@@ -1,0 +1,1 @@
+include ':app', ':paris-annotations', ':paris-processor', ':paris'

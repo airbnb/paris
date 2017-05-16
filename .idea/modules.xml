@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paris/paris.iml" filepath="$PROJECT_DIR$/paris/paris.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paris-annotations/paris-annotations.iml" filepath="$PROJECT_DIR$/paris-annotations/paris-annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paris-library.iml" filepath="$PROJECT_DIR$/paris-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paris-processor/paris-processor.iml" filepath="$PROJECT_DIR$/paris-processor/paris-processor.iml" />
+    </modules>
+  </component>
+</project>
