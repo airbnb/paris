@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="test">
+    <style name="Test_View_background">
         <item name="android:background">@android:drawable/ic_delete</item>
     </style>
 
