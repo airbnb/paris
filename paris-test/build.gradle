@@ -1,5 +1,8 @@
+import org.gradle.internal.jvm.Jvm
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: 'build.workaround-missing-resource.gradle'
 
 android {
     compileSdkVersion 25
@@ -31,6 +34,10 @@ dependencies {
     compile project(':paris')
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+    testCompile files(getRuntimeJar())
+    testCompile files(Jvm.current().getToolsJar())
+    testCompile deps.googleTestingCompile
+    testCompile project(':paris-processor')
 }
 
 buildscript {
@@ -43,4 +50,18 @@ buildscript {
 }
 repositories {
     mavenCentral()
+}
+
+static def getRuntimeJar() {
+    try {
+        final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();
+        File runtimeJar = new File(javaBase, "lib/rt.jar");
+        if (runtimeJar.exists()) {
+            return runtimeJar;
+        }
+        runtimeJar = new File(javaBase, "jre/lib/rt.jar");
+        return runtimeJar.exists() ? runtimeJar : null;
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
 }

@@ -15,14 +15,9 @@ class ParisProcessor : AbstractProcessor() {
 
     companion object {
 
-        internal val N2_PACKAGE_NAME = "com.airbnb.n2"
-        internal val N2_COMPONENTS_PACKAGE_NAME = N2_PACKAGE_NAME + ".components"
-
         internal val supportedAnnotations: Set<Class<out Annotation>>
             get() {
-                val annotations: Set<Class<out Annotation>> = LinkedHashSet()
-                annotations.plus(Styleable::class.java)
-                return annotations
+                return setOf(Styleable::class.java)
             }
     }
 
@@ -43,10 +38,8 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        val types: Set<String> = LinkedHashSet()
-        for (annotation in supportedAnnotations) {
-            types.plus(annotation.canonicalName)
-        }
+        val types: MutableSet<String> = LinkedHashSet()
+        supportedAnnotations.mapTo(types) { it.canonicalName }
         return types
     }
 
@@ -55,7 +48,6 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        throw RuntimeException()
 //        val styleableClasses = ArrayList()
 //        for (element in roundEnv.getElementsAnnotatedWith(Styleable::class.java)) {
 //            val classInfo = StyleableClassInfo.fromElement(element)
@@ -72,12 +64,12 @@ class ParisProcessor : AbstractProcessor() {
 //            writeLoggedErrorsIfAny()
 //        }
 
-        //return true
+        return true
     }
 
 
     private fun logError(e: Exception) {
-        loggedExceptions.plus(e)
+        loggedExceptions.add(e)
     }
 
     private fun writeLoggedErrorsIfAny() {
