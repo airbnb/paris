@@ -24,7 +24,7 @@ public final class Styles {
 
         private final T view;
 
-        private Config config = null;//Config.builder().build();
+        private Config config = new Config.Builder().build();
 
         private Applier(T view) {
             this.view = view;
@@ -35,7 +35,7 @@ public final class Styles {
          * {@link Config}
          */
         public Applier<T> addOption(Config.Option option) {
-            config = null;//config.toBuilder().addOption(option).build();
+            config = config.toBuilder().addOption(option).build();
             return this;
         }
 

@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/paris" />
             <option value="$PROJECT_DIR$/paris-annotations" />
             <option value="$PROJECT_DIR$/paris-processor" />
+            <option value="$PROJECT_DIR$/paris-test" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

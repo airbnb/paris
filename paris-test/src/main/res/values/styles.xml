@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="test_layout_params_width">42dp</dimen>
+    <dimen name="test_layout_params_height">51dp</dimen>
+    <style name="Test_LayoutParams_width_height">
+        <item name="android:layout_width">@dimen/test_layout_params_width</item>
+        <item name="android:layout_height">@dimen/test_layout_params_height</item>
+    </style>
+
+    <style name="Test_View_background">
+        <item name="android:background">@android:drawable/ic_delete</item>
+    </style>
+
+    <dimen name="test_view_min_width">100dp</dimen>
+    <style name="Test_View_minWidth">
+        <item name="android:minWidth">@dimen/test_view_min_width</item>
+    </style>
+
+    <dimen name="test_view_padding">42dp</dimen>
+    <style name="Test_View_padding">
+        <item name="android:padding">@dimen/test_view_padding</item>
+    </style>
+
+</resources>

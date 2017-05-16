@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/paris-annotations/paris-annotations.iml" filepath="$PROJECT_DIR$/paris-annotations/paris-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/paris-library.iml" filepath="$PROJECT_DIR$/paris-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/paris-processor/paris-processor.iml" filepath="$PROJECT_DIR$/paris-processor/paris-processor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paris-test/paris-test.iml" filepath="$PROJECT_DIR$/paris-test/paris-test.iml" />
     </modules>
   </component>
 </project>

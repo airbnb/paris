@@ -1,1 +1,1 @@
-include ':app', ':paris-annotations', ':paris-processor', ':paris'
+include ':app', ':paris-annotations', ':paris-processor', ':paris', ':paris-test'
