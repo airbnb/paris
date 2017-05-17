@@ -10,19 +10,21 @@ import com.airbnb.paris.Style.Config;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-public final class MyViewStyle extends BaseStyle<MyView> {
+public abstract class MyViewStyle extends BaseStyle<MyView> {
 
     public static MyViewStyle from(AttributeSet set, @StyleRes int styleRes, Config config) {
         return new AutoValue_MyViewStyle(set, styleRes, config);
     }
 
     @Override
-    protected Class<MyView> targetClass() {
-        return MyView.class;
+    protected int[] attributes() {
+        return R.styleable.MyView;
     }
 
     @Override
-    protected int[] attributes() {
-        return R.styleable.MyView;
+    protected void processAttribute(MyView view, TypedArray a, int index) {
+        if (index == R.styleable.MyView_title) {
+            view.setTitle(a.getString(index));
+        }
     }
 }
