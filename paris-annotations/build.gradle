@@ -9,16 +9,4 @@ dependencies {
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
-}
-repositories {
-    mavenCentral()
-}
-
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')
