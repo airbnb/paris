@@ -8,18 +8,18 @@ import org.junit.Test
 
 
 
-class ProcessorTest {
+class ParisProcessorTest {
 
     @Test
     fun basic() {
-        val model = JavaFileObjects
-                .forResource("MyView.java")
-
-//        val generatedModel = JavaFileObjects.forResource("MyViewStyle.java")
+        val view = JavaFileObjects.forResource("MyView.java")
+        val generatedStyleClass = JavaFileObjects.forResource("MyViewStyle.java")
 
         assert_().about(javaSource())
-                .that(model)
+                .that(view)
                 .processedWith(ParisProcessor())
                 .compilesWithoutError()
+                .and()
+                .generatesSources(generatedStyleClass)
     }
 }

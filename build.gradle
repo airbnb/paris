@@ -31,5 +31,6 @@ ext {
             googleAutoValue: "com.google.auto.value:auto-value:1.4.1",
             googleGuava: "com.google.guava:guava:22.0-rc1-android",
             googleTestingCompile : "com.google.testing.compile:compile-testing:0.10",
+            squareJavaPoet: "com.squareup:javapoet:1.8.0",
     ]
 }

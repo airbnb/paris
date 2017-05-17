@@ -1,5 +1,5 @@
 package com.airbnb.paris.annotations
 
-@Target(AnnotationTarget.CLASS)
+@Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Styleable(val value: String)
+annotation class Attr(val value: Int)

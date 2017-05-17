@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.airbnb.paris.annotations.Styleable;
 
-@Styleable(0)
+@Styleable("Hi")
 public class MainActivity extends AppCompatActivity {
 
     @Override

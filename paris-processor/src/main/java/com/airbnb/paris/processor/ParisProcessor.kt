@@ -1,7 +1,10 @@
 package com.airbnb.paris.processor
 
+import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
 import com.google.auto.service.AutoService
+import com.squareup.javapoet.ClassName
+import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
@@ -17,11 +20,14 @@ class ParisProcessor : AbstractProcessor() {
 
         internal val supportedAnnotations: Set<Class<out Annotation>>
             get() {
-                return setOf(Styleable::class.java)
+                return setOf(
+                        Styleable::class.java,
+                        Attr::class.java)
             }
     }
 
     private val loggedExceptions: MutableList<Exception> = ArrayList()
+    private val resourceProcessor = ResourceProcessor()
 
     private lateinit var filer: Filer
     private lateinit var messager: Messager
@@ -31,10 +37,12 @@ class ParisProcessor : AbstractProcessor() {
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
+        resourceProcessor.init(processingEnv)
         filer = processingEnv.filer
         messager = processingEnv.messager
         elementUtils = processingEnv.elementUtils
         typeUtils = processingEnv.typeUtils
+
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
@@ -48,21 +56,33 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-//        val styleableClasses = ArrayList()
-//        for (element in roundEnv.getElementsAnnotatedWith(Styleable::class.java)) {
-//            val classInfo = StyleableClassInfo.fromElement(element)
-//            styleableClasses.add(classInfo)
-//        }
-//
-//        try {
-//            StyleClassesJavaWriter.writeFrom(filer, styleableClasses)
-//        } catch (e: IOException) {
-//            logError(e)
-//        }
-//
-//        if (roundEnv.processingOver()) {
-//            writeLoggedErrorsIfAny()
-//        }
+        val styleableClasses: MutableList<StyleableClassInfo> = ArrayList()
+        roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+                .mapTo(styleableClasses) {
+                    StyleableClassInfo.fromElement(it)
+                }
+
+        val attrMethods: MutableList<AttrMethodInfo> = ArrayList()
+        roundEnv.getElementsAnnotatedWith(Attr::class.java)
+                .mapTo(attrMethods) {
+                    AttrMethodInfo.fromElement(resourceProcessor, it)
+                }
+
+        if (attrMethods.isEmpty()) {
+            return true
+        }
+
+        val rClassName: ClassName = attrMethods[0].id.className.enclosingClassName()
+
+        try {
+            Proust.writeFrom(filer, styleableClasses, rClassName)
+        } catch (e: IOException) {
+            logError(e)
+        }
+
+        if (roundEnv.processingOver()) {
+            writeLoggedErrorsIfAny()
+        }
 
         return true
     }
