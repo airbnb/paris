@@ -91,7 +91,7 @@ public abstract class BaseStyle<T extends View> implements Style<T> {
     }
 
     public final void applyTo(T view) {
-        // This applies the explicitely declared parents
+        // This applies the explicitly declared parents
         for (Class<? extends Style<? super T>> parentClass : parents()) {
             StyleUtils.create(parentClass, attrSet(), styleRes(), config()).applyTo(view);
         }

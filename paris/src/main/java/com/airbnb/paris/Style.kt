@@ -9,7 +9,7 @@ interface Style<T : View> {
      * are simply a collection of objects with some helpers to sort through them. It is up to each
      * style to declare, retrieve, and act upon the configuration option that they are interested
      * in.
-
+     *
      * Option objects can be as simple as enum values, or as complex as fully fledged objects, such
      * as listeners.
      */
