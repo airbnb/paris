@@ -10,6 +10,9 @@ import com.airbnb.paris.annotations.Styleable;
 @Styleable("MyView")
 public class MyView extends View {
 
+    @Attr(R2.styleable.MyView_subtitle)
+    String subtitle;
+
     public MyView(Context context) {
         super(context);
     }

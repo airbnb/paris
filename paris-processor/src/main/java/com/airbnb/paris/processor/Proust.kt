@@ -40,9 +40,8 @@ internal object Proust {
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .superclass(ParameterizedTypeName.get(BASE_STYLE_CLASS_NAME, TypeName.get(classInfo.type)))
                 .addMethod(buildFromMethod(className))
-//                .addMethod(buildTargetClassMethod(classInfo.type))
                 .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
-                .addMethod(buildProcessAttributeMethod(classInfo.type, classInfo.attrMethods))
+                .addMethod(buildProcessAttributeMethod(classInfo.type, classInfo.attrs))
 
         JavaFile.builder(className.packageName(), adapterTypeBuilder.build())
                 .build()
@@ -60,16 +59,6 @@ internal object Proust {
                 .build()
     }
 
-    // TODO  Remove
-    private fun buildTargetClassMethod(styleableClassType: TypeMirror): MethodSpec {
-        return MethodSpec.methodBuilder("targetClass")
-                .addAnnotation(Override::class.java)
-                .addModifiers(Modifier.PROTECTED)
-                .returns(ParameterizedTypeName.get(ClassName.get(Class::class.java), TypeName.get(styleableClassType)))
-                .addStatement("return \$T.class", styleableClassType)
-                .build()
-    }
-
     private fun buildAttributesMethod(rClassName: ClassName, resourceName: String): MethodSpec {
         return MethodSpec.methodBuilder("attributes")
                 .addAnnotation(Override::class.java)
@@ -79,7 +68,7 @@ internal object Proust {
                 .build()
     }
 
-    private fun buildProcessAttributeMethod(styleableClassType: TypeMirror, attrMethods: List<AttrMethodInfo>): MethodSpec {
+    private fun buildProcessAttributeMethod(styleableClassType: TypeMirror, attrs: List<AttrInfo>): MethodSpec {
         val methodSpecBuilder = MethodSpec.methodBuilder("processAttribute")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
@@ -88,12 +77,15 @@ internal object Proust {
                 .addParameter(ParameterSpec.builder(Integer.TYPE, "index").build())
 
         var first = true
-        for (attrMethod in attrMethods) {
-            val statement = String.format(Locale.US, attrMethod.format.statement, "index")
-            methodSpecBuilder
-                    .beginControlFlow((if (first) "" else "else ") + "if (index == \$L)", attrMethod.id.code)
-                    .addStatement("view.\$N(a.\$L)", attrMethod.name, statement)
-                    .endControlFlow()
+        for (attr in attrs) {
+            val statement = String.format(Locale.US, attr.format.statement, "index")
+            methodSpecBuilder.beginControlFlow((if (first) "" else "else ") + "if (index == \$L)", attr.id.code)
+            if (attr.isMethod) {
+                methodSpecBuilder.addStatement("view.\$N(a.\$L)", attr.name, statement)
+            } else {
+                methodSpecBuilder.addStatement("view.\$N = a.\$L", attr.name, statement)
+            }
+            methodSpecBuilder.endControlFlow()
             first = false
         }
 

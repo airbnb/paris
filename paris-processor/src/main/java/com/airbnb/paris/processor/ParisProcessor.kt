@@ -7,13 +7,13 @@ import com.squareup.javapoet.ClassName
 import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import javax.tools.Diagnostic
 
 
+// TODO  Support using the same attr on multiple methods/fields
 @AutoService(Processor::class)
 class ParisProcessor : AbstractProcessor() {
 
@@ -56,24 +56,23 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val allAttrMethods: MutableList<AttrMethodInfo> = ArrayList()
+        val allAttrs: MutableList<AttrInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Attr::class.java)
-                .mapTo(allAttrMethods) {
-                    AttrMethodInfo.fromElement(resourceProcessor, it as ExecutableElement)
+                .mapTo(allAttrs) {
+                    AttrInfo.fromElement(resourceProcessor, it)
                 }
 
-        if (allAttrMethods.isEmpty()) {
+        if (allAttrs.isEmpty()) {
             return true
         }
-        val rClassName: ClassName = allAttrMethods[0].id.className.enclosingClassName()
+        val rClassName: ClassName = allAttrs[0].id.className.enclosingClassName()
 
         val styleableClasses: MutableList<StyleableClassInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                 .mapTo(styleableClasses) { element ->
-                    val attrMethods = allAttrMethods.filter { element == it.enclosingElement }
-                    StyleableClassInfo.fromElement(element, attrMethods)
+                    val attrs = allAttrs.filter { element == it.enclosingElement }
+                    StyleableClassInfo.fromElement(element, attrs)
                 }
-
 
         try {
             Proust.writeFrom(filer, styleableClasses, rClassName)

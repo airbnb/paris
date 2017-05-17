@@ -25,6 +25,8 @@ public abstract class MyViewStyle extends BaseStyle<MyView> {
     protected void processAttribute(MyView view, TypedArray a, int index) {
         if (index == R.styleable.MyView_title) {
             view.setTitle(a.getString(index));
+        } else if (index == R.styleable.MyView_subtitle) {
+            view.subtitle = a.getString(index);
         }
     }
 }
