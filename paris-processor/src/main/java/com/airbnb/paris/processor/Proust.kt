@@ -3,6 +3,7 @@ package com.airbnb.paris.processor
 import com.google.auto.value.AutoValue
 import com.squareup.javapoet.*
 import java.io.IOException
+import java.util.*
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import javax.lang.model.type.TypeMirror
@@ -12,6 +13,8 @@ internal object Proust {
     private val CLASS_NAME_FORMAT = "%sStyle"
     private val BASE_STYLE_CLASS_NAME = ClassName.get("com.airbnb.paris", "BaseStyle")
     private val ATTRIBUTE_SET_CLASS_NAME = ClassName.get("android.util", "AttributeSet")
+    private val VIEW_CLASS_NAME = ClassName.get("android.view", "View")
+    private val TYPED_ARRAY_CLASS_NAME = ClassName.get("android.content.res", "TypedArray")
     private val CONFIG_CLASS_NAME = ClassName.get("com.airbnb.paris.Style", "Config")
 
     fun getClassName(classInfo: StyleableClassInfo): ClassName {
@@ -40,6 +43,7 @@ internal object Proust {
                 .addMethod(buildFromMethod(className))
                 .addMethod(buildTargetClassMethod(classInfo.type))
                 .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
+                .addMethod(buildProcessAttributesMethod(classInfo.type, classInfo.attrMethods))
 
         JavaFile.builder(className.packageName(), adapterTypeBuilder.build())
                 .build()
@@ -73,5 +77,26 @@ internal object Proust {
                 .returns(ArrayTypeName.get(Integer.TYPE))
                 .addStatement("return \$T.styleable.\$L", rClassName, resourceName)
                 .build()
+    }
+
+    private fun buildProcessAttributesMethod(styleableClassType: TypeMirror, attrMethods: List<AttrMethodInfo>): MethodSpec {
+        val methodSpecBuilder = MethodSpec.methodBuilder("processAttributes")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PROTECTED)
+                .addParameter(ParameterSpec.builder(TypeName.get(styleableClassType), "view").build())
+                .addParameter(ParameterSpec.builder(TYPED_ARRAY_CLASS_NAME, "a").build())
+                .addParameter(ParameterSpec.builder(Integer.TYPE, "index").build())
+
+        var first = true
+        for (attrMethod in attrMethods) {
+            val statement = String.format(Locale.US, attrMethod.format.statement, "index")
+            methodSpecBuilder
+                    .beginControlFlow((if (first) "" else "else ") + "if (index == \$L)", attrMethod.id.code)
+                    .addStatement("view.\$N(a.\$L)", attrMethod.name, statement)
+                    .endControlFlow()
+            first = false
+        }
+
+        return methodSpecBuilder.build()
     }
 }

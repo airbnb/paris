@@ -7,6 +7,7 @@ import com.squareup.javapoet.ClassName
 import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -42,7 +43,6 @@ class ParisProcessor : AbstractProcessor() {
         messager = processingEnv.messager
         elementUtils = processingEnv.elementUtils
         typeUtils = processingEnv.typeUtils
-
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
@@ -56,23 +56,24 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val styleableClasses: MutableList<StyleableClassInfo> = ArrayList()
-        roundEnv.getElementsAnnotatedWith(Styleable::class.java)
-                .mapTo(styleableClasses) {
-                    StyleableClassInfo.fromElement(it)
-                }
-
-        val attrMethods: MutableList<AttrMethodInfo> = ArrayList()
+        val allAttrMethods: MutableList<AttrMethodInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Attr::class.java)
-                .mapTo(attrMethods) {
-                    AttrMethodInfo.fromElement(resourceProcessor, it)
+                .mapTo(allAttrMethods) {
+                    AttrMethodInfo.fromElement(resourceProcessor, it as ExecutableElement)
                 }
 
-        if (attrMethods.isEmpty()) {
+        if (allAttrMethods.isEmpty()) {
             return true
         }
+        val rClassName: ClassName = allAttrMethods[0].id.className.enclosingClassName()
 
-        val rClassName: ClassName = attrMethods[0].id.className.enclosingClassName()
+        val styleableClasses: MutableList<StyleableClassInfo> = ArrayList()
+        roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+                .mapTo(styleableClasses) { element ->
+                    val attrMethods = allAttrMethods.filter { element == it.enclosingElement }
+                    StyleableClassInfo.fromElement(element, attrMethods)
+                }
+
 
         try {
             Proust.writeFrom(filer, styleableClasses, rClassName)
