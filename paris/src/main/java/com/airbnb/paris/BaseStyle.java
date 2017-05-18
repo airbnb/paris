@@ -32,7 +32,7 @@ public abstract class BaseStyle<T extends View> implements Style<T> {
      * Instantiates and applies the style classes returned here right before this style is applied
      * itself.
      *
-     * Note: when using {@link Styles#change(View)} to apply styles the entire hierarchy of View
+     * Note: when using {@link Paris#change(View)} to apply styles the entire hierarchy of View
      * styles is automatically applied. For example changing a {@link android.widget.TextView}
      * will automatically apply both {@link TextViewStyle} and {@link ViewStyle}, because
      * {@link View} is a parent of {@link android.widget.TextView}. As a result it is recommended

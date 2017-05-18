@@ -5,7 +5,7 @@ import android.content.res.Resources
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import com.airbnb.paris.Styles
+import com.airbnb.paris.Paris
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -28,14 +28,14 @@ class ViewStyleTest {
     @Test
     fun viewBackground() {
         assertNull(view.background)
-        Styles.change(view).apply(R.style.Test_View_background)
+        Paris.change(view).apply(R.style.Test_View_background)
         assertNotNull(view.background)
     }
 
     @Test
     fun viewMinWidth() {
         assertEquals(0, view.minimumWidth)
-        Styles.change(view).apply(R.style.Test_View_minWidth)
+        Paris.change(view).apply(R.style.Test_View_minWidth)
         assertEquals(res.getDimensionPixelSize(R.dimen.test_view_min_width), view.minimumWidth)
     }
 
@@ -45,7 +45,7 @@ class ViewStyleTest {
         assertEquals(0, view.paddingLeft)
         assertEquals(0, view.paddingRight)
         assertEquals(0, view.paddingTop)
-        Styles.change(view).apply(R.style.Test_View_padding)
+        Paris.change(view).apply(R.style.Test_View_padding)
         val padding = res.getDimensionPixelSize(R.dimen.test_view_padding);
         assertEquals(padding, view.paddingBottom)
         assertEquals(padding, view.paddingLeft)

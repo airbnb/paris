@@ -15,7 +15,7 @@ import java.util.Map;
  * This is an experimental framework. It's currently being tested on fonts and a couple of DLS
  * Components. In the meantime, please refrain from using it, or talk to nathanael-silverman.
  */
-public final class Styles {
+public final class Paris {
 
     /**
      * Builder-like class to apply styles and options in a chain
@@ -49,7 +49,7 @@ public final class Styles {
          */
         public Applier<T> apply(@Nullable AttributeSet set) {
             if (set != null) {
-                Styles.apply(view, set, 0, config);
+                Paris.apply(view, set, 0, config);
             }
             return this;
         }
@@ -64,7 +64,7 @@ public final class Styles {
          */
         public Applier<T> apply(@Nullable AttributeSet set, Config config) {
             if (set != null) {
-                Styles.apply(view, set, 0, config);
+                Paris.apply(view, set, 0, config);
             }
             return this;
         }
@@ -78,7 +78,7 @@ public final class Styles {
          * {@link TextViewStyle} and {@link ViewStyle}.
          */
         public Applier<T> apply(@StyleRes int styleRes) {
-            Styles.apply(view, null, styleRes, config);
+            Paris.apply(view, null, styleRes, config);
             return this;
         }
 
@@ -91,7 +91,7 @@ public final class Styles {
          * {@link TextViewStyle} and {@link ViewStyle}.
          */
         public Applier<T> apply(@StyleRes int styleRes, Config config) {
-            Styles.apply(view, null, styleRes, config);
+            Paris.apply(view, null, styleRes, config);
             return this;
         }
     }
@@ -125,7 +125,7 @@ public final class Styles {
         }
     }
 
-    private static final String PACKAGE_NAME = Styles.class.getPackage().getName();
+    private static final String PACKAGE_NAME = Paris.class.getPackage().getName();
     private static final String STYLE_CLASS_NAME_SUFFIX = "Style";
     private static final Map<Class<?>, Node> VIEW_CLASS_TO_NODE = new HashMap<>();
 
