@@ -2,9 +2,9 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
-import com.google.auto.service.AutoService
 import com.squareup.javapoet.ClassName
 import java.io.IOException
+import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
@@ -14,7 +14,6 @@ import javax.tools.Diagnostic
 
 
 // TODO  Support using the same attr on multiple methods/fields
-@AutoService(Processor::class)
 class ParisProcessor : AbstractProcessor() {
 
     companion object {
