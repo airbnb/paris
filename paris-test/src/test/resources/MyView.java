@@ -1,6 +1,7 @@
 package com.airbnb.paris.test;
 
 import android.content.Context;
+import android.support.annotation.Px;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +17,10 @@ public class MyView extends View {
 
     @Attr(R2.styleable.MyView_subtitle)
     String subtitle;
+
+    @Attr(R2.styleable.MyView_verticalPadding)
+    @Px
+    int verticalPadding;
 
     public MyView(Context context) {
         super(context);

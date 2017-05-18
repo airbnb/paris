@@ -10,9 +10,6 @@ import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.airbnb.paris.Style.Config;
-
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -84,7 +81,7 @@ public class StyleUtils {
         view.setPadding(view.getPaddingLeft(), px, view.getPaddingRight(), view.getPaddingBottom());
     }
 
-    public static Drawable getDrawable(Context context, TypedArray a, int index) {
+    public static Drawable getDrawable(Context context, TypedArrayWrapper a, int index) {
         return isNull(a, index) ? null : getDrawableCompat(context, a, index);
     }
 
@@ -92,7 +89,7 @@ public class StyleUtils {
      * Use this to load a vector drawable from a TypedArray in a backwards compatible fashion
      */
     @Nullable
-    static Drawable getDrawableCompat(Context context, TypedArray array, int index) {
+    static Drawable getDrawableCompat(Context context, TypedArrayWrapper array, int index) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return array.getDrawable(index);
         } else {
@@ -105,19 +102,16 @@ public class StyleUtils {
         }
     }
 
-    public static int getResourceId(TypedArray a, int index, int defValue) {
+    public static int getResourceId(TypedArrayWrapper a, int index, int defValue) {
         return isNull(a, index) ? 0 : a.getResourceId(index, 0);
     }
 
-    private static boolean isNull(TypedArray a, int index) {
+    private static boolean isNull(TypedArrayWrapper a, int index) {
         return NULL_RESOURCE_IDS.contains(a.getResourceId(index, 0));
     }
 
-    static <T extends Style<?>> T create(Class<T> styleClass, AttributeSet set, @StyleRes int styleRes, Config config) {
-        return create(getConstructor(styleClass), set, styleRes, config);
-    }
-
-    static <T extends Style<?>> T create(Method method, AttributeSet set, @StyleRes int styleRes, Config config) {
+    /*
+    static <T extends StyleApplier<?>> T create(Method method, AttributeSet set, @StyleRes int styleRes, Config config) {
         if (method == null) {
             //noinspection unchecked
             return (T) new Style() {
@@ -160,4 +154,5 @@ public class StyleUtils {
         STYLE_CLASS_TO_METHOD.put(styleClass, method);
         return method;
     }
+    */
 }

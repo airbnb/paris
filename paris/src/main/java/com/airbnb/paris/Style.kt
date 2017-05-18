@@ -1,8 +1,25 @@
 package com.airbnb.paris
 
-import android.view.View
+import android.annotation.SuppressLint
+import android.content.Context
+import android.support.annotation.AttrRes
+import android.support.annotation.StyleRes
+import android.util.AttributeSet
+import android.util.SparseIntArray
 
-interface Style<T : View> {
+class Style private constructor(
+        val attributeMap: SparseIntArray?,
+        val attributeSet: AttributeSet?,
+        @StyleRes val styleRes: Int,
+        val config: Config?) {
+
+    private constructor(builder: Builder) : this(builder.attributeMap, null, 0, null)
+
+    constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0, null)
+    constructor(attributeSet: AttributeSet, config: Config) : this(null, attributeSet, 0, config)
+
+    constructor(@StyleRes styleRes: Int) : this(null, null, styleRes, null)
+    constructor(@StyleRes styleRes: Int, config: Config) : this(null, null, styleRes, config)
 
     /**
      * Config objects are automatically passed from [BaseStyle] to [BaseStyle]. They
@@ -53,5 +70,47 @@ interface Style<T : View> {
         }
     }
 
-    fun applyTo(view: T)
+    class Builder internal constructor() {
+
+        internal val attributeMap = SparseIntArray()
+
+        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder {
+            attributeMap.put(attrRes, valueRes)
+            return this
+        }
+
+        fun build(): Style {
+            return Style(this)
+        }
+    }
+
+    companion object {
+        fun builder(): Builder {
+            return Builder()
+        }
+    }
+
+    @SuppressLint("Recycle")
+    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper? {
+        if (attributeMap != null) {
+            val filteredAttributeMap = SparseIntArray()
+            for (attrRes in attrs) {
+                val value = attributeMap.get(attrRes, -1)
+                if (value != -1) {
+                    filteredAttributeMap.put(attrRes, value)
+                }
+            }
+            return SparseIntArrayTypedArrayWrapper(context.resources, filteredAttributeMap)
+        } else if (attributeSet != null) {
+            return TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
+        } else if (styleRes != 0) {
+            return TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
+        } else {
+            return null
+        }
+    }
+
+    fun hasOption(option: Config.Option): Boolean {
+        return config != null && config.contains(option)
+    }
 }

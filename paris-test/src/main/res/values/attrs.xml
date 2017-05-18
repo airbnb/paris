@@ -5,6 +5,7 @@
         <attr name="title" format="string" />
         <attr name="titleStyle" format="reference" />
         <attr name="subtitle" format="string" />
+        <attr name="verticalPadding" format="dimension" />
     </declare-styleable>
 
 </resources>

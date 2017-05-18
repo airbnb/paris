@@ -4,7 +4,6 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Format
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -35,14 +34,12 @@ internal class AttrInfo private constructor(
                 val type: TypeMirror
                 if (element.kind == ElementKind.FIELD) {
                     type = element.asType()
-
                     val viewType = elementUtils.getTypeElement("android.view.View").asType()
                     isView = typeUtils.isSubtype(type, viewType)
 
-                    format = Format.forField(elementUtils, typeUtils, type)
+                    format = Format.forField(elementUtils, typeUtils, element)
                 } else {
-                    type = (element as ExecutableElement).parameters[0].asType()
-                    format = Format.forMethod(type)
+                    format = Format.forMethod(element)
                 }
             }
 
