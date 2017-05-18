@@ -74,6 +74,7 @@ class ParisProcessor : AbstractProcessor() {
                 }
 
         try {
+            ParisWriter.writeFrom(filer, styleableClasses)
             Proust.writeFrom(filer, styleableClasses, rClassName)
         } catch (e: IOException) {
             logError(e)

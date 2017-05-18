@@ -46,6 +46,10 @@ class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : Type
         return typedArray.getResourceId(index, defValue)
     }
 
+    override fun getString(index: Int): String {
+        return typedArray.getString(index)
+    }
+
     override fun recycle() {
         typedArray.recycle()
     }

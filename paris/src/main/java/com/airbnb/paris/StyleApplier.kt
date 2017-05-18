@@ -4,7 +4,7 @@ import android.support.annotation.StyleRes
 import android.util.AttributeSet
 import android.view.View
 
-abstract class StyleApplier<T : View>(val view: T) {
+abstract class StyleApplier<out T : View>(protected val view: T) {
 
     protected abstract fun attributes(): IntArray
 

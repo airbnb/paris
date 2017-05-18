@@ -13,13 +13,16 @@ class ParisProcessorTest {
     @Test
     fun basic() {
         val view = JavaFileObjects.forResource("MyView.java")
-        val generatedStyleClass = JavaFileObjects.forResource("MyViewStyle.java")
+        val generatedParisClass = JavaFileObjects.forResource("Paris.java")
+        val generatedStyleApplierClass = JavaFileObjects.forResource("MyViewStyleApplier.java")
 
         assert_().about(javaSource())
                 .that(view)
                 .processedWith(ParisProcessor())
                 .compilesWithoutError()
                 .and()
-                .generatesSources(generatedStyleClass)
+                .generatesSources(generatedParisClass)
+                .and()
+                .generatesSources(generatedStyleApplierClass)
     }
 }

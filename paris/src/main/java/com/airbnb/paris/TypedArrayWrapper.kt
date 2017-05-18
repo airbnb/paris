@@ -27,5 +27,7 @@ interface TypedArrayWrapper {
 
     fun getResourceId(@StyleableRes index: Int, defValue: Int): Int
 
+    fun getString(@StyleableRes index: Int): String
+
     fun recycle()
 }

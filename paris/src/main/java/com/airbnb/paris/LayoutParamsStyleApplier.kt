@@ -23,7 +23,7 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
         return R.styleable.LayoutParams
     }
 
-    override fun beforeProcessAttributes(style: Style, view: View) {
+    override fun beforeProcessAttributes(style: Style) {
         ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight)
         width = StyleUtils.NOT_SET
         height = StyleUtils.NOT_SET
@@ -34,7 +34,7 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
         marginTop = StyleUtils.NOT_SET
     }
 
-    override fun processAttribute(style: Style, view: View, a: TypedArrayWrapper, index: Int) {
+    override fun processAttribute(style: Style, a: TypedArrayWrapper, index: Int) {
         if (index == R.styleable.LayoutParams_android_layout_width && !ignoreLayoutWidthAndHeight) {
             width = a.getLayoutDimension(index, 0)
         } else if (index == R.styleable.LayoutParams_android_layout_height && !ignoreLayoutWidthAndHeight) {
@@ -52,7 +52,7 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
         }
     }
 
-    override fun afterProcessAttributes(style: Style, view: View) {
+    override fun afterProcessAttributes(style: Style) {
         if ((width != StyleUtils.NOT_SET) xor (height != StyleUtils.NOT_SET)) {
             throw IllegalArgumentException("Width and height must either both be set, or not be set at all. It can't be one and not the other.")
         }

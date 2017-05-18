@@ -50,6 +50,10 @@ class SparseIntArrayTypedArrayWrapper constructor(val resources: Resources, val 
         return resources.getInteger(index)
     }
 
+    override fun getString(index: Int): String {
+        return resources.getString(index)
+    }
+
     override fun recycle() {
         attributeMap.clear()
     }
