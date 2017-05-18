@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor
 
+import com.airbnb.paris.annotations.Format
 import com.google.auto.value.AutoValue
 import com.squareup.javapoet.*
 import java.io.IOException
@@ -11,6 +12,7 @@ import javax.lang.model.type.TypeMirror
 internal object Proust {
 
     private val CLASS_NAME_FORMAT = "%sStyle"
+    private val PARIS_CLASS_NAME = ClassName.get("com.airbnb.paris", "Paris")
     private val BASE_STYLE_CLASS_NAME = ClassName.get("com.airbnb.paris", "BaseStyle")
     private val ATTRIBUTE_SET_CLASS_NAME = ClassName.get("android.util", "AttributeSet")
     private val TYPED_ARRAY_CLASS_NAME = ClassName.get("android.content.res", "TypedArray")
@@ -80,7 +82,10 @@ internal object Proust {
         for (attr in attrs) {
             val statement = String.format(Locale.US, attr.format.statement, "index")
             methodSpecBuilder.beginControlFlow((if (first) "" else "else ") + "if (index == \$L)", attr.id.code)
-            if (attr.isMethod) {
+            if (attr.isView) {
+                assert(attr.format == Format.DEFAULT || attr.format == Format.RESOURCE_ID)
+                methodSpecBuilder.addStatement("\$T.change(view.\$N).apply(a.\$L)", PARIS_CLASS_NAME, attr.name, statement)
+            } else if (attr.isMethod) {
                 methodSpecBuilder.addStatement("view.\$N(a.\$L)", attr.name, statement)
             } else {
                 methodSpecBuilder.addStatement("view.\$N = a.\$L", attr.name, statement)
@@ -90,5 +95,9 @@ internal object Proust {
         }
 
         return methodSpecBuilder.build()
+    }
+
+    private fun assert(assertion: Boolean) {
+        // TODO
     }
 }

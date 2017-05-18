@@ -3,6 +3,7 @@
 
     <declare-styleable name="MyView">
         <attr name="title" format="string" />
+        <attr name="titleStyle" format="reference" />
         <attr name="subtitle" format="string" />
     </declare-styleable>
 

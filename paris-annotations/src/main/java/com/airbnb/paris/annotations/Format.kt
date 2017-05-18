@@ -1,6 +1,8 @@
 package com.airbnb.paris.annotations
 
 import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 enum class Format(val statement: String) {
 
@@ -25,9 +27,22 @@ enum class Format(val statement: String) {
 
     companion object {
 
-        fun fromType(type: TypeMirror): Format {
-            val typeString = type.toString()
+        fun forField(elementUtils: Elements, typeUtils: Types, type: TypeMirror): Format {
+            val viewType = elementUtils.getTypeElement("android.view.View").asType()
+            if (typeUtils.isSubtype(type, viewType)) {
+                // If the field is a View then the attribute must be a resource to style it
+                return RESOURCE_ID
+            }
 
+            return fromType(type)
+        }
+
+        fun forMethod(type: TypeMirror): Format {
+            return fromType(type)
+        }
+
+        private fun fromType(type: TypeMirror): Format {
+            val typeString = type.toString()
             return when (typeString) {
                 "java.lang.Boolean", "boolean" -> BOOLEAN
                 "java.lang.CharSequence" -> CHARSEQUENCE

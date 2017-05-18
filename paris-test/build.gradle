@@ -40,18 +40,6 @@ dependencies {
     testCompile project(':paris-processor')
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
-}
-repositories {
-    mavenCentral()
-}
-
 static def getRuntimeJar() {
     try {
         final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();

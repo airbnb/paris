@@ -6,17 +6,20 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class AttrInfo private constructor(
         val enclosingElement: Element,
         val name: String,
         val format: Format,
         val id: Id,
-        val isMethod: Boolean) {
+        val isMethod: Boolean,
+        val isView: Boolean) {
 
     companion object {
 
-        fun fromElement(resourceProcessor: ResourceProcessor, element: Element): AttrInfo {
+        fun fromElement(resourceProcessor: ResourceProcessor, elementUtils: Elements, typeUtils: Types, element: Element): AttrInfo {
             // TODO  Check that element is either a method or a field
             // TODO  Check that element isn't private or protected
 
@@ -27,19 +30,25 @@ internal class AttrInfo private constructor(
             var format = attr.format
             val id = resourceProcessor.getId(Attr::class.java, element, styleableResourceValue)
 
+            var isView = false
             if (format == Format.DEFAULT) {
                 val type: TypeMirror
                 if (element.kind == ElementKind.FIELD) {
                     type = element.asType()
+
+                    val viewType = elementUtils.getTypeElement("android.view.View").asType()
+                    isView = typeUtils.isSubtype(type, viewType)
+
+                    format = Format.forField(elementUtils, typeUtils, type)
                 } else {
                     type = (element as ExecutableElement).parameters[0].asType()
+                    format = Format.forMethod(type)
                 }
-                format = Format.fromType(type)
             }
 
             val isMethod = element.kind == ElementKind.METHOD
 
-            return AttrInfo(enclosingElement, name, format, id, isMethod)
+            return AttrInfo(enclosingElement, name, format, id, isMethod, isView)
         }
     }
 }

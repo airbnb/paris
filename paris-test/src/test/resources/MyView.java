@@ -3,12 +3,16 @@ package com.airbnb.paris.test;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable("MyView")
 public class MyView extends View {
+
+    @Attr(R2.styleable.MyView_titleStyle)
+    TextView titleText;
 
     @Attr(R2.styleable.MyView_subtitle)
     String subtitle;

@@ -58,7 +58,7 @@ class ParisProcessor : AbstractProcessor() {
         val allAttrs: MutableList<AttrInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Attr::class.java)
                 .mapTo(allAttrs) {
-                    AttrInfo.fromElement(resourceProcessor, it)
+                    AttrInfo.fromElement(resourceProcessor, elementUtils, typeUtils, it)
                 }
 
         if (allAttrs.isEmpty()) {
