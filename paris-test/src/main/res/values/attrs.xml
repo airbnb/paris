@@ -2,15 +2,19 @@
 <resources>
 
     <declare-styleable name="MyView">
-        <attr name="title" format="string" />
-        <attr name="titleStyle" format="reference" />
+        <attr name="active" format="boolean" />
+        <attr name="factor" format="float" />
+        <attr name="image" format="reference" />
+        <attr name="index" format="integer" />
         <attr name="subtitle" format="string" />
         <attr name="subtitleStyle" format="reference" />
+        <attr name="title" format="string" />
+        <attr name="titleStyle" format="reference" />
         <attr name="verticalPadding" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="Font">
-        <attr name="font" format="string" />
+    <declare-styleable name="ManuallyWritten">
+        <attr name="attribute1" format="string" />
     </declare-styleable>
 
 </resources>

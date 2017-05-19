@@ -24,7 +24,7 @@ internal object Proust {
     }
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, styleableClassesTree: StyleableClassesTree, rClassName: ClassName) {
+    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, styleableClassesTree: StyleableClassesTree, rClassName: ClassName?) {
         if (styleableClasses.isEmpty()) {
             return
         }
@@ -35,7 +35,7 @@ internal object Proust {
     }
 
     @Throws(IOException::class)
-    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, classInfo: StyleableClassInfo, styleableClassesTree: StyleableClassesTree, rClassName: ClassName) {
+    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, classInfo: StyleableClassInfo, styleableClassesTree: StyleableClassesTree, rClassName: ClassName?) {
         val className = getClassName(classInfo)
 
         val styleTypeBuilder = TypeSpec.classBuilder(className)
@@ -44,8 +44,9 @@ internal object Proust {
                 .addMethod(buildConstructorMethod(classInfo))
 
         if (!classInfo.resourceName.isEmpty()) {
+            // TODO  Error if no @Attrs is set but we have a resource name
             styleTypeBuilder
-                    .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
+                    .addMethod(buildAttributesMethod(rClassName!!, classInfo.resourceName))
                     .addMethod(buildProcessAttributeMethod(classInfo.attrs))
         }
 
@@ -64,7 +65,7 @@ internal object Proust {
                     typeUtils,
                     styleableClasses,
                     typeUtils.asElement(attrInfo.type) as TypeElement)
-            styleTypeBuilder.addMethod(buildChangeMethod(attrInfo, styleApplierClassName))
+            styleTypeBuilder.addMethod(buildSubMethod(attrInfo, styleApplierClassName))
         }
 
         JavaFile.builder(className.packageName(), styleTypeBuilder.build())
@@ -125,7 +126,7 @@ internal object Proust {
             methodSpecBuilder.beginControlFlow((if (first) "" else "else ") + "if (index == \$L)", attr.id.code)
             if (attr.isView) {
                 assert(attr.format == Format.DEFAULT || attr.format == Format.RESOURCE_ID)
-                methodSpecBuilder.addStatement("\$T.change(getView().\$N).apply(a.\$L)", PARIS_CLASS_NAME, attr.name, statement)
+                methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply(a.\$L)", PARIS_CLASS_NAME, attr.name, statement)
             } else if (attr.isMethod) {
                 methodSpecBuilder.addStatement("getView().\$N(a.\$L)", attr.name, statement)
             } else {
@@ -138,8 +139,8 @@ internal object Proust {
         return methodSpecBuilder.build()
     }
 
-    private fun buildChangeMethod(attrInfo: AttrInfo, styleApplierClassName: ClassName): MethodSpec {
-        return MethodSpec.methodBuilder("change" + attrInfo.name.capitalize())
+    private fun buildSubMethod(attrInfo: AttrInfo, styleApplierClassName: ClassName): MethodSpec {
+        return MethodSpec.methodBuilder(attrInfo.name)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
                 .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.name)

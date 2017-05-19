@@ -61,11 +61,10 @@ class ParisProcessor : AbstractProcessor() {
                     AttrInfo.fromElement(resourceProcessor, elementUtils, typeUtils, it)
                 }
 
-        // TODO  It's possible for all attrs to genuinely be empty if Styleable classes only declare dependencies
-        if (allAttrs.isEmpty()) {
-            return true
+        var rClassName: ClassName? = null
+        if (!allAttrs.isEmpty()) {
+            rClassName = allAttrs[0].id.className.enclosingClassName()
         }
-        val rClassName: ClassName = allAttrs[0].id.className.enclosingClassName()
 
         val styleableClassesInfo: MutableList<StyleableClassInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Styleable::class.java)

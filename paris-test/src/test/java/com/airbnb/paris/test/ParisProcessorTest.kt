@@ -10,6 +10,21 @@ import org.junit.Test
 
 class ParisProcessorTest {
 
+    fun assertCase(folder: String) {
+        val view = JavaFileObjects.forResource("$folder/MyView.java")
+        val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java")
+        val generatedStyleApplierClass = JavaFileObjects.forResource("$folder/MyViewStyleApplier.java")
+
+        assert_().about(javaSource())
+                .that(view)
+                .processedWith(ParisProcessor())
+                .compilesWithoutError()
+                .and()
+                .generatesSources(generatedParisClass)
+                .and()
+                .generatesSources(generatedStyleApplierClass)
+    }
+
     @Test
     fun basic() {
         val view = JavaFileObjects.forResource("MyView.java")
@@ -27,15 +42,17 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun dependenciesWithNoAttributes() {
-        val view = JavaFileObjects.forResource("MyViewDependencyNoAttrs.java")
-        val generatedStyleApplierClass = JavaFileObjects.forResource("MyViewDependencyNoAttrsStyleApplier.java")
+    fun attributeAndDependency() {
+        assertCase("attr_dependency")
+    }
 
-        assert_().about(javaSource())
-                .that(view)
-                .processedWith(ParisProcessor())
-                .compilesWithoutError()
-                .and()
-                .generatesSources(generatedStyleApplierClass)
+    @Test
+    fun fields() {
+        assertCase("fields")
+    }
+
+    @Test
+    fun noAttributesAndDependency() {
+        assertCase("no_attrs_dependency")
     }
 }

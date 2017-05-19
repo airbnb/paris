@@ -19,11 +19,11 @@ internal object ParisWriter {
 
         val parisTypeBuilder = TypeSpec.classBuilder(PARIS_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .addMethod(buildChangeMethod("com.airbnb.paris", "ViewStyleApplier", ClassName.get("android.view", "View")))
-                .addMethod(buildChangeMethod("com.airbnb.paris", "TextViewStyleApplier", ClassName.get("android.widget", "TextView")))
+                .addMethod(buildStyleMethod("com.airbnb.paris", "ViewStyleApplier", ClassName.get("android.view", "View")))
+                .addMethod(buildStyleMethod("com.airbnb.paris", "TextViewStyleApplier", ClassName.get("android.widget", "TextView")))
 
         for (styleableClassInfo in styleableClassesInfo) {
-            parisTypeBuilder.addMethod(buildChangeMethod(styleableClassInfo))
+            parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
         }
 
         JavaFile.builder(PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
@@ -31,18 +31,18 @@ internal object ParisWriter {
                 .writeTo(filer)
     }
 
-    private fun buildChangeMethod(styleableClassInfo: StyleableClassInfo): MethodSpec {
-        return buildChangeMethod(
+    private fun buildStyleMethod(styleableClassInfo: StyleableClassInfo): MethodSpec {
+        return buildStyleMethod(
                 styleableClassInfo.packageName,
                 String.format(Locale.US, STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.name),
                 TypeName.get(styleableClassInfo.type))
     }
 
-    private fun buildChangeMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {
+    private fun buildStyleMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {
         val styleApplierClassName = ClassName.get(
                 styleApplierPackageName,
                 styleApplierSimpleName)
-        return MethodSpec.methodBuilder("change")
+        return MethodSpec.methodBuilder("style")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(styleApplierClassName)
                 .addParameter(ParameterSpec.builder(viewParameterTypeName, "view").build())

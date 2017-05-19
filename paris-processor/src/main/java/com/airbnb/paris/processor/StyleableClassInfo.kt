@@ -37,10 +37,7 @@ internal class StyleableClassInfo private constructor(
                         for ((key, value) in it.elementValues) {
                             if ("dependencies" == key.simpleName.toString()) {
                                 @Suppress("UNCHECKED_CAST")
-                                dependencies = (value.value as List<Attribute.Class?>).map {
-                                    val dependencyClassQualifiedName = it.toString().removeSuffix(".class")
-                                    elementUtils.getTypeElement(dependencyClassQualifiedName).asType()
-                                }
+                                dependencies = (value.value as List<Attribute.Class>).map { it.value }
                             }
                         }
                     }

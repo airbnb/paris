@@ -17,10 +17,6 @@ public class MyView extends View {
     @Attr(R2.styleable.MyView_titleStyle)
     TextView title;
 
-    @Attr(R2.styleable.MyView_verticalPadding)
-    @Px
-    int verticalPadding;
-
     public MyView(Context context) {
         super(context);
     }
@@ -45,6 +41,11 @@ public class MyView extends View {
 
     @Attr(R2.styleable.MyView_subtitleStyle)
     public void setSubtitleStyle(@StyleRes int styleRes) {
+
+    }
+
+    @Attr(R2.styleable.MyView_verticalPadding)
+    public void setVerticalPadding(@Px int padding) {
 
     }
 }

@@ -32,6 +32,8 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
             applyParent(style)
         }
 
+        applyDependencies(style)
+
         beforeProcessAttributes(style)
 
         val attributes = attributes()
