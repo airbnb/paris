@@ -103,8 +103,7 @@ internal object Proust {
         return MethodSpec.methodBuilder("change" + attrInfo.name.capitalize())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(styleApplierClassName)
-                .addParameter(ParameterSpec.builder(TypeName.get(attrInfo.type), "view").build())
-                .addStatement("return new \$T(view)", styleApplierClassName)
+                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.name)
                 .build()
     }
 

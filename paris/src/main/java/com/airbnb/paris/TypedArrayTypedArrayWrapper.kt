@@ -50,6 +50,10 @@ class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : Type
         return typedArray.getString(index)
     }
 
+    override fun getText(index: Int): CharSequence {
+        return typedArray.getText(index)
+    }
+
     override fun recycle() {
         typedArray.recycle()
     }

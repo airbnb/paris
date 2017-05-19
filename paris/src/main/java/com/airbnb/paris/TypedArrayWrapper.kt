@@ -29,5 +29,7 @@ interface TypedArrayWrapper {
 
     fun getString(@StyleableRes index: Int): String
 
+    fun getText(@StyleableRes index: Int): CharSequence
+
     fun recycle()
 }
