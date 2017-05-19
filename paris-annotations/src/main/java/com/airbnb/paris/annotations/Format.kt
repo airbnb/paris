@@ -28,6 +28,30 @@ enum class Format(val statement: String) {
 
     companion object {
 
+        private val RES_ANNOTATIONS = hashSetOf(
+                "AnimatorRes",
+                "AnimRes",
+                "AnyRes",
+                "ArrayRes",
+                "AttrRes",
+                "BoolRes",
+                "ColorRes",
+                "DimenRes",
+                "DrawableRes",
+                "FontRes",
+                "FractionRes",
+                "IdRes",
+                "IntegerRes",
+                "InterpolatorRes",
+                "LayoutRes",
+                "PluralsRes",
+                "RawRes",
+                "StringRes",
+                "StyleableRes",
+                "StyleRes",
+                "TransitionRes",
+                "XmlRes")
+
         fun forField(elementUtils: Elements, typeUtils: Types, element: Element): Format {
             val type = element.asType()
             val viewType = elementUtils.getTypeElement("android.view.View").asType()
@@ -46,6 +70,10 @@ enum class Format(val statement: String) {
         private fun forEitherFieldOrMethod(element: Element): Format {
             if (element.hasAnnotation("Px")) {
                 return DIMENSION_PIXEL_SIZE
+            }
+
+            if (element.hasAnyAnnotation(RES_ANNOTATIONS)) {
+                return RESOURCE_ID
             }
 
             val type = element.asType()
