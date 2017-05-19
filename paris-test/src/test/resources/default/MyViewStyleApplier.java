@@ -20,8 +20,17 @@ public final class MyViewStyleApplier extends StyleApplier<MyView> {
     @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
         Resources res = getView().getContext().getResources();
+        if (a.hasValue(R.styleable.MyView_active)) {
+            getView().active = a.getBoolean(R.styleable.MyView_active, false);
+        }
+        else {
+            getView().active = res.getBoolean(R.bool.active);
+        }
         if (a.hasValue(R.styleable.MyView_title)) {
             getView().setTitle(a.getString(R.styleable.MyView_title));
+        }
+        else {
+            getView().setTitle(res.getString(R.string.app_name));
         }
     }
 

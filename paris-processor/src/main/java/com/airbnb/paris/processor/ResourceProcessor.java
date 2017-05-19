@@ -35,8 +35,8 @@ class ResourceProcessor {
     /**
      * Returns the {@link Id} that is used as an annotation value of the given {@link Element}
      */
-    Id getId(Class<? extends Annotation> annotation, Element element, Object value) {
-        Map<Object, Id> results = getResults(annotation, element);
+    Id getId(Class<? extends Annotation> annotation, Element element, int value) {
+        Map<Integer, Id> results = getResults(annotation, element);
         if (results.containsKey(value)) {
             return results.get(value);
         } else {
@@ -54,7 +54,7 @@ class ResourceProcessor {
         return null;
     }
 
-    private Map<Object, Id> getResults(Class<? extends Annotation> annotation, Element element) {
+    private Map<Integer, Id> getResults(Class<? extends Annotation> annotation, Element element) {
         AnnotationScanner scanner = new AnnotationScanner();
         JCTree tree = (JCTree) trees.getTree(element, getMirror(element, annotation));
         if (tree != null) { // tree can be null if the references are compiled types and not source
@@ -65,7 +65,7 @@ class ResourceProcessor {
 
     private class AnnotationScanner extends TreeScanner {
 
-        private final Map<Object, Id> results = new HashMap<>();
+        private final Map<Integer, Id> results = new HashMap<>();
 
         @Override public void visitSelect(JCTree.JCFieldAccess jcFieldAccess) {
             Symbol symbol = jcFieldAccess.sym;
@@ -86,15 +86,15 @@ class ResourceProcessor {
             String resourceName = symbol.getSimpleName().toString();
 
             Object value = symbol.getConstantValue();
-            if (!(value instanceof Integer || value instanceof int[])) {
+            if (!(value instanceof Integer)) {
                 return;
             }
 
-            Id id = new Id(value, getClassName(rClass, rTypeClass), resourceName);
+            Id id = new Id((int) value, getClassName(rClass, rTypeClass), resourceName);
             results.put(id.value, id);
         }
 
-        Map<Object, Id> results() {
+        Map<Integer, Id> results() {
             return results;
         }
     }

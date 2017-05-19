@@ -5,26 +5,26 @@ import javax.lang.model.element.ExecutableElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-enum class Format(val statement: String) {
+enum class Format(val resourcesMethodStatement: String, val typedArrayMethodStatement: String) {
 
-    DEFAULT(""),
+    DEFAULT("", ""),
 
-    BOOLEAN("getBoolean(\$L, false)"),
-    CHARSEQUENCE("getText(\$L)"),
-    CHARSEQUENCE_ARRAY("getTextArray(\$L)"),
-    COLOR("getColor(\$L, -1)"),
-    COLOR_STATE_LIST("getColorStateList(\$L)"),
-    DIMENSION("getDimension(\$L, -1f)"),
-    DIMENSION_PIXEL_OFFSET("getDimensionPixelOffset(\$L, -1)"),
-    DIMENSION_PIXEL_SIZE("getDimensionPixelSize(\$L, -1)"),
-    DRAWABLE("getDrawable(\$L)"),
-    FLOAT("getFloat(\$L, -1f)"),
-    FRACTION("getFraction(\$L, 1, 1, -1f)"),
-    INT("getInt(\$L, -1)"),
-    INTEGER("getInteger(\$L, -1)"),
-    NON_RESOURCE_STRING("getNonResourceString(\$L)"),
-    RESOURCE_ID("getResourceId(\$L, -1)"),
-    STRING("getString(\$L)");
+    BOOLEAN("getBoolean(\$L)", "getBoolean(\$L, false)"),
+    CHARSEQUENCE("getText(\$L)", "getText(\$L)"),
+    CHARSEQUENCE_ARRAY("getTextArray(\$L)", "getTextArray(\$L)"),
+    COLOR("getColor(\$L)", "getColor(\$L, -1)"),
+    COLOR_STATE_LIST("getColorStateList(\$L)", "getColorStateList(\$L)"),
+    DIMENSION("getDimension(\$L)", "getDimension(\$L, -1f)"),
+    DIMENSION_PIXEL_OFFSET("getDimensionPixelOffset(\$L)", "getDimensionPixelOffset(\$L, -1)"),
+    DIMENSION_PIXEL_SIZE("getDimensionPixelSize(\$L)", "getDimensionPixelSize(\$L, -1)"),
+    DRAWABLE("getDrawable(\$L)", "getDrawable(\$L)"),
+    FLOAT(/* TODO */"", "getFloat(\$L, -1f)"),
+    FRACTION("getFraction(\$L, 1, 1)", "getFraction(\$L, 1, 1, -1f)"),
+    INT("getInteger(\$L)", "getInt(\$L, -1)"),
+    INTEGER("getInteger(\$L)", "getInteger(\$L, -1)"),
+    NON_RESOURCE_STRING("getNonResourceString(\$L)", "getNonResourceString(\$L)"),
+    RESOURCE_ID("getResourceId(\$L)", "getResourceId(\$L, -1)"),
+    STRING("getString(\$L)", "getString(\$L)");
 
     companion object {
 

@@ -31,6 +31,11 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun default() {
+        assertCase("default")
+    }
+
+    @Test
     fun fields() {
         assertCase("fields")
     }

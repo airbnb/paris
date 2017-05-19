@@ -15,6 +15,7 @@ internal class AttrInfo private constructor(
         val name: String,
         val format: Format,
         val id: Id,
+        val defaultValueResId: Id?,
         val isMethod: Boolean,
         val isView: Boolean) {
 
@@ -30,6 +31,12 @@ internal class AttrInfo private constructor(
             val styleableResourceValue = attr.value
             var format = attr.format
             val id = resourceProcessor.getId(Attr::class.java, element, styleableResourceValue)
+
+            var defaultValueResId: Id? = null
+            if (attr.defaultValue != -1) {
+                defaultValueResId = resourceProcessor.getId(Attr::class.java, element, attr.defaultValue)
+
+            }
 
             var isView = false
             if (format == Format.DEFAULT) {
@@ -51,7 +58,7 @@ internal class AttrInfo private constructor(
 
             val isMethod = element.kind == ElementKind.METHOD
 
-            return AttrInfo(enclosingElement, type, name, format, id, isMethod, isView)
+            return AttrInfo(enclosingElement, type, name, format, id, defaultValueResId, isMethod, isView)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.airbnb.paris.test;
 
+import android.content.res.Resources;
 import com.airbnb.paris.Paris;
 import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
@@ -20,6 +21,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView> {
 
     @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
+        Resources res = getView().getContext().getResources();
         if (a.hasValue(R.styleable.MyView_active)) {
             getView().active = a.getBoolean(R.styleable.MyView_active, false);
         }
