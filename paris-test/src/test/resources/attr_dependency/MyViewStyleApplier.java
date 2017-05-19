@@ -17,9 +17,9 @@ public final class MyViewStyleApplier extends StyleApplier<MyView> {
     }
 
     @Override
-    protected void processAttribute(Style style, TypedArrayWrapper a, int index) {
-        if (index == R.styleable.MyView_title) {
-            getView().setTitle(a.getString(index));
+    protected void processAttributes(Style style, TypedArrayWrapper a) {
+        if (a.hasValue(R.styleable.MyView_title)) {
+            getView().setTitle(a.getString(R.styleable.MyView_title));
         }
     }
 

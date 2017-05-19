@@ -26,22 +26,6 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun basic() {
-        val view = JavaFileObjects.forResource("MyView.java")
-        val generatedParisClass = JavaFileObjects.forResource("Paris.java")
-        val generatedStyleApplierClass = JavaFileObjects.forResource("MyViewStyleApplier.java")
-
-        assert_().about(javaSource())
-                .that(view)
-                .processedWith(ParisProcessor())
-                .compilesWithoutError()
-                .and()
-                .generatesSources(generatedParisClass)
-                .and()
-                .generatesSources(generatedStyleApplierClass)
-    }
-
-    @Test
     fun attributeAndDependency() {
         assertCase("attr_dependency")
     }
@@ -49,6 +33,11 @@ class ParisProcessorTest {
     @Test
     fun fields() {
         assertCase("fields")
+    }
+
+    @Test
+    fun methods() {
+        assertCase("methods")
     }
 
     @Test

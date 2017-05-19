@@ -14,6 +14,10 @@ class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : Type
         return typedArray.getIndex(at)
     }
 
+    override fun hasValue(index: Int): Boolean {
+        return typedArray.hasValue(index)
+    }
+
     override fun getBoolean(index: Int, defValue: Boolean): Boolean {
         return typedArray.getBoolean(index, defValue)
     }

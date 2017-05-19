@@ -17,8 +17,8 @@ public final class ManuallyWrittenStyleApplier extends StyleApplier<View> {
     }
 
     @Override
-    protected void processAttribute(Style style, TypedArrayWrapper a, int index) {
-        if (index == R.styleable.ManuallyWritten_attribute1) {
+    protected void processAttributes(Style style, TypedArrayWrapper a) {
+        if (a.hasValue(R.styleable.ManuallyWritten_attribute1)) {
             // nothing!
         }
     }

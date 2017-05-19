@@ -10,49 +10,42 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
         IgnoreLayoutWidthAndHeight
     }
 
-    private var ignoreLayoutWidthAndHeight = false
-    private var width = StyleUtils.NOT_SET
-    private var height = StyleUtils.NOT_SET
-    private var margin = StyleUtils.NOT_SET
-    private var marginBottom = StyleUtils.NOT_SET
-    private var marginLeft = StyleUtils.NOT_SET
-    private var marginRight = StyleUtils.NOT_SET
-    private var marginTop = StyleUtils.NOT_SET
-
     override fun attributes(): IntArray {
         return R.styleable.LayoutParams
     }
 
-    override fun beforeProcessAttributes(style: Style) {
-        ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight)
-        width = StyleUtils.NOT_SET
-        height = StyleUtils.NOT_SET
-        margin = StyleUtils.NOT_SET
-        marginBottom = StyleUtils.NOT_SET
-        marginLeft = StyleUtils.NOT_SET
-        marginRight = StyleUtils.NOT_SET
-        marginTop = StyleUtils.NOT_SET
-    }
+    override fun processAttributes(style: Style, a: TypedArrayWrapper) {
+        val ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight)
+        var width = StyleUtils.NOT_SET
+        var height = StyleUtils.NOT_SET
+        var margin = StyleUtils.NOT_SET
+        var marginBottom = StyleUtils.NOT_SET
+        var marginLeft = StyleUtils.NOT_SET
+        var marginRight = StyleUtils.NOT_SET
+        var marginTop = StyleUtils.NOT_SET
 
-    override fun processAttribute(style: Style, a: TypedArrayWrapper, index: Int) {
-        if (index == R.styleable.LayoutParams_android_layout_width && !ignoreLayoutWidthAndHeight) {
-            width = a.getLayoutDimension(index, 0)
-        } else if (index == R.styleable.LayoutParams_android_layout_height && !ignoreLayoutWidthAndHeight) {
-            height = a.getLayoutDimension(index, 0)
-        } else if (index == R.styleable.LayoutParams_android_layout_margin) {
-            margin = a.getDimensionPixelSize(index, 0)
-        } else if (index == R.styleable.LayoutParams_android_layout_marginBottom) {
-            marginBottom = a.getDimensionPixelSize(index, 0)
-        } else if (index == R.styleable.LayoutParams_android_layout_marginLeft) {
-            marginLeft = a.getDimensionPixelSize(index, 0)
-        } else if (index == R.styleable.LayoutParams_android_layout_marginRight) {
-            marginRight = a.getDimensionPixelSize(index, 0)
-        } else if (index == R.styleable.LayoutParams_android_layout_marginTop) {
-            marginTop = a.getDimensionPixelSize(index, 0)
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_width) && !ignoreLayoutWidthAndHeight) {
+            width = a.getLayoutDimension(R.styleable.LayoutParams_android_layout_width, 0)
         }
-    }
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_height) && !ignoreLayoutWidthAndHeight) {
+            height = a.getLayoutDimension(R.styleable.LayoutParams_android_layout_height, 0)
+        }
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_margin)) {
+            margin = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_margin, 0)
+        }
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginBottom)) {
+            marginBottom = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginBottom, 0)
+        }
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginLeft)) {
+            marginLeft = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginLeft, 0)
+        }
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginRight)) {
+            marginRight = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginRight, 0)
+        }
+        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginTop)) {
+            marginTop = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginTop, 0)
+        }
 
-    override fun afterProcessAttributes(style: Style) {
         if ((width != StyleUtils.NOT_SET) xor (height != StyleUtils.NOT_SET)) {
             throw IllegalArgumentException("Width and height must either both be set, or not be set at all. It can't be one and not the other.")
         }

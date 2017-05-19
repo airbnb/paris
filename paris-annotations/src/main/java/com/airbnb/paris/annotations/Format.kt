@@ -9,22 +9,22 @@ enum class Format(val statement: String) {
 
     DEFAULT(""),
 
-    BOOLEAN("getBoolean(%s, false)"),
-    CHARSEQUENCE("getText(%s)"),
-    CHARSEQUENCE_ARRAY("getTextArray(%s)"),
-    COLOR("getColor(%s, -1)"),
-    COLOR_STATE_LIST("getColorStateList(%s)"),
-    DIMENSION("getDimension(%s, -1f)"),
-    DIMENSION_PIXEL_OFFSET("getDimensionPixelOffset(%s, -1)"),
-    DIMENSION_PIXEL_SIZE("getDimensionPixelSize(%s, -1)"),
-    DRAWABLE("getDrawable(%s)"),
-    FLOAT("getFloat(%s, -1f)"),
-    FRACTION("getFraction(%s, 1, 1, -1f)"),
-    INT("getInt(%s, -1)"),
-    INTEGER("getInteger(%s, -1)"),
-    NON_RESOURCE_STRING("getNonResourceString(%s)"),
-    RESOURCE_ID("getResourceId(%s, -1)"),
-    STRING("getString(%s)");
+    BOOLEAN("getBoolean(\$L, false)"),
+    CHARSEQUENCE("getText(\$L)"),
+    CHARSEQUENCE_ARRAY("getTextArray(\$L)"),
+    COLOR("getColor(\$L, -1)"),
+    COLOR_STATE_LIST("getColorStateList(\$L)"),
+    DIMENSION("getDimension(\$L, -1f)"),
+    DIMENSION_PIXEL_OFFSET("getDimensionPixelOffset(\$L, -1)"),
+    DIMENSION_PIXEL_SIZE("getDimensionPixelSize(\$L, -1)"),
+    DRAWABLE("getDrawable(\$L)"),
+    FLOAT("getFloat(\$L, -1f)"),
+    FRACTION("getFraction(\$L, 1, 1, -1f)"),
+    INT("getInt(\$L, -1)"),
+    INTEGER("getInteger(\$L, -1)"),
+    NON_RESOURCE_STRING("getNonResourceString(\$L)"),
+    RESOURCE_ID("getResourceId(\$L, -1)"),
+    STRING("getString(\$L)");
 
     companion object {
 

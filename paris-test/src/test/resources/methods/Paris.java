@@ -6,16 +6,15 @@ import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 
 public final class Paris {
-
-    public static ViewStyleApplier change(View view) {
+    public static ViewStyleApplier style(View view) {
         return new ViewStyleApplier(view);
     }
 
-    public static TextViewStyleApplier change(TextView view) {
+    public static TextViewStyleApplier style(TextView view) {
         return new TextViewStyleApplier(view);
     }
 
-    public static MyViewStyleApplier change(MyView view) {
+    public static MyViewStyleApplier style(MyView view) {
         return new MyViewStyleApplier(view);
     }
 }

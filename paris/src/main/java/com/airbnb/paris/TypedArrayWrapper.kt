@@ -11,6 +11,8 @@ interface TypedArrayWrapper {
 
     fun getIndex(at: Int): Int
 
+    fun hasValue(index: Int): Boolean
+
     fun getBoolean(@StyleableRes index: Int, defValue: Boolean): Boolean
 
     fun getColorStateList(@StyleableRes index: Int): ColorStateList

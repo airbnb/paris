@@ -3,7 +3,6 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.annotations.Format
 import com.squareup.javapoet.*
 import java.io.IOException
-import java.util.*
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
@@ -47,7 +46,7 @@ internal object Proust {
             // TODO  Error if no @Attrs is set but we have a resource name
             styleTypeBuilder
                     .addMethod(buildAttributesMethod(rClassName!!, classInfo.resourceName))
-                    .addMethod(buildProcessAttributeMethod(classInfo.attrs))
+                    .addMethod(buildProcessAttributesMethod(classInfo.attrs))
         }
 
         val parentStyleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
@@ -112,28 +111,25 @@ internal object Proust {
                 .build()
     }
 
-    private fun buildProcessAttributeMethod(attrs: List<AttrInfo>): MethodSpec {
-        val methodSpecBuilder = MethodSpec.methodBuilder("processAttribute")
+    private fun buildProcessAttributesMethod(attrs: List<AttrInfo>): MethodSpec {
+        val methodSpecBuilder = MethodSpec.methodBuilder("processAttributes")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
                 .addParameter(ParameterSpec.builder(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
-                .addParameter(ParameterSpec.builder(Integer.TYPE, "index").build())
 
-        var first = true
         for (attr in attrs) {
-            val statement = String.format(Locale.US, attr.format.statement, "index")
-            methodSpecBuilder.beginControlFlow((if (first) "" else "else ") + "if (index == \$L)", attr.id.code)
+            val statement = attr.format.statement
+            methodSpecBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.id.code)
             if (attr.isView) {
                 assert(attr.format == Format.DEFAULT || attr.format == Format.RESOURCE_ID)
-                methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply(a.\$L)", PARIS_CLASS_NAME, attr.name, statement)
+                methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply(a.$statement)", PARIS_CLASS_NAME, attr.name, attr.id.code)
             } else if (attr.isMethod) {
-                methodSpecBuilder.addStatement("getView().\$N(a.\$L)", attr.name, statement)
+                methodSpecBuilder.addStatement("getView().\$N(a.$statement)", attr.name, attr.id.code)
             } else {
-                methodSpecBuilder.addStatement("getView().\$N = a.\$L", attr.name, statement)
+                methodSpecBuilder.addStatement("getView().\$N = a.$statement", attr.name, attr.id.code)
             }
             methodSpecBuilder.endControlFlow()
-            first = false
         }
 
         return methodSpecBuilder.build()

@@ -15,6 +15,10 @@ class SparseIntArrayTypedArrayWrapper constructor(val resources: Resources, val 
         return attributeMap.valueAt(at)
     }
 
+    override fun hasValue(index: Int): Boolean {
+        return attributeMap.get(index, -1) != -1
+    }
+
     override fun getBoolean(index: Int, defValue: Boolean): Boolean {
         return resources.getBoolean(attributeMap[index])
     }

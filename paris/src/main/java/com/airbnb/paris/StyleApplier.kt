@@ -34,20 +34,14 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
 
         applyDependencies(style)
 
-        beforeProcessAttributes(style)
-
         val attributes = attributes()
         if (attributes != null) {
             val typedArray = style.obtainStyledAttributes(view.context, attributes)
             if (typedArray != null) {
-                for (i in 0..typedArray.getIndexCount() - 1) {
-                    processAttribute(style, typedArray, typedArray.getIndex(i))
-                }
+                processAttributes(style, typedArray)
                 typedArray.recycle()
             }
         }
-
-        afterProcessAttributes(style)
 
         return this
     }
@@ -60,9 +54,5 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
 
     protected open fun applyDependencies(style: Style) {}
 
-    protected open fun beforeProcessAttributes(style: Style) {}
-
-    protected open fun processAttribute(style: Style, a: TypedArrayWrapper, index: Int) {}
-
-    protected open fun afterProcessAttributes(style: Style) {}
+    protected open fun processAttributes(style: Style, a: TypedArrayWrapper) {}
 }

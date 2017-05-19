@@ -22,8 +22,7 @@ public class MyView extends View {
     @Attr(R2.styleable.MyView_titleStyle) TextView titleView;
     @Attr(R2.styleable.MyView_subtitle) String subtitleText;
     @Attr(R2.styleable.MyView_subtitleStyle) TextView subtitleView;
-    // TODO
-    //@Attr(R2.styleable.MyView_verticalPadding) @DimenRes int verticalPaddingRes;
+    @Attr(R2.styleable.MyView_verticalPadding) @DimenRes int verticalPaddingRes;
     @Attr(R2.styleable.MyView_verticalPadding) @Px int verticalPaddingPx;
 
     public MyView(Context context) {
