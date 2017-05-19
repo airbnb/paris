@@ -61,6 +61,7 @@ class ParisProcessor : AbstractProcessor() {
                     AttrInfo.fromElement(resourceProcessor, elementUtils, typeUtils, it)
                 }
 
+        // TODO  It's possible for all attrs to genuinely be empty if Styleable classes only declare dependencies
         if (allAttrs.isEmpty()) {
             return true
         }

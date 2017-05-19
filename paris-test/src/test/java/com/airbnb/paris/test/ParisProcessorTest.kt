@@ -25,4 +25,17 @@ class ParisProcessorTest {
                 .and()
                 .generatesSources(generatedStyleApplierClass)
     }
+
+    @Test
+    fun dependenciesWithNoAttributes() {
+        val view = JavaFileObjects.forResource("MyViewDependencyNoAttrs.java")
+        val generatedStyleApplierClass = JavaFileObjects.forResource("MyViewDependencyNoAttrsStyleApplier.java")
+
+        assert_().about(javaSource())
+                .that(view)
+                .processedWith(ParisProcessor())
+                .compilesWithoutError()
+                .and()
+                .generatesSources(generatedStyleApplierClass)
+    }
 }

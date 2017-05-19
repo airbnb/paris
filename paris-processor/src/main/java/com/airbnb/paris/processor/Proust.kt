@@ -42,8 +42,12 @@ internal object Proust {
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, TypeName.get(classInfo.type)))
                 .addMethod(buildConstructorMethod(classInfo))
-                .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
-                .addMethod(buildProcessAttributeMethod(classInfo.attrs))
+
+        if (!classInfo.resourceName.isEmpty()) {
+            styleTypeBuilder
+                    .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
+                    .addMethod(buildProcessAttributeMethod(classInfo.attrs))
+        }
 
         val parentStyleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
                 typeUtils,

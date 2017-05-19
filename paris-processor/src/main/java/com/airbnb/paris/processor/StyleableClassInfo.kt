@@ -45,6 +45,8 @@ internal class StyleableClassInfo private constructor(
                         }
                     }
 
+            // TODO  Throw exception if no resourceName AND no dependencies
+
             return StyleableClassInfo(attrs, styleableAttrs, packageName, name, type, resourceName, dependencies)
         }
     }
