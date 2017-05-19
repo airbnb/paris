@@ -66,16 +66,18 @@ class ParisProcessor : AbstractProcessor() {
         }
         val rClassName: ClassName = allAttrs[0].id.className.enclosingClassName()
 
-        val styleableClasses: MutableList<StyleableClassInfo> = ArrayList()
+        val styleableClassesInfo: MutableList<StyleableClassInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Styleable::class.java)
-                .mapTo(styleableClasses) { element ->
+                .mapTo(styleableClassesInfo) { element ->
                     val attrs = allAttrs.filter { element == it.enclosingElement }
                     StyleableClassInfo.fromElement(element, attrs)
                 }
 
+        val styleableClassesTree = StyleableClassesTree(typeUtils, styleableClassesInfo)
+
         try {
-            ParisWriter.writeFrom(filer, styleableClasses)
-            Proust.writeFrom(filer, styleableClasses, rClassName)
+            ParisWriter.writeFrom(filer, styleableClassesInfo)
+            Proust.writeFrom(filer, typeUtils, styleableClassesInfo, styleableClassesTree, rClassName)
         } catch (e: IOException) {
             logError(e)
         }

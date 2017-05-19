@@ -13,10 +13,7 @@ import com.airbnb.paris.annotations.Styleable;
 public class MyView extends View {
 
     @Attr(R2.styleable.MyView_titleStyle)
-    TextView titleText;
-
-    @Attr(R2.styleable.MyView_subtitle)
-    String subtitle;
+    TextView title;
 
     @Attr(R2.styleable.MyView_verticalPadding)
     @Px
@@ -36,6 +33,11 @@ public class MyView extends View {
 
     @Attr(R2.styleable.MyView_title)
     public void setTitle(String title) {
+
+    }
+
+    @Attr(R2.styleable.MyView_subtitle)
+    public void setSubitle(String subtitle) {
 
     }
 }

@@ -6,6 +6,8 @@ import java.io.IOException
 import java.util.*
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Types
 
 internal object Proust {
 
@@ -22,18 +24,18 @@ internal object Proust {
     }
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, styleableClasses: List<StyleableClassInfo>, rClassName: ClassName) {
+    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, styleableClassesTree: StyleableClassesTree, rClassName: ClassName) {
         if (styleableClasses.isEmpty()) {
             return
         }
 
         for (styleableClassInfo in styleableClasses) {
-            writeStyleClass(filer, styleableClassInfo, rClassName)
+            writeStyleClass(filer, typeUtils, styleableClasses, styleableClassInfo, styleableClassesTree, rClassName)
         }
     }
 
     @Throws(IOException::class)
-    private fun writeStyleClass(filer: Filer, classInfo: StyleableClassInfo, rClassName: ClassName) {
+    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, classInfo: StyleableClassInfo, styleableClassesTree: StyleableClassesTree, rClassName: ClassName) {
         val className = getClassName(classInfo)
 
         val adapterTypeBuilder = TypeSpec.classBuilder(className)
@@ -42,6 +44,11 @@ internal object Proust {
                 .addMethod(buildConstructorMethod(classInfo))
                 .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
                 .addMethod(buildProcessAttributeMethod(classInfo.attrs))
+
+        for (attrInfo in classInfo.styleableAttrs) {
+            val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(typeUtils, styleableClasses, typeUtils.asElement(attrInfo.type) as TypeElement)
+            adapterTypeBuilder.addMethod(buildChangeMethod(attrInfo, styleApplierClassName))
+        }
 
         JavaFile.builder(className.packageName(), adapterTypeBuilder.build())
                 .build()
@@ -90,6 +97,15 @@ internal object Proust {
         }
 
         return methodSpecBuilder.build()
+    }
+
+    private fun buildChangeMethod(attrInfo: AttrInfo, styleApplierClassName: ClassName): MethodSpec {
+        return MethodSpec.methodBuilder("change" + attrInfo.name.capitalize())
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(styleApplierClassName)
+                .addParameter(ParameterSpec.builder(TypeName.get(attrInfo.type), "view").build())
+                .addStatement("return new \$T(view)", styleApplierClassName)
+                .build()
     }
 
     private fun assert(assertion: Boolean) {
