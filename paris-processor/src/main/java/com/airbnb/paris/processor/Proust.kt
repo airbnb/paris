@@ -38,19 +38,28 @@ internal object Proust {
     private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, classInfo: StyleableClassInfo, styleableClassesTree: StyleableClassesTree, rClassName: ClassName) {
         val className = getClassName(classInfo)
 
-        val adapterTypeBuilder = TypeSpec.classBuilder(className)
+        val styleTypeBuilder = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, TypeName.get(classInfo.type)))
                 .addMethod(buildConstructorMethod(classInfo))
                 .addMethod(buildAttributesMethod(rClassName, classInfo.resourceName))
                 .addMethod(buildProcessAttributeMethod(classInfo.attrs))
 
+        val parentStyleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
+                typeUtils,
+                styleableClasses,
+                typeUtils.asElement((typeUtils.asElement(classInfo.type) as TypeElement).superclass) as TypeElement)
+        styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
+
         for (attrInfo in classInfo.styleableAttrs) {
-            val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(typeUtils, styleableClasses, typeUtils.asElement(attrInfo.type) as TypeElement)
-            adapterTypeBuilder.addMethod(buildChangeMethod(attrInfo, styleApplierClassName))
+            val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
+                    typeUtils,
+                    styleableClasses,
+                    typeUtils.asElement(attrInfo.type) as TypeElement)
+            styleTypeBuilder.addMethod(buildChangeMethod(attrInfo, styleApplierClassName))
         }
 
-        JavaFile.builder(className.packageName(), adapterTypeBuilder.build())
+        JavaFile.builder(className.packageName(), styleTypeBuilder.build())
                 .build()
                 .writeTo(filer)
     }
@@ -60,6 +69,15 @@ internal object Proust {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(TypeName.get(classInfo.type), "view")
                 .addStatement("super(view)")
+                .build()
+    }
+
+    private fun buildApplyParentMethod(parentStyleApplierClassName: ClassName): MethodSpec {
+        return MethodSpec.methodBuilder("applyParent")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PROTECTED)
+                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
+                .addStatement("new \$T(getView()).apply(style)", parentStyleApplierClassName)
                 .build()
     }
 
@@ -101,7 +119,7 @@ internal object Proust {
 
     private fun buildChangeMethod(attrInfo: AttrInfo, styleApplierClassName: ClassName): MethodSpec {
         return MethodSpec.methodBuilder("change" + attrInfo.name.capitalize())
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
                 .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.name)
                 .build()

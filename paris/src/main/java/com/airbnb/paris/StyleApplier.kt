@@ -20,14 +20,14 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
         // Assumes that if the Style has an AttributeSet it's being applied during the View
         // initialization, in which case parents should be making the call themselves
         if (style.attributeSet == null) {
-            applyParents(style)
+            applyParent(style)
         }
 
         beforeProcessAttributes(style)
 
         val typedArray = style.obtainStyledAttributes(view.context, attributes())
         if (typedArray != null) {
-            for (i in 0..typedArray.getIndexCount()) {
+            for (i in 0..typedArray.getIndexCount()-1) {
                 processAttribute(style, typedArray, typedArray.getIndex(i))
             }
         }
@@ -35,7 +35,7 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
         afterProcessAttributes(style)
     }
 
-    protected open fun applyParents(style: Style) {}
+    protected open fun applyParent(style: Style) {}
 
     protected open fun beforeProcessAttributes(style: Style) {}
 

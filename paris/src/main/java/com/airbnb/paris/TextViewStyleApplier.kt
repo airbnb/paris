@@ -11,7 +11,7 @@ open class TextViewStyleApplier(view: TextView) : StyleApplier<TextView>(view) {
         return R.styleable.TextView
     }
 
-    override fun applyParents(style: Style) {
+    override fun applyParent(style: Style) {
         ViewStyleApplier(view).apply(style)
     }
 
