@@ -11,7 +11,7 @@ import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.test.MyViewStyleApplier;
 
-@Styleable(value = "MyView")
+@Styleable(value = "MyView", dependencies = FontStyleApplier.class)
 public class MyView extends View {
 
     @Attr(R2.styleable.MyView_titleStyle)

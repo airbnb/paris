@@ -70,7 +70,7 @@ class ParisProcessor : AbstractProcessor() {
         roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                 .mapTo(styleableClassesInfo) { element ->
                     val attrs = allAttrs.filter { element == it.enclosingElement }
-                    StyleableClassInfo.fromElement(element, attrs)
+                    StyleableClassInfo.fromElement(elementUtils, element, attrs)
                 }
 
         val styleableClassesTree = StyleableClassesTree(typeUtils, styleableClassesInfo)

@@ -9,4 +9,8 @@
         <attr name="verticalPadding" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="Font">
+        <attr name="font" format="string" />
+    </declare-styleable>
+
 </resources>

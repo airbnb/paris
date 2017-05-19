@@ -51,6 +51,10 @@ internal object Proust {
                 typeUtils.asElement((typeUtils.asElement(classInfo.type) as TypeElement).superclass) as TypeElement)
         styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
 
+        if (classInfo.dependencies.isNotEmpty()) {
+            styleTypeBuilder.addMethod(buildApplyDependenciesMethod(classInfo))
+        }
+
         for (attrInfo in classInfo.styleableAttrs) {
             val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
                     typeUtils,
@@ -79,6 +83,19 @@ internal object Proust {
                 .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
                 .addStatement("new \$T(getView()).apply(style)", parentStyleApplierClassName)
                 .build()
+    }
+
+    private fun buildApplyDependenciesMethod(classInfo: StyleableClassInfo): MethodSpec {
+        val methodBuilder = MethodSpec.methodBuilder("applyDependencies")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PROTECTED)
+                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
+
+        for (dependency in classInfo.dependencies) {
+            methodBuilder.addStatement("new \$T(getView()).apply(style)", dependency)
+        }
+
+        return methodBuilder.build()
     }
 
     private fun buildAttributesMethod(rClassName: ClassName, resourceName: String): MethodSpec {

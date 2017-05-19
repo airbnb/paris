@@ -41,6 +41,7 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
             for (i in 0..typedArray.getIndexCount()-1) {
                 processAttribute(style, typedArray, typedArray.getIndex(i))
             }
+            typedArray.recycle()
         }
 
         afterProcessAttributes(style)
@@ -49,6 +50,8 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
     }
 
     protected open fun applyParent(style: Style) {}
+
+    protected open fun applyDependencies(style: Style) {}
 
     protected open fun beforeProcessAttributes(style: Style) {}
 
