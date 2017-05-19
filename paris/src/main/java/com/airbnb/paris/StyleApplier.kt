@@ -8,15 +8,26 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
 
     protected abstract fun attributes(): IntArray
 
-    fun apply(attributeSet: AttributeSet) {
-        apply(Style(attributeSet))
+    private var config: Style.Config = Style.Config.builder().build()
+
+    fun addOption(option: Style.Config.Option): StyleApplier<T> {
+        config = config.toBuilder().addOption(option).build()
+        return this
     }
 
-    fun apply(@StyleRes styleRes: Int) {
-        apply(Style(styleRes))
+    fun apply(attributeSet: AttributeSet?): StyleApplier<T> {
+        // We allow null AttributeSets purely for convenience here
+        if (attributeSet != null) {
+            apply(Style(attributeSet, config))
+        }
+        return this
     }
 
-    fun apply(style: Style) {
+    fun apply(@StyleRes styleRes: Int): StyleApplier<T> {
+        return apply(Style(styleRes, config))
+    }
+
+    fun apply(style: Style): StyleApplier<T> {
         // Assumes that if the Style has an AttributeSet it's being applied during the View
         // initialization, in which case parents should be making the call themselves
         if (style.attributeSet == null) {
@@ -33,6 +44,8 @@ abstract class StyleApplier<out T : View>(protected val view: T) {
         }
 
         afterProcessAttributes(style)
+
+        return this
     }
 
     protected open fun applyParent(style: Style) {}

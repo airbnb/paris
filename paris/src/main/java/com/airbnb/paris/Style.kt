@@ -37,11 +37,11 @@ class Style private constructor(
             override fun equals(other: Any?): Boolean
         }
 
-        class Builder() {
+        class Builder internal constructor() {
 
-            var options: MutableSet<Option> = mutableSetOf()
+            private var options: MutableSet<Option> = mutableSetOf()
 
-            constructor(config: Config) : this() {
+            internal constructor(config: Config) : this() {
                 options = config.options.toMutableSet()
             }
 
@@ -52,6 +52,12 @@ class Style private constructor(
 
             fun build(): Config {
                 return Config(options)
+            }
+        }
+
+        companion object {
+            fun builder(): Builder {
+                return Builder()
             }
         }
 

@@ -6,8 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
-import com.airbnb.paris.LayoutParamsStyle
-import com.airbnb.paris.Paris
+import com.airbnb.paris.LayoutParamsStyleApplier
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -34,7 +33,7 @@ class LayoutParamsStyleTest {
         params = view.layoutParams
         assertNull(params)
 
-        Paris.change(view).apply(R.style.Test_LayoutParams_width_height)
+        LayoutParamsStyleApplier(view).apply(R.style.Test_LayoutParams_width_height)
 
         params = view.layoutParams
         assertNotNull(params)
@@ -47,8 +46,8 @@ class LayoutParamsStyleTest {
         params = view.layoutParams
         assertNull(params)
 
-        Paris.change(view)
-                .addOption(LayoutParamsStyle.Option.IgnoreLayoutWidthAndHeight)
+        LayoutParamsStyleApplier(view)
+                .addOption(LayoutParamsStyleApplier.Option.IgnoreLayoutWidthAndHeight)
                 .apply(R.style.Test_LayoutParams_width_height)
 
         params = view.layoutParams
