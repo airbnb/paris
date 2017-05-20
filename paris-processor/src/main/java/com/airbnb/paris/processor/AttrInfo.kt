@@ -10,7 +10,7 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal class AttrInfo private constructor(
-        val enclosingElement: Element,
+        private val enclosingElement: Element,
         val type: TypeMirror,
         val name: String,
         val format: Format,
@@ -60,5 +60,9 @@ internal class AttrInfo private constructor(
 
             return AttrInfo(enclosingElement, type, name, format, id, defaultValueResId, isMethod, isView)
         }
+    }
+
+    internal fun belongsTo(element: Element): Boolean {
+        return element == enclosingElement
     }
 }

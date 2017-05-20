@@ -7,7 +7,7 @@ import com.airbnb.paris.TypedArrayWrapper;
 import com.airbnb.paris.ViewStyleApplier;
 import java.lang.Override;
 
-public final class MyViewStyleApplier extends StyleApplier<MyView> {
+public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, MyView> {
     public MyViewStyleApplier(MyView view) {
         super(view);
     }

@@ -15,8 +15,15 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         new ViewStyleApplier(getView()).apply(style);
     }
 
-    @Override
-    protected void applyDependencies(Style style) {
-        new ManuallyWrittenStyleApplier(getView()).apply(style);
+    public MyViewStyleApplier applyRed() {
+        return apply(R.style.MyView_Red);
+    }
+
+    public MyViewStyleApplier applyGreen() {
+        return apply(R.style.MyView_Green);
+    }
+
+    public MyViewStyleApplier applyBlue() {
+        return apply(R.style.MyView_Blue);
     }
 }

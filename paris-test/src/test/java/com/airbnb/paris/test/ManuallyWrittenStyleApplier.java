@@ -6,7 +6,7 @@ import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
 
-public final class ManuallyWrittenStyleApplier extends StyleApplier<View> {
+public final class ManuallyWrittenStyleApplier extends StyleApplier<ManuallyWrittenStyleApplier, View> {
     public ManuallyWrittenStyleApplier(View view) {
         super(view);
     }

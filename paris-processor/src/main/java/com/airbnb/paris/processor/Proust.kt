@@ -14,9 +14,7 @@ internal object Proust {
     private val PARIS_CLASS_NAME = ClassName.get("com.airbnb.paris", "Paris")
     private val STYLE_CLASS_NAME = ClassName.get("com.airbnb.paris", "Style")
     private val STYLE_APPLIER_CLASS_NAME = ClassName.get("com.airbnb.paris", "StyleApplier")
-    private val ATTRIBUTE_SET_CLASS_NAME = ClassName.get("android.util", "AttributeSet")
     private val TYPED_ARRAY_WRAPPER_CLASS_NAME = ClassName.get("com.airbnb.paris", "TypedArrayWrapper")
-    private val CONFIG_CLASS_NAME = ClassName.get("com.airbnb.paris.Style", "Config")
     private val RESOURCES_CLASS_NAME = ClassName.get("android.content.res", "Resources")
 
     fun getClassName(classInfo: StyleableClassInfo): ClassName {
@@ -40,7 +38,7 @@ internal object Proust {
 
         val styleTypeBuilder = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, TypeName.get(classInfo.type)))
+                .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, className, TypeName.get(classInfo.type)))
                 .addMethod(buildConstructorMethod(classInfo))
 
         if (!classInfo.resourceName.isEmpty()) {
@@ -64,8 +62,12 @@ internal object Proust {
             val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
                     typeUtils,
                     styleableClasses,
-                    typeUtils.asElement(attrInfo.type) as TypeElement)
+                    attrInfo.type.asTypeElement(typeUtils))
             styleTypeBuilder.addMethod(buildSubMethod(attrInfo, styleApplierClassName))
+        }
+
+        for (styleInfo in classInfo.styles) {
+            styleTypeBuilder.addMethod(buildApplyStyleMethod(className, styleInfo))
         }
 
         JavaFile.builder(className.packageName(), styleTypeBuilder.build())
@@ -151,6 +153,14 @@ internal object Proust {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
                 .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.name)
+                .build()
+    }
+
+    private fun buildApplyStyleMethod(styleApplierClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
+        return MethodSpec.methodBuilder("apply${styleInfo.name.capitalize()}")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(styleApplierClassName)
+                .addStatement("return apply(\$L)", styleInfo.id.code)
                 .build()
     }
 

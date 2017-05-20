@@ -22,4 +22,8 @@
         <item name="android:padding">@dimen/test_view_padding</item>
     </style>
 
+    <style name="MyView_Red" />
+    <style name="MyView_Green" />
+    <style name="MyView_Blue" />
+
 </resources>

@@ -49,4 +49,9 @@ class ParisProcessorTest {
     fun noAttributesAndDependency() {
         assertCase("no_attrs_dependency")
     }
+
+    @Test
+    fun styles() {
+        assertCase("styles")
+    }
 }

@@ -69,8 +69,8 @@ class ParisProcessor : AbstractProcessor() {
         val styleableClassesInfo: MutableList<StyleableClassInfo> = ArrayList()
         roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                 .mapTo(styleableClassesInfo) { element ->
-                    val attrs = allAttrs.filter { element == it.enclosingElement }
-                    StyleableClassInfo.fromElement(elementUtils, element, attrs)
+                    val attrs = allAttrs.filter { it.belongsTo(element) }
+                    StyleableClassInfo.fromElement(resourceProcessor, element, attrs)
                 }
 
         val styleableClassesTree = StyleableClassesTree(typeUtils, styleableClassesInfo)

@@ -10,6 +10,12 @@ public final class R2 {
         public static final int app_name = 200;
     }
 
+    public static final class style {
+        public static final int MyView_Red = 300;
+        public static final int MyView_Green = 301;
+        public static final int MyView_Blue = 302;
+    }
+
     public static final class styleable {
         public static final int ManuallyWritten_attribute1 = 0;
         public static final int MyView_active = 1;

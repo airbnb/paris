@@ -5,7 +5,7 @@ import android.text.TextUtils
 import android.util.TypedValue
 import android.widget.TextView
 
-open class TextViewStyleApplier(view: TextView) : StyleApplier<TextView>(view) {
+open class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, TextView>(view) {
 
     override fun attributes(): IntArray {
         return R.styleable.TextView

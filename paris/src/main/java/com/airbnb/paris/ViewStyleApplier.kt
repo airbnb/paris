@@ -6,7 +6,7 @@ import android.os.Build
 import android.support.annotation.DrawableRes
 import android.view.View
 
-open class ViewStyleApplier(view: View) : StyleApplier<View>(view) {
+open class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) {
 
     override fun attributes(): IntArray {
         return R.styleable.View
