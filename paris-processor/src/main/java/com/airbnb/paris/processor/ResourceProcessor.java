@@ -33,14 +33,14 @@ class ResourceProcessor {
     }
 
     /**
-     * Returns the {@link Id} that is used as an annotation value of the given {@link Element}
+     * Returns the {@link AndroidResourceId} that is used as an annotation value of the given {@link Element}
      */
-    Id getId(Class<? extends Annotation> annotation, Element element, int value) {
-        Map<Integer, Id> results = getResults(annotation, element);
+    AndroidResourceId getId(Class<? extends Annotation> annotation, Element element, int value) {
+        Map<Integer, AndroidResourceId> results = getResults(annotation, element);
         if (results.containsKey(value)) {
             return results.get(value);
         } else {
-            return new Id(value);
+            return new AndroidResourceId(value);
         }
     }
 
@@ -54,7 +54,7 @@ class ResourceProcessor {
         return null;
     }
 
-    private Map<Integer, Id> getResults(Class<? extends Annotation> annotation, Element element) {
+    private Map<Integer, AndroidResourceId> getResults(Class<? extends Annotation> annotation, Element element) {
         AnnotationScanner scanner = new AnnotationScanner();
         JCTree tree = (JCTree) trees.getTree(element, getMirror(element, annotation));
         if (tree != null) { // tree can be null if the references are compiled types and not source
@@ -65,7 +65,7 @@ class ResourceProcessor {
 
     private class AnnotationScanner extends TreeScanner {
 
-        private final Map<Integer, Id> results = new HashMap<>();
+        private final Map<Integer, AndroidResourceId> results = new HashMap<>();
 
         @Override public void visitSelect(JCTree.JCFieldAccess jcFieldAccess) {
             Symbol symbol = jcFieldAccess.sym;
@@ -90,11 +90,11 @@ class ResourceProcessor {
                 return;
             }
 
-            Id id = new Id((int) value, getClassName(rClass, rTypeClass), resourceName);
-            results.put(id.value, id);
+            AndroidResourceId androidResourceId = new AndroidResourceId((int) value, getClassName(rClass, rTypeClass), resourceName);
+            results.put(androidResourceId.getValue(), androidResourceId);
         }
 
-        Map<Integer, Id> results() {
+        Map<Integer, AndroidResourceId> results() {
             return results;
         }
     }

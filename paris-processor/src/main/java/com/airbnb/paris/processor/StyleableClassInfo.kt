@@ -21,7 +21,7 @@ internal class StyleableClassInfo private constructor(
     companion object {
 
         fun fromElement(resourceProcessor: ResourceProcessor, element: Element, attrs: List<AttrInfo>): StyleableClassInfo {
-            val styleableAttrs = attrs.filter { it.isView }
+            val styleableAttrs = attrs.filter { it.isElementStyleable }
 
             val packageName = ClassName.get(element as TypeElement).packageName()
             val name = element.getSimpleName().toString()

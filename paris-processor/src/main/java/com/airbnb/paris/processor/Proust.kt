@@ -62,7 +62,7 @@ internal object Proust {
             val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
                     typeUtils,
                     styleableClasses,
-                    attrInfo.type.asTypeElement(typeUtils))
+                    attrInfo.targetType.asTypeElement(typeUtils))
             styleTypeBuilder.addMethod(buildSubMethod(attrInfo, styleApplierClassName))
         }
 
@@ -123,13 +123,13 @@ internal object Proust {
                 .addStatement("\$T res = getView().getContext().getResources()", RESOURCES_CLASS_NAME)
 
         for (attr in attrs) {
-            methodSpecBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.id.code)
-            addStatement(methodSpecBuilder, attr, "a", attr.format.typedArrayMethodStatement, attr.id)
+            methodSpecBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.styleableResId.code)
+            addStatement(methodSpecBuilder, attr, "a", attr.targetFormat.typedArrayMethodStatement(), attr.styleableResId)
             methodSpecBuilder.endControlFlow()
 
             if (attr.defaultValueResId != null) {
                 methodSpecBuilder.beginControlFlow("else")
-                addStatement(methodSpecBuilder, attr, "res", attr.format.resourcesMethodStatement, attr.defaultValueResId)
+                addStatement(methodSpecBuilder, attr, "res", attr.targetFormat.resourcesMethodStatement(), attr.defaultValueResId)
                 methodSpecBuilder.endControlFlow()
             }
         }
@@ -137,22 +137,22 @@ internal object Proust {
         return methodSpecBuilder.build()
     }
 
-    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, attr: AttrInfo, from: String, statement: String, id: Id) {
-        if (attr.isView) {
-            assert(attr.format == Format.DEFAULT || attr.format == Format.RESOURCE_ID)
-            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)", PARIS_CLASS_NAME, attr.name, id.code)
-        } else if (attr.isMethod) {
-            methodSpecBuilder.addStatement("getView().\$N($from.$statement)", attr.name, id.code)
+    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, attr: AttrInfo, from: String, statement: String, androidResourceId: AndroidResourceId) {
+        if (attr.isElementStyleable) {
+            assert(attr.targetFormat == Format.DEFAULT || attr.targetFormat == Format.RESOURCE_ID)
+            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)", PARIS_CLASS_NAME, attr.elementName, androidResourceId.code)
+        } else if (attr.isElementAMethod) {
+            methodSpecBuilder.addStatement("getView().\$N($from.$statement)", attr.elementName, androidResourceId.code)
         } else {
-            methodSpecBuilder.addStatement("getView().\$N = $from.$statement", attr.name, id.code)
+            methodSpecBuilder.addStatement("getView().\$N = $from.$statement", attr.elementName, androidResourceId.code)
         }
     }
 
     private fun buildSubMethod(attrInfo: AttrInfo, styleApplierClassName: ClassName): MethodSpec {
-        return MethodSpec.methodBuilder(attrInfo.name)
+        return MethodSpec.methodBuilder(attrInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
-                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.name)
+                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.elementName)
                 .build()
     }
 
@@ -160,7 +160,7 @@ internal object Proust {
         return MethodSpec.methodBuilder("apply${styleInfo.name.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
-                .addStatement("return apply(\$L)", styleInfo.id.code)
+                .addStatement("return apply(\$L)", styleInfo.androidResourceId.code)
                 .build()
     }
 

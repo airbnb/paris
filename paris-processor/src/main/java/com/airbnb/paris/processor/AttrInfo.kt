@@ -5,60 +5,71 @@ import com.airbnb.paris.annotations.Format
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
+/**
+ * Element  The annotated element
+ * Target   The attribute recipient (either a field or a method parameter)
+ */
 internal class AttrInfo private constructor(
         private val enclosingElement: Element,
-        val type: TypeMirror,
-        val name: String,
-        val format: Format,
-        val id: Id,
-        val defaultValueResId: Id?,
-        val isMethod: Boolean,
-        val isView: Boolean) {
+        val targetType: TypeMirror,
+        val targetFormat: Format,
+        val elementName: String,
+        val isElementAMethod: Boolean,
+        val isElementStyleable: Boolean,
+        val styleableResId: AndroidResourceId,
+        val defaultValueResId: AndroidResourceId?) {
 
     companion object {
 
+        @Throws(ProcessorException::class)
         fun fromElement(resourceProcessor: ResourceProcessor, elementUtils: Elements, typeUtils: Types, element: Element): AttrInfo {
-            // TODO  Check that element is either a method or a field
-            // TODO  Check that element isn't private or protected
+
+            check(element.kind == ElementKind.FIELD || element.kind == ElementKind.METHOD, element) {
+                "Element annotated with @Attr must be a field or method"
+            }
+            check(!element.modifiers.contains(Modifier.PRIVATE) && !element.modifiers.contains(Modifier.PROTECTED), element) {
+                "Fields and methods annotated with @Attr can't be private or protected"
+            }
+
+            val attr = element.getAnnotation(Attr::class.java)
 
             val enclosingElement = element.enclosingElement
-            val name = element.simpleName.toString()
-            val attr = element.getAnnotation(Attr::class.java)
-            val styleableResourceValue = attr.value
-            var format = attr.format
-            val id = resourceProcessor.getId(Attr::class.java, element, styleableResourceValue)
 
-            var defaultValueResId: Id? = null
+            val targetType = if (element.kind == ElementKind.FIELD) {
+                element.asType()
+            } else {
+                (element as ExecutableElement).parameters[0].asType()
+            }
+            var targetFormat = attr.format
+            if (targetFormat == Format.DEFAULT) {
+                // The format wasn't specified, use the context to guess at it
+                targetFormat = Format.forElement(elementUtils, typeUtils, element)
+            }
+
+            val elementName = element.simpleName.toString()
+            val isElementAMethod = element.kind == ElementKind.METHOD
+            val isElementStyleable = element.kind == ElementKind.FIELD && typeUtils.isView(elementUtils, targetType)
+
+            val styleableResId = resourceProcessor.getId(Attr::class.java, element, attr.value)
+            var defaultValueResId: AndroidResourceId? = null
             if (attr.defaultValue != -1) {
                 defaultValueResId = resourceProcessor.getId(Attr::class.java, element, attr.defaultValue)
-
             }
 
-            var isView = false
-            if (format == Format.DEFAULT) {
-                if (element.kind == ElementKind.FIELD) {
-                    format = Format.forField(elementUtils, typeUtils, element)
-                } else {
-                    format = Format.forMethod(element)
-                }
-            }
-
-            val type: TypeMirror
-            if (element.kind == ElementKind.FIELD) {
-                type = element.asType()
-                val viewType = elementUtils.getTypeElement("android.view.View").asType()
-                isView = typeUtils.isSubtype(type, viewType)
-            } else {
-                type = (element as ExecutableElement).parameters[0].asType()
-            }
-
-            val isMethod = element.kind == ElementKind.METHOD
-
-            return AttrInfo(enclosingElement, type, name, format, id, defaultValueResId, isMethod, isView)
+            return AttrInfo(
+                    enclosingElement,
+                    targetType,
+                    targetFormat,
+                    elementName,
+                    isElementAMethod,
+                    isElementStyleable,
+                    styleableResId,
+                    defaultValueResId)
         }
     }
 

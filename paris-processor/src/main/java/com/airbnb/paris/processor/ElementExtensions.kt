@@ -1,4 +1,4 @@
-package com.airbnb.paris.annotations
+package com.airbnb.paris.processor
 
 import javax.lang.model.element.Element
 

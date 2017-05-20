@@ -55,15 +55,19 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val allAttrs: MutableList<AttrInfo> = ArrayList()
-        roundEnv.getElementsAnnotatedWith(Attr::class.java)
-                .mapTo(allAttrs) {
-                    AttrInfo.fromElement(resourceProcessor, elementUtils, typeUtils, it)
+        val allAttrs: List<AttrInfo> = roundEnv.getElementsAnnotatedWith(Attr::class.java)
+                .mapNotNull {
+                    try {
+                        return@mapNotNull AttrInfo.fromElement(resourceProcessor, elementUtils, typeUtils, it)
+                    } catch (e: ProcessorException) {
+                        logError(e)
+                        return@mapNotNull null
+                    }
                 }
 
         var rClassName: ClassName? = null
         if (!allAttrs.isEmpty()) {
-            rClassName = allAttrs[0].id.className.enclosingClassName()
+            rClassName = allAttrs[0].styleableResId.className!!.enclosingClassName()
         }
 
         val styleableClassesInfo: MutableList<StyleableClassInfo> = ArrayList()
