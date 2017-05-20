@@ -12,7 +12,7 @@ internal object ParisWriter {
     private val PARIS_CLASS_NAME = ClassName.get("com.airbnb.paris", "Paris")
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableClassInfo>) {
+    fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
         if (styleableClassesInfo.isEmpty()) {
             return
         }
@@ -31,11 +31,11 @@ internal object ParisWriter {
                 .writeTo(filer)
     }
 
-    private fun buildStyleMethod(styleableClassInfo: StyleableClassInfo): MethodSpec {
+    private fun buildStyleMethod(styleableClassInfo: StyleableInfo): MethodSpec {
         return buildStyleMethod(
-                styleableClassInfo.packageName,
-                String.format(Locale.US, STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.name),
-                TypeName.get(styleableClassInfo.type))
+                styleableClassInfo.elementPackageName,
+                String.format(Locale.US, STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
+                TypeName.get(styleableClassInfo.elementType))
     }
 
     private fun buildStyleMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {

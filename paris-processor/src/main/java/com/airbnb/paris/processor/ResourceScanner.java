@@ -17,7 +17,7 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-class ResourceProcessor {
+class ResourceScanner {
 
     private Types typeUtils;
     private Elements elementUtils;

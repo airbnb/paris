@@ -17,41 +17,43 @@ internal object Proust {
     private val TYPED_ARRAY_WRAPPER_CLASS_NAME = ClassName.get("com.airbnb.paris", "TypedArrayWrapper")
     private val RESOURCES_CLASS_NAME = ClassName.get("android.content.res", "Resources")
 
-    fun getClassName(classInfo: StyleableClassInfo): ClassName {
-        return ClassName.get(classInfo.packageName, String.format(CLASS_NAME_FORMAT, classInfo.name))
+    fun getClassName(classInfo: StyleableInfo): ClassName {
+        return ClassName.get(classInfo.elementPackageName, String.format(CLASS_NAME_FORMAT, classInfo.elementName))
     }
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, styleableClassesTree: StyleableClassesTree, rClassName: ClassName?) {
+    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, styleableClassesTree: StyleableClassesTree) {
         if (styleableClasses.isEmpty()) {
             return
         }
 
         for (styleableClassInfo in styleableClasses) {
-            writeStyleClass(filer, typeUtils, styleableClasses, styleableClassInfo, styleableClassesTree, rClassName)
+            writeStyleClass(filer, typeUtils, styleableClasses, styleableClassInfo, styleableClassesTree)
         }
     }
 
-    @Throws(IOException::class)
-    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableClassInfo>, classInfo: StyleableClassInfo, styleableClassesTree: StyleableClassesTree, rClassName: ClassName?) {
+    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, classInfo: StyleableInfo, styleableClassesTree: StyleableClassesTree) {
         val className = getClassName(classInfo)
 
         val styleTypeBuilder = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, className, TypeName.get(classInfo.type)))
+                .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, className, TypeName.get(classInfo.elementType)))
                 .addMethod(buildConstructorMethod(classInfo))
 
-        if (!classInfo.resourceName.isEmpty()) {
-            // TODO  Error if no @Attrs is set but we have a resource name
+        if (!classInfo.styleableResourceName.isEmpty()) {
+            // Use an arbitrary AndroidResourceId to get R's ClassName. Per the StyleableInfo doc
+            // it's safe to assume that attrs won't be empty if styleableResourceName isn't either
+            val rClassName = classInfo.attrs[0].styleableResId.className!!.enclosingClassName()
+
             styleTypeBuilder
-                    .addMethod(buildAttributesMethod(rClassName!!, classInfo.resourceName))
+                    .addMethod(buildAttributesMethod(rClassName!!, classInfo.styleableResourceName))
                     .addMethod(buildProcessAttributesMethod(classInfo.attrs))
         }
 
         val parentStyleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
                 typeUtils,
                 styleableClasses,
-                typeUtils.asElement((typeUtils.asElement(classInfo.type) as TypeElement).superclass) as TypeElement)
+                typeUtils.asElement((typeUtils.asElement(classInfo.elementType) as TypeElement).superclass) as TypeElement)
         styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
 
         if (classInfo.dependencies.isNotEmpty()) {
@@ -75,10 +77,10 @@ internal object Proust {
                 .writeTo(filer)
     }
 
-    private fun buildConstructorMethod(classInfo: StyleableClassInfo): MethodSpec {
+    private fun buildConstructorMethod(classInfo: StyleableInfo): MethodSpec {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(TypeName.get(classInfo.type), "view")
+                .addParameter(TypeName.get(classInfo.elementType), "view")
                 .addStatement("super(view)")
                 .build()
     }
@@ -92,7 +94,7 @@ internal object Proust {
                 .build()
     }
 
-    private fun buildApplyDependenciesMethod(classInfo: StyleableClassInfo): MethodSpec {
+    private fun buildApplyDependenciesMethod(classInfo: StyleableInfo): MethodSpec {
         val methodBuilder = MethodSpec.methodBuilder("applyDependencies")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
@@ -162,9 +164,5 @@ internal object Proust {
                 .returns(styleApplierClassName)
                 .addStatement("return apply(\$L)", styleInfo.androidResourceId.code)
                 .build()
-    }
-
-    private fun assert(assertion: Boolean) {
-        // TODO
     }
 }

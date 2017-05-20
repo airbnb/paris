@@ -2,6 +2,7 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Format
+import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -15,7 +16,7 @@ import javax.lang.model.util.Types
  * Target   The attribute recipient (either a field or a method parameter)
  */
 internal class AttrInfo private constructor(
-        private val enclosingElement: Element,
+        val enclosingElement: Element,
         val targetType: TypeMirror,
         val targetFormat: Format,
         val elementName: String,
@@ -26,8 +27,20 @@ internal class AttrInfo private constructor(
 
     companion object {
 
+        fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types, resourceScanner: ResourceScanner): List<AttrInfo> {
+            return roundEnv.getElementsAnnotatedWith(Attr::class.java)
+                    .mapNotNull {
+                        try {
+                            fromElement(elementUtils, typeUtils, resourceScanner, it)
+                        } catch (e: ProcessorException) {
+                            Errors.log(e)
+                            null
+                        }
+                    }
+        }
+
         @Throws(ProcessorException::class)
-        fun fromElement(resourceProcessor: ResourceProcessor, elementUtils: Elements, typeUtils: Types, element: Element): AttrInfo {
+        private fun fromElement(elementUtils: Elements, typeUtils: Types, resourceScanner: ResourceScanner, element: Element): AttrInfo {
 
             check(element.kind == ElementKind.FIELD || element.kind == ElementKind.METHOD, element) {
                 "Element annotated with @Attr must be a field or method"
@@ -55,10 +68,10 @@ internal class AttrInfo private constructor(
             val isElementAMethod = element.kind == ElementKind.METHOD
             val isElementStyleable = element.kind == ElementKind.FIELD && typeUtils.isView(elementUtils, targetType)
 
-            val styleableResId = resourceProcessor.getId(Attr::class.java, element, attr.value)
+            val styleableResId = resourceScanner.getId(Attr::class.java, element, attr.value)
             var defaultValueResId: AndroidResourceId? = null
             if (attr.defaultValue != -1) {
-                defaultValueResId = resourceProcessor.getId(Attr::class.java, element, attr.defaultValue)
+                defaultValueResId = resourceScanner.getId(Attr::class.java, element, attr.defaultValue)
             }
 
             return AttrInfo(

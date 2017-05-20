@@ -5,7 +5,7 @@ import java.util.*
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Types
 
-internal class StyleableClassesTree(private val typeUtils: Types, private val stylealeClassesInfo: List<StyleableClassInfo>) {
+internal class StyleableClassesTree(private val typeUtils: Types, private val stylealeClassesInfo: List<StyleableInfo>) {
 
     private val CLASS_NAME_FORMAT = "%sStyleApplier"
 
@@ -13,14 +13,14 @@ internal class StyleableClassesTree(private val typeUtils: Types, private val st
             Pair("android.view.View", ClassName.get("com.airbnb.paris", "ViewStyleApplier")),
             Pair("android.widget.TextView", ClassName.get("com.airbnb.paris", "TextViewStyleApplier")))
 
-    internal fun findFirstStyleableSuperClassName(typeUtils: Types, stylealeClassesInfo: List<StyleableClassInfo>, typeElement: TypeElement): ClassName {
+    internal fun findFirstStyleableSuperClassName(typeUtils: Types, stylealeClassesInfo: List<StyleableInfo>, typeElement: TypeElement): ClassName {
         var styleApplierClassName = viewQualifiedNameToStyleApplierClassName[typeElement.qualifiedName.toString()]
         if (styleApplierClassName != null) {
             return styleApplierClassName
         }
 
         val type = typeElement.asType()
-        if (stylealeClassesInfo.any { typeUtils.isSameType(type, it.type) }) {
+        if (stylealeClassesInfo.any { typeUtils.isSameType(type, it.elementType) }) {
             styleApplierClassName = viewTypeElemenetToStyleApplierClassName(typeElement)
         } else {
             styleApplierClassName = findFirstStyleableSuperClassName(
