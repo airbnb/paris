@@ -2,10 +2,16 @@ package com.airbnb.paris
 
 import android.content.res.ColorStateList
 import android.content.res.Resources
+import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.util.SparseIntArray
 
 class SparseIntArrayTypedArrayWrapper constructor(val resources: Resources, val attributeMap: SparseIntArray) : TypedArrayWrapper {
+
+    override fun isNull(index: Int): Boolean {
+        // TODO
+        return false
+    }
 
     override fun getIndexCount(): Int {
         return attributeMap.size()

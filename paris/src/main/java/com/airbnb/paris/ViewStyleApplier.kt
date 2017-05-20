@@ -36,23 +36,23 @@ open class ViewStyleApplier(view: View) : StyleApplier<View>(view) {
             view.minimumWidth = a.getDimensionPixelSize(R.styleable.View_android_minWidth, -1)
         }
         if (a.hasValue(R.styleable.View_android_padding)) {
-            StyleUtils.setPadding(view, a.getDimensionPixelSize(R.styleable.View_android_padding, -1))
+            view.setPadding(a.getDimensionPixelSize(R.styleable.View_android_padding, -1))
         }
         if (a.hasValue(R.styleable.View_android_paddingBottom)) {
-            StyleUtils.setPaddingBottom(view, a.getDimensionPixelSize(R.styleable.View_android_paddingBottom, -1))
+            view.setPaddingBottom(a.getDimensionPixelSize(R.styleable.View_android_paddingBottom, -1))
         }
         if (a.hasValue(R.styleable.View_android_paddingLeft)) {
-            StyleUtils.setPaddingLeft(view, a.getDimensionPixelSize(R.styleable.View_android_paddingLeft, -1))
+            view.setPaddingLeft(a.getDimensionPixelSize(R.styleable.View_android_paddingLeft, -1))
         }
         if (a.hasValue(R.styleable.View_android_paddingRight)) {
-            StyleUtils.setPaddingRight(view, a.getDimensionPixelSize(R.styleable.View_android_paddingRight, -1))
+            view.setPaddingRight(a.getDimensionPixelSize(R.styleable.View_android_paddingRight, -1))
         }
         if (a.hasValue(R.styleable.View_android_paddingTop)) {
-            StyleUtils.setPaddingTop(view, a.getDimensionPixelSize(R.styleable.View_android_paddingTop, -1))
+            view.setPaddingTop(a.getDimensionPixelSize(R.styleable.View_android_paddingTop, -1))
         }
         if (a.hasValue(R.styleable.View_android_stateListAnimator)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val resourceId = StyleUtils.getResourceId(a, R.styleable.View_android_stateListAnimator, 0)
+                val resourceId = a.getResourceId(R.styleable.View_android_stateListAnimator, 0)
                 view.stateListAnimator = if (resourceId != 0)
                     AnimatorInflater.loadStateListAnimator(view.context, resourceId)
                 else

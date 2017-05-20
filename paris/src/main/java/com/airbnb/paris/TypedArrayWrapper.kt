@@ -7,6 +7,8 @@ import android.support.annotation.StyleableRes
 
 interface TypedArrayWrapper {
 
+    fun isNull(index: Int): Boolean
+
     fun getIndexCount(): Int
 
     fun getIndex(at: Int): Int

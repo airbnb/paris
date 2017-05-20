@@ -6,6 +6,23 @@ import android.view.ViewGroup.MarginLayoutParams
 
 open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
 
+    companion object {
+        var NOT_SET = -10
+
+        fun ifSetElse(value: Int, ifNotSet: Int): Int {
+            return if (value != NOT_SET) value else ifNotSet
+        }
+
+        fun isAnySet(vararg values: Int): Boolean {
+            for (value in values) {
+                if (value != NOT_SET) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+    
     enum class Option : Style.Config.Option {
         IgnoreLayoutWidthAndHeight
     }
@@ -16,13 +33,13 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
         val ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight)
-        var width = StyleUtils.NOT_SET
-        var height = StyleUtils.NOT_SET
-        var margin = StyleUtils.NOT_SET
-        var marginBottom = StyleUtils.NOT_SET
-        var marginLeft = StyleUtils.NOT_SET
-        var marginRight = StyleUtils.NOT_SET
-        var marginTop = StyleUtils.NOT_SET
+        var width = NOT_SET
+        var height = NOT_SET
+        var margin = NOT_SET
+        var marginBottom = NOT_SET
+        var marginLeft = NOT_SET
+        var marginRight = NOT_SET
+        var marginTop = NOT_SET
 
         if (a.hasValue(R.styleable.LayoutParams_android_layout_width) && !ignoreLayoutWidthAndHeight) {
             width = a.getLayoutDimension(R.styleable.LayoutParams_android_layout_width, 0)
@@ -46,12 +63,12 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
             marginTop = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginTop, 0)
         }
 
-        if ((width != StyleUtils.NOT_SET) xor (height != StyleUtils.NOT_SET)) {
+        if ((width != NOT_SET) xor (height != NOT_SET)) {
             throw IllegalArgumentException("Width and height must either both be set, or not be set at all. It can't be one and not the other.")
         }
 
-        val isWidthHeightSet = width != StyleUtils.NOT_SET // Height follows given the XOR condition above
-        val isMarginSet = StyleUtils.isAnySet(margin, marginBottom, marginLeft, marginRight, marginTop)
+        val isWidthHeightSet = width != NOT_SET // Height follows given the XOR condition above
+        val isMarginSet = isAnySet(margin, marginBottom, marginLeft, marginRight, marginTop)
 
         if (isWidthHeightSet) {
             var params: LayoutParams? = view.layoutParams
@@ -66,13 +83,13 @@ open class LayoutParamsStyleApplier(view: View) : StyleApplier<View>(view) {
 
         if (isMarginSet) {
             val marginParams = view.layoutParams as MarginLayoutParams
-            if (margin != StyleUtils.NOT_SET) {
+            if (margin != NOT_SET) {
                 marginParams.setMargins(margin, margin, margin, margin)
             }
-            marginParams.bottomMargin = StyleUtils.ifSetElse(marginBottom, marginParams.bottomMargin)
-            marginParams.leftMargin = StyleUtils.ifSetElse(marginLeft, marginParams.leftMargin)
-            marginParams.rightMargin = StyleUtils.ifSetElse(marginRight, marginParams.rightMargin)
-            marginParams.topMargin = StyleUtils.ifSetElse(marginTop, marginParams.topMargin)
+            marginParams.bottomMargin = ifSetElse(marginBottom, marginParams.bottomMargin)
+            marginParams.leftMargin = ifSetElse(marginLeft, marginParams.leftMargin)
+            marginParams.rightMargin = ifSetElse(marginRight, marginParams.rightMargin)
+            marginParams.topMargin = ifSetElse(marginTop, marginParams.topMargin)
             view.layoutParams = marginParams
         }
     }
