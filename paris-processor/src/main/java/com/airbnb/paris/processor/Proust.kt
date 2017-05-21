@@ -25,10 +25,6 @@ internal object Proust {
 
     @Throws(IOException::class)
     fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>) {
-        if (styleableClasses.isEmpty()) {
-            return
-        }
-
         val styleableClassesTree = StyleablesTree()
 
         for (styleableClassInfo in styleableClasses) {

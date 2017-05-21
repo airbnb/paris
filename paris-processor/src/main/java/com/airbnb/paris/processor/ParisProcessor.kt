@@ -5,6 +5,7 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
+import com.airbnb.paris.processor.utils.className
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -17,7 +18,13 @@ import javax.lang.model.util.Types
 class ParisProcessor : AbstractProcessor() {
 
     companion object {
+        internal val PARIS_PACKAGE_NAME = "com.airbnb.paris"
+        internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
         internal val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
+
+        internal val BUILT_IN_STYLE_APPLIERS = mapOf(
+                Pair("com.airbnb.paris.ViewStyleApplier", "android.view.View"),
+                Pair("com.airbnb.paris.TextViewStyleApplier", "android.widget.TextView"))
 
         private val supportedAnnotations: Set<Class<out Annotation>>
             get() {
@@ -57,11 +64,13 @@ class ParisProcessor : AbstractProcessor() {
                 .groupBy { it.enclosingElement }
         val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(roundEnv, resourceScanner, classesToAttrsInfo)
 
-        try {
-            ParisWriter.writeFrom(filer, styleablesInfo)
-            Proust.writeFrom(filer, typeUtils, styleablesInfo)
-        } catch (e: ProcessorException) {
-            Errors.log(e)
+        if (!styleablesInfo.isEmpty()) {
+            try {
+                ParisWriter.writeFrom(filer, styleablesInfo)
+                Proust.writeFrom(filer, typeUtils, styleablesInfo)
+            } catch (e: ProcessorException) {
+                Errors.log(e)
+            }
         }
 
         if (roundEnv.processingOver()) {

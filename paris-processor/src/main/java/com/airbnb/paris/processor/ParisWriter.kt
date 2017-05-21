@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor
 
+import com.airbnb.paris.processor.utils.className
 import com.squareup.javapoet.*
 import java.io.IOException
 import java.util.*
@@ -8,25 +9,24 @@ import javax.lang.model.element.Modifier
 
 internal object ParisWriter {
 
-    private val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
-    private val PARIS_CLASS_NAME = ClassName.get("com.airbnb.paris", "Paris")
-
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
-        if (styleableClassesInfo.isEmpty()) {
-            return
-        }
-
-        val parisTypeBuilder = TypeSpec.classBuilder(PARIS_CLASS_NAME)
+    internal fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
+        val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .addMethod(buildStyleMethod("com.airbnb.paris", "ViewStyleApplier", ClassName.get("android.view", "View")))
-                .addMethod(buildStyleMethod("com.airbnb.paris", "TextViewStyleApplier", ClassName.get("android.widget", "TextView")))
+
+        ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
+            val styleApplierClassName = styleApplierQualifiedName.className()
+            parisTypeBuilder.addMethod(buildStyleMethod(
+                    styleApplierClassName.packageName(),
+                    styleApplierClassName.simpleName(),
+                    viewQualifiedName.className()))
+        }
 
         for (styleableClassInfo in styleableClassesInfo) {
             parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
         }
 
-        JavaFile.builder(PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
+        JavaFile.builder(ParisProcessor.PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
                 .build()
                 .writeTo(filer)
     }
@@ -34,7 +34,7 @@ internal object ParisWriter {
     private fun buildStyleMethod(styleableClassInfo: StyleableInfo): MethodSpec {
         return buildStyleMethod(
                 styleableClassInfo.elementPackageName,
-                String.format(Locale.US, STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
+                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
                 TypeName.get(styleableClassInfo.elementType))
     }
 
