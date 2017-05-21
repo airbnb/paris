@@ -1,7 +1,7 @@
 # Paris
 Programmatic style application for Android views, including custom attributes.
 
-* Apply styles programmatically in addition to XML
+* Apply styles programmatically at any time, in addition to XML
 * Use annotations to easily support custom attributes (inspired by [Barber](https://github.com/hzsweers/barber))
 * Declare explicitly supported styles for your custom views
 
@@ -44,9 +44,9 @@ Paris.style(myView).applyGreen();
 Paris.style(myView).applyBlue(); // Same as calling ...apply(R.style.MyView_Blue)
 ```
 
-Note: This doesn't prohibit the application of other styles.
+Note: This doesn't prevent the application of other styles.
 
-## Nested Styleable Views
+## Styleable Subviews
 
 Sometimes your custom views may have subviews which you'd like to make individually styleable. For example, a custom view may contain both a title and subtitle, and each can be restyled separately. Paris has you covered.
 
@@ -89,6 +89,6 @@ Paris.style(myHeader).subtitle().apply(R.style.Regular);
 ## How do I...
 
 * ... apply **multiple styles** to a view?
-* ... add support for my custom view's **custom attributes**?
+* ... add support for my view's **custom attributes**?
 * ... **share** custom attribute logic across multiple views?
 * ... apply a style to a **subview's subview**?
