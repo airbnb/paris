@@ -27,7 +27,7 @@ internal class StyleableInfo private constructor(
         val dependencies: List<TypeMirror>,
         val styles: List<StyleInfo>) {
 
-    fun className(): ClassName {
+    fun styleApplierClassName(): ClassName {
         return ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
     }
 

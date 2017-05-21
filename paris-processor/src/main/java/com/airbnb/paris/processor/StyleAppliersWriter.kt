@@ -8,61 +8,60 @@ import com.squareup.javapoet.*
 import java.io.IOException
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
-import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Types
 
 internal object StyleAppliersWriter {
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>) {
+    fun writeFrom(filer: Filer, typeUtils: Types, styleablesInfo: List<StyleableInfo>) {
         val styleableClassesTree = StyleablesTree()
 
-        for (styleableClassInfo in styleableClasses) {
-            writeStyleClass(filer, typeUtils, styleableClasses, styleableClassInfo, styleableClassesTree)
+        for (styleableInfo in styleablesInfo) {
+            writeStyleApplier(filer, typeUtils, styleablesInfo, styleableInfo, styleableClassesTree)
         }
     }
 
-    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, classInfo: StyleableInfo, styleablesTree: StyleablesTree) {
-        val className = classInfo.className()
+    private fun writeStyleApplier(filer: Filer, typeUtils: Types, styleablesInfo: List<StyleableInfo>, styleableInfo: StyleableInfo, styleablesTree: StyleablesTree) {
+        val styleApplierClassName = styleableInfo.styleApplierClassName()
 
-        val styleTypeBuilder = TypeSpec.classBuilder(className)
+        val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, className, TypeName.get(classInfo.elementType)))
-                .addMethod(buildConstructorMethod(classInfo))
+                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType)))
+                .addMethod(buildConstructorMethod(styleableInfo))
 
-        if (!classInfo.styleableResourceName.isEmpty()) {
+        if (!styleableInfo.styleableResourceName.isEmpty()) {
             // Use an arbitrary AndroidResourceId to get R's ClassName. Per the StyleableInfo doc
             // it's safe to assume that attrs won't be empty if styleableResourceName isn't either
-            val rClassName = classInfo.attrs[0].styleableResId.className!!.enclosingClassName()
+            val rClassName = styleableInfo.attrs[0].styleableResId.className!!.enclosingClassName()
 
             styleTypeBuilder
-                    .addMethod(buildAttributesMethod(rClassName!!, classInfo.styleableResourceName))
-                    .addMethod(buildProcessAttributesMethod(classInfo.attrs))
+                    .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
+                    .addMethod(buildProcessAttributesMethod(styleableInfo.attrs))
         }
 
         val parentStyleApplierClassName = styleablesTree.findStyleApplier(
                 typeUtils,
-                styleableClasses,
-                typeUtils.asElement((typeUtils.asElement(classInfo.elementType) as TypeElement).superclass) as TypeElement)
+                styleablesInfo,
+                styleableInfo.elementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
         styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
 
-        if (classInfo.dependencies.isNotEmpty()) {
-            styleTypeBuilder.addMethod(buildApplyDependenciesMethod(classInfo))
+        if (styleableInfo.dependencies.isNotEmpty()) {
+            styleTypeBuilder.addMethod(buildApplyDependenciesMethod(styleableInfo))
         }
 
-        for (attrInfo in classInfo.styleableAttrs) {
-            val styleApplierClassName = styleablesTree.findStyleApplier(
+        for (attrInfo in styleableInfo.styleableAttrs) {
+            val subStyleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
-                    styleableClasses,
+                    styleablesInfo,
                     attrInfo.targetType.asTypeElement(typeUtils))
-            styleTypeBuilder.addMethod(buildSubMethod(attrInfo, styleApplierClassName))
+            styleTypeBuilder.addMethod(buildSubMethod(attrInfo, subStyleApplierClassName))
         }
 
-        for (styleInfo in classInfo.styles) {
-            styleTypeBuilder.addMethod(buildApplyStyleMethod(className, styleInfo))
+        for (styleInfo in styleableInfo.styles) {
+            styleTypeBuilder.addMethod(buildApplyStyleMethod(styleApplierClassName, styleInfo))
         }
 
-        JavaFile.builder(className.packageName(), styleTypeBuilder.build())
+        JavaFile.builder(styleApplierClassName.packageName(), styleTypeBuilder.build())
                 .build()
                 .writeTo(filer)
     }
@@ -107,7 +106,7 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildProcessAttributesMethod(attrs: List<AttrInfo>): MethodSpec {
-        val methodSpecBuilder = MethodSpec.methodBuilder("processAttributes")
+        val methodBuilder = MethodSpec.methodBuilder("processAttributes")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
@@ -115,18 +114,18 @@ internal object StyleAppliersWriter {
                 .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
         for (attr in attrs) {
-            methodSpecBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.styleableResId.code)
-            addStatement(methodSpecBuilder, attr, "a", attr.targetFormat.typedArrayMethodStatement(), attr.styleableResId)
-            methodSpecBuilder.endControlFlow()
+            methodBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.styleableResId.code)
+            addStatement(methodBuilder, attr, "a", attr.targetFormat.typedArrayMethodStatement(), attr.styleableResId)
+            methodBuilder.endControlFlow()
 
             if (attr.defaultValueResId != null) {
-                methodSpecBuilder.beginControlFlow("else")
-                addStatement(methodSpecBuilder, attr, "res", attr.targetFormat.resourcesMethodStatement(), attr.defaultValueResId)
-                methodSpecBuilder.endControlFlow()
+                methodBuilder.beginControlFlow("else")
+                addStatement(methodBuilder, attr, "res", attr.targetFormat.resourcesMethodStatement(), attr.defaultValueResId)
+                methodBuilder.endControlFlow()
             }
         }
 
-        return methodSpecBuilder.build()
+        return methodBuilder.build()
     }
 
     private fun addStatement(methodSpecBuilder: MethodSpec.Builder, attr: AttrInfo, from: String, statement: String, androidResourceId: AndroidResourceId) {
