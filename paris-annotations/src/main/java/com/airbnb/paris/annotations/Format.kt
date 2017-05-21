@@ -1,5 +1,6 @@
 package com.airbnb.paris.annotations
 
+// TODO  Better support for enums
 enum class Format {
 
     /**

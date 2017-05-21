@@ -2,6 +2,7 @@ package com.airbnb.paris
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import java.util.*
 
@@ -33,6 +34,10 @@ class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : Type
         return typedArray.getBoolean(index, defValue)
     }
 
+    override fun getColor(index: Int, defValue: Int): Int {
+        return typedArray.getColor(index, defValue)
+    }
+
     override fun getColorStateList(index: Int): ColorStateList {
         return typedArray.getColorStateList(index)
     }
@@ -47,6 +52,10 @@ class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : Type
 
     override fun getFloat(index: Int, defValue: Float): Float {
         return typedArray.getFloat(index, defValue)
+    }
+
+    override fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float {
+        return typedArray.getFraction(index, base, pbase, defValue)
     }
 
     override fun getInt(index: Int, defValue: Int): Int {
@@ -67,6 +76,10 @@ class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : Type
 
     override fun getText(index: Int): CharSequence {
         return typedArray.getText(index)
+    }
+
+    override fun getTextArray(index: Int): Array<CharSequence> {
+        return typedArray.getTextArray(index)
     }
 
     override fun recycle() {

@@ -41,6 +41,11 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun formats() {
+        assertCase("formats")
+    }
+
+    @Test
     fun methods() {
         assertCase("methods")
     }

@@ -93,14 +93,18 @@ private fun forField(elementUtils: Elements, typeUtils: Types, element: Element)
         return Format.RESOURCE_ID
     }
 
-    return forEitherFieldOrMethod(element)
+    return forEitherFieldOrMethodParameter(element)
 }
 
 private fun forMethod(element: Element): Format {
-    return forEitherFieldOrMethod((element as ExecutableElement).parameters[0])
+    return forEitherFieldOrMethodParameter((element as ExecutableElement).parameters[0])
 }
 
-private fun forEitherFieldOrMethod(element: Element): Format {
+private fun forEitherFieldOrMethodParameter(element: Element): Format {
+    if (element.hasAnnotation("ColorInt")) {
+        return Format.COLOR
+    }
+
     if (element.hasAnnotation("Px")) {
         return Format.DIMENSION_PIXEL_SIZE
     }

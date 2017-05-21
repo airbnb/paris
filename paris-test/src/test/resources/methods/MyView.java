@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
-@Styleable(value = "MyView")
+@Styleable("MyView")
 public class MyView extends View {
 
     public MyView(Context context) {

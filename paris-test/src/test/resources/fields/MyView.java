@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
-@Styleable(value = "MyView")
+@Styleable("MyView")
 public class MyView extends View {
 
     @Attr(R2.styleable.MyView_active) boolean active;
