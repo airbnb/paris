@@ -2,6 +2,11 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
+import com.airbnb.paris.processor.utils.Errors
+import com.airbnb.paris.processor.utils.ProcessorException
+import com.airbnb.paris.processor.utils.check
+import com.airbnb.paris.processor.utils.packageName
 import com.sun.tools.javac.code.Attribute
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
@@ -23,7 +28,7 @@ internal class StyleableInfo private constructor(
 
     companion object {
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: ResourceScanner, classesToAttrsInfo: Map<Element, List<AttrInfo>>): List<StyleableInfo> {
+        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner, classesToAttrsInfo: Map<Element, List<AttrInfo>>): List<StyleableInfo> {
             return roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                     .mapNotNull {
                         try {
@@ -36,7 +41,7 @@ internal class StyleableInfo private constructor(
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(resourceScanner: ResourceScanner, element: TypeElement, attrs: List<AttrInfo>): StyleableInfo {
+        private fun fromElement(resourceScanner: AndroidResourceScanner, element: TypeElement, attrs: List<AttrInfo>): StyleableInfo {
 
             val styleableAttrs = attrs.filter { it.isElementStyleable }
 

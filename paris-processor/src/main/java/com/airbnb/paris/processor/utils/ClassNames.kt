@@ -1,8 +1,8 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.utils
 
 import com.squareup.javapoet.ClassName
 
-object ClassNames {
+internal object ClassNames {
 
     val ANDROID_R = ClassName.get("android", "R")!!
 }

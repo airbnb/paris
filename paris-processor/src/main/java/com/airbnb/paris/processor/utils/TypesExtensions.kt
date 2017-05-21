@@ -1,4 +1,4 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.utils
 
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements

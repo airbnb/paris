@@ -1,4 +1,4 @@
-package com.airbnb.paris.processor;
+package com.airbnb.paris.processor.android_resource_scanner;
 
 import com.squareup.javapoet.ClassName;
 import com.sun.source.util.Trees;
@@ -17,13 +17,13 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-class ResourceScanner {
+public class AndroidResourceScanner {
 
     private Types typeUtils;
     private Elements elementUtils;
     private Trees trees;
 
-    void init(ProcessingEnvironment processingEnv) {
+    public void init(ProcessingEnvironment processingEnv) {
         typeUtils = processingEnv.getTypeUtils();
         elementUtils = processingEnv.getElementUtils();
         try {
@@ -35,7 +35,7 @@ class ResourceScanner {
     /**
      * Returns the {@link AndroidResourceId} that is used as an annotation value of the given {@link Element}
      */
-    AndroidResourceId getId(Class<? extends Annotation> annotation, Element element, int value) {
+    public AndroidResourceId getId(Class<? extends Annotation> annotation, Element element, int value) {
         Map<Integer, AndroidResourceId> results = getResults(annotation, element);
         if (results.containsKey(value)) {
             return results.get(value);
@@ -78,11 +78,11 @@ class ResourceScanner {
         }
 
         private void parseResourceSymbol(Symbol.VarSymbol symbol) {
-            // eg io.sweers.barber.R
+            // eg com.airbnb.paris.R
             String rClass = symbol.getEnclosingElement().getEnclosingElement().enclClass().className();
             // eg styleable
             String rTypeClass = symbol.getEnclosingElement().getSimpleName().toString();
-            // eg BarberView_stripeColor
+            // eg View_background
             String resourceName = symbol.getSimpleName().toString();
 
             Object value = symbol.getConstantValue();

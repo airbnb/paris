@@ -1,10 +1,10 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.utils
 
 import java.util.*
 import javax.annotation.processing.Messager
 import javax.tools.Diagnostic
 
-object Errors {
+internal object Errors {
 
     private val loggedExceptions: MutableList<Exception> = ArrayList()
 

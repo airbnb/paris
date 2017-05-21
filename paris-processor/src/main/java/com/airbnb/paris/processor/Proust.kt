@@ -1,6 +1,8 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Format
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.utils.asTypeElement
 import com.squareup.javapoet.*
 import java.io.IOException
 import javax.annotation.processing.Filer
@@ -22,17 +24,19 @@ internal object Proust {
     }
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, styleableClassesTree: StyleableClassesTree) {
+    fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>) {
         if (styleableClasses.isEmpty()) {
             return
         }
+
+        val styleableClassesTree = StyleablesTree()
 
         for (styleableClassInfo in styleableClasses) {
             writeStyleClass(filer, typeUtils, styleableClasses, styleableClassInfo, styleableClassesTree)
         }
     }
 
-    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, classInfo: StyleableInfo, styleableClassesTree: StyleableClassesTree) {
+    private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, classInfo: StyleableInfo, styleablesTree: StyleablesTree) {
         val className = getClassName(classInfo)
 
         val styleTypeBuilder = TypeSpec.classBuilder(className)
@@ -50,7 +54,7 @@ internal object Proust {
                     .addMethod(buildProcessAttributesMethod(classInfo.attrs))
         }
 
-        val parentStyleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
+        val parentStyleApplierClassName = styleablesTree.findStyleApplier(
                 typeUtils,
                 styleableClasses,
                 typeUtils.asElement((typeUtils.asElement(classInfo.elementType) as TypeElement).superclass) as TypeElement)
@@ -61,7 +65,7 @@ internal object Proust {
         }
 
         for (attrInfo in classInfo.styleableAttrs) {
-            val styleApplierClassName = styleableClassesTree.findFirstStyleableSuperClassName(
+            val styleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
                     styleableClasses,
                     attrInfo.targetType.asTypeElement(typeUtils))

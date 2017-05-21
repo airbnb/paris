@@ -1,4 +1,4 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.utils
 
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.TypeElement

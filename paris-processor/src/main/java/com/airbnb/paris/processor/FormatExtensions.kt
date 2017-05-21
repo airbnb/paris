@@ -1,6 +1,8 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Format
+import com.airbnb.paris.processor.utils.hasAnnotation
+import com.airbnb.paris.processor.utils.hasAnyAnnotation
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement

@@ -2,6 +2,12 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Format
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
+import com.airbnb.paris.processor.utils.Errors
+import com.airbnb.paris.processor.utils.ProcessorException
+import com.airbnb.paris.processor.utils.check
+import com.airbnb.paris.processor.utils.isView
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -27,7 +33,7 @@ internal class AttrInfo private constructor(
 
     companion object {
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types, resourceScanner: ResourceScanner): List<AttrInfo> {
+        fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types, resourceScanner: AndroidResourceScanner): List<AttrInfo> {
             return roundEnv.getElementsAnnotatedWith(Attr::class.java)
                     .mapNotNull {
                         try {
@@ -40,7 +46,7 @@ internal class AttrInfo private constructor(
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(elementUtils: Elements, typeUtils: Types, resourceScanner: ResourceScanner, element: Element): AttrInfo {
+        private fun fromElement(elementUtils: Elements, typeUtils: Types, resourceScanner: AndroidResourceScanner, element: Element): AttrInfo {
 
             check(element.kind == ElementKind.FIELD || element.kind == ElementKind.METHOD, element) {
                 "Element annotated with @Attr must be a field or method"

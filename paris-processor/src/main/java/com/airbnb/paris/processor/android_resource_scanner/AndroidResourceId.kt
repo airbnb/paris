@@ -1,5 +1,6 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.android_resource_scanner
 
+import com.airbnb.paris.processor.utils.ClassNames
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 

@@ -2,6 +2,9 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
+import com.airbnb.paris.processor.utils.Errors
+import com.airbnb.paris.processor.utils.ProcessorException
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -14,13 +17,15 @@ import javax.lang.model.util.Types
 class ParisProcessor : AbstractProcessor() {
 
     companion object {
-        internal val supportedAnnotations: Set<Class<out Annotation>>
+        internal val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
+
+        private val supportedAnnotations: Set<Class<out Annotation>>
             get() {
                 return setOf(Styleable::class.java, Attr::class.java)
             }
     }
 
-    private val resourceScanner = ResourceScanner()
+    private val resourceScanner = AndroidResourceScanner()
 
     private lateinit var filer: Filer
     private lateinit var messager: Messager
@@ -52,11 +57,9 @@ class ParisProcessor : AbstractProcessor() {
                 .groupBy { it.enclosingElement }
         val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(roundEnv, resourceScanner, classesToAttrsInfo)
 
-        val styleableClassesTree = StyleableClassesTree(typeUtils, styleablesInfo)
-
         try {
             ParisWriter.writeFrom(filer, styleablesInfo)
-            Proust.writeFrom(filer, typeUtils, styleablesInfo, styleableClassesTree)
+            Proust.writeFrom(filer, typeUtils, styleablesInfo)
         } catch (e: ProcessorException) {
             Errors.log(e)
         }
