@@ -46,8 +46,49 @@ Paris.style(myView).applyBlue(); // Same as calling ...apply(R.style.MyView_Blue
 
 Note: This doesn't prohibit the application of other styles.
 
+## Nested Styleable Views
+
+Sometimes your custom views may have subviews which you'd like to make individually styleable. For example, a custom view may contain both a title and subtitle, and each can be restyled separately. Paris has you covered.
+
+First declare custom attributes for the substyles you'd like to support.
+```xml
+<declare-styleable name="MyHeader">
+    <attr name="titleStyle" format="reference" />
+    <attr name="subtitleStyle" format="reference" />
+    ...
+</declare-styleable>
+```
+
+Then annotate your custom view's subview fields with the corresponding attribute ids:
+```java
+@Styleable(value = "MyHeader")
+public class MyHeader extends ViewGroup {
+    @Attr(R.styleable.MyHeader_titleStyle) TextView title;
+    @Attr(R.styleable.MyHeader_subtitleStyle) TextView subtitle;
+    ...
+    // Make sure to call Paris.style(this).apply(attrs) during initialization
+}
+```
+
+That's it!
+
+You can now use these attributes in XML and Paris will automatically apply the specified styles to the subviews:
+```xml
+<MyHeader
+    ...
+    app:titleStyle="@style/Title2"
+    app:subtitleStyle="@style/Regular" />
+```
+
+Or programmatically. Paris generates helper methods based on the name of the fields:
+```java
+Paris.style(myHeader).title().apply(R.style.Title2);
+Paris.style(myHeader).subtitle().apply(R.style.Regular);
+```
+
 ## How do I...
 
 * ... apply **multiple styles** to a view?
 * ... add support for my custom view's **custom attributes**?
 * ... **share** custom attribute logic across multiple views?
+* ... apply a style to a **subview's subview**?
