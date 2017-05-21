@@ -143,7 +143,7 @@ First declare custom attributes for the substyles you'd like to support:
 
 Then annotate your custom view's subview fields with the corresponding attribute ids:
 ```java
-@Styleable(value = "MyHeader")
+@Styleable("MyHeader")
 public class MyHeader extends ViewGroup {
 
     @Attr(R.styleable.MyHeader_titleStyle)
