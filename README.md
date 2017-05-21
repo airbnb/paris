@@ -23,6 +23,29 @@ Paris.style(textView).apply(R.style.Title1);
 
 You can find the list of currently supported attributes [here](paris/src/main/res/values/attrs.xml).
 
+## Style Links
+
+XML resource files can get big and chaotic. For styles it can become hard to find which are available for any given view type. To remedy this, Paris lets your custom views explicitly declare their supported styles.
+```java
+@Styleable(styles = {
+        @Style(name = "Red", id = R.style.MyView_Red),
+        @Style(name = "Green", id = R.style.MyView_Green),
+        @Style(name = "Blue", id = R.style.MyView_Blue)
+})
+public class MyView extends View {
+    ...
+}
+```
+
+Now when styling a view of type `MyView` you'll have access to helper methods for each of those styles.
+```java
+Paris.style(myView).applyRed();
+Paris.style(myView).applyGreen();
+Paris.style(myView).applyBlue(); // Same as calling ...apply(R.style.MyView_Blue)
+```
+
+Note: This doesn't prohibit the application of other styles.
+
 ## How do I...
 
 * ... apply **multiple styles** to a view?
