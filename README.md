@@ -44,7 +44,7 @@ Paris.style(myView).applyGreen();
 Paris.style(myView).applyBlue(); // Same as calling ...apply(R.style.MyView_Blue)
 ```
 
-Note: This doesn't prevent the application of other styles.
+**Note:** This doesn't prevent the application of other styles.
 
 ## Custom View Attributes
 
@@ -93,7 +93,7 @@ public class MyView extends ViewGroup {
     }
 }
 ```
-Note: Paris converts the attribute value based on the type of the field or method parameter, as well as the use of support annotations like `@DimenRes`, `@DrawableRes`, all the other `@...Res`, and `@Px`.
+**Note:** Paris converts the attribute value based on the type of the field or method parameter, as well as the use of support annotations like `@DimenRes`, `@DrawableRes`, all the other `@...Res`, and `@Px`.
 
 That's it!
 
