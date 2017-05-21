@@ -2,6 +2,7 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Format
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.asTypeElement
 import com.squareup.javapoet.*
 import java.io.IOException
@@ -10,18 +11,7 @@ import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Types
 
-internal object Proust {
-
-    private val CLASS_NAME_FORMAT = "%sStyleApplier"
-    private val PARIS_CLASS_NAME = ClassName.get("com.airbnb.paris", "Paris")
-    private val STYLE_CLASS_NAME = ClassName.get("com.airbnb.paris", "Style")
-    private val STYLE_APPLIER_CLASS_NAME = ClassName.get("com.airbnb.paris", "StyleApplier")
-    private val TYPED_ARRAY_WRAPPER_CLASS_NAME = ClassName.get("com.airbnb.paris", "TypedArrayWrapper")
-    private val RESOURCES_CLASS_NAME = ClassName.get("android.content.res", "Resources")
-
-    fun getClassName(classInfo: StyleableInfo): ClassName {
-        return ClassName.get(classInfo.elementPackageName, String.format(CLASS_NAME_FORMAT, classInfo.elementName))
-    }
+internal object StyleAppliersWriter {
 
     @Throws(IOException::class)
     fun writeFrom(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>) {
@@ -33,11 +23,11 @@ internal object Proust {
     }
 
     private fun writeStyleClass(filer: Filer, typeUtils: Types, styleableClasses: List<StyleableInfo>, classInfo: StyleableInfo, styleablesTree: StyleablesTree) {
-        val className = getClassName(classInfo)
+        val className = classInfo.className()
 
         val styleTypeBuilder = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, className, TypeName.get(classInfo.elementType)))
+                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, className, TypeName.get(classInfo.elementType)))
                 .addMethod(buildConstructorMethod(classInfo))
 
         if (!classInfo.styleableResourceName.isEmpty()) {
@@ -89,7 +79,7 @@ internal object Proust {
         return MethodSpec.methodBuilder("applyParent")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
                 .addStatement("new \$T(getView()).apply(style)", parentStyleApplierClassName)
                 .build()
     }
@@ -98,7 +88,7 @@ internal object Proust {
         val methodBuilder = MethodSpec.methodBuilder("applyDependencies")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
 
         for (dependency in classInfo.dependencies) {
             methodBuilder.addStatement("new \$T(getView()).apply(style)", dependency)
@@ -120,9 +110,9 @@ internal object Proust {
         val methodSpecBuilder = MethodSpec.methodBuilder("processAttributes")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
-                .addParameter(ParameterSpec.builder(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
-                .addStatement("\$T res = getView().getContext().getResources()", RESOURCES_CLASS_NAME)
+                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
+                .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
         for (attr in attrs) {
             methodSpecBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.styleableResId.code)
@@ -142,7 +132,7 @@ internal object Proust {
     private fun addStatement(methodSpecBuilder: MethodSpec.Builder, attr: AttrInfo, from: String, statement: String, androidResourceId: AndroidResourceId) {
         if (attr.isElementStyleable) {
             assert(attr.targetFormat == Format.DEFAULT || attr.targetFormat == Format.RESOURCE_ID)
-            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)", PARIS_CLASS_NAME, attr.elementName, androidResourceId.code)
+            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)", ParisProcessor.PARIS_CLASS_NAME, attr.elementName, androidResourceId.code)
         } else if (attr.isElementAMethod) {
             methodSpecBuilder.addStatement("getView().\$N($from.$statement)", attr.elementName, androidResourceId.code)
         } else {

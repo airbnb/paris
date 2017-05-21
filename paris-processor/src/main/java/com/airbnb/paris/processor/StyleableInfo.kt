@@ -7,6 +7,7 @@ import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
 import com.airbnb.paris.processor.utils.check
 import com.airbnb.paris.processor.utils.packageName
+import com.squareup.javapoet.ClassName
 import com.sun.tools.javac.code.Attribute
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
@@ -25,6 +26,10 @@ internal class StyleableInfo private constructor(
         val styleableResourceName: String,
         val dependencies: List<TypeMirror>,
         val styles: List<StyleInfo>) {
+
+    fun className(): ClassName {
+        return ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
+    }
 
     companion object {
 

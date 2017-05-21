@@ -19,8 +19,12 @@ class ParisProcessor : AbstractProcessor() {
 
     companion object {
         internal val PARIS_PACKAGE_NAME = "com.airbnb.paris"
-        internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
         internal val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
+
+        internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
+        internal val STYLE_CLASS_NAME = "com.airbnb.paris.Style".className()
+        internal val STYLE_APPLIER_CLASS_NAME = "com.airbnb.paris.StyleApplier".className()
+        internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "com.airbnb.paris.TypedArrayWrapper".className()
 
         internal val BUILT_IN_STYLE_APPLIERS = mapOf(
                 Pair("com.airbnb.paris.ViewStyleApplier", "android.view.View"),
@@ -67,7 +71,7 @@ class ParisProcessor : AbstractProcessor() {
         if (!styleablesInfo.isEmpty()) {
             try {
                 ParisWriter.writeFrom(filer, styleablesInfo)
-                Proust.writeFrom(filer, typeUtils, styleablesInfo)
+                StyleAppliersWriter.writeFrom(filer, typeUtils, styleablesInfo)
             } catch (e: ProcessorException) {
                 Errors.log(e)
             }
