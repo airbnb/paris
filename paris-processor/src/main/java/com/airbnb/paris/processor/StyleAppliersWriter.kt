@@ -6,6 +6,7 @@ import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.asTypeElement
 import com.squareup.javapoet.*
 import java.io.IOException
+import javax.annotation.Generated
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import javax.lang.model.util.Types
@@ -25,6 +26,9 @@ internal object StyleAppliersWriter {
         val styleApplierClassName = styleableInfo.styleApplierClassName()
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
+                .addAnnotation(AnnotationSpec.builder(Generated::class.java)
+                        .addMember("value", "\$S", StyleAppliersWriter::class.java.canonicalName)
+                        .build())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
