@@ -119,12 +119,12 @@ internal object StyleAppliersWriter {
 
         for (attr in attrs) {
             methodBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.styleableResId.code)
-            addStatement(methodBuilder, attr, "a", attr.targetFormat.typedArrayMethodStatement(), attr.styleableResId)
+            addStatement(methodBuilder, attr, "a", Formats.typedArrayMethodStatement(attr.targetFormat), attr.styleableResId)
             methodBuilder.endControlFlow()
 
             if (attr.defaultValueResId != null) {
                 methodBuilder.beginControlFlow("else")
-                addStatement(methodBuilder, attr, "res", attr.targetFormat.resourcesMethodStatement(), attr.defaultValueResId)
+                addStatement(methodBuilder, attr, "res", Formats.resourcesMethodStatement(attr.targetFormat), attr.defaultValueResId)
                 methodBuilder.endControlFlow()
             }
         }

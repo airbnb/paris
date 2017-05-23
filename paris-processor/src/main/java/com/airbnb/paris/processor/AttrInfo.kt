@@ -67,7 +67,7 @@ internal class AttrInfo private constructor(
             var targetFormat = attr.format
             if (targetFormat == Format.DEFAULT) {
                 // The format wasn't specified, use the context to guess at it
-                targetFormat = Format.forElement(elementUtils, typeUtils, element)
+                targetFormat = Formats.forElement(elementUtils, typeUtils, element)
             }
 
             val elementName = element.simpleName.toString()
