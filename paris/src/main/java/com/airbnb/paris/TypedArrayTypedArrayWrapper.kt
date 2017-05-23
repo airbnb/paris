@@ -2,11 +2,10 @@ package com.airbnb.paris
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import java.util.*
 
-class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : TypedArrayWrapper {
+internal class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : TypedArrayWrapper {
 
     /**
      * Unfortunately Android doesn't support reading @null resources from a style resource like it

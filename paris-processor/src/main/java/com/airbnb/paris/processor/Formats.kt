@@ -9,7 +9,7 @@ import javax.lang.model.element.ExecutableElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-object Formats {
+internal object Formats {
 
     private val RES_ANNOTATIONS = hashSetOf(
             "AnimatorRes",

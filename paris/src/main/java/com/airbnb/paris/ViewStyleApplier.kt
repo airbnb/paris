@@ -1,28 +1,26 @@
 package com.airbnb.paris
 
 import android.animation.AnimatorInflater
-import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.DrawableRes
 import android.view.View
 
-open class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) {
+class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) {
 
     override fun attributes(): IntArray {
         return R.styleable.View
     }
 
-    fun background(@DrawableRes drawableRes: Int): ViewStyleApplier {
-        apply(Style.builder()
-                .put(R.styleable.View_android_background, drawableRes)
-                .build())
-        return this
-    }
-
-    fun background(drawable: Drawable): ViewStyleApplier {
-        // TODO
-        return this
-    }
+//    fun background(@DrawableRes drawableRes: Int): ViewStyleApplier {
+//        apply(Style.builder()
+//                .put(R.styleable.View_android_background, drawableRes)
+//                .build())
+//        return this
+//    }
+//
+//    fun background(drawable: Drawable): ViewStyleApplier {
+//        // TODO
+//        return this
+//    }
 
     override fun applyDependencies(style: Style) {
         LayoutParamsStyleApplier(view).apply(style)

@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.MarginLayoutParams
 
-open class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
+internal class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
 
     companion object {
         var NOT_SET = -10

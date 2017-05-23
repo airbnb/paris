@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
 
-public class StyleUtils {
+class StyleUtils {
 
     public static Drawable getDrawable(Context context, TypedArrayWrapper a, int index) {
         return a.isNull(index) ? null : getDrawableCompat(context, a, index);
