@@ -4,7 +4,6 @@ import com.airbnb.paris.processor.utils.className
 import com.squareup.javapoet.*
 import java.io.IOException
 import java.util.*
-import javax.annotation.Generated
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 
@@ -13,9 +12,6 @@ internal object ParisWriter {
     @Throws(IOException::class)
     internal fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
         val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_CLASS_NAME)
-                .addAnnotation(AnnotationSpec.builder(Generated::class.java)
-                        .addMember("value", "\$S", ParisWriter::class.java.canonicalName)
-                        .build())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
 
         ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
