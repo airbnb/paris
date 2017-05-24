@@ -52,4 +52,17 @@ class ViewStyleTest {
         assertEquals(padding, view.paddingRight)
         assertEquals(padding, view.paddingTop)
     }
+
+    @Test
+    fun viewPaddings() {
+        assertEquals(0, view.paddingBottom)
+        assertEquals(0, view.paddingLeft)
+        assertEquals(0, view.paddingRight)
+        assertEquals(0, view.paddingTop)
+        ViewStyleApplier(view).apply(R.style.Test_View_paddings)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_view_paddingBottom), view.paddingBottom)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_view_paddingLeft), view.paddingLeft)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_view_paddingRight), view.paddingRight)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_view_paddingTop), view.paddingTop)
+    }
 }

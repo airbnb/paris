@@ -20,6 +20,7 @@ class LayoutParamsStyleTest {
     lateinit var view: View
 
     var params: ViewGroup.LayoutParams? = null
+    var marginParams: ViewGroup.MarginLayoutParams? = null
 
     @Before
     fun setup() {
@@ -52,5 +53,35 @@ class LayoutParamsStyleTest {
 
         params = view.layoutParams
         assertNull(params)
+    }
+
+    @Test
+    fun layoutParamsMargin() {
+        params = view.layoutParams
+        assertNull(params)
+
+        LayoutParamsStyleApplier(view).apply(R.style.Test_LayoutParams_margin)
+
+        marginParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertNotNull(marginParams)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_margin), marginParams!!.bottomMargin)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_margin), marginParams!!.leftMargin)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_margin), marginParams!!.rightMargin)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_margin), marginParams!!.topMargin)
+    }
+
+    @Test
+    fun layoutParamsMargins() {
+        params = view.layoutParams
+        assertNull(params)
+
+        LayoutParamsStyleApplier(view).apply(R.style.Test_LayoutParams_margins)
+
+        marginParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertNotNull(marginParams)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_marginBottom), marginParams!!.bottomMargin)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_marginLeft), marginParams!!.leftMargin)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_marginRight), marginParams!!.rightMargin)
+        assertEquals(res.getDimensionPixelSize(R.dimen.test_layout_params_marginTop), marginParams!!.topMargin)
     }
 }

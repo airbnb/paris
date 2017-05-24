@@ -84,7 +84,7 @@ class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleAppli
         }
 
         if (isMarginSet) {
-            val marginParams = view.layoutParams as MarginLayoutParams
+            val marginParams = (view.layoutParams ?: MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)) as MarginLayoutParams
             if (margin != NOT_SET) {
                 marginParams.setMargins(margin, margin, margin, margin)
             }

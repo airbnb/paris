@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <dimen name="test_layout_params_width">42dp</dimen>
     <dimen name="test_layout_params_height">51dp</dimen>
     <style name="Test_LayoutParams_width_height">
         <item name="android:layout_width">@dimen/test_layout_params_width</item>
         <item name="android:layout_height">@dimen/test_layout_params_height</item>
+    </style>
+
+    <dimen name="test_layout_params_margin">42dp</dimen>
+    <style name="Test_LayoutParams_margin">
+        <item name="android:layout_margin">@dimen/test_layout_params_margin</item>
+    </style>
+
+    <dimen name="test_layout_params_marginBottom">11dp</dimen>
+    <dimen name="test_layout_params_marginLeft">22dp</dimen>
+    <dimen name="test_layout_params_marginRight">33dp</dimen>
+    <dimen name="test_layout_params_marginTop">44dp</dimen>
+    <style name="Test_LayoutParams_margins">
+        <item name="android:layout_marginBottom">@dimen/test_layout_params_marginBottom</item>
+        <item name="android:layout_marginLeft">@dimen/test_layout_params_marginLeft</item>
+        <item name="android:layout_marginRight">@dimen/test_layout_params_marginRight</item>
+        <item name="android:layout_marginTop">@dimen/test_layout_params_marginTop</item>
     </style>
 
     <style name="Test_View_background">
@@ -20,6 +36,62 @@
     <dimen name="test_view_padding">42dp</dimen>
     <style name="Test_View_padding">
         <item name="android:padding">@dimen/test_view_padding</item>
+    </style>
+
+    <dimen name="test_view_paddingBottom">11dp</dimen>
+    <dimen name="test_view_paddingLeft">22dp</dimen>
+    <dimen name="test_view_paddingRight">33dp</dimen>
+    <dimen name="test_view_paddingTop">44dp</dimen>
+    <style name="Test_View_paddings">
+        <item name="android:paddingBottom">@dimen/test_view_paddingBottom</item>
+        <item name="android:paddingLeft">@dimen/test_view_paddingLeft</item>
+        <item name="android:paddingRight">@dimen/test_view_paddingRight</item>
+        <item name="android:paddingTop">@dimen/test_view_paddingTop</item>
+    </style>
+
+    <!-- end -->
+    <integer name="test_text_view_ellipsize">3</integer>
+    <style name="Test_TextView_ellipsize">
+        <item name="android:ellipsize">@integer/test_text_view_ellipsize</item>
+    </style>
+
+    <style name="Test_TextView_gravity">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <item format="float" type="dimen" name="test_text_view_letter_spacing">1.4</item>
+    <style name="Test_TextView_letterSpacing">
+        <item name="android:letterSpacing" tools:targetApi="lollipop">@dimen/test_text_view_letter_spacing</item>
+    </style>
+
+    <dimen name="test_text_view_line_spacing_extra">4dp</dimen>
+    <style name="Test_TextView_lineSpacingExtra">
+        <item name="android:lineSpacingExtra">@dimen/test_text_view_line_spacing_extra</item>
+    </style>
+
+    <item format="float" type="dimen" name="test_text_view_line_spacing_multiplier">1.5</item>
+    <style name="Test_TextView_lineSpacingMultiplier">
+        <item name="android:lineSpacingMultiplier">@dimen/test_text_view_line_spacing_multiplier</item>
+    </style>
+
+    <integer name="test_text_view_max_lines">3</integer>
+    <style name="Test_TextView_maxLines">
+        <item name="android:maxLines">@integer/test_text_view_max_lines</item>
+    </style>
+
+    <dimen name="test_text_view_min_width">99dp</dimen>
+    <style name="Test_TextView_minWidth">
+        <item name="android:minWidth">@dimen/test_text_view_min_width</item>
+    </style>
+
+    <bool name="test_text_view_text_all_caps">true</bool>
+    <style name="Test_TextView_textAllCaps">
+        <item name="android:textAllCaps">@bool/test_text_view_text_all_caps</item>
+    </style>
+
+    <dimen name="test_text_view_text_size">24sp</dimen>
+    <style name="Test_TextView_textSize">
+        <item name="android:textSize">@dimen/test_text_view_text_size</item>
     </style>
 
     <style name="MyView_Red" />
