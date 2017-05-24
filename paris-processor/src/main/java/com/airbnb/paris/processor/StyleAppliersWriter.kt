@@ -1,6 +1,5 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Format
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.asTypeElement
@@ -136,21 +135,20 @@ internal object StyleAppliersWriter {
                                elementName: String, styleableResId: AndroidResourceId,
                                defaultValueResId: AndroidResourceId?, isElementStyleable: Boolean) {
         methodBuilder.beginControlFlow("if (a.hasValue(\$L))", styleableResId.code)
-        addStatement(methodBuilder, format, elementName, "a", Formats.typedArrayMethodStatement(format), styleableResId, isElementStyleable)
+        addStatement(methodBuilder, elementName, "a", format.typedArrayMethodStatement(), styleableResId, isElementStyleable)
         methodBuilder.endControlFlow()
 
         if (defaultValueResId != null) {
             methodBuilder.beginControlFlow("else")
-            addStatement(methodBuilder, format, elementName, "res", Formats.resourcesMethodStatement(format), defaultValueResId, isElementStyleable)
+            addStatement(methodBuilder, elementName, "res", format.resourcesMethodStatement(), defaultValueResId, isElementStyleable)
             methodBuilder.endControlFlow()
         }
     }
 
-    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, format: Format,
-                             elementName: String, from: String, statement: String,
-                             androidResourceId: AndroidResourceId, isElementStyleable: Boolean) {
+    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, elementName: String,
+                             from: String, statement: String, androidResourceId: AndroidResourceId,
+                             isElementStyleable: Boolean) {
         if (isElementStyleable) {
-            assert(format == Format.DEFAULT || format == Format.RESOURCE_ID)
             methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)",
                     ParisProcessor.PARIS_CLASS_NAME, elementName, androidResourceId.code)
         } else {

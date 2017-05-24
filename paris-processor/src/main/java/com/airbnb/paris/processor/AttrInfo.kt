@@ -1,7 +1,6 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.annotations.Format
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.Errors
@@ -11,7 +10,6 @@ import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -21,7 +19,6 @@ import javax.lang.model.util.Types
  */
 internal class AttrInfo private constructor(
         val enclosingElement: Element,
-        val targetType: TypeMirror,
         val targetFormat: Format,
         val elementName: String,
         val styleableResId: AndroidResourceId,
@@ -51,13 +48,7 @@ internal class AttrInfo private constructor(
 
             val enclosingElement = element.enclosingElement
 
-            val targetType = element.parameters[0].asType()
-
-            var targetFormat = attr.format
-            if (targetFormat == Format.DEFAULT) {
-                // The format wasn't specified, use the context to guess at it
-                targetFormat = Formats.forElement(elementUtils, typeUtils, element)
-            }
+            val targetFormat = Format.forElement(elementUtils, typeUtils, element)
 
             val elementName = element.simpleName.toString()
 
@@ -69,7 +60,6 @@ internal class AttrInfo private constructor(
 
             return AttrInfo(
                     enclosingElement,
-                    targetType,
                     targetFormat,
                     elementName,
                     styleableResId,

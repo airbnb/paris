@@ -2,17 +2,14 @@ package com.airbnb.paris.test;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DimenRes;
 import android.support.annotation.Px;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
-import com.airbnb.paris.annotations.Format;
+import com.airbnb.paris.annotations.Fraction;
 import com.airbnb.paris.annotations.Styleable;
 
 // TODO  Test default values
@@ -49,8 +46,8 @@ public class MyView extends View {
     @Attr(R2.styleable.Formats_formatFloat)
     public void formatFloat(float value) {}
 
-    @Attr(value = R2.styleable.Formats_formatFraction, format = Format.FRACTION)
-    public void formatFraction(float value) {}
+    @Attr(R2.styleable.Formats_formatFraction)
+    public void formatFraction(@Fraction(base = 2, pbase = 3) float value) {}
 
     @Attr(R2.styleable.Formats_formatInteger)
     public void formatInteger(int value) {}

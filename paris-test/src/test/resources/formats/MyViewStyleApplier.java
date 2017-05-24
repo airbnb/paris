@@ -39,7 +39,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
             getView().formatFloat(a.getFloat(R.styleable.Formats_formatFloat, -1f));
         }
         if (a.hasValue(R.styleable.Formats_formatFraction)) {
-            getView().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 1, 1, -1f));
+            getView().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3, -1f));
         }
         if (a.hasValue(R.styleable.Formats_formatInteger)) {
             getView().formatInteger(a.getInt(R.styleable.Formats_formatInteger, -1));
