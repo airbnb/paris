@@ -1,10 +1,12 @@
 package com.airbnb.paris
 
+import android.support.annotation.VisibleForTesting
 import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.MarginLayoutParams
 
-internal class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
+@VisibleForTesting
+class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
 
     companion object {
         var NOT_SET = -10

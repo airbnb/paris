@@ -19,21 +19,6 @@ import com.airbnb.paris.annotations.Styleable;
 @Styleable("Formats")
 public class MyView extends View {
 
-    @Attr(R2.styleable.Formats_formatBoolean) boolean formatBoolean;
-    @Attr(R2.styleable.Formats_formatColor) @ColorInt int formatColor;
-    @Attr(R2.styleable.Formats_formatDimension) @Px int formatDimension;
-    @Attr(R2.styleable.Formats_formatEnum) int formatEnum;
-    @Attr(R2.styleable.Formats_formatFlag) int formatFlag;
-    @Attr(R2.styleable.Formats_formatFloat) float formatFloat;
-    @Attr(value = R2.styleable.Formats_formatFraction, format = Format.FRACTION) float formatFraction;
-    @Attr(R2.styleable.Formats_formatInteger) int formatInteger;
-    @Attr(R2.styleable.Formats_formatReference) CharSequence[] formatReference_CharSequenceArray;
-    @Attr(R2.styleable.Formats_formatReference) ColorStateList formatReference_ColorStateList;
-    @Attr(R2.styleable.Formats_formatReference) Drawable formatReference_Drawable;
-    @Attr(R2.styleable.Formats_formatReference) int formatReference_int;
-    @Attr(R2.styleable.Formats_formatString) CharSequence formatString_CharSequence;
-    @Attr(R2.styleable.Formats_formatString) String formatString_String;
-
     public MyView(Context context) {
         super(context);
     }
@@ -45,4 +30,46 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
+    @Attr(R2.styleable.Formats_formatBoolean)
+    public void formatBoolean(boolean value) {}
+
+    @Attr(R2.styleable.Formats_formatColor)
+    public void formatColor(@ColorInt int value) {}
+
+    @Attr(R2.styleable.Formats_formatDimension)
+    public void formatDimension(@Px int value) {}
+
+    @Attr(R2.styleable.Formats_formatEnum)
+    public void formatEnum(int value) {}
+
+    @Attr(R2.styleable.Formats_formatFlag)
+    public void formatFlag(int value) {}
+
+    @Attr(R2.styleable.Formats_formatFloat)
+    public void formatFloat(float value) {}
+
+    @Attr(value = R2.styleable.Formats_formatFraction, format = Format.FRACTION)
+    public void formatFraction(float value) {}
+
+    @Attr(R2.styleable.Formats_formatInteger)
+    public void formatInteger(int value) {}
+
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_CharSequenceArray(CharSequence[] value) {}
+
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_ColorStateList(ColorStateList value) {}
+
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_Drawable(Drawable value) {}
+
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_int(int value) {}
+
+    @Attr(R2.styleable.Formats_formatString)
+    public void formatString_CharSequence(CharSequence value) {}
+
+    @Attr(R2.styleable.Formats_formatString)
+    public void formatString_String(String value) {}
 }

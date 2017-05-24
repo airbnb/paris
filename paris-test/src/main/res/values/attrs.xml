@@ -3,6 +3,7 @@
 
     <declare-styleable name="MyView">
         <attr name="active" format="boolean" />
+        <attr name="dividerStyle" format="reference" />
         <attr name="factor" format="float" />
         <attr name="image" format="reference" />
         <attr name="index" format="integer" />

@@ -1,8 +1,7 @@
 package com.airbnb.paris.annotations
 
-@Target(AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Attr(
+annotation class StyleableField(
         val value: Int,
-        val format: Format = Format.DEFAULT,
         val defaultValue: Int = -1)

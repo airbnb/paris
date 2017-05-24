@@ -29,13 +29,14 @@ public final class R2 {
         public static final int Formats_formatString = 409;
         public static final int ManuallyWritten_attribute1 = 410;
         public static final int MyView_active = 411;
-        public static final int MyView_factor = 412;
-        public static final int MyView_image = 413;
-        public static final int MyView_index = 414;
-        public static final int MyView_subtitle = 415;
-        public static final int MyView_subtitleStyle = 416;
-        public static final int MyView_title = 417;
-        public static final int MyView_titleStyle = 418;
-        public static final int MyView_verticalPadding = 419;
+        public static final int MyView_dividerStyle = 412;
+        public static final int MyView_factor = 413;
+        public static final int MyView_image = 414;
+        public static final int MyView_index = 415;
+        public static final int MyView_subtitle = 416;
+        public static final int MyView_subtitleStyle = 417;
+        public static final int MyView_title = 418;
+        public static final int MyView_titleStyle = 419;
+        public static final int MyView_verticalPadding = 420;
     }
 }

@@ -7,9 +7,19 @@ import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
+import com.airbnb.paris.annotations.StyleableField;
 
-@Styleable(value = "MyView", dependencies = ManuallyWrittenStyleApplier.class)
+@Styleable("MyView")
 public class MyView extends View {
+
+    @StyleableField(R2.styleable.MyView_titleStyle)
+    TextView title;
+
+    @StyleableField(R2.styleable.MyView_subtitleStyle)
+    TextView subtitle;
+
+    @StyleableField(R2.styleable.MyView_dividerStyle)
+    View divider;
 
     public MyView(Context context) {
         super(context);
@@ -22,7 +32,4 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
-    @Attr(R2.styleable.MyView_title)
-    public void setTitle(String title) {}
 }

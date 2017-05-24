@@ -31,12 +31,18 @@ internal object StyleAppliersWriter {
 
         if (!styleableInfo.styleableResourceName.isEmpty()) {
             // Use an arbitrary AndroidResourceId to get R's ClassName. Per the StyleableInfo doc
-            // it's safe to assume that attrs won't be empty if styleableResourceName isn't either
-            val rClassName = styleableInfo.attrs[0].styleableResId.className!!.enclosingClassName()
+            // it's safe to assume that either styleableFields or attrs won't be empty if
+            // styleableResourceName isn't either
+            val arbitraryResId = if (!styleableInfo.styleableFields.isEmpty()) {
+                styleableInfo.styleableFields[0].styleableResId
+            } else {
+                styleableInfo.attrs[0].styleableResId
+            }
+            val rClassName = arbitraryResId.className!!.enclosingClassName()
 
             styleTypeBuilder
                     .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
-                    .addMethod(buildProcessAttributesMethod(styleableInfo.attrs))
+                    .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.attrs))
         }
 
         val parentStyleApplierClassName = styleablesTree.findStyleApplier(
@@ -49,12 +55,12 @@ internal object StyleAppliersWriter {
             styleTypeBuilder.addMethod(buildApplyDependenciesMethod(styleableInfo))
         }
 
-        for (attrInfo in styleableInfo.styleableAttrs) {
+        for (styleableFieldInfo in styleableInfo.styleableFields) {
             val subStyleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
                     styleablesInfo,
-                    attrInfo.targetType.asTypeElement(typeUtils))
-            styleTypeBuilder.addMethod(buildSubMethod(attrInfo, subStyleApplierClassName))
+                    styleableFieldInfo.elementType.asTypeElement(typeUtils))
+            styleTypeBuilder.addMethod(buildSubMethod(styleableFieldInfo, subStyleApplierClassName))
         }
 
         for (styleInfo in styleableInfo.styles) {
@@ -105,7 +111,7 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildProcessAttributesMethod(attrs: List<AttrInfo>): MethodSpec {
+    private fun buildProcessAttributesMethod(styleableFields: List<StyleableFieldInfo>, attrs: List<AttrInfo>): MethodSpec {
         val methodBuilder = MethodSpec.methodBuilder("processAttributes")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
@@ -113,37 +119,50 @@ internal object StyleAppliersWriter {
                 .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
                 .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
-        for (attr in attrs) {
-            methodBuilder.beginControlFlow("if (a.hasValue(\$L))", attr.styleableResId.code)
-            addStatement(methodBuilder, attr, "a", Formats.typedArrayMethodStatement(attr.targetFormat), attr.styleableResId)
-            methodBuilder.endControlFlow()
+        for (styleableField in styleableFields) {
+            addControlFlow(methodBuilder, Format.RESOURCE_ID, styleableField.elementName,
+                    styleableField.styleableResId, styleableField.defaultValueResId, true)
+        }
 
-            if (attr.defaultValueResId != null) {
-                methodBuilder.beginControlFlow("else")
-                addStatement(methodBuilder, attr, "res", Formats.resourcesMethodStatement(attr.targetFormat), attr.defaultValueResId)
-                methodBuilder.endControlFlow()
-            }
+        for (attr in attrs) {
+            addControlFlow(methodBuilder, attr.targetFormat, attr.elementName,
+                    attr.styleableResId, attr.defaultValueResId, false)
         }
 
         return methodBuilder.build()
     }
 
-    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, attr: AttrInfo, from: String, statement: String, androidResourceId: AndroidResourceId) {
-        if (attr.isElementStyleable) {
-            assert(attr.targetFormat == Format.DEFAULT || attr.targetFormat == Format.RESOURCE_ID)
-            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)", ParisProcessor.PARIS_CLASS_NAME, attr.elementName, androidResourceId.code)
-        } else if (attr.isElementAMethod) {
-            methodSpecBuilder.addStatement("getView().\$N($from.$statement)", attr.elementName, androidResourceId.code)
-        } else {
-            methodSpecBuilder.addStatement("getView().\$N = $from.$statement", attr.elementName, androidResourceId.code)
+    private fun addControlFlow(methodBuilder: MethodSpec.Builder, format: Format,
+                               elementName: String, styleableResId: AndroidResourceId,
+                               defaultValueResId: AndroidResourceId?, isElementStyleable: Boolean) {
+        methodBuilder.beginControlFlow("if (a.hasValue(\$L))", styleableResId.code)
+        addStatement(methodBuilder, format, elementName, "a", Formats.typedArrayMethodStatement(format), styleableResId, isElementStyleable)
+        methodBuilder.endControlFlow()
+
+        if (defaultValueResId != null) {
+            methodBuilder.beginControlFlow("else")
+            addStatement(methodBuilder, format, elementName, "res", Formats.resourcesMethodStatement(format), defaultValueResId, isElementStyleable)
+            methodBuilder.endControlFlow()
         }
     }
 
-    private fun buildSubMethod(attrInfo: AttrInfo, styleApplierClassName: ClassName): MethodSpec {
-        return MethodSpec.methodBuilder(attrInfo.elementName)
+    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, format: Format,
+                             elementName: String, from: String, statement: String,
+                             androidResourceId: AndroidResourceId, isElementStyleable: Boolean) {
+        if (isElementStyleable) {
+            assert(format == Format.DEFAULT || format == Format.RESOURCE_ID)
+            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)",
+                    ParisProcessor.PARIS_CLASS_NAME, elementName, androidResourceId.code)
+        } else {
+            methodSpecBuilder.addStatement("getView().\$N($from.$statement)", elementName, androidResourceId.code)
+        }
+    }
+
+    private fun buildSubMethod(styleableFieldInfo: StyleableFieldInfo, styleApplierClassName: ClassName): MethodSpec {
+        return MethodSpec.methodBuilder(styleableFieldInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
-                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, attrInfo.elementName)
+                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, styleableFieldInfo.elementName)
                 .build()
     }
 

@@ -15,11 +15,12 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 
 /**
- * [attrs] will be empty if [styleableResourceName] is and vice versa
+ * If [styleableResourceName] isn't empty then at least one of [styleableFields] or [attrs] won't be
+ * empty either
  */
 internal class StyleableInfo private constructor(
+        val styleableFields: List<StyleableFieldInfo>,
         val attrs: List<AttrInfo>,
-        val styleableAttrs: List<AttrInfo>,
         val elementPackageName: String,
         val elementName: String,
         val elementType: TypeMirror,
@@ -33,11 +34,15 @@ internal class StyleableInfo private constructor(
 
     companion object {
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner, classesToAttrsInfo: Map<Element, List<AttrInfo>>): List<StyleableInfo> {
+        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner,
+                            classesToStyleableFieldInfo: Map<Element, List<StyleableFieldInfo>>,
+                            classesToAttrsInfo: Map<Element, List<AttrInfo>>): List<StyleableInfo> {
             return roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                     .mapNotNull {
                         try {
-                            fromElement(resourceScanner, it as TypeElement, classesToAttrsInfo[it] ?: emptyList())
+                            fromElement(resourceScanner, it as TypeElement,
+                                    classesToStyleableFieldInfo[it] ?: emptyList(),
+                                    classesToAttrsInfo[it] ?: emptyList())
                         } catch(e: ProcessorException) {
                             Errors.log(e)
                             null
@@ -46,9 +51,8 @@ internal class StyleableInfo private constructor(
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(resourceScanner: AndroidResourceScanner, element: TypeElement, attrs: List<AttrInfo>): StyleableInfo {
-
-            val styleableAttrs = attrs.filter { it.isElementStyleable }
+        private fun fromElement(resourceScanner: AndroidResourceScanner, element: TypeElement,
+                                styleableFields: List<StyleableFieldInfo>, attrs: List<AttrInfo>): StyleableInfo {
 
             val elementPackageName = element.packageName
             val elementName = element.simpleName.toString()
@@ -76,13 +80,13 @@ internal class StyleableInfo private constructor(
             check(!styleableResourceName.isEmpty() || !dependencies.isEmpty() || !styles.isEmpty(), element) {
                 "@Styleable declaration must have at least a value, or a dependency, or a style"
             }
-            check(styleableResourceName.isEmpty() || !attrs.isEmpty()) {
+            check(styleableResourceName.isEmpty() || !(styleableFields.isEmpty() && attrs.isEmpty())) {
                 "Do not specify the @Styleable value parameter if no class members are annotated with @Attr"
             }
 
             return StyleableInfo(
+                    styleableFields,
                     attrs,
-                    styleableAttrs,
                     elementPackageName,
                     elementName,
                     elementType,

@@ -25,19 +25,20 @@ class ParisProcessorTest {
                 .generatesSources(generatedStyleApplierClass)
     }
 
+
     @Test
-    fun attributeAndDependency() {
-        assertCase("attr_dependency")
+    fun attrs() {
+        assertCase("attrs")
     }
 
     @Test
-    fun default() {
-        assertCase("default")
+    fun defaultValues() {
+        assertCase("default_values")
     }
 
     @Test
-    fun fields() {
-        assertCase("fields")
+    fun dependency() {
+        assertCase("dependency")
     }
 
     @Test
@@ -46,13 +47,8 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun methods() {
-        assertCase("methods")
-    }
-
-    @Test
-    fun noAttributesAndDependency() {
-        assertCase("no_attrs_dependency")
+    fun styleableFields() {
+        assertCase("styleable_fields")
     }
 
     @Test

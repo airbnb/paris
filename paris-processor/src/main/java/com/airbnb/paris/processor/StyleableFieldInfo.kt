@@ -1,7 +1,7 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.annotations.Format
+import com.airbnb.paris.annotations.StyleableField
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.Errors
@@ -9,31 +9,23 @@ import com.airbnb.paris.processor.utils.ProcessorException
 import com.airbnb.paris.processor.utils.check
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
-/**
- * Element  The annotated element
- * Target   The method parameter
- */
-internal class AttrInfo private constructor(
+internal class StyleableFieldInfo private constructor(
         val enclosingElement: Element,
-        val targetType: TypeMirror,
-        val targetFormat: Format,
+        val elementType: TypeMirror,
         val elementName: String,
         val styleableResId: AndroidResourceId,
         val defaultValueResId: AndroidResourceId?) {
 
     companion object {
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types, resourceScanner: AndroidResourceScanner): List<AttrInfo> {
-            return roundEnv.getElementsAnnotatedWith(Attr::class.java)
+        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner): List<StyleableFieldInfo> {
+            return roundEnv.getElementsAnnotatedWith(StyleableField::class.java)
                     .mapNotNull {
                         try {
-                            fromElement(elementUtils, typeUtils, resourceScanner, it as ExecutableElement)
+                            fromElement(resourceScanner, it)
                         } catch (e: ProcessorException) {
                             Errors.log(e)
                             null
@@ -42,22 +34,16 @@ internal class AttrInfo private constructor(
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(elementUtils: Elements, typeUtils: Types, resourceScanner: AndroidResourceScanner, element: ExecutableElement): AttrInfo {
+        private fun fromElement(resourceScanner: AndroidResourceScanner, element: Element): StyleableFieldInfo {
             check(!element.modifiers.contains(Modifier.PRIVATE) && !element.modifiers.contains(Modifier.PROTECTED), element) {
-                "Methods annotated with @Attr can't be private or protected"
+                "Fields annotated with @StyleableField can't be private or protected"
             }
 
-            val attr = element.getAnnotation(Attr::class.java)
+            val attr = element.getAnnotation(StyleableField::class.java)
 
             val enclosingElement = element.enclosingElement
 
-            val targetType = element.parameters[0].asType()
-
-            var targetFormat = attr.format
-            if (targetFormat == Format.DEFAULT) {
-                // The format wasn't specified, use the context to guess at it
-                targetFormat = Formats.forElement(elementUtils, typeUtils, element)
-            }
+            val elementType = element.asType()
 
             val elementName = element.simpleName.toString()
 
@@ -67,10 +53,9 @@ internal class AttrInfo private constructor(
                 defaultValueResId = resourceScanner.getId(Attr::class.java, element, attr.defaultValue)
             }
 
-            return AttrInfo(
+            return StyleableFieldInfo(
                     enclosingElement,
-                    targetType,
-                    targetFormat,
+                    elementType,
                     elementName,
                     styleableResId,
                     defaultValueResId)

@@ -9,7 +9,6 @@ import com.airbnb.paris.processor.utils.className
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -64,9 +63,12 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val classesToAttrsInfo: Map<Element, List<AttrInfo>> = AttrInfo.fromEnvironment(roundEnv, elementUtils, typeUtils, resourceScanner)
-                .groupBy { it.enclosingElement }
-        val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(roundEnv, resourceScanner, classesToAttrsInfo)
+        val classesToAttrsInfo = AttrInfo.fromEnvironment(roundEnv, elementUtils, typeUtils, resourceScanner)
+                        .groupBy { it.enclosingElement }
+        val classesToStyleableFieldInfo = StyleableFieldInfo.fromEnvironment(roundEnv, resourceScanner)
+                        .groupBy { it.enclosingElement }
+        val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(roundEnv,
+                resourceScanner, classesToStyleableFieldInfo, classesToAttrsInfo)
 
         if (!styleablesInfo.isEmpty()) {
             try {
