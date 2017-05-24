@@ -14,41 +14,53 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
 
     @Override
     protected int[] attributes() {
-        return R.styleable.MyView;
+        return R.styleable.Formats;
     }
 
     @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
         Resources res = getView().getContext().getResources();
-        if (a.hasValue(R.styleable.MyView_active)) {
-            getView().setActive(a.getBoolean(R.styleable.MyView_active, false));
+        if (a.hasValue(R.styleable.Formats_formatBoolean)) {
+            getView().formatBoolean(a.getBoolean(R.styleable.Formats_formatBoolean, false));
         }
-        if (a.hasValue(R.styleable.MyView_factor)) {
-            getView().setFactor(a.getFloat(R.styleable.MyView_factor, -1f));
+        if (a.hasValue(R.styleable.Formats_formatColor)) {
+            getView().formatColor(a.getColor(R.styleable.Formats_formatColor, -1));
         }
-        if (a.hasValue(R.styleable.MyView_image)) {
-            getView().setDrawable(a.getDrawable(R.styleable.MyView_image));
+        if (a.hasValue(R.styleable.Formats_formatDimension)) {
+            getView().formatDimension(a.getDimensionPixelSize(R.styleable.Formats_formatDimension, -1));
         }
-        if (a.hasValue(R.styleable.MyView_index)) {
-            getView().setIndex(a.getInt(R.styleable.MyView_index, -1));
+        if (a.hasValue(R.styleable.Formats_formatEnum)) {
+            getView().formatEnum(a.getInt(R.styleable.Formats_formatEnum, -1));
         }
-        if (a.hasValue(R.styleable.MyView_title)) {
-            getView().setTitle(a.getString(R.styleable.MyView_title));
+        if (a.hasValue(R.styleable.Formats_formatFlag)) {
+            getView().formatFlag(a.getInt(R.styleable.Formats_formatFlag, -1));
         }
-        if (a.hasValue(R.styleable.MyView_titleStyle)) {
-            getView().setTitleStyle(a.getResourceId(R.styleable.MyView_titleStyle, -1));
+        if (a.hasValue(R.styleable.Formats_formatFloat)) {
+            getView().formatFloat(a.getFloat(R.styleable.Formats_formatFloat, -1f));
         }
-        if (a.hasValue(R.styleable.MyView_subtitle)) {
-            getView().setSubtitle(a.getString(R.styleable.MyView_subtitle));
+        if (a.hasValue(R.styleable.Formats_formatFraction)) {
+            getView().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3, -1f));
         }
-        if (a.hasValue(R.styleable.MyView_subtitleStyle)) {
-            getView().setSubtitleStyle(a.getResourceId(R.styleable.MyView_subtitleStyle, -1));
+        if (a.hasValue(R.styleable.Formats_formatInteger)) {
+            getView().formatInteger(a.getInt(R.styleable.Formats_formatInteger, -1));
         }
-        if (a.hasValue(R.styleable.MyView_verticalPadding)) {
-            getView().setVerticalPaddingRes(a.getResourceId(R.styleable.MyView_verticalPadding, -1));
+        if (a.hasValue(R.styleable.Formats_formatReference)) {
+            getView().formatReference_CharSequenceArray(a.getTextArray(R.styleable.Formats_formatReference));
         }
-        if (a.hasValue(R.styleable.MyView_verticalPadding)) {
-            getView().setVerticalPadding(a.getDimensionPixelSize(R.styleable.MyView_verticalPadding, -1));
+        if (a.hasValue(R.styleable.Formats_formatReference)) {
+            getView().formatReference_ColorStateList(a.getColorStateList(R.styleable.Formats_formatReference));
+        }
+        if (a.hasValue(R.styleable.Formats_formatReference)) {
+            getView().formatReference_Drawable(a.getDrawable(R.styleable.Formats_formatReference));
+        }
+        if (a.hasValue(R.styleable.Formats_formatReference)) {
+            getView().formatReference_int(a.getResourceId(R.styleable.Formats_formatReference, -1));
+        }
+        if (a.hasValue(R.styleable.Formats_formatString)) {
+            getView().formatString_CharSequence(a.getText(R.styleable.Formats_formatString));
+        }
+        if (a.hasValue(R.styleable.Formats_formatString)) {
+            getView().formatString_String(a.getString(R.styleable.Formats_formatString));
         }
     }
 

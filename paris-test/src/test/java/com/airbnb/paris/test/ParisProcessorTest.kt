@@ -38,12 +38,7 @@ class ParisProcessorTest {
 
     @Test
     fun dependency() {
-        assertCase("dependency")
-    }
-
-    @Test
-    fun formats() {
-        assertCase("formats")
+        assertCase("dependencies")
     }
 
     @Test

@@ -1,18 +1,20 @@
 package com.airbnb.paris.test;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DimenRes;
+import android.support.annotation.AnyRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Px;
-import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
+import com.airbnb.paris.annotations.Fraction;
 import com.airbnb.paris.annotations.Styleable;
 
-@Styleable("MyView")
+// TODO  Test default values
+@Styleable("Formats")
 public class MyView extends View {
 
     public MyView(Context context) {
@@ -27,33 +29,45 @@ public class MyView extends View {
         super(context, attrs, defStyle);
     }
 
-    @Attr(R2.styleable.MyView_active)
-    public void setActive(boolean active) {}
+    @Attr(R2.styleable.Formats_formatBoolean)
+    public void formatBoolean(boolean value) {}
 
-    @Attr(R2.styleable.MyView_factor)
-    public void setFactor(float factor) {}
+    @Attr(R2.styleable.Formats_formatColor)
+    public void formatColor(@ColorInt int value) {}
 
-    @Attr(R2.styleable.MyView_image)
-    public void setDrawable(Drawable image) {}
+    @Attr(R2.styleable.Formats_formatDimension)
+    public void formatDimension(@Px int value) {}
 
-    @Attr(R2.styleable.MyView_index)
-    public void setIndex(int index) {}
+    @Attr(R2.styleable.Formats_formatEnum)
+    public void formatEnum(int value) {}
 
-    @Attr(R2.styleable.MyView_title)
-    public void setTitle(String titleText) {}
+    @Attr(R2.styleable.Formats_formatFlag)
+    public void formatFlag(int value) {}
 
-    @Attr(R2.styleable.MyView_titleStyle)
-    public void setTitleStyle(@StyleRes int styleRes) {}
+    @Attr(R2.styleable.Formats_formatFloat)
+    public void formatFloat(float value) {}
 
-    @Attr(R2.styleable.MyView_subtitle)
-    public void setSubtitle(String subtitleText) {}
+    @Attr(R2.styleable.Formats_formatFraction)
+    public void formatFraction(@Fraction(base = 2, pbase = 3) float value) {}
 
-    @Attr(R2.styleable.MyView_subtitleStyle)
-    public void setSubtitleStyle(@StyleRes int styleRes) {}
+    @Attr(R2.styleable.Formats_formatInteger)
+    public void formatInteger(int value) {}
 
-    @Attr(R2.styleable.MyView_verticalPadding)
-    public void setVerticalPaddingRes(@DimenRes int verticalPaddingRes) {}
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_CharSequenceArray(CharSequence[] value) {}
 
-    @Attr(R2.styleable.MyView_verticalPadding)
-    public void setVerticalPadding(@Px int verticalPaddingPx) {}
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_ColorStateList(ColorStateList value) {}
+
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_Drawable(Drawable value) {}
+
+    @Attr(R2.styleable.Formats_formatReference)
+    public void formatReference_int(@AnyRes int value) {}
+
+    @Attr(R2.styleable.Formats_formatString)
+    public void formatString_CharSequence(CharSequence value) {}
+
+    @Attr(R2.styleable.Formats_formatString)
+    public void formatString_String(String value) {}
 }
