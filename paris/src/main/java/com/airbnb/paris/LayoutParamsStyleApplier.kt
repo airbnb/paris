@@ -30,7 +30,7 @@ class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleAppli
     }
 
     override fun attributes(): IntArray {
-        return R.styleable.LayoutParams
+        return R.styleable.Paris_LayoutParams
     }
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
@@ -43,26 +43,26 @@ class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleAppli
         var marginRight = NOT_SET
         var marginTop = NOT_SET
 
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_width) && !ignoreLayoutWidthAndHeight) {
-            width = a.getLayoutDimension(R.styleable.LayoutParams_android_layout_width, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_width) && !ignoreLayoutWidthAndHeight) {
+            width = a.getLayoutDimension(R.styleable.Paris_LayoutParams_android_layout_width, 0)
         }
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_height) && !ignoreLayoutWidthAndHeight) {
-            height = a.getLayoutDimension(R.styleable.LayoutParams_android_layout_height, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_height) && !ignoreLayoutWidthAndHeight) {
+            height = a.getLayoutDimension(R.styleable.Paris_LayoutParams_android_layout_height, 0)
         }
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_margin)) {
-            margin = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_margin, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_margin)) {
+            margin = a.getDimensionPixelSize(R.styleable.Paris_LayoutParams_android_layout_margin, 0)
         }
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginBottom)) {
-            marginBottom = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginBottom, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_marginBottom)) {
+            marginBottom = a.getDimensionPixelSize(R.styleable.Paris_LayoutParams_android_layout_marginBottom, 0)
         }
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginLeft)) {
-            marginLeft = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginLeft, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_marginLeft)) {
+            marginLeft = a.getDimensionPixelSize(R.styleable.Paris_LayoutParams_android_layout_marginLeft, 0)
         }
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginRight)) {
-            marginRight = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginRight, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_marginRight)) {
+            marginRight = a.getDimensionPixelSize(R.styleable.Paris_LayoutParams_android_layout_marginRight, 0)
         }
-        if (a.hasValue(R.styleable.LayoutParams_android_layout_marginTop)) {
-            marginTop = a.getDimensionPixelSize(R.styleable.LayoutParams_android_layout_marginTop, 0)
+        if (a.hasValue(R.styleable.Paris_LayoutParams_android_layout_marginTop)) {
+            marginTop = a.getDimensionPixelSize(R.styleable.Paris_LayoutParams_android_layout_marginTop, 0)
         }
 
         if ((width != NOT_SET) xor (height != NOT_SET)) {

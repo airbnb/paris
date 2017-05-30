@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="LayoutParams">
+    <declare-styleable name="Paris_LayoutParams">
         <attr name="android:layout_width" />
         <attr name="android:layout_height" />
         <attr name="android:layout_margin" />
@@ -11,7 +11,7 @@
         <attr name="android:layout_marginTop" />
     </declare-styleable>
 
-    <declare-styleable name="View">
+    <declare-styleable name="Paris_View">
         <attr name="android:background" />
         <attr name="android:minWidth" />
         <attr name="android:padding" />
@@ -22,7 +22,7 @@
         <attr name="android:stateListAnimator" />
     </declare-styleable>
 
-    <declare-styleable name="TextView">
+    <declare-styleable name="Paris_TextView">
         <attr name="android:ellipsize" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
