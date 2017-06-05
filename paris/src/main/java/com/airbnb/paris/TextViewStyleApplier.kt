@@ -1,5 +1,6 @@
 package com.airbnb.paris
 
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.TextUtils
 import android.util.TypedValue
@@ -16,6 +17,25 @@ class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, 
     }
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
+        var drawableBottom: Drawable? = null
+        var drawableLeft: Drawable? = null
+        var drawableRight: Drawable? = null
+        var drawableTop: Drawable? = null
+
+        if (a.hasValue(R.styleable.Paris_TextView_android_drawableBottom)) {
+            drawableBottom = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableBottom);
+        }
+        if (a.hasValue(R.styleable.Paris_TextView_android_drawableLeft)) {
+            drawableLeft = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableLeft);
+        }
+        if (a.hasValue(R.styleable.Paris_TextView_android_drawableRight)) {
+            drawableRight = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableRight);
+        }
+        if (a.hasValue(R.styleable.Paris_TextView_android_drawableTop)) {
+            drawableTop = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableTop);
+        }
+        view.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, drawableTop, drawableRight, drawableBottom)
+
         if (a.hasValue(R.styleable.Paris_TextView_android_ellipsize)) {
             setEllipsize(view, a.getInt(R.styleable.Paris_TextView_android_ellipsize, -1))
         }
@@ -39,11 +59,17 @@ class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, 
         if (a.hasValue(R.styleable.Paris_TextView_android_minWidth)) {
             view.minWidth = a.getDimensionPixelSize(R.styleable.Paris_TextView_android_minWidth, -1)
         }
+        if (a.hasValue(R.styleable.Paris_TextView_android_singleLine)) {
+            view.setSingleLine(a.getBoolean(R.styleable.Paris_TextView_android_singleLine, false))
+        }
         if (a.hasValue(R.styleable.Paris_TextView_android_textAllCaps)) {
             view.setAllCaps(a.getBoolean(R.styleable.Paris_TextView_android_textAllCaps, false))
         }
         if (a.hasValue(R.styleable.Paris_TextView_android_textColor)) {
             view.setTextColor(a.getColorStateList(R.styleable.Paris_TextView_android_textColor))
+        }
+        if (a.hasValue(R.styleable.Paris_TextView_android_textColorHint)) {
+            view.setHintTextColor(a.getColorStateList(R.styleable.Paris_TextView_android_textColorHint))
         }
         if (a.hasValue(R.styleable.Paris_TextView_android_textSize)) {
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getDimensionPixelSize(R.styleable.Paris_TextView_android_textSize, 0).toFloat())

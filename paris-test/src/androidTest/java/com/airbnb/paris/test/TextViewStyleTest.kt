@@ -14,7 +14,8 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import org.mockito.Mockito
+import org.mockito.Mockito.spy
 
 
 @RunWith(AndroidJUnit4::class)
@@ -29,6 +30,19 @@ class TextViewStyleTest {
         context = InstrumentationRegistry.getTargetContext()
         res = context.resources
         view = TextView(context)
+    }
+
+    @Test
+    fun textViewDrawables() {
+        assertNull(view.compoundDrawables[0])
+        assertNull(view.compoundDrawables[1])
+        assertNull(view.compoundDrawables[2])
+        assertNull(view.compoundDrawables[3])
+        TextViewStyleApplier(view).apply(R.style.Test_TextView_drawables)
+        assertNotNull(view.compoundDrawables[0])
+        assertNotNull(view.compoundDrawables[1])
+        assertNotNull(view.compoundDrawables[2])
+        assertNotNull(view.compoundDrawables[3])
     }
 
     @Test
@@ -87,9 +101,17 @@ class TextViewStyleTest {
     }
 
     @Test
+    fun textViewSingleLine() {
+        val spy = spy(view)
+        TextViewStyleApplier(spy).apply(R.style.Test_TextView_singleLine)
+        Mockito.verify(spy).setSingleLine(true)
+    }
+
+    @Test
     fun textViewTextAllCaps() {
-        TextViewStyleApplier(view).apply(R.style.Test_TextView_textAllCaps)
-        // TODO  How to test this? There's no getter
+        val spy = spy(view)
+        TextViewStyleApplier(spy).apply(R.style.Test_TextView_textAllCaps)
+        Mockito.verify(spy).setAllCaps(true)
     }
 
     @Test

@@ -49,7 +49,13 @@
         <item name="android:paddingTop">@dimen/test_view_paddingTop</item>
     </style>
 
-    <!-- end -->
+    <style name="Test_TextView_drawables">
+        <item name="android:drawableBottom">@android:drawable/ic_delete</item>
+        <item name="android:drawableLeft">@android:drawable/ic_delete</item>
+        <item name="android:drawableRight">@android:drawable/ic_delete</item>
+        <item name="android:drawableTop">@android:drawable/ic_delete</item>
+    </style>
+
     <integer name="test_text_view_ellipsize">3</integer>
     <style name="Test_TextView_ellipsize">
         <item name="android:ellipsize">@integer/test_text_view_ellipsize</item>
@@ -82,6 +88,10 @@
     <dimen name="test_text_view_min_width">99dp</dimen>
     <style name="Test_TextView_minWidth">
         <item name="android:minWidth">@dimen/test_text_view_min_width</item>
+    </style>
+
+    <style name="Test_TextView_singleLine">
+        <item name="android:singleLine">true</item>
     </style>
 
     <bool name="test_text_view_text_all_caps">true</bool>

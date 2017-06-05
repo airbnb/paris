@@ -13,8 +13,8 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -27,17 +27,19 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     compile deps.kotlin
     compile project(':paris')
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.8.9'
     testCompile files(getRuntimeJar())
     testCompile files(Jvm.current().getToolsJar())
     testCompile deps.googleTestingCompile
     testCompile project(':paris-processor')
+    androidTestCompile 'org.mockito:mockito-android:2.8.9'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
 
 static def getRuntimeJar() {

@@ -23,6 +23,10 @@
     </declare-styleable>
 
     <declare-styleable name="Paris_TextView">
+        <attr name="android:drawableBottom" />
+        <attr name="android:drawableLeft" />
+        <attr name="android:drawableRight" />
+        <attr name="android:drawableTop" />
         <attr name="android:ellipsize" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
@@ -30,8 +34,10 @@
         <attr name="android:lineSpacingMultiplier" />
         <attr name="android:maxLines" />
         <attr name="android:minWidth" />
+        <attr name="android:singleLine" />
         <attr name="android:textAllCaps" />
         <attr name="android:textColor" />
+        <attr name="android:textColorHint" />
         <attr name="android:textSize" />
     </declare-styleable>
 
