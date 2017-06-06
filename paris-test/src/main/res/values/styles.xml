@@ -56,6 +56,10 @@
         <item name="android:drawableTop">@android:drawable/ic_delete</item>
     </style>
 
+    <style name="Test_TextView_no_drawables">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <integer name="test_text_view_ellipsize">3</integer>
     <style name="Test_TextView_ellipsize">
         <item name="android:ellipsize">@integer/test_text_view_ellipsize</item>

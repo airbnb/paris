@@ -46,6 +46,18 @@ class TextViewStyleTest {
     }
 
     @Test
+    fun textViewDrawablesNotReset() {
+        // If a style is applied that doesn't change the drawable then it should still be there
+
+        assertNull(view.compoundDrawables[0])
+        TextViewStyleApplier(view).apply(R.style.Test_TextView_drawables)
+        val drawableLeft = view.compoundDrawables[0];
+        assertNotNull(drawableLeft)
+        TextViewStyleApplier(view).apply(R.style.Test_TextView_no_drawables)
+        assertEquals(drawableLeft, view.compoundDrawables[0])
+    }
+
+    @Test
     fun textViewEllipsize() {
         assertNull(view.ellipsize)
         TextViewStyleApplier(view).apply(R.style.Test_TextView_ellipsize)

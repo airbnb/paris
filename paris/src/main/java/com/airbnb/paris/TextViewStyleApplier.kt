@@ -17,24 +17,30 @@ class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, 
     }
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
-        var drawableBottom: Drawable? = null
         var drawableLeft: Drawable? = null
-        var drawableRight: Drawable? = null
         var drawableTop: Drawable? = null
-
-        if (a.hasValue(R.styleable.Paris_TextView_android_drawableBottom)) {
-            drawableBottom = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableBottom);
-        }
+        var drawableRight: Drawable? = null
+        var drawableBottom: Drawable? = null
         if (a.hasValue(R.styleable.Paris_TextView_android_drawableLeft)) {
             drawableLeft = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableLeft);
-        }
-        if (a.hasValue(R.styleable.Paris_TextView_android_drawableRight)) {
-            drawableRight = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableRight);
         }
         if (a.hasValue(R.styleable.Paris_TextView_android_drawableTop)) {
             drawableTop = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableTop);
         }
-        view.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, drawableTop, drawableRight, drawableBottom)
+        if (a.hasValue(R.styleable.Paris_TextView_android_drawableRight)) {
+            drawableRight = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableRight);
+        }
+        if (a.hasValue(R.styleable.Paris_TextView_android_drawableBottom)) {
+            drawableBottom = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_TextView_android_drawableBottom);
+        }
+        if (drawableLeft != null || drawableTop != null || drawableRight != null || drawableBottom != null) {
+            val drawables = view.compoundDrawables
+            view.setCompoundDrawablesWithIntrinsicBounds(
+                    drawableLeft ?: drawables[0],
+                    drawableTop ?: drawables[1],
+                    drawableRight ?: drawables[2],
+                    drawableBottom ?: drawables[3])
+        }
 
         if (a.hasValue(R.styleable.Paris_TextView_android_ellipsize)) {
             setEllipsize(view, a.getInt(R.styleable.Paris_TextView_android_ellipsize, -1))
