@@ -11,7 +11,7 @@ internal class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArra
      * Unfortunately Android doesn't support reading @null resources from a style resource like it
      * does from an AttributeSet so this trickery is required
      */
-    private val NULL_RESOURCE_IDS = HashSet(Arrays.asList(R.anim.null_, R.color.null_))
+    private val NULL_RESOURCE_IDS = HashSet(Arrays.asList(R.anim.null_, R.color.null_, R.drawable.null_))
 
     override fun isNull(index: Int): Boolean {
         return NULL_RESOURCE_IDS.contains(typedArray.getResourceId(index, 0))
