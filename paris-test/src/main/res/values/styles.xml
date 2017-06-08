@@ -74,6 +74,11 @@
         <item name="android:letterSpacing" tools:targetApi="lollipop">@dimen/test_text_view_letter_spacing</item>
     </style>
 
+    <integer name="test_text_view_lines">4</integer>
+    <style name="Test_TextView_lines">
+        <item name="android:lines">@integer/test_text_view_lines</item>
+    </style>
+
     <dimen name="test_text_view_line_spacing_extra">4dp</dimen>
     <style name="Test_TextView_lineSpacingExtra">
         <item name="android:lineSpacingExtra">@dimen/test_text_view_line_spacing_extra</item>

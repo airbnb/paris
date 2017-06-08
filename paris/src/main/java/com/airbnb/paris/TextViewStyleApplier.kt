@@ -53,6 +53,9 @@ class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, 
                 view.letterSpacing = a.getFloat(R.styleable.Paris_TextView_android_letterSpacing, 0f)
             }
         }
+        if (a.hasValue(R.styleable.Paris_TextView_android_lines)) {
+            view.setLines(a.getInt(R.styleable.Paris_TextView_android_lines, -1))
+        }
         if (a.hasValue(R.styleable.Paris_TextView_android_lineSpacingExtra)) {
             view.setLineSpacing(a.getDimensionPixelSize(R.styleable.Paris_TextView_android_lineSpacingExtra, 0).toFloat(), view.lineSpacingMultiplier)
         }

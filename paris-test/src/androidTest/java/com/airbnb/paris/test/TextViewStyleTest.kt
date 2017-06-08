@@ -83,6 +83,13 @@ class TextViewStyleTest {
     }
 
     @Test
+    fun textViewLines() {
+        val spy = spy(view)
+        TextViewStyleApplier(spy).apply(R.style.Test_TextView_lines)
+        Mockito.verify(spy).setLines(view.resources.getInteger(R.integer.test_text_view_lines))
+    }
+
+    @Test
     fun textViewLineSpacingExtra() {
         assertEquals(0.0f, view.lineSpacingExtra)
         TextViewStyleApplier(view).apply(R.style.Test_TextView_lineSpacingExtra)

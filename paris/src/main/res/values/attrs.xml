@@ -32,6 +32,7 @@
         <attr name="android:letterSpacing" />
         <attr name="android:lineSpacingExtra" />
         <attr name="android:lineSpacingMultiplier" />
+        <attr name="android:lines" />
         <attr name="android:maxLines" />
         <attr name="android:minWidth" />
         <attr name="android:singleLine" />
