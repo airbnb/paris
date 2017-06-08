@@ -113,6 +113,13 @@ class TextViewStyleTest {
     }
 
     @Test
+    fun textViewMinLines() {
+        assertEquals(0, view.minLines)
+        TextViewStyleApplier(view).apply(R.style.Test_TextView_minLines)
+        assertEquals(res.getInteger(R.integer.test_text_view_min_lines), view.minLines)
+    }
+
+    @Test
     fun textViewMinWidth() {
         assertEquals(0, view.minWidth)
         TextViewStyleApplier(view).apply(R.style.Test_TextView_minWidth)

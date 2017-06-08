@@ -65,6 +65,9 @@ class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, 
         if (a.hasValue(R.styleable.Paris_TextView_android_maxLines)) {
             view.maxLines = a.getInt(R.styleable.Paris_TextView_android_maxLines, -1)
         }
+        if (a.hasValue(R.styleable.Paris_TextView_android_minLines)) {
+            view.minLines = a.getInt(R.styleable.Paris_TextView_android_minLines, -1)
+        }
         if (a.hasValue(R.styleable.Paris_TextView_android_minWidth)) {
             view.minWidth = a.getDimensionPixelSize(R.styleable.Paris_TextView_android_minWidth, -1)
         }

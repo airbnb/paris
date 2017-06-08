@@ -94,6 +94,11 @@
         <item name="android:maxLines">@integer/test_text_view_max_lines</item>
     </style>
 
+    <integer name="test_text_view_min_lines">4</integer>
+    <style name="Test_TextView_minLines">
+        <item name="android:minLines">@integer/test_text_view_min_lines</item>
+    </style>
+
     <dimen name="test_text_view_min_width">99dp</dimen>
     <style name="Test_TextView_minWidth">
         <item name="android:minWidth">@dimen/test_text_view_min_width</item>
