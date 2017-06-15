@@ -16,6 +16,7 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: 
     }
 
     fun apply(attributeSet: AttributeSet?): S {
+        // TODO  Apply even if attributeSet is null so that default values work even when creating a view with no AttributeSet
         // We allow null AttributeSets purely for convenience here
         if (attributeSet != null) {
             apply(Style(attributeSet, config))
