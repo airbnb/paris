@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor
 
+import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.className
 import com.squareup.javapoet.*
 import java.io.IOException
@@ -26,6 +27,8 @@ internal object ParisWriter {
             parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
         }
 
+        parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
+
         JavaFile.builder(ParisProcessor.PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
                 .build()
                 .writeTo(filer)
@@ -48,5 +51,35 @@ internal object ParisWriter {
                 .addParameter(ParameterSpec.builder(viewParameterTypeName, "view").build())
                 .addStatement("return new \$T(view)", styleApplierClassName)
                 .build()
+    }
+
+    private fun buildAssertStylesMethod(styleableClassesInfo: List<StyleableInfo>): MethodSpec {
+        val builder = MethodSpec.methodBuilder("assertStylesContainSameAttributes")
+                .addJavadoc("For debugging")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(ClassNames.ANDROID_CONTEXT, "context")
+
+        for (styleableClassInfo in styleableClassesInfo) {
+            if (styleableClassInfo.styles.size > 1) {
+                builder.addStatement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
+
+                val styleVarargCodeBuilder = CodeBlock.builder()
+                for ((i, style) in styleableClassInfo.styles.withIndex()) {
+                    if (i > 0) {
+                        styleVarargCodeBuilder.add(", ")
+                    }
+                    styleVarargCodeBuilder.add("new \$T(\$L)",
+                            ParisProcessor.STYLE_CLASS_NAME, style.androidResourceId.code)
+                }
+
+                val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
+                        ParisProcessor.STYLE_APPLIER_UTILS_CLASS_NAME,
+                        styleableClassInfo.elementType,
+                        styleVarargCodeBuilder.build())
+                builder.addCode(assertEqualAttributesCode)
+            }
+        }
+
+        return builder.build()
     }
 }

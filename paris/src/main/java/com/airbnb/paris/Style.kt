@@ -97,6 +97,12 @@ class Style private constructor(
         }
     }
 
+    internal interface TestingListener {
+        fun beforeTypedArrayProcessed(typedArray: TypedArrayWrapper?)
+    }
+
+    internal var testingListener: TestingListener? = null
+
     @SuppressLint("Recycle")
     fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper? {
         if (attributeMap != null) {

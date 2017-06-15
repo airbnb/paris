@@ -37,7 +37,7 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun dependency() {
+    fun dependencies() {
         assertCase("dependencies")
     }
 

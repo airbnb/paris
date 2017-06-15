@@ -1,5 +1,6 @@
 package com.airbnb.paris;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 import com.airbnb.paris.test.MyView;
@@ -16,5 +17,10 @@ public final class Paris {
 
     public static MyViewStyleApplier style(MyView view) {
         return new MyViewStyleApplier(view);
+    }
+
+    /**
+     * For debugging */
+    public static void assertStylesContainSameAttributes(Context context) {
     }
 }

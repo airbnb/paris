@@ -6,7 +6,7 @@ import android.support.annotation.StyleRes
 import android.util.AttributeSet
 import android.view.View
 
-abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(protected val view: T) {
+abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: T) {
 
     private var config: Style.Config = Style.Config.builder().build()
 
@@ -39,6 +39,10 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(protected 
         val attributes = attributes()
         if (attributes != null) {
             val typedArray = style.obtainStyledAttributes(view.context, attributes)
+
+            // For testing purposes
+            style.testingListener?.beforeTypedArrayProcessed(typedArray)
+
             if (typedArray != null) {
                 processAttributes(style, typedArray)
                 typedArray.recycle()
