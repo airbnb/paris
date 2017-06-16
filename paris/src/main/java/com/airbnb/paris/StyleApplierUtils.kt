@@ -7,7 +7,7 @@ class StyleApplierUtils {
 
     companion object {
 
-        private class TestingListener : Style.TestingListener {
+        private class DebugListener : Style.DebugListener {
 
             val attributeIndexesList = ArrayList<Set<Int>?>()
 
@@ -18,21 +18,21 @@ class StyleApplierUtils {
 
         @VisibleForTesting
         fun assertSameAttributes(applier: StyleApplier<*, *>, vararg styles: Style) {
-            if (styles.size == 1) {
+            if (styles.size <= 1) {
                 return
             }
 
             val styleReference = styles.first()
-            val testingListenerReference = TestingListener()
-            styleReference.testingListener = testingListenerReference
+            val debugListenerReference = DebugListener()
+            styleReference.debugListener = debugListenerReference
             applier.apply(styleReference)
 
             for (style in styles.drop(1)) {
-                val testingListener = TestingListener()
-                style.testingListener = testingListener
+                val testingListener = DebugListener()
+                style.debugListener = testingListener
                 applier.apply(style)
 
-                if (testingListenerReference.attributeIndexesList != testingListener.attributeIndexesList) {
+                if (debugListenerReference.attributeIndexesList != testingListener.attributeIndexesList) {
                     val context = applier.view.context
                     val viewSimpleName = applier.view.javaClass.simpleName
                     // Assumes these styles have a style resource since they come from @Styleable
