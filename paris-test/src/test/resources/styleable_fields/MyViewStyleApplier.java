@@ -22,14 +22,21 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
     @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
         Resources res = getView().getContext().getResources();
+        Style subStyle;
         if (a.hasValue(R.styleable.MyView_titleStyle)) {
-            Paris.style(getView().title).apply(a.getResourceId(R.styleable.MyView_titleStyle, -1));
+            subStyle = new Style(a.getResourceId(R.styleable.MyView_titleStyle, -1));
+            subStyle.setDebugListener(style.getDebugListener());
+            Paris.style(getView().title).apply(subStyle);
         }
         if (a.hasValue(R.styleable.MyView_subtitleStyle)) {
-            Paris.style(getView().subtitle).apply(a.getResourceId(R.styleable.MyView_subtitleStyle, -1));
+            subStyle = new Style(a.getResourceId(R.styleable.MyView_subtitleStyle, -1));
+            subStyle.setDebugListener(style.getDebugListener());
+            Paris.style(getView().subtitle).apply(subStyle);
         }
         if (a.hasValue(R.styleable.MyView_dividerStyle)) {
-            Paris.style(getView().divider).apply(a.getResourceId(R.styleable.MyView_dividerStyle, -1));
+            subStyle = new Style(a.getResourceId(R.styleable.MyView_dividerStyle, -1));
+            subStyle.setDebugListener(style.getDebugListener());
+            Paris.style(getView().divider).apply(subStyle);
         }
     }
 

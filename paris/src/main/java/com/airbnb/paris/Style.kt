@@ -97,11 +97,17 @@ class Style private constructor(
         }
     }
 
-    internal interface DebugListener {
-        fun beforeTypedArrayProcessed(typedArray: TypedArrayWrapper?)
+    /**
+     * Visible for debug
+     */
+    interface DebugListener {
+        fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper?)
     }
 
-    internal var debugListener: DebugListener? = null
+    /**
+     * Visible for debug
+     */
+    var debugListener: DebugListener? = null
 
     @SuppressLint("Recycle")
     fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper? {

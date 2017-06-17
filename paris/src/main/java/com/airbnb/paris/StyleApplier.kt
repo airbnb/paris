@@ -42,7 +42,7 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: 
             val typedArray = style.obtainStyledAttributes(view.context, attributes)
 
             // For debug purposes
-            style.debugListener?.beforeTypedArrayProcessed(typedArray)
+            style.debugListener?.beforeTypedArrayProcessed(style, typedArray)
 
             if (typedArray != null) {
                 processAttributes(style, typedArray)

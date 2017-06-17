@@ -118,10 +118,16 @@
         <item name="android:textSize">@dimen/test_text_view_text_size</item>
     </style>
 
-    <style name="StyleApplierUtilsTest_TextView_textColorTextSizePadding">
+    <style name="StyleApplierUtilsTest_TextView_textColorTextSizePadding_1">
         <item name="android:padding">24dp</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="StyleApplierUtilsTest_TextView_textColorTextSizePadding_2">
+        <item name="android:padding">24dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">19sp</item>
     </style>
 
     <style name="StyleApplierUtilsTest_TextView_textSizePadding">
@@ -132,6 +138,20 @@
     <style name="StyleApplierUtilsTest_TextView_textColorTextSizePadding_withInheritance" parent="StyleApplierUtilsTest_TextView_textSizePadding">
         <item name="android:textColor">@android:color/black</item>
     </style>
+
+    <style name="StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1">
+        <item name="titleStyle">@style/StyleApplierUtilsTest_TextView_textColorTextSizePadding_1</item>
+    </style>
+
+    <style name="StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_2">
+        <item name="titleStyle">@style/StyleApplierUtilsTest_TextView_textColorTextSizePadding_2</item>
+    </style>
+
+    <style name="StyleApplierUtilsTest_MyView_titleStyle_textSizePadding">
+        <item name="titleStyle">@style/StyleApplierUtilsTest_TextView_textSizePadding</item>
+    </style>
+
+    <style name="Empty" />
 
     <style name="MyView_Red" />
     <style name="MyView_Green" />

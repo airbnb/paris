@@ -9,10 +9,16 @@ class StyleApplierUtils {
 
         private class DebugListener : Style.DebugListener {
 
-            val attributeIndexesList = ArrayList<Set<Int>?>()
+            /**
+             * For each TypedArray processed during the application of a style we save the style
+             * and the set of attribute indexes. We save the style because it may be a sub-style of
+             * the parent and we'll need that information to display a user friendly error
+             */
+            val attributeIndexes = ArrayList<Pair<Style, Set<Int>?>>()
 
-            override fun beforeTypedArrayProcessed(typedArray: TypedArrayWrapper?) {
-                attributeIndexesList.add(if (typedArray != null) Companion.getAttributeIndexes(typedArray) else null)
+            override fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper?) {
+                val pair = Pair(style, if (typedArray != null) Companion.getAttributeIndexes(typedArray) else null)
+                attributeIndexes.add(pair)
             }
         }
 
@@ -28,18 +34,49 @@ class StyleApplierUtils {
             applier.apply(styleReference)
 
             for (style in styles.drop(1)) {
-                val testingListener = DebugListener()
-                style.debugListener = testingListener
+                val debugListener = DebugListener()
+                style.debugListener = debugListener
                 applier.apply(style)
 
-                if (debugListenerReference.attributeIndexesList != testingListener.attributeIndexesList) {
+                val mismatchedStyle = getMismatchedStyles(styleReference, debugListenerReference.attributeIndexes,
+                        style, debugListener.attributeIndexes)
+                if (mismatchedStyle != null) {
                     val context = applier.view.context
                     val viewSimpleName = applier.view.javaClass.simpleName
-                    // Assumes these styles have a style resource since they come from @Styleable
-                    val styleReferenceName = context.resources.getResourceEntryName(styleReference.styleRes)
-                    val otherStyleName = context.resources.getResourceEntryName(style.styleRes)
-                    throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" and \"$otherStyleName\" linked to $viewSimpleName have different attributes.")
+                    val isSubStyle = mismatchedStyle.first.styleRes != styleReference.styleRes
+                    val styleReferenceName = context.resources.getResourceEntryName(mismatchedStyle.first.styleRes)
+                    val otherStyleName = context.resources.getResourceEntryName(mismatchedStyle.second.styleRes)
+                    if (isSubStyle) {
+                        val parentStyleReferenceName = context.resources.getResourceEntryName(styleReference.styleRes)
+                        val otherParentStyleName = context.resources.getResourceEntryName(style.styleRes)
+                        throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" (referenced in \"$parentStyleReferenceName\") and \"$otherStyleName\" (referenced in \"$otherParentStyleName\") linked to $viewSimpleName have different attributes.")
+                    } else {
+                        throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" and \"$otherStyleName\" linked to $viewSimpleName have different attributes.")
+                    }
                 }
+            }
+        }
+
+        private fun getMismatchedStyles(style1: Style, attributeIndexes1: ArrayList<Pair<Style, Set<Int>?>>,
+                                        style2: Style, attributeIndexes2: ArrayList<Pair<Style, Set<Int>?>>): Pair<Style, Style>? {
+            val iterator1 = attributeIndexes1.listIterator()
+            val iterator2 = attributeIndexes2.listIterator()
+
+            while (iterator1.hasNext() && iterator2.hasNext()) {
+                val pair1 = iterator1.next()
+                val pair2 = iterator2.next()
+                if (pair1.second != pair2.second) {
+                    // The sets of attributes are mismatched, they could be from a sub-style so we
+                    // return the styles from the attribute maps
+                    return Pair(pair1.first, pair2.first)
+                }
+            }
+
+            if (iterator1.hasNext() || iterator2.hasNext()) {
+                // One parent style is the same as the other plus other attributes: mismatch
+                return Pair(style1, style2)
+            } else {
+                return null
             }
         }
 

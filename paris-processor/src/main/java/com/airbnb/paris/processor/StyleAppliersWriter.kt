@@ -118,6 +118,10 @@ internal object StyleAppliersWriter {
                 .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
                 .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
+        if (styleableFields.isNotEmpty()) {
+            methodBuilder.addStatement("\$T subStyle", ParisProcessor.STYLE_CLASS_NAME)
+        }
+
         for (styleableField in styleableFields) {
             addControlFlow(methodBuilder, Format.RESOURCE_ID, styleableField.elementName,
                     styleableField.styleableResId, styleableField.defaultValueResId, true)
@@ -149,8 +153,10 @@ internal object StyleAppliersWriter {
                              from: String, statement: String, androidResourceId: AndroidResourceId,
                              isElementStyleable: Boolean) {
         if (isElementStyleable) {
-            methodSpecBuilder.addStatement("\$T.style(getView().\$N).apply($from.$statement)",
-                    ParisProcessor.PARIS_CLASS_NAME, elementName, androidResourceId.code)
+            methodSpecBuilder
+                    .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.STYLE_CLASS_NAME, androidResourceId.code)
+                    .addStatement("subStyle.setDebugListener(style.getDebugListener())")
+                    .addStatement("\$T.style(getView().\$N).apply(subStyle)", ParisProcessor.PARIS_CLASS_NAME, elementName)
         } else {
             methodSpecBuilder.addStatement("getView().\$N($from.$statement)", elementName, androidResourceId.code)
         }

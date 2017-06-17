@@ -15,39 +15,76 @@ import org.junit.runner.RunWith
 class StyleApplierUtilsTest {
 
     lateinit var context: Context
-    lateinit var applier: TextViewStyleApplier
+    lateinit var textViewApplier: TextViewStyleApplier
+    lateinit var myViewApplier: MyViewStyleApplier
 
     @Before
     fun setup() {
         context = InstrumentationRegistry.getTargetContext()
-        applier = TextViewStyleApplier(TextView(context))
+        textViewApplier = TextViewStyleApplier(TextView(context))
+        myViewApplier = MyViewStyleApplier(MyView(context))
     }
 
     @Test
     fun sameStyle() {
-        StyleApplierUtils.assertSameAttributes(applier,
-                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding),
-                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding))
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
+                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1))
     }
 
     @Test
     fun sameAttributes() {
-        StyleApplierUtils.assertSameAttributes(applier,
-                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding),
-                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding))
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
+                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_2))
     }
 
     @Test(expected = AssertionError::class)
     fun differentAttributes() {
-        StyleApplierUtils.assertSameAttributes(applier,
-                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding),
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
                 Style(R.style.StyleApplierUtilsTest_TextView_textSizePadding))
     }
 
     @Test
     fun inheritance() {
-        StyleApplierUtils.assertSameAttributes(applier,
-                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding),
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
                 Style(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_withInheritance))
+    }
+
+    @Test
+    fun subStylesSameStyle() {
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1))
+    }
+
+    @Test
+    fun subStylesSameAttributes() {
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_2))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun subStylesDifferentAttributes() {
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textSizePadding))
+    }
+
+    @Test
+    fun emptyStyleSameStyle() {
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.Empty),
+                Style(R.style.Empty))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun emptyStyleDifferentAttributes() {
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+                Style(R.style.Empty))
     }
 }
