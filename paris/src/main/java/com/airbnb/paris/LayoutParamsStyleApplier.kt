@@ -1,10 +1,12 @@
 package com.airbnb.paris
 
+import android.support.annotation.UiThread
 import android.support.annotation.VisibleForTesting
 import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.MarginLayoutParams
 
+@UiThread
 @VisibleForTesting
 class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
 

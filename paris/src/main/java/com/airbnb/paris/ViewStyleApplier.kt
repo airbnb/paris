@@ -2,8 +2,10 @@ package com.airbnb.paris
 
 import android.animation.AnimatorInflater
 import android.os.Build
+import android.support.annotation.UiThread
 import android.view.View
 
+@UiThread
 class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) {
 
     override fun attributes(): IntArray {

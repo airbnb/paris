@@ -3,9 +3,11 @@
 package com.airbnb.paris
 
 import android.support.annotation.StyleRes
+import android.support.annotation.UiThread
 import android.util.AttributeSet
 import android.view.View
 
+@UiThread
 abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: T) {
 
     private var config: Style.Config = Style.Config.builder().build()

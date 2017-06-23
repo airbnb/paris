@@ -2,10 +2,12 @@ package com.airbnb.paris
 
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.annotation.UiThread
 import android.text.TextUtils
 import android.util.TypedValue
 import android.widget.TextView
 
+@UiThread
 class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, TextView>(view) {
 
     override fun attributes(): IntArray {

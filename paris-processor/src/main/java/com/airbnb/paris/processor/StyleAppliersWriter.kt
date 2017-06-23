@@ -9,6 +9,7 @@ import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import javax.lang.model.util.Types
 
+// TODO  Add @UiThread annotation to StyleApplier classes
 internal object StyleAppliersWriter {
 
     @Throws(IOException::class)
