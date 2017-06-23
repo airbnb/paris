@@ -36,6 +36,7 @@ class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleAppli
     }
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
+        val view = getViewOrThrow()
         val ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight)
         var width = NOT_SET
         var height = NOT_SET

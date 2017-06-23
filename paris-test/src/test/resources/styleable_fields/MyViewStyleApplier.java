@@ -14,6 +14,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         super(view);
     }
 
+    public MyViewStyleApplier() {
+        super(null);
+    }
+
     @Override
     protected int[] attributes() {
         return R.styleable.MyView;
@@ -21,39 +25,39 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
 
     @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
-        Resources res = getView().getContext().getResources();
+        Resources res = getViewOrThrow().getContext().getResources();
         Style subStyle;
         if (a.hasValue(R.styleable.MyView_titleStyle)) {
             subStyle = new Style(a.getResourceId(R.styleable.MyView_titleStyle, -1));
             subStyle.setDebugListener(style.getDebugListener());
-            Paris.style(getView().title).apply(subStyle);
+            Paris.style(getViewOrThrow().title).apply(subStyle);
         }
         if (a.hasValue(R.styleable.MyView_subtitleStyle)) {
             subStyle = new Style(a.getResourceId(R.styleable.MyView_subtitleStyle, -1));
             subStyle.setDebugListener(style.getDebugListener());
-            Paris.style(getView().subtitle).apply(subStyle);
+            Paris.style(getViewOrThrow().subtitle).apply(subStyle);
         }
         if (a.hasValue(R.styleable.MyView_dividerStyle)) {
             subStyle = new Style(a.getResourceId(R.styleable.MyView_dividerStyle, -1));
             subStyle.setDebugListener(style.getDebugListener());
-            Paris.style(getView().divider).apply(subStyle);
+            Paris.style(getViewOrThrow().divider).apply(subStyle);
         }
     }
 
     @Override
     protected void applyParent(Style style) {
-        new ViewStyleApplier(getView()).apply(style);
+        new ViewStyleApplier(getViewOrThrow()).apply(style);
     }
 
     public TextViewStyleApplier title() {
-        return new TextViewStyleApplier(getView().title);
+        return new TextViewStyleApplier(getViewOrThrow().title);
     }
 
     public TextViewStyleApplier subtitle() {
-        return new TextViewStyleApplier(getView().subtitle);
+        return new TextViewStyleApplier(getViewOrThrow().subtitle);
     }
 
     public ViewStyleApplier divider() {
-        return new ViewStyleApplier(getView().divider);
+        return new ViewStyleApplier(getViewOrThrow().divider);
     }
 }
