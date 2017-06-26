@@ -6,7 +6,7 @@ import android.support.annotation.UiThread
 import android.view.View
 
 @UiThread
-class ViewStyleApplier(view: View? = null) : StyleApplier<ViewStyleApplier, View>(view) {
+class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) {
 
     override fun attributes(): IntArray {
         return R.styleable.Paris_View
@@ -25,11 +25,10 @@ class ViewStyleApplier(view: View? = null) : StyleApplier<ViewStyleApplier, View
 //    }
 
     override fun applyDependencies(style: Style) {
-        LayoutParamsStyleApplier(getViewOrThrow()).apply(style)
+        LayoutParamsStyleApplier(view).apply(style)
     }
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
-        val view = getViewOrThrow()
         if (a.hasValue(R.styleable.Paris_View_android_background)) {
             view.background = StyleUtils.getDrawable(view.context, a, R.styleable.Paris_View_android_background)
         }

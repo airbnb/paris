@@ -8,18 +8,17 @@ import android.util.TypedValue
 import android.widget.TextView
 
 @UiThread
-class TextViewStyleApplier(view: TextView? = null) : StyleApplier<TextViewStyleApplier, TextView>(view) {
+class TextViewStyleApplier(view: TextView) : StyleApplier<TextViewStyleApplier, TextView>(view) {
 
     override fun attributes(): IntArray {
         return R.styleable.Paris_TextView
     }
 
     override fun applyParent(style: Style) {
-        ViewStyleApplier(getViewOrThrow()).apply(style)
+        ViewStyleApplier(view).apply(style)
     }
 
     override fun processAttributes(style: Style, a: TypedArrayWrapper) {
-        val view = getViewOrThrow()
         var drawableLeft: Drawable? = null
         var drawableTop: Drawable? = null
         var drawableRight: Drawable? = null

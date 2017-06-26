@@ -27,8 +27,7 @@ internal object StyleAppliersWriter {
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType)))
-                .addMethod(buildViewConstructorMethod(styleableInfo))
-                .addMethod(buildEmptyConstructorMethod())
+                .addMethod(buildConstructorMethod(styleableInfo))
 
         if (!styleableInfo.styleableResourceName.isEmpty()) {
             // Use an arbitrary AndroidResourceId to get R's ClassName. Per the StyleableInfo doc
@@ -73,18 +72,11 @@ internal object StyleAppliersWriter {
                 .writeTo(filer)
     }
 
-    private fun buildViewConstructorMethod(classInfo: StyleableInfo): MethodSpec {
+    private fun buildConstructorMethod(classInfo: StyleableInfo): MethodSpec {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(TypeName.get(classInfo.elementType), "view")
                 .addStatement("super(view)")
-                .build()
-    }
-
-    private fun buildEmptyConstructorMethod(): MethodSpec {
-        return MethodSpec.constructorBuilder()
-                .addModifiers(Modifier.PUBLIC)
-                .addStatement("super(null)")
                 .build()
     }
 
@@ -93,7 +85,7 @@ internal object StyleAppliersWriter {
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
-                .addStatement("new \$T(getViewOrThrow()).apply(style)", parentStyleApplierClassName)
+                .addStatement("new \$T(getView()).apply(style)", parentStyleApplierClassName)
                 .build()
     }
 
@@ -104,7 +96,7 @@ internal object StyleAppliersWriter {
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
 
         for (dependency in classInfo.dependencies) {
-            methodBuilder.addStatement("new \$T(getViewOrThrow()).apply(style)", dependency)
+            methodBuilder.addStatement("new \$T(getView()).apply(style)", dependency)
         }
 
         return methodBuilder.build()
@@ -125,7 +117,7 @@ internal object StyleAppliersWriter {
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
                 .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
-                .addStatement("\$T res = getViewOrThrow().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
+                .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
         if (styleableFields.isNotEmpty()) {
             methodBuilder.addStatement("\$T subStyle", ParisProcessor.STYLE_CLASS_NAME)
@@ -165,9 +157,9 @@ internal object StyleAppliersWriter {
             methodSpecBuilder
                     .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.STYLE_CLASS_NAME, androidResourceId.code)
                     .addStatement("subStyle.setDebugListener(style.getDebugListener())")
-                    .addStatement("\$T.style(getViewOrThrow().\$N).apply(subStyle)", ParisProcessor.PARIS_CLASS_NAME, elementName)
+                    .addStatement("\$T.style(getView().\$N).apply(subStyle)", ParisProcessor.PARIS_CLASS_NAME, elementName)
         } else {
-            methodSpecBuilder.addStatement("getViewOrThrow().\$N($from.$statement)", elementName, androidResourceId.code)
+            methodSpecBuilder.addStatement("getView().\$N($from.$statement)", elementName, androidResourceId.code)
         }
     }
 
@@ -175,7 +167,7 @@ internal object StyleAppliersWriter {
         return MethodSpec.methodBuilder(styleableFieldInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
-                .addStatement("return new \$T(getViewOrThrow().\$N)", styleApplierClassName, styleableFieldInfo.elementName)
+                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, styleableFieldInfo.elementName)
                 .build()
     }
 

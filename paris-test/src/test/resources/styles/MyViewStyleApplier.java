@@ -10,13 +10,9 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         super(view);
     }
 
-    public MyViewStyleApplier() {
-        super(null);
-    }
-
     @Override
     protected void applyParent(Style style) {
-        new ViewStyleApplier(getViewOrThrow()).apply(style);
+        new ViewStyleApplier(getView()).apply(style);
     }
 
     public MyViewStyleApplier applyRed() {

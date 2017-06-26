@@ -12,10 +12,6 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         super(view);
     }
 
-    public MyViewStyleApplier() {
-        super(null);
-    }
-
     @Override
     protected int[] attributes() {
         return R.styleable.MyView;
@@ -23,28 +19,28 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
 
     @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
-        Resources res = getViewOrThrow().getContext().getResources();
+        Resources res = getView().getContext().getResources();
         if (a.hasValue(R.styleable.MyView_active)) {
-            getViewOrThrow().setActive(a.getBoolean(R.styleable.MyView_active, false));
+            getView().setActive(a.getBoolean(R.styleable.MyView_active, false));
         }
         else {
-            getViewOrThrow().setActive(res.getBoolean(R.bool.active));
+            getView().setActive(res.getBoolean(R.bool.active));
         }
         if (a.hasValue(R.styleable.MyView_title)) {
-            getViewOrThrow().setTitle(a.getString(R.styleable.MyView_title));
+            getView().setTitle(a.getString(R.styleable.MyView_title));
         }
         else {
-            getViewOrThrow().setTitle(res.getString(R.string.app_name));
+            getView().setTitle(res.getString(R.string.app_name));
         }
     }
 
     @Override
     protected void applyParent(Style style) {
-        new ViewStyleApplier(getViewOrThrow()).apply(style);
+        new ViewStyleApplier(getView()).apply(style);
     }
 
     @Override
     protected void applyDependencies(Style style) {
-        new ManuallyWrittenStyleApplier(getViewOrThrow()).apply(style);
+        new ManuallyWrittenStyleApplier(getView()).apply(style);
     }
 }
