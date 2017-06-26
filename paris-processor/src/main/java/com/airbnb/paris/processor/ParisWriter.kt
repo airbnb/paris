@@ -14,6 +14,7 @@ internal object ParisWriter {
     internal fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
         val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .superclass(ParisProcessor.PARIS_BASE_CLASS_NAME)
 
         ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
             val styleApplierClassName = styleApplierQualifiedName.className()
@@ -49,7 +50,7 @@ internal object ParisWriter {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(styleApplierClassName)
                 .addParameter(ParameterSpec.builder(viewParameterTypeName, "view").build())
-                .addStatement("return new \$T(view)", styleApplierClassName)
+                .addStatement("return process(new \$T(view))", styleApplierClassName)
                 .build()
     }
 

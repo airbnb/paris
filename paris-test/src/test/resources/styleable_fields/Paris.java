@@ -6,17 +6,17 @@ import android.widget.TextView;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 
-public final class Paris {
+public final class Paris extends ParisBase {
     public static ViewStyleApplier style(View view) {
-        return new ViewStyleApplier(view);
+        return process(new ViewStyleApplier(view));
     }
 
     public static TextViewStyleApplier style(TextView view) {
-        return new TextViewStyleApplier(view);
+        return process(new TextViewStyleApplier(view));
     }
 
     public static MyViewStyleApplier style(MyView view) {
-        return new MyViewStyleApplier(view);
+        return process(new MyViewStyleApplier(view));
     }
 
     /**

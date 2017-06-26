@@ -20,6 +20,7 @@ class ParisProcessor : AbstractProcessor() {
         internal val PARIS_PACKAGE_NAME = "com.airbnb.paris"
         internal val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
 
+        internal val PARIS_BASE_CLASS_NAME = "$PARIS_PACKAGE_NAME.ParisBase".className()
         internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
         internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.Style".className()
         internal val STYLE_APPLIER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplier".className()

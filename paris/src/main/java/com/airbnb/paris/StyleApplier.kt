@@ -10,6 +10,19 @@ import android.view.View
 @UiThread
 abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: T) {
 
+    /**
+     * This is only public because the internal visibility Java interop is weird, do not use
+     */
+    // TODO  Fix visibility
+    var onStyleApply: ((Style) -> Unit)? = null
+        set(value) {
+            if (field == null) {
+                field = value
+            } else {
+                throw IllegalStateException("onStyleApply was already set")
+            }
+        }
+
     private var config: Style.Config = Style.Config.builder().build()
 
     fun addOption(option: Style.Config.Option): S {
@@ -31,6 +44,8 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: 
     }
 
     open fun apply(style: Style): S {
+        onStyleApply?.invoke(style)
+
         // Assumes that if the Style has an AttributeSet it's being applied during the View
         // initialization, in which case parents should be making the call themselves
         if (style.attributeSet == null) {
