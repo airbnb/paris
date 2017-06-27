@@ -13,7 +13,6 @@ import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Fraction;
 import com.airbnb.paris.annotations.Styleable;
 
-// TODO  Test default values
 @Styleable("Formats")
 public class MyView extends View {
 

@@ -1,14 +1,19 @@
 package com.airbnb.paris.test;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.AnyRes;
+import android.support.annotation.ColorInt;
+import android.support.annotation.Px;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
+import com.airbnb.paris.annotations.Fraction;
 import com.airbnb.paris.annotations.Styleable;
 
-@Styleable(value = "MyView", dependencies = ManuallyWrittenStyleApplier.class)
+@Styleable("Formats")
 public class MyView extends View {
 
     public MyView(Context context) {
@@ -23,9 +28,47 @@ public class MyView extends View {
         super(context, attrs, defStyle);
     }
 
-    @Attr(value = R2.styleable.MyView_active, defaultValue = R2.bool.active)
-    public void setActive(boolean active) {}
+    @Attr(value = R2.styleable.Formats_formatBoolean, defaultValue = R2.bool.format_boolean)
+    public void formatBoolean(boolean value) {}
 
-    @Attr(value = R2.styleable.MyView_title, defaultValue = R2.string.app_name)
-    public void setTitle(String title) {}
+    @Attr(value = R2.styleable.Formats_formatColor, defaultValue = R2.color.format_color)
+    public void formatColor(@ColorInt int value) {}
+
+    @Attr(value = R2.styleable.Formats_formatDimension, defaultValue = R2.dimen.format_dimension)
+    public void formatDimension(@Px int value) {}
+
+    @Attr(value = R2.styleable.Formats_formatEnum, defaultValue = R2.integer.format_enum)
+    public void formatEnum(int value) {}
+
+    @Attr(value = R2.styleable.Formats_formatFlag, defaultValue = R2.integer.format_flag)
+    public void formatFlag(int value) {}
+
+    // TODO
+    //@Attr(value = R2.styleable.Formats_formatFloat, defaultValue = R2.dimen.format_float)
+    //public void formatFloat(float value) {}
+
+    @Attr(value = R2.styleable.Formats_formatFraction, defaultValue = R2.fraction.format_fraction)
+    public void formatFraction(@Fraction(base = 2, pbase = 3) float value) {}
+
+    @Attr(value = R2.styleable.Formats_formatInteger, defaultValue = R2.integer.format_integer)
+    public void formatInteger(int value) {}
+
+    @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.array.format_string_array)
+    public void formatReference_CharSequenceArray(CharSequence[] value) {}
+
+    @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.color.format_color_state_list)
+    public void formatReference_ColorStateList(ColorStateList value) {}
+
+    @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.drawable.format_drawable)
+    public void formatReference_Drawable(Drawable value) {}
+
+    // Arbitrary resource used as a default value
+    @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.bool.active)
+    public void formatReference_int(@AnyRes int value) {}
+
+    @Attr(value = R2.styleable.Formats_formatString, defaultValue = R2.string.format_char_sequence)
+    public void formatString_CharSequence(CharSequence value) {}
+
+    @Attr(value = R2.styleable.Formats_formatString, defaultValue = R2.string.format_string)
+    public void formatString_String(String value) {}
 }

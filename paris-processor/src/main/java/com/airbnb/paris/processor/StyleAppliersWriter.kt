@@ -140,26 +140,32 @@ internal object StyleAppliersWriter {
                                elementName: String, styleableResId: AndroidResourceId,
                                defaultValueResId: AndroidResourceId?, isElementStyleable: Boolean) {
         methodBuilder.beginControlFlow("if (a.hasValue(\$L))", styleableResId.code)
-        addStatement(methodBuilder, elementName, "a", format.typedArrayMethodStatement(), styleableResId, isElementStyleable)
+        addStatement(methodBuilder, format, elementName, false, format.typedArrayMethodStatement(), styleableResId, isElementStyleable)
         methodBuilder.endControlFlow()
 
         if (defaultValueResId != null) {
             methodBuilder.beginControlFlow("else")
-            addStatement(methodBuilder, elementName, "res", format.resourcesMethodStatement(), defaultValueResId, isElementStyleable)
+            addStatement(methodBuilder, format, elementName, true, format.resourcesMethodStatement(), defaultValueResId, isElementStyleable)
             methodBuilder.endControlFlow()
         }
     }
 
-    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, elementName: String,
-                             from: String, statement: String, androidResourceId: AndroidResourceId,
-                             isElementStyleable: Boolean) {
+    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, format: Format,
+                             elementName: String, isForDefaultValue: Boolean, statement: String,
+                             androidResourceId: AndroidResourceId, isElementStyleable: Boolean) {
+        val from = if (isForDefaultValue) "res" else "a"
         if (isElementStyleable) {
             methodSpecBuilder
                     .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.STYLE_CLASS_NAME, androidResourceId.code)
                     .addStatement("subStyle.setDebugListener(style.getDebugListener())")
                     .addStatement("\$T.style(getView().\$N).apply(subStyle)", ParisProcessor.PARIS_CLASS_NAME, elementName)
         } else {
-            methodSpecBuilder.addStatement("getView().\$N($from.$statement)", elementName, androidResourceId.code)
+            if (isForDefaultValue && format == Format.RESOURCE_ID) {
+                // The parameter is the resource id
+                methodSpecBuilder.addStatement("getView().\$N(\$L)", elementName, androidResourceId.code)
+            } else {
+                methodSpecBuilder.addStatement("getView().\$N($from.$statement)", elementName, androidResourceId.code)
+            }
         }
     }
 

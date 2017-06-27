@@ -133,7 +133,8 @@ internal class Format private constructor(
             Type.INT -> "getInteger(\$L)"
             Type.INTEGER -> "getInteger(\$L)"
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
-            Type.RESOURCE_ID -> "getResourceId(\$L)"
+            // Special case
+            Type.RESOURCE_ID -> "The parameter is the resource id, this should never be used"
             Type.STRING -> "getString(\$L)"
         }
     }

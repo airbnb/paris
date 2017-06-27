@@ -14,27 +14,6 @@
         <attr name="verticalPadding" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="Formats">
-        <attr name="formatBoolean" format="boolean" />
-        <attr name="formatColor" format="color" />
-        <attr name="formatDimension" format="dimension" />
-        <attr name="formatEnum" format="enum">
-            <enum name="formatEnumZero" value="0" />
-            <enum name="formatEnumOne" value="1" />
-            <enum name="formatEnumTwo" value="2" />
-        </attr>
-        <attr name="formatFlag">
-            <flag name="formatFlagZero" value="0x01" />
-            <flag name="formatFlagOne" value="0x02" />
-            <flag name="formatFlagTwo" value="0x03" />
-        </attr>
-        <attr name="formatFloat" format="float" />
-        <attr name="formatFraction" format="fraction" />
-        <attr name="formatInteger" format="integer" />
-        <attr name="formatReference" format="reference" />
-        <attr name="formatString" format="string" />
-    </declare-styleable>
-
     <declare-styleable name="ManuallyWritten">
         <attr name="attribute1" format="string" />
     </declare-styleable>
