@@ -8,6 +8,13 @@ import android.view.View
 @UiThread
 class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) {
 
+    companion object {
+        /**
+         * This replicates what happens privately within [View]
+         */
+        private val VISIBILITY_FLAGS = intArrayOf(View.VISIBLE, View.INVISIBLE, View.GONE)
+    }
+
     override fun attributes(): IntArray {
         return R.styleable.Paris_View
     }
@@ -58,6 +65,9 @@ class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) 
                 else
                     null
             }
+        }
+        if (a.hasValue(R.styleable.Paris_View_android_visibility)) {
+            view.visibility = VISIBILITY_FLAGS[a.getInt(R.styleable.Paris_View_android_visibility, -1)]
         }
     }
 }

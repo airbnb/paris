@@ -49,6 +49,10 @@
         <item name="android:paddingTop">@dimen/test_view_paddingTop</item>
     </style>
 
+    <style name="Test_View_visibility">
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="Test_TextView_drawables">
         <item name="android:drawableBottom">@android:drawable/ic_delete</item>
         <item name="android:drawableLeft">@android:drawable/ic_delete</item>

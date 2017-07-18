@@ -65,4 +65,11 @@ class ViewStyleTest {
         assertEquals(res.getDimensionPixelSize(R.dimen.test_view_paddingRight), view.paddingRight)
         assertEquals(res.getDimensionPixelSize(R.dimen.test_view_paddingTop), view.paddingTop)
     }
+
+    @Test
+    fun viewVisibility() {
+        assertEquals(View.VISIBLE, view.visibility)
+        ViewStyleApplier(view).apply(R.style.Test_View_visibility)
+        assertEquals(View.GONE, view.visibility)
+    }
 }

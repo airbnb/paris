@@ -20,6 +20,7 @@
         <attr name="android:paddingRight" />
         <attr name="android:paddingTop" />
         <attr name="android:stateListAnimator" />
+        <attr name="android:visibility" />
     </declare-styleable>
 
     <declare-styleable name="Paris_TextView">
