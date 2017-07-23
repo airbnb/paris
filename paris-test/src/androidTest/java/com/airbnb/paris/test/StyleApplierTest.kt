@@ -6,7 +6,9 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import com.airbnb.paris.Style
 import com.airbnb.paris.StyleApplier
+import com.airbnb.paris.TypedArrayWrapper
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +16,11 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StyleApplierTest {
 
-    private class TestStyleApplier(view: View) : StyleApplier<TestStyleApplier, View>(view)
+    private open class TestStyleApplier(view: View) : StyleApplier<TestStyleApplier, View>(view) {
+        override fun attributes(): IntArray? {
+            return intArrayOf(1, 2, 3)
+        }
+    }
 
     private lateinit var context: Context
     private lateinit var view: View
@@ -45,5 +51,30 @@ class StyleApplierTest {
 
         applier.onStyleApply = {}
         applier.onStyleApply = {}
+    }
+
+    @Test
+    fun nullAttributeSet() {
+        // Applying a null AttributeSet should still call processAttributes(...) so that default
+        // values can be applied even when views are created programmatically
+
+        var methodCallCount = 0
+        var style_: Style? = null
+        var a_: TypedArrayWrapper? = null
+        val applier = object : TestStyleApplier(view) {
+            override fun processAttributes(style: Style, a: TypedArrayWrapper) {
+                methodCallCount++
+                style_ = style
+                a_ = a
+            }
+        }
+        applier.apply(null)
+
+        assertEquals(1, methodCallCount)
+        assertEquals(0, a_!!.getIndexCount())
+        assertFalse(a_!!.hasValue(42))
+        assertEquals(null, style_!!.attributeSet)
+        assertEquals(0, style_!!.styleRes)
+        assertEquals(null, style_!!.config)
     }
 }

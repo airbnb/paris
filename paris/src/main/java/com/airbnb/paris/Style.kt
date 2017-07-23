@@ -72,7 +72,11 @@ class Style private constructor(
      * Visible for debug
      */
     interface DebugListener {
-        fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper?)
+        fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper)
+    }
+
+    companion object {
+        internal val EMPTY = Style(null, 0, null)
     }
 
     /**
@@ -81,13 +85,13 @@ class Style private constructor(
     var debugListener: DebugListener? = null
 
     @SuppressLint("Recycle")
-    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper? {
+    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper {
         if (attributeSet != null) {
             return TypedArrayWrapperImpl(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
         } else if (styleRes != 0) {
             return TypedArrayWrapperImpl(context.obtainStyledAttributes(styleRes, attrs))
         } else {
-            return null
+            return EmptyTypedArrayWrapper
         }
     }
 

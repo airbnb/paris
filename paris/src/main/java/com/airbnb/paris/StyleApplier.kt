@@ -30,11 +30,14 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: 
         return this as S
     }
 
+    /**
+     * Passing a null [AttributeSet] will apply default values, if any
+     */
     fun apply(attributeSet: AttributeSet?): S {
-        // TODO  Apply even if attributeSet is null so that default values work even when creating a view with no AttributeSet
-        // We allow null AttributeSets purely for convenience here
         if (attributeSet != null) {
             apply(Style(attributeSet, config))
+        } else {
+            apply(Style.EMPTY)
         }
         return this as S
     }
@@ -61,10 +64,8 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: 
             // For debug purposes
             style.debugListener?.beforeTypedArrayProcessed(style, typedArray)
 
-            if (typedArray != null) {
-                processAttributes(style, typedArray)
-                typedArray.recycle()
-            }
+            processAttributes(style, typedArray)
+            typedArray.recycle()
         }
 
         return this as S

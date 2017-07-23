@@ -6,7 +6,6 @@ import android.support.annotation.ColorInt
 import android.support.annotation.Px
 import android.support.annotation.StyleableRes
 
-// TODO  Remove support for default values since not all implementations can do it?
 interface TypedArrayWrapper {
 
     fun isNull(index: Int): Boolean

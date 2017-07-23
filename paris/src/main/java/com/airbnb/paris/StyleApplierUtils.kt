@@ -16,8 +16,8 @@ class StyleApplierUtils {
              */
             val attributeIndexes = ArrayList<Pair<Style, Set<Int>?>>()
 
-            override fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper?) {
-                val pair = Pair(style, if (typedArray != null) Companion.getAttributeIndexes(typedArray) else null)
+            override fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper) {
+                val pair = Pair(style, Companion.getAttributeIndexes(typedArray))
                 attributeIndexes.add(pair)
             }
         }
