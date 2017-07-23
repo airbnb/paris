@@ -11,19 +11,14 @@ import android.view.ViewGroup.MarginLayoutParams
 class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
 
     companion object {
-        var NOT_SET = -10
+        const val NOT_SET = -10
 
         fun ifSetElse(value: Int, ifNotSet: Int): Int {
             return if (value != NOT_SET) value else ifNotSet
         }
 
         fun isAnySet(vararg values: Int): Boolean {
-            for (value in values) {
-                if (value != NOT_SET) {
-                    return true
-                }
-            }
-            return false
+            return values.any { it != NOT_SET }
         }
     }
     

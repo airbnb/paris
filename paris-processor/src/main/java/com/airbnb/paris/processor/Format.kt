@@ -101,19 +101,19 @@ internal class Format private constructor(
                 return Format.RESOURCE_ID
             }
 
-            val type = element.asType()
-            val typeString = type.toString()
-            return when (typeString) {
-                "java.lang.Boolean", "boolean" -> Format(Type.BOOLEAN)
-                "java.lang.CharSequence" -> Format(Type.CHARSEQUENCE)
-                "java.lang.CharSequence[]" -> Format(Type.CHARSEQUENCE_ARRAY)
-                "android.content.res.ColorStateList" -> Format(Type.COLOR_STATE_LIST)
-                "android.graphics.drawable.Drawable" -> Format(Type.DRAWABLE)
-                "java.lang.Float", "float" -> Format(Type.FLOAT)
-                "java.lang.Integer", "int" -> Format(Type.INT)
-                "java.lang.String" -> Format(Type.STRING)
+            val typeString = element.asType().toString()
+            val formatType = when (typeString) {
+                "java.lang.Boolean", "boolean" -> Type.BOOLEAN
+                "java.lang.CharSequence" -> Type.CHARSEQUENCE
+                "java.lang.CharSequence[]" -> Type.CHARSEQUENCE_ARRAY
+                "android.content.res.ColorStateList" -> Type.COLOR_STATE_LIST
+                "android.graphics.drawable.Drawable" -> Type.DRAWABLE
+                "java.lang.Float", "float" -> Type.FLOAT
+                "java.lang.Integer", "int" -> Type.INT
+                "java.lang.String" -> Type.STRING
                 else -> throw IllegalArgumentException(String.format("Invalid type"))
             }
+            return Format(formatType)
         }
     }
 

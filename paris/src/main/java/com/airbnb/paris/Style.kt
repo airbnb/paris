@@ -15,14 +15,11 @@ class Style private constructor(
 
     private constructor(builder: Builder) : this(builder.attributeMap, null, 0, null)
 
-    constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0, null)
-    constructor(attributeSet: AttributeSet, config: Config) : this(null, attributeSet, 0, config)
-
-    constructor(@StyleRes styleRes: Int) : this(null, null, styleRes, null)
-    constructor(@StyleRes styleRes: Int, config: Config) : this(null, null, styleRes, config)
+    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(null, attributeSet, 0, config)
+    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, null, styleRes, config)
 
     /**
-     * Config objects are automatically passed from [BaseStyle] to [BaseStyle]. They
+     * Config objects are automatically passed from [Style] to [Style]. They
      * are simply a collection of objects with some helpers to sort through them. It is up to each
      * style to declare, retrieve, and act upon the configuration option that they are interested
      * in.

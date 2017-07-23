@@ -17,8 +17,8 @@ import javax.lang.model.util.Types
 class ParisProcessor : AbstractProcessor() {
 
     companion object {
-        internal val PARIS_PACKAGE_NAME = "com.airbnb.paris"
-        internal val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
+        internal const val PARIS_PACKAGE_NAME = "com.airbnb.paris"
+        internal const val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
 
         internal val PARIS_BASE_CLASS_NAME = "$PARIS_PACKAGE_NAME.ParisBase".className()
         internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
@@ -31,10 +31,7 @@ class ParisProcessor : AbstractProcessor() {
                 Pair("com.airbnb.paris.ViewStyleApplier", "android.view.View"),
                 Pair("com.airbnb.paris.TextViewStyleApplier", "android.widget.TextView"))
 
-        private val supportedAnnotations: Set<Class<out Annotation>>
-            get() {
-                return setOf(Styleable::class.java, Attr::class.java)
-            }
+        private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }
 
     private val resourceScanner = AndroidResourceScanner()
