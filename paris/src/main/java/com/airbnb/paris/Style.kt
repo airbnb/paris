@@ -2,21 +2,16 @@ package com.airbnb.paris
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.AttrRes
 import android.support.annotation.StyleRes
 import android.util.AttributeSet
-import android.util.SparseIntArray
 
 class Style private constructor(
-        val attributeMap: SparseIntArray?,
         val attributeSet: AttributeSet?,
         @StyleRes val styleRes: Int,
         val config: Config?) {
 
-    private constructor(builder: Builder) : this(builder.attributeMap, null, 0, null)
-
-    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(null, attributeSet, 0, config)
-    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, null, styleRes, config)
+    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(attributeSet, 0, config)
+    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, styleRes, config)
 
     /**
      * Config objects are automatically passed from [Style] to [Style]. They
@@ -73,27 +68,6 @@ class Style private constructor(
         }
     }
 
-    // TODO
-    class Builder internal constructor() {
-
-        internal val attributeMap = SparseIntArray()
-
-        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder {
-            attributeMap.put(attrRes, valueRes)
-            return this
-        }
-
-        fun build(): Style {
-            return Style(this)
-        }
-    }
-
-    companion object {
-        fun builder(): Builder {
-            return Builder()
-        }
-    }
-
     /**
      * Visible for debug
      */
@@ -108,19 +82,10 @@ class Style private constructor(
 
     @SuppressLint("Recycle")
     fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper? {
-        if (attributeMap != null) {
-            val filteredAttributeMap = SparseIntArray()
-            for (attrRes in attrs) {
-                val value = attributeMap.get(attrRes, -1)
-                if (value != -1) {
-                    filteredAttributeMap.put(attrRes, value)
-                }
-            }
-            return SparseIntArrayTypedArrayWrapper(context.resources, filteredAttributeMap)
-        } else if (attributeSet != null) {
-            return TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
+        if (attributeSet != null) {
+            return TypedArrayWrapperImpl(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
         } else if (styleRes != 0) {
-            return TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
+            return TypedArrayWrapperImpl(context.obtainStyledAttributes(styleRes, attrs))
         } else {
             return null
         }

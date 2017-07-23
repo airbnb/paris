@@ -19,18 +19,6 @@ class ViewStyleApplier(view: View) : StyleApplier<ViewStyleApplier, View>(view) 
         return R.styleable.Paris_View
     }
 
-//    fun background(@DrawableRes drawableRes: Int): ViewStyleApplier {
-//        apply(Style.builder()
-//                .put(R.styleable.View_android_background, drawableRes)
-//                .build())
-//        return this
-//    }
-//
-//    fun background(drawable: Drawable): ViewStyleApplier {
-//        // TODO
-//        return this
-//    }
-
     override fun applyDependencies(style: Style) {
         LayoutParamsStyleApplier(view).apply(style)
     }
