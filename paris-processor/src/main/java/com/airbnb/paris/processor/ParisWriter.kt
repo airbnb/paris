@@ -2,6 +2,7 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.className
+import com.grosner.kpoet.*
 import com.squareup.javapoet.*
 import java.io.IOException
 import java.util.*
@@ -12,9 +13,9 @@ internal object ParisWriter {
 
     @Throws(IOException::class)
     internal fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
-        val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_CLASS_NAME)
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParisProcessor.PARIS_BASE_CLASS_NAME)
+        val parisTypeBuilder = `public final class`(ParisProcessor.PARIS_CLASS_NAME.simpleName()) {
+            extends(ParisProcessor.PARIS_BASE_CLASS_NAME)
+        }.toBuilder()
 
         ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
             val styleApplierClassName = styleApplierQualifiedName.className()
@@ -46,23 +47,19 @@ internal object ParisWriter {
         val styleApplierClassName = ClassName.get(
                 styleApplierPackageName,
                 styleApplierSimpleName)
-        return MethodSpec.methodBuilder("style")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .returns(styleApplierClassName)
-                .addParameter(ParameterSpec.builder(viewParameterTypeName, "view").build())
-                .addStatement("return process(new \$T(view))", styleApplierClassName)
-                .build()
+        return `public static`(styleApplierClassName, "style", param(viewParameterTypeName, "view")) {
+            `return`("process(new \$T(view))", styleApplierClassName)
+        }
     }
 
     private fun buildAssertStylesMethod(styleableClassesInfo: List<StyleableInfo>): MethodSpec {
-        val builder = MethodSpec.methodBuilder("assertStylesContainSameAttributes")
-                .addJavadoc("For debugging")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addParameter(ClassNames.ANDROID_CONTEXT, "context")
+        val builder = `public static`(TypeName.VOID, "assertStylesContainSameAttributes", param(ClassNames.ANDROID_CONTEXT, "context")) {
+            javadoc("For debugging")
+        }.toBuilder()
 
         for (styleableClassInfo in styleableClassesInfo) {
             if (styleableClassInfo.styles.size > 1) {
-                builder.addStatement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
+                builder.statement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
 
                 val styleVarargCodeBuilder = CodeBlock.builder()
                 for ((i, style) in styleableClassInfo.styles.withIndex()) {
