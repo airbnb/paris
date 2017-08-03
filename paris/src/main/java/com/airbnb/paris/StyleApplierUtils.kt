@@ -84,7 +84,7 @@ class StyleApplierUtils {
         }
 
         private fun getAttributeIndexes(typedArray: TypedArrayWrapper, ignoredAttributeIndexes: IntArray?): Set<Int> {
-            return (0..typedArray.getIndexCount() - 1)
+            return (0 until typedArray.getIndexCount())
                     .map { typedArray.getIndex(it) }
                     .filter { ignoredAttributeIndexes == null || !ignoredAttributeIndexes.contains(it) }
                     .toSet()
