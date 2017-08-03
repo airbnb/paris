@@ -87,4 +87,13 @@ class StyleApplierUtilsTest {
                 Style(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
                 Style(R.style.Empty))
     }
+
+    @Test
+    fun defaultValues() {
+        // Because MyView specifies a default value for active this should be fine
+
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.StyleApplierUtilsTest_MyView_active),
+                Style(R.style.Empty))
+    }
 }

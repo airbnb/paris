@@ -155,6 +155,10 @@
         <item name="titleStyle">@style/StyleApplierUtilsTest_TextView_textSizePadding</item>
     </style>
 
+    <style name="StyleApplierUtilsTest_MyView_active">
+        <item name="active">true</item>
+    </style>
+
     <style name="Empty" />
 
     <style name="MyView_Red" />
