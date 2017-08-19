@@ -75,6 +75,13 @@ abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: 
         return null
     }
 
+    /**
+     * Visible for debug
+     */
+    open fun attributesWithDefaultValue(): IntArray? {
+        return null
+    }
+
     protected open fun applyParent(style: Style) {}
 
     protected open fun applyDependencies(style: Style) {}

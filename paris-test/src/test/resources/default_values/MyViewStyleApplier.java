@@ -18,84 +18,76 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
     }
 
     @Override
+    public int[] attributesWithDefaultValue() {
+        return new int[] {R.styleable.Formats_formatBoolean,R.styleable.Formats_formatColor,R.styleable.Formats_formatDimension,R.styleable.Formats_formatEnum,R.styleable.Formats_formatFlag,R.styleable.Formats_formatFraction,R.styleable.Formats_formatInteger,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatString,R.styleable.Formats_formatString,};
+    }
+
+    @Override
     protected void processAttributes(Style style, TypedArrayWrapper a) {
         Resources res = getView().getContext().getResources();
         if (a.hasValue(R.styleable.Formats_formatBoolean)) {
             getView().formatBoolean(a.getBoolean(R.styleable.Formats_formatBoolean, false));
-        }
-        else {
+        } else {
             getView().formatBoolean(res.getBoolean(R.bool.format_boolean));
         }
         if (a.hasValue(R.styleable.Formats_formatColor)) {
             getView().formatColor(a.getColor(R.styleable.Formats_formatColor, -1));
-        }
-        else {
+        } else {
             getView().formatColor(res.getColor(R.color.format_color));
         }
         if (a.hasValue(R.styleable.Formats_formatDimension)) {
             getView().formatDimension(a.getDimensionPixelSize(R.styleable.Formats_formatDimension, -1));
-        }
-        else {
+        } else {
             getView().formatDimension(res.getDimensionPixelSize(R.dimen.format_dimension));
         }
         if (a.hasValue(R.styleable.Formats_formatEnum)) {
             getView().formatEnum(a.getInt(R.styleable.Formats_formatEnum, -1));
-        }
-        else {
+        } else {
             getView().formatEnum(res.getInteger(R.integer.format_enum));
         }
         if (a.hasValue(R.styleable.Formats_formatFlag)) {
             getView().formatFlag(a.getInt(R.styleable.Formats_formatFlag, -1));
-        }
-        else {
+        } else {
             getView().formatFlag(res.getInteger(R.integer.format_flag));
         }
         if (a.hasValue(R.styleable.Formats_formatFraction)) {
             getView().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3, -1f));
-        }
-        else {
+        } else {
             getView().formatFraction(res.getFraction(R.fraction.format_fraction, 2, 3));
         }
         if (a.hasValue(R.styleable.Formats_formatInteger)) {
             getView().formatInteger(a.getInt(R.styleable.Formats_formatInteger, -1));
-        }
-        else {
+        } else {
             getView().formatInteger(res.getInteger(R.integer.format_integer));
         }
         if (a.hasValue(R.styleable.Formats_formatReference)) {
             getView().formatReference_CharSequenceArray(a.getTextArray(R.styleable.Formats_formatReference));
-        }
-        else {
+        } else {
             getView().formatReference_CharSequenceArray(res.getTextArray(R.array.format_string_array));
         }
         if (a.hasValue(R.styleable.Formats_formatReference)) {
             getView().formatReference_ColorStateList(a.getColorStateList(R.styleable.Formats_formatReference));
-        }
-        else {
+        } else {
             getView().formatReference_ColorStateList(res.getColorStateList(R.color.format_color_state_list));
         }
         if (a.hasValue(R.styleable.Formats_formatReference)) {
             getView().formatReference_Drawable(a.getDrawable(R.styleable.Formats_formatReference));
-        }
-        else {
+        } else {
             getView().formatReference_Drawable(res.getDrawable(R.drawable.format_drawable));
         }
         if (a.hasValue(R.styleable.Formats_formatReference)) {
             getView().formatReference_int(a.getResourceId(R.styleable.Formats_formatReference, -1));
-        }
-        else {
+        } else {
             getView().formatReference_int(R.bool.active);
         }
         if (a.hasValue(R.styleable.Formats_formatString)) {
             getView().formatString_CharSequence(a.getText(R.styleable.Formats_formatString));
-        }
-        else {
+        } else {
             getView().formatString_CharSequence(res.getText(R.string.format_char_sequence));
         }
         if (a.hasValue(R.styleable.Formats_formatString)) {
             getView().formatString_String(a.getString(R.styleable.Formats_formatString));
-        }
-        else {
+        } else {
             getView().formatString_String(res.getString(R.string.format_string));
         }
     }

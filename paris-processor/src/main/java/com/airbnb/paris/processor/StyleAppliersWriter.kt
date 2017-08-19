@@ -42,6 +42,7 @@ internal object StyleAppliersWriter {
 
             styleTypeBuilder
                     .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
+                    .addMethod(buildAttributesWithDefaultValueMethod(styleableInfo.attrs))
                     .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.attrs))
         }
 
@@ -108,6 +109,20 @@ internal object StyleAppliersWriter {
                 .addModifiers(Modifier.PROTECTED)
                 .returns(ArrayTypeName.of(Integer.TYPE))
                 .addStatement("return \$T.styleable.\$L", rClassName, resourceName)
+                .build()
+    }
+
+    private fun buildAttributesWithDefaultValueMethod(attrs: List<AttrInfo>): MethodSpec {
+        val builder = MethodSpec.methodBuilder("attributesWithDefaultValue")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(ArrayTypeName.of(Integer.TYPE))
+                .addCode("return new int[] {")
+        val attrsWithDefaultValue = attrs.filter { it.defaultValueResId != null }
+        for (attr in attrsWithDefaultValue) {
+            builder.addCode("\$L,", attr.styleableResId.code)
+        }
+        return builder.addCode("};\n")
                 .build()
     }
 

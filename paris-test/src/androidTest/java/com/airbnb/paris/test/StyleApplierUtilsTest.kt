@@ -98,4 +98,13 @@ class StyleApplierUtilsTest {
         //        Style(R.style.StyleApplierUtilsTest_MyView_background),
         //        Style(R.style.StyleApplierUtilsTest_MyView_background_other))
     }
+
+    @Test
+    fun defaultValues() {
+        // Because MyView specifies a default value for active this should be fine
+
+        StyleApplierUtils.assertSameAttributes(myViewApplier,
+                Style(R.style.StyleApplierUtilsTest_MyView_active),
+                Style(R.style.Empty))
+    }
 }
