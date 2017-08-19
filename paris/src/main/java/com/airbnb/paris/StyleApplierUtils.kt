@@ -7,7 +7,7 @@ class StyleApplierUtils {
 
     companion object {
 
-        private class DebugListener(val ignoredAttributeIndexes: IntArray?) : Style.DebugListener {
+        private class DebugListener : Style.DebugListener {
 
             /**
              * For each TypedArray processed during the application of a style we save the style
@@ -17,7 +17,7 @@ class StyleApplierUtils {
             val attributeIndexes = ArrayList<Pair<Style, Set<Int>?>>()
 
             override fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper) {
-                val pair = Pair(style, Companion.getAttributeIndexes(typedArray, ignoredAttributeIndexes))
+                val pair = Pair(style, Companion.getAttributeIndexes(typedArray))
                 attributeIndexes.add(pair)
             }
         }
@@ -28,16 +28,13 @@ class StyleApplierUtils {
                 return
             }
 
-            // These can be safely ignored since a value is always applied
-            val attributesWithDefaultValue = applier.attributesWithDefaultValue()
-
             val styleReference = styles.first()
-            val debugListenerReference = DebugListener(attributesWithDefaultValue)
+            val debugListenerReference = DebugListener()
             styleReference.debugListener = debugListenerReference
             applier.apply(styleReference)
 
             for (style in styles.drop(1)) {
-                val debugListener = DebugListener(attributesWithDefaultValue)
+                val debugListener = DebugListener()
                 style.debugListener = debugListener
                 applier.apply(style)
 
@@ -83,11 +80,10 @@ class StyleApplierUtils {
             }
         }
 
-        private fun getAttributeIndexes(typedArray: TypedArrayWrapper, ignoredAttributeIndexes: IntArray?): Set<Int> {
-            return (0 until typedArray.getIndexCount())
-                    .map { typedArray.getIndex(it) }
-                    .filter { ignoredAttributeIndexes == null || !ignoredAttributeIndexes.contains(it) }
-                    .toSet()
+        private fun getAttributeIndexes(typedArray: TypedArrayWrapper): Set<Int> {
+            return (0 until typedArray.getIndexCount()).map {
+                typedArray.getIndex(it)
+            }.toSet()
         }
     }
 }

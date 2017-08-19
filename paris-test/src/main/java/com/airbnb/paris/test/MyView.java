@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.annotations.StyleableField;
 
@@ -32,10 +31,5 @@ public class MyView extends View {
 
     private void init() {
         title = new TextView(getContext());
-    }
-
-    @Attr(value = R2.styleable.MyView_active, defaultValue = R2.bool.active)
-    public void setActive(boolean active) {
-        // Nothing to do
     }
 }

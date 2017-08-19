@@ -46,20 +46,7 @@ internal object StyleAppliersWriter {
                     val rClassName = arbitraryResId.className!!.enclosingClassName()
 
                     `protected int attributes()` {
-                        `return`("\$T.styleable.\$L", rClassName, styleableInfo.styleableResourceName)
-                    }
-
-                    val attrsWithDefaultValue = styleableInfo.attrs.filter {
-                        it.defaultValueResId != null
-                    }
-                    if (attrsWithDefaultValue.isNotEmpty()) {
-                        `public int attributesWithDefaultValue()` {
-                            addCode("return new int[] {")
-                            for (attr in attrsWithDefaultValue) {
-                                addCode("\$L,", attr.styleableResId.code)
-                            }
-                            addCode("};\n")
-                        }
+                        statement("return \$T.styleable.\$L", rClassName, styleableInfo.styleableResourceName)
                     }
 
                     `protected void processAttributes(style, typedArrayWrapper)`(styleableInfo.styleableFields, styleableInfo.attrs)
@@ -113,13 +100,6 @@ private fun TypeSpec.Builder.`public StyleApplier(view)`(customViewType: TypeMir
 
 private fun TypeSpec.Builder.`protected int attributes()`(function: MethodSpec.Builder.() -> MethodSpec.Builder): TypeSpec.Builder {
     return protected(ArrayTypeName.of(Integer.TYPE), "attributes") {
-        `@`(Override::class)
-        function()
-    }
-}
-
-private fun TypeSpec.Builder.`public int attributesWithDefaultValue()`(function: MethodSpec.Builder.() -> MethodSpec.Builder): TypeSpec.Builder {
-    return public(ArrayTypeName.of(Integer.TYPE), "attributesWithDefaultValue") {
         `@`(Override::class)
         function()
     }
