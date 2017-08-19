@@ -3,39 +3,37 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.className
 import com.grosner.kpoet.*
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.CodeBlock
-import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.*
 import java.io.IOException
 import java.util.*
 import javax.annotation.processing.Filer
+import javax.lang.model.element.Modifier
 
 internal object ParisWriter {
 
     @Throws(IOException::class)
     internal fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
-        javaFile(ParisProcessor.PARIS_CLASS_NAME.packageName()) {
-            `public final class`(ParisProcessor.PARIS_CLASS_NAME.simpleName()) {
-                extends(ParisProcessor.PARIS_BASE_CLASS_NAME)
+        val parisTypeBuilder = `public final class`(ParisProcessor.PARIS_CLASS_NAME.simpleName()) {
+            extends(ParisProcessor.PARIS_BASE_CLASS_NAME)
+        }.toBuilder()
 
-                for ((styleApplierQualifiedName, viewQualifiedName) in ParisProcessor.BUILT_IN_STYLE_APPLIERS) {
-                    val styleApplierClassName = styleApplierQualifiedName.className()
-                    addMethod(buildStyleMethod(
-                            styleApplierClassName.packageName(),
-                            styleApplierClassName.simpleName(),
-                            viewQualifiedName.className()))
-                }
+        ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
+            val styleApplierClassName = styleApplierQualifiedName.className()
+            parisTypeBuilder.addMethod(buildStyleMethod(
+                    styleApplierClassName.packageName(),
+                    styleApplierClassName.simpleName(),
+                    viewQualifiedName.className()))
+        }
 
-                for (styleableClassInfo in styleableClassesInfo) {
-                    addMethod(buildStyleMethod(styleableClassInfo))
-                }
+        for (styleableClassInfo in styleableClassesInfo) {
+            parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
+        }
 
-                addMethod(buildAssertStylesMethod(styleableClassesInfo))
+        parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
 
-                this
-            }
-        }.writeTo(filer)
+        JavaFile.builder(ParisProcessor.PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
+                .build()
+                .writeTo(filer)
     }
 
     private fun buildStyleMethod(styleableClassInfo: StyleableInfo): MethodSpec {
@@ -55,31 +53,31 @@ internal object ParisWriter {
     }
 
     private fun buildAssertStylesMethod(styleableClassesInfo: List<StyleableInfo>): MethodSpec {
-        return `public static`(TypeName.VOID, "assertStylesContainSameAttributes", param(ClassNames.ANDROID_CONTEXT, "context")) {
+        val builder = `public static`(TypeName.VOID, "assertStylesContainSameAttributes", param(ClassNames.ANDROID_CONTEXT, "context")) {
             javadoc("For debugging")
+        }.toBuilder()
 
-            for (styleableClassInfo in styleableClassesInfo) {
-                if (styleableClassInfo.styles.size > 1) {
-                    statement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
+        for (styleableClassInfo in styleableClassesInfo) {
+            if (styleableClassInfo.styles.size > 1) {
+                builder.statement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
 
-                    val styleVarargCodeBuilder = CodeBlock.builder()
-                    for ((i, style) in styleableClassInfo.styles.withIndex()) {
-                        if (i > 0) {
-                            styleVarargCodeBuilder.add(", ")
-                        }
-                        styleVarargCodeBuilder.add("new \$T(\$L)",
-                                ParisProcessor.STYLE_CLASS_NAME, style.androidResourceId.code)
+                val styleVarargCodeBuilder = CodeBlock.builder()
+                for ((i, style) in styleableClassInfo.styles.withIndex()) {
+                    if (i > 0) {
+                        styleVarargCodeBuilder.add(", ")
                     }
-
-                    val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
-                            ParisProcessor.STYLE_APPLIER_UTILS_CLASS_NAME,
-                            styleableClassInfo.elementType,
-                            styleVarargCodeBuilder.build())
-                    addCode(assertEqualAttributesCode)
+                    styleVarargCodeBuilder.add("new \$T(\$L)",
+                            ParisProcessor.STYLE_CLASS_NAME, style.androidResourceId.code)
                 }
-            }
 
-            this
+                val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
+                        ParisProcessor.STYLE_APPLIER_UTILS_CLASS_NAME,
+                        styleableClassInfo.elementType,
+                        styleVarargCodeBuilder.build())
+                builder.addCode(assertEqualAttributesCode)
+            }
         }
+
+        return builder.build()
     }
 }
