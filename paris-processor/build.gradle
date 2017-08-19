@@ -9,7 +9,6 @@ dependencies {
     compile project(':paris-annotations')
     compile deps.googleAutoValue
     compile deps.squareJavaPoet
-    compile deps.kPoet
     compileOnly files(Jvm.current().getToolsJar())
 }
 

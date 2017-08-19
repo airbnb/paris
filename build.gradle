@@ -19,7 +19,6 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "https://www.jitpack.io" }
     }
 }
 
@@ -36,6 +35,5 @@ ext {
             googleTestingCompile: "com.google.testing.compile:compile-testing:0.10",
             kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion",
             squareJavaPoet: "com.squareup:javapoet:1.8.0",
-            kPoet: "com.github.agrosner:KPoet:1.0.0",
     ]
 }
