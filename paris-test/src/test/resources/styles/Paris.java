@@ -3,17 +3,19 @@ package com.airbnb.paris;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
+import com.airbnb.paris.proxy.TextViewProxyStyleApplier;
+import com.airbnb.paris.proxy.ViewProxyStyleApplier;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 import com.airbnb.paris.test.R;
 
 public final class Paris extends ParisBase {
-    public static ViewStyleApplier style(View view) {
-        return process(new ViewStyleApplier(view));
+    public static ViewProxyStyleApplier style(View view) {
+        return process(new ViewProxyStyleApplier(view));
     }
 
-    public static TextViewStyleApplier style(TextView view) {
-        return process(new TextViewStyleApplier(view));
+    public static TextViewProxyStyleApplier style(TextView view) {
+        return process(new TextViewProxyStyleApplier(view));
     }
 
     public static MyViewStyleApplier style(MyView view) {

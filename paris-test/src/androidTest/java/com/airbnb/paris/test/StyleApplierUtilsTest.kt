@@ -6,7 +6,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.widget.TextView
 import com.airbnb.paris.Style
 import com.airbnb.paris.StyleApplierUtils
-import com.airbnb.paris.TextViewStyleApplier
+import com.airbnb.paris.proxy.TextViewProxyStyleApplier
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 class StyleApplierUtilsTest {
 
     lateinit var context: Context
-    lateinit var textViewApplier: TextViewStyleApplier
+    lateinit var textViewApplier: TextViewProxyStyleApplier
     lateinit var myViewApplier: MyViewStyleApplier
 
     @Before
@@ -24,7 +24,7 @@ class StyleApplierUtilsTest {
         // Necessary to test AppCompat attributes like "?attr/selectableItemBackground"
         // TODO Not working for background() test
         context.setTheme(R.style.Theme_AppCompat)
-        textViewApplier = TextViewStyleApplier(TextView(context))
+        textViewApplier = TextViewProxyStyleApplier(TextView(context))
         myViewApplier = MyViewStyleApplier(MyView(context))
     }
 

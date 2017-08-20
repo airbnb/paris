@@ -29,8 +29,8 @@ class ParisProcessor : AbstractProcessor() {
         internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.TypedArrayWrapper".className()
 
         internal val BUILT_IN_STYLE_APPLIERS = mapOf(
-                Pair("com.airbnb.paris.ViewStyleApplier", "android.view.View"),
-                Pair("com.airbnb.paris.TextViewStyleApplier", "android.widget.TextView"))
+                Pair("com.airbnb.paris.proxy.ViewProxyStyleApplier", "android.view.View"),
+                Pair("com.airbnb.paris.proxy.TextViewProxyStyleApplier", "android.widget.TextView"))
 
         private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }
