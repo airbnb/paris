@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="formatBoolean" format="boolean" />
+    <attr name="formatColor" format="color" />
+    <attr name="formatDimension" format="dimension" />
+    <attr name="formatEnum" format="enum">
+        <enum name="formatEnumZero" value="0" />
+        <enum name="formatEnumOne" value="1" />
+        <enum name="formatEnumTwo" value="2" />
+    </attr>
+    <attr name="formatFlag">
+        <flag name="formatFlagZero" value="0x01" />
+        <flag name="formatFlagOne" value="0x02" />
+        <flag name="formatFlagTwo" value="0x03" />
+    </attr>
+    <attr name="formatFloat" format="float" />
+    <attr name="formatFraction" format="fraction" />
+    <attr name="formatInteger" format="integer" />
+    <attr name="formatReference" format="reference" />
+    <attr name="formatString" format="string" />
+
+    <declare-styleable name="Formats">
+        <attr name="formatBoolean" />
+        <attr name="formatColor" />
+        <attr name="formatDimension" />
+        <attr name="formatEnum" />
+        <attr name="formatFlag" />
+        <attr name="formatFloat" />
+        <attr name="formatFraction" />
+        <attr name="formatInteger" />
+        <attr name="formatReference" />
+        <attr name="formatString" />
+    </declare-styleable>
+
+    <bool name="format_boolean">true</bool>
+    <string name="format_char_sequence">Hello</string>
+    <color name="format_color">#FF0000</color>
+    <dimen name="format_dimension">17dp</dimen>
+    <integer name="format_enum">0</integer>
+    <integer name="format_flag">0x01</integer>
+    <item name="format_float" format="float" type="dimen">1.2</item>
+    <fraction name="format_fraction">5%</fraction>
+    <integer name="format_integer">42</integer>
+    <item name="format_layout_dimension_match_parent" format="integer" type="dimen">-1</item>
+    <item name="format_layout_dimension_wrap_content" format="integer" type="dimen">-2</item>
+    <string name="format_string">Hello</string>
+    <string-array name="format_string_array">
+        <item>Tour Eiffel</item>
+        <item>Le Louvre</item>
+        <item>Arc de Triomphe</item>
+    </string-array>
+
+</resources>

@@ -2,45 +2,55 @@ package com.airbnb.paris
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.support.annotation.AnyRes
 import android.support.annotation.ColorInt
 import android.support.annotation.Px
 import android.support.annotation.StyleableRes
+import java.util.*
 
-interface TypedArrayWrapper {
+abstract class TypedArrayWrapper {
 
-    fun isNull(index: Int): Boolean
+    /**
+     * Unfortunately Android doesn't support reading @null resources from a style resource like it
+     * does from an AttributeSet so this trickery is required
+     */
+    private val NULL_RESOURCE_IDS = HashSet(Arrays.asList(R.anim.null_, R.color.null_, R.drawable.null_))
 
-    fun getIndexCount(): Int
+    protected fun isNullRes(@AnyRes res: Int): Boolean = NULL_RESOURCE_IDS.contains(res)
 
-    fun getIndex(at: Int): Int
+    abstract fun isNull(index: Int): Boolean
 
-    fun hasValue(index: Int): Boolean
+    abstract fun getIndexCount(): Int
 
-    fun getBoolean(@StyleableRes index: Int, defValue: Boolean): Boolean
+    abstract fun getIndex(at: Int): Int
 
-    @ColorInt fun getColor(@StyleableRes index: Int, @ColorInt defValue: Int): Int
+    abstract fun hasValue(index: Int): Boolean
 
-    fun getColorStateList(@StyleableRes index: Int): ColorStateList
+    abstract fun getBoolean(@StyleableRes index: Int, defValue: Boolean): Boolean
 
-    @Px fun getDimensionPixelSize(@StyleableRes index: Int, @Px defValue: Int): Int
+    @ColorInt abstract fun getColor(@StyleableRes index: Int, @ColorInt defValue: Int): Int
 
-    fun getDrawable(@StyleableRes index: Int): Drawable
+    abstract fun getColorStateList(@StyleableRes index: Int): ColorStateList
 
-    fun getFloat(@StyleableRes index: Int, defValue: Float): Float
+    @Px abstract fun getDimensionPixelSize(@StyleableRes index: Int, @Px defValue: Int): Int
 
-    fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float
+    abstract fun getDrawable(@StyleableRes index: Int): Drawable
 
-    fun getInt(@StyleableRes index: Int, defValue: Int): Int
+    abstract fun getFloat(@StyleableRes index: Int, defValue: Float): Float
 
-    fun getLayoutDimension(@StyleableRes index: Int, defValue: Int): Int
+    abstract fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float
 
-    fun getResourceId(@StyleableRes index: Int, defValue: Int): Int
+    abstract fun getInt(@StyleableRes index: Int, defValue: Int): Int
 
-    fun getString(@StyleableRes index: Int): String
+    abstract fun getLayoutDimension(@StyleableRes index: Int, defValue: Int): Int
 
-    fun getText(@StyleableRes index: Int): CharSequence
+    abstract fun getResourceId(@StyleableRes index: Int, defValue: Int): Int
 
-    fun getTextArray(index: Int): Array<CharSequence>
+    abstract fun getString(@StyleableRes index: Int): String
 
-    fun recycle()
+    abstract fun getText(@StyleableRes index: Int): CharSequence
+
+    abstract fun getTextArray(index: Int): Array<CharSequence>
+
+    abstract fun recycle()
 }

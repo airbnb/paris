@@ -103,7 +103,7 @@ class Style private constructor(
 
     @SuppressLint("Recycle")
     fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper = when {
-        attributeMap != null -> SparseIntArrayTypedArrayWrapper(context.resources, attrs, attributeMap)
+        attributeMap != null -> MapTypedArrayWrapper(context.resources, attrs, attributeMap)
         attributeSet != null -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
         styleRes != 0 -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
         else -> EmptyTypedArrayWrapper

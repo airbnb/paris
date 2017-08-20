@@ -26,16 +26,24 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':paris-annotations')
+
     compile deps.kotlin
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
+    provided deps.googleAutoValue
+    annotationProcessor deps.googleAutoValue
+
+    provided project(':paris-processor')
+    annotationProcessor project(':paris-processor')
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.8.9'
+    testCompile 'io.kotlintest:kotlintest:2.0.5'
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    provided deps.googleAutoValue
-    annotationProcessor deps.googleAutoValue
-    provided project(':paris-processor')
-    annotationProcessor project(':paris-processor')
-    testCompile 'junit:junit:4.12'
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')

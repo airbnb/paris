@@ -3,7 +3,7 @@ package com.airbnb.paris
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 
-internal object EmptyTypedArrayWrapper : TypedArrayWrapper {
+internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
 
     override fun isNull(index: Int): Boolean {
         throw illegalStateException()
