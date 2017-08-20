@@ -1,10 +1,13 @@
 package com.airbnb.paris;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+
+import static android.support.annotation.VisibleForTesting.PRIVATE;
 
 /**
  * Meant to be extended by the generated Paris class
@@ -27,7 +30,8 @@ class ParisBase {
         return (Style) view.getTag(R.id.paris_tag_view_style);
     }
 
-    private static void setLastStyleApplied(View view, Style style) {
+    @VisibleForTesting(otherwise = PRIVATE)
+    static void setLastStyleApplied(View view, Style style) {
         view.setTag(R.id.paris_tag_view_style, style);
     }
 }

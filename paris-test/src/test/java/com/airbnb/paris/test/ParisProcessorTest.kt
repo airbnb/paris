@@ -28,6 +28,7 @@ class ParisProcessorTest {
 
     @Test
     fun attrs() {
+        // TODO Add Drawable case
         assertCase("attrs")
     }
 
