@@ -7,21 +7,22 @@ import com.squareup.javapoet.*
 import java.io.IOException
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
+import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 // TODO  Add @UiThread annotation to StyleApplier classes
 internal object StyleAppliersWriter {
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, typeUtils: Types, styleablesInfo: List<StyleableInfo>) {
+    fun writeFrom(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>) {
         val styleableClassesTree = StyleablesTree()
 
         for (styleableInfo in styleablesInfo) {
-            writeStyleApplier(filer, typeUtils, styleablesInfo, styleableInfo, styleableClassesTree)
+            writeStyleApplier(filer, elementUtils, typeUtils, styleablesInfo, styleableInfo, styleableClassesTree)
         }
     }
 
-    private fun writeStyleApplier(filer: Filer, typeUtils: Types, styleablesInfo: List<StyleableInfo>, styleableInfo: StyleableInfo, styleablesTree: StyleablesTree) {
+    private fun writeStyleApplier(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>, styleableInfo: StyleableInfo, styleablesTree: StyleablesTree) {
         val styleApplierClassName = styleableInfo.styleApplierClassName()
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
@@ -43,7 +44,7 @@ internal object StyleAppliersWriter {
             styleTypeBuilder
                     .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
                     .addMethod(buildAttributesWithDefaultValueMethod(styleableInfo.attrs))
-                    .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.attrs))
+                    .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
         }
 
         val parentStyleApplierClassName = styleablesTree.findStyleApplier(
@@ -126,7 +127,10 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildProcessAttributesMethod(styleableFields: List<StyleableFieldInfo>, attrs: List<AttrInfo>): MethodSpec {
+    private fun buildProcessAttributesMethod(styleableFields: List<StyleableFieldInfo>,
+                                             beforeStyles: List<BeforeStyleInfo>,
+                                             afterStyles: List<AfterStyleInfo>,
+                                             attrs: List<AttrInfo>): MethodSpec {
         val methodBuilder = MethodSpec.methodBuilder("processAttributes")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
@@ -138,6 +142,10 @@ internal object StyleAppliersWriter {
             methodBuilder.addStatement("\$T subStyle", ParisProcessor.STYLE_CLASS_NAME)
         }
 
+        for (beforeStyle in beforeStyles) {
+            methodBuilder.addStatement("getProxy().\$N()", beforeStyle.elementName)
+        }
+
         for (styleableField in styleableFields) {
             addControlFlow(methodBuilder, Format.RESOURCE_ID, styleableField.elementName,
                     styleableField.styleableResId, styleableField.defaultValueResId, true)
@@ -146,6 +154,10 @@ internal object StyleAppliersWriter {
         for (attr in attrs) {
             addControlFlow(methodBuilder, attr.targetFormat, attr.elementName,
                     attr.styleableResId, attr.defaultValueResId, false)
+        }
+
+        for (afterStyle in afterStyles) {
+            methodBuilder.addStatement("getProxy().\$N()", afterStyle.elementName)
         }
 
         return methodBuilder.build()

@@ -3,16 +3,15 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.utils.Errors
-import com.airbnb.paris.processor.utils.ProcessorException
-import com.airbnb.paris.processor.utils.check
-import com.airbnb.paris.processor.utils.packageName
+import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.ClassName
 import com.sun.tools.javac.code.Attribute
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 /**
  * If [styleableResourceName] isn't empty then at least one of [styleableFields] or [attrs] won't be
@@ -20,6 +19,8 @@ import javax.lang.model.type.TypeMirror
  */
 internal class StyleableInfo private constructor(
         val styleableFields: List<StyleableFieldInfo>,
+        val beforeStyles: List<BeforeStyleInfo>,
+        val afterStyles: List<AfterStyleInfo>,
         val attrs: List<AttrInfo>,
         val elementPackageName: String,
         val elementName: String,
@@ -34,14 +35,19 @@ internal class StyleableInfo private constructor(
 
     companion object {
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner,
+        fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types,
+                            resourceScanner: AndroidResourceScanner,
                             classesToStyleableFieldInfo: Map<Element, List<StyleableFieldInfo>>,
+                            classesToBeforeStyleInfo: Map<Element, List<BeforeStyleInfo>>,
+                            classesToAfterStyleInfo: Map<Element, List<AfterStyleInfo>>,
                             classesToAttrsInfo: Map<Element, List<AttrInfo>>): List<StyleableInfo> {
             return roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                     .mapNotNull {
                         try {
-                            fromElement(resourceScanner, it as TypeElement,
+                            fromElement(elementUtils, typeUtils, resourceScanner, it as TypeElement,
                                     classesToStyleableFieldInfo[it] ?: emptyList(),
+                                    classesToBeforeStyleInfo[it] ?: emptyList(),
+                                    classesToAfterStyleInfo[it] ?: emptyList(),
                                     classesToAttrsInfo[it] ?: emptyList())
                         } catch(e: ProcessorException) {
                             Errors.log(e)
@@ -51,8 +57,14 @@ internal class StyleableInfo private constructor(
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(resourceScanner: AndroidResourceScanner, element: TypeElement,
-                                styleableFields: List<StyleableFieldInfo>, attrs: List<AttrInfo>): StyleableInfo {
+        private fun fromElement(elementUtils: Elements,
+                                typeUtils: Types,
+                                resourceScanner: AndroidResourceScanner,
+                                element: TypeElement,
+                                styleableFields: List<StyleableFieldInfo>,
+                                beforeStyles: List<BeforeStyleInfo>,
+                                afterStyles: List<AfterStyleInfo>,
+                                attrs: List<AttrInfo>): StyleableInfo {
 
             val elementPackageName = element.packageName
             val elementName = element.simpleName.toString()
@@ -86,6 +98,8 @@ internal class StyleableInfo private constructor(
 
             return StyleableInfo(
                     styleableFields,
+                    beforeStyles,
+                    afterStyles,
                     attrs,
                     elementPackageName,
                     elementName,
