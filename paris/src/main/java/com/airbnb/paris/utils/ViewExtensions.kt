@@ -1,4 +1,4 @@
-package com.airbnb.paris
+package com.airbnb.paris.utils
 
 import android.support.annotation.Px
 import android.view.View
