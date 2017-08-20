@@ -7,17 +7,20 @@ import com.squareup.javapoet.CodeBlock
 internal class AndroidResourceId {
 
     val value: Int
+    val resourceName: String?
     val code: CodeBlock
     val className: ClassName?
 
     constructor(value: Int) {
         this.value = value
+        this.resourceName = null
         this.code = CodeBlock.of("\$L", value)
         this.className = null
     }
 
     constructor(value: Int, className: ClassName, resourceName: String) {
         this.value = value
+        this.resourceName = resourceName
         this.code = if (className.topLevelClassName() == ClassNames.ANDROID_R)
             CodeBlock.of("\$L.\$N", className, resourceName)
         else

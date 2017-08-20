@@ -31,6 +31,16 @@ internal object StyleAppliersWriter {
                 .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
 
+        // If the view type is "View" then there is no parent
+        var parentStyleApplierClassName: ClassName? = null
+        if (!typeUtils.isSameType(elementUtils.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
+            parentStyleApplierClassName = styleablesTree.findStyleApplier(
+                    typeUtils,
+                    styleablesInfo,
+                    styleableInfo.viewElementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
+            styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
+        }
+
         if (!styleableInfo.styleableResourceName.isEmpty()) {
             // Use an arbitrary AndroidResourceId to get R's ClassName. Per the StyleableInfo doc
             // it's safe to assume that either styleableFields or attrs won't be empty if
@@ -47,15 +57,8 @@ internal object StyleAppliersWriter {
                     // TODO Only add if there are attributes with a default value?
                     .addMethod(buildAttributesWithDefaultValueMethod(styleableInfo.attrs))
                     .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
-        }
 
-        // If the view type is "View" then there is no parent
-        if (!typeUtils.isSameType(elementUtils.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
-            val parentStyleApplierClassName = styleablesTree.findStyleApplier(
-                    typeUtils,
-                    styleablesInfo,
-                    styleableInfo.viewElementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
-            styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
+            addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
         }
 
         if (styleableInfo.dependencies.isNotEmpty()) {
@@ -221,5 +224,90 @@ internal object StyleAppliersWriter {
                 .returns(styleApplierClassName)
                 .addStatement("return apply(\$L)", styleInfo.androidResourceId.code)
                 .build()
+    }
+
+    private fun addStyleBuilderInnerClass(styleApplierTypeBuilder: TypeSpec.Builder,
+                                          styleApplierClassName: ClassName,
+                                          rClassName: ClassName,
+                                          styleableInfo: StyleableInfo,
+                                          parentStyleApplierClassName: ClassName?) {
+        // BaseStyleBuilder inner class
+        val parentClassName: ClassName?
+        if (parentStyleApplierClassName != null) {
+            parentClassName = ClassName.get(parentStyleApplierClassName.packageName(), parentStyleApplierClassName.simpleName(), "BaseStyleBuilder")
+        } else {
+            parentClassName = ParisProcessor.STYLE_BUILDER_CLASS_NAME
+        }
+        val wildcardTypeName = WildcardTypeName.subtypeOf(Object::class.java)
+        val baseClassName = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
+        val baseStyleBuilderTypeBuilder = TypeSpec.classBuilder(baseClassName)
+                .addTypeVariable(TypeVariableName.get("B", ParameterizedTypeName.get(baseClassName, TypeVariableName.get("B"), TypeVariableName.get("A"))))
+                .addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName, wildcardTypeName)))
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
+                .superclass(ParameterizedTypeName.get(parentClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
+                .addMethod(buildStyleBuilderApplierConstructorMethod(TypeVariableName.get("A")))
+                .addMethod(buildStyleBuilderEmptyConstructorMethod())
+        styleableInfo.attrs
+                .mapNotNull { buildAttributeSetterMethod(rClassName, styleableInfo.styleableResourceName, it) }
+                .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
+        baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))
+        styleApplierTypeBuilder.addType(baseStyleBuilderTypeBuilder.build())
+
+        // StyleBuilder inner class
+        val className = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "StyleBuilder")
+        val styleBuilderTypeBuilder = TypeSpec.classBuilder(className)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .superclass(ParameterizedTypeName.get(baseClassName, className, styleApplierClassName))
+                .addMethod(buildStyleBuilderApplierConstructorMethod(styleApplierClassName))
+                .addMethod(buildStyleBuilderEmptyConstructorMethod())
+        styleApplierTypeBuilder.addType(styleBuilderTypeBuilder.build())
+
+        // builder() method
+        styleApplierTypeBuilder.addMethod(MethodSpec.methodBuilder("builder")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(className)
+                .addStatement("return new \$T(this)", className)
+                .build())
+    }
+
+    private fun buildStyleBuilderApplierConstructorMethod(parameterTypeName: TypeName): MethodSpec {
+        return MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(parameterTypeName, "applier")
+                .addStatement("super(applier)")
+                .build()
+    }
+
+    private fun buildStyleBuilderEmptyConstructorMethod(): MethodSpec {
+        return MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
+                .build()
+    }
+
+    private fun buildAttributeSetterMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
+        val attrResourceName = attr.styleableResId.resourceName
+        if (attrResourceName != null) {
+            val methodName = attrResourceName.substring(attrResourceName.lastIndexOf('_') + 1)
+            return MethodSpec.methodBuilder(methodName)
+                    .addModifiers(Modifier.PUBLIC)
+                    // TODO Add @AnyRes
+                    .addParameter(ParameterSpec.builder(Integer.TYPE, "res").build())
+                    .returns(TypeVariableName.get("B"))
+                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], res)", rClassName, styleableResourceName, attr.styleableResId.code)
+                    .addStatement("return (B) this")
+                    .build()
+        } else {
+            return null
+        }
+    }
+
+    private fun buildApplyToMethod(styleableInfo: StyleableInfo, styleApplierClassName: ClassName): MethodSpec? {
+        val methodBuilder = MethodSpec.methodBuilder("applyTo")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec.builder(TypeName.get(styleableInfo.viewElementType), "view").build())
+                .returns(TypeVariableName.get("B"))
+                .addStatement("new \$T(view).apply(build())", styleApplierClassName)
+                .addStatement("return (B) this")
+        return methodBuilder.build()
     }
 }

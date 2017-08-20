@@ -2,16 +2,19 @@ package com.airbnb.paris
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.annotation.AttrRes
 import android.support.annotation.StyleRes
 import android.util.AttributeSet
 
 class Style private constructor(
+        private val attributeMap: Map<Int, Int>?,
         val attributeSet: AttributeSet?,
         @StyleRes val styleRes: Int,
         val config: Config?) {
 
-    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(attributeSet, 0, config)
-    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, styleRes, config)
+    private constructor(builder: Builder) : this(builder.attributeMap, null, 0, null)
+    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(null, attributeSet, 0, config)
+    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, null, styleRes, config)
 
     /**
      * Config objects are automatically passed from [Style] to [Style]. They
@@ -68,6 +71,18 @@ class Style private constructor(
         }
     }
 
+    class Builder internal constructor() {
+
+        internal val attributeMap = HashMap<Int, Int>()
+
+        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder {
+            attributeMap.put(attrRes, valueRes)
+            return this
+        }
+
+        fun build(): Style = Style(this)
+    }
+
     /**
      * Visible for debug
      */
@@ -76,7 +91,9 @@ class Style private constructor(
     }
 
     companion object {
-        internal val EMPTY = Style(null, 0, null)
+        internal val EMPTY = Style(null, null, 0, null)
+
+        fun builder(): Builder = Builder()
     }
 
     /**
@@ -85,14 +102,11 @@ class Style private constructor(
     var debugListener: DebugListener? = null
 
     @SuppressLint("Recycle")
-    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper {
-        if (attributeSet != null) {
-            return TypedArrayWrapperImpl(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
-        } else if (styleRes != 0) {
-            return TypedArrayWrapperImpl(context.obtainStyledAttributes(styleRes, attrs))
-        } else {
-            return EmptyTypedArrayWrapper
-        }
+    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper = when {
+        attributeMap != null -> SparseIntArrayTypedArrayWrapper(context.resources, attrs, attributeMap)
+        attributeSet != null -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
+        styleRes != 0 -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
+        else -> EmptyTypedArrayWrapper
     }
 
     fun hasOption(option: Config.Option): Boolean {

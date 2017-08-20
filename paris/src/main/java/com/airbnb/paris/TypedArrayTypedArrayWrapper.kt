@@ -5,7 +5,7 @@ import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import java.util.*
 
-internal class TypedArrayWrapperImpl constructor(val typedArray: TypedArray) : TypedArrayWrapper {
+internal class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : TypedArrayWrapper {
 
     /**
      * Unfortunately Android doesn't support reading @null resources from a style resource like it
