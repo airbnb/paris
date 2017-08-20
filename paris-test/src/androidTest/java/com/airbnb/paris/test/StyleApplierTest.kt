@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StyleApplierTest {
 
-    private open class TestStyleApplier(view: View) : StyleApplier<TestStyleApplier, View>(view) {
+    private open class TestStyleApplier(view: View) : StyleApplier<TestStyleApplier, View, View>(view) {
         override fun attributes(): IntArray? {
             return intArrayOf(1, 2, 3)
         }

@@ -39,7 +39,7 @@ internal object ParisWriter {
         return buildStyleMethod(
                 styleableClassInfo.elementPackageName,
                 String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
-                TypeName.get(styleableClassInfo.elementType))
+                TypeName.get(styleableClassInfo.viewElementType))
     }
 
     private fun buildStyleMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {

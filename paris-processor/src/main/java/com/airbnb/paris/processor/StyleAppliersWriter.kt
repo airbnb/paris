@@ -2,6 +2,7 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.utils.ClassNames
+import com.airbnb.paris.processor.utils.VIEW_TYPE
 import com.airbnb.paris.processor.utils.asTypeElement
 import com.squareup.javapoet.*
 import java.io.IOException
@@ -27,7 +28,7 @@ internal object StyleAppliersWriter {
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType)))
+                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
 
         if (!styleableInfo.styleableResourceName.isEmpty()) {
@@ -43,21 +44,26 @@ internal object StyleAppliersWriter {
 
             styleTypeBuilder
                     .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
+                    // TODO Only add if there are attributes with a default value?
                     .addMethod(buildAttributesWithDefaultValueMethod(styleableInfo.attrs))
                     .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
         }
 
-        val parentStyleApplierClassName = styleablesTree.findStyleApplier(
-                typeUtils,
-                styleablesInfo,
-                styleableInfo.elementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
-        styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
+        // If the view type is "View" then there is no parent
+        if (!typeUtils.isSameType(elementUtils.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
+            val parentStyleApplierClassName = styleablesTree.findStyleApplier(
+                    typeUtils,
+                    styleablesInfo,
+                    styleableInfo.viewElementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
+            styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
+        }
 
         if (styleableInfo.dependencies.isNotEmpty()) {
             styleTypeBuilder.addMethod(buildApplyDependenciesMethod(styleableInfo))
         }
 
         for (styleableFieldInfo in styleableInfo.styleableFields) {
+            // TODO Enable @StyleableField for proxies? Why not
             val subStyleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
                     styleablesInfo,
@@ -75,11 +81,16 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildConstructorMethod(classInfo: StyleableInfo): MethodSpec {
-        return MethodSpec.constructorBuilder()
+        val builder = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(TypeName.get(classInfo.elementType), "view")
-                .addStatement("super(view)")
-                .build()
+                .addParameter(TypeName.get(classInfo.viewElementType), "view")
+        if (classInfo.elementType == classInfo.viewElementType) {
+            builder.addStatement("super(view)")
+        } else {
+            // Different types means this style applier uses a proxy
+            builder.addStatement("super(new \$T(view))", classInfo.elementType)
+        }
+        return builder.build()
     }
 
     private fun buildApplyParentMethod(parentStyleApplierClassName: ClassName): MethodSpec {
@@ -185,13 +196,13 @@ internal object StyleAppliersWriter {
             methodSpecBuilder
                     .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.STYLE_CLASS_NAME, androidResourceId.code)
                     .addStatement("subStyle.setDebugListener(style.getDebugListener())")
-                    .addStatement("\$T.style(getView().\$N).apply(subStyle)", ParisProcessor.PARIS_CLASS_NAME, elementName)
+                    .addStatement("\$N().apply(subStyle)", elementName)
         } else {
             if (isForDefaultValue && format == Format.RESOURCE_ID) {
                 // The parameter is the resource id
-                methodSpecBuilder.addStatement("getView().\$N(\$L)", elementName, androidResourceId.code)
+                methodSpecBuilder.addStatement("getProxy().\$N(\$L)", elementName, androidResourceId.code)
             } else {
-                methodSpecBuilder.addStatement("getView().\$N($from.$statement)", elementName, androidResourceId.code)
+                methodSpecBuilder.addStatement("getProxy().\$N($from.$statement)", elementName, androidResourceId.code)
             }
         }
     }
@@ -200,7 +211,7 @@ internal object StyleAppliersWriter {
         return MethodSpec.methodBuilder(styleableFieldInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
-                .addStatement("return new \$T(getView().\$N)", styleApplierClassName, styleableFieldInfo.elementName)
+                .addStatement("return new \$T(getProxy().\$N)", styleApplierClassName, styleableFieldInfo.elementName)
                 .build()
     }
 

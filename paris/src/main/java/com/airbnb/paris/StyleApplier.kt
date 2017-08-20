@@ -6,9 +6,13 @@ import android.support.annotation.StyleRes
 import android.support.annotation.UiThread
 import android.util.AttributeSet
 import android.view.View
+import com.airbnb.paris.proxy.Proxy
 
 @UiThread
-abstract class StyleApplier<out S : StyleApplier<S, T>, out T : View>(val view: T) {
+abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private constructor(val proxy: P, val view: V) {
+
+    protected constructor(proxy: Proxy<P, V>) : this(proxy.proxy, proxy.view)
+    constructor(view: V) : this(view as P, view)
 
     /**
      * This is only public because the internal visibility Java interop is weird, do not use

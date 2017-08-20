@@ -8,7 +8,7 @@ import android.view.ViewGroup.MarginLayoutParams
 
 @UiThread
 @VisibleForTesting
-class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View>(view) {
+class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleApplier, View, View>(view) {
 
     companion object {
         const val NOT_SET = -10
@@ -77,7 +77,7 @@ class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleAppli
                 params.width = width
                 params.height = height
             }
-            view.layoutParams = params
+            proxy.layoutParams = params
         }
 
         if (isMarginSet) {
@@ -89,7 +89,7 @@ class LayoutParamsStyleApplier(view: View) : StyleApplier<LayoutParamsStyleAppli
             marginParams.leftMargin = ifSetElse(marginLeft, marginParams.leftMargin)
             marginParams.rightMargin = ifSetElse(marginRight, marginParams.rightMargin)
             marginParams.topMargin = ifSetElse(marginTop, marginParams.topMargin)
-            view.layoutParams = marginParams
+            proxy.layoutParams = marginParams
         }
     }
 }

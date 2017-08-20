@@ -9,6 +9,7 @@ import com.sun.tools.javac.code.Attribute
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -24,7 +25,16 @@ internal class StyleableInfo private constructor(
         val attrs: List<AttrInfo>,
         val elementPackageName: String,
         val elementName: String,
+        /**
+         * If the styleable class is not a proxy, will be equal to [viewElementType]. Otherwise,
+         * will refer to the proxy class
+         */
         val elementType: TypeMirror,
+        /**
+         * If the styleable class is not a proxy, will be equal to [elementType]. Refers to the view
+         * class
+         */
+        val viewElementType: TypeMirror,
         val styleableResourceName: String,
         val dependencies: List<TypeMirror>,
         val styles: List<StyleInfo>) {
@@ -70,6 +80,14 @@ internal class StyleableInfo private constructor(
             val elementName = element.simpleName.toString()
             val elementType = element.asType()
 
+            val viewElementType: TypeMirror
+            if (typeUtils.isSubtype(elementType, typeUtils.erasure(elementUtils.PROXY_TYPE.asType()))) {
+                // Get the parameterized type, which should be the view type
+                viewElementType = (element.superclass as DeclaredType).typeArguments[1]
+            } else {
+                viewElementType = elementType
+            }
+
             val styleable = element.getAnnotation(Styleable::class.java)
             val styleableResourceName = styleable.value
 
@@ -104,6 +122,7 @@ internal class StyleableInfo private constructor(
                     elementPackageName,
                     elementName,
                     elementType,
+                    viewElementType,
                     styleableResourceName,
                     dependencies,
                     styles)

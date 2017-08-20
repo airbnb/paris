@@ -28,8 +28,10 @@ internal class StyleablesTree {
         }
 
         val type = viewTypeElement.asType()
-        if (styleablesInfo.any { typeUtils.isSameType(type, it.elementType) }) {
-            styleApplierClassName = viewTypeElementToStyleApplierClassName(viewTypeElement)
+        // Check to see if the view type is handled by a styleable class
+        val styleableInfo = styleablesInfo.find { typeUtils.isSameType(type, it.viewElementType) }
+        if (styleableInfo != null) {
+            styleApplierClassName = viewTypeElementToStyleApplierClassName(styleableInfo.elementType.asTypeElement(typeUtils))
         } else {
             styleApplierClassName = findStyleApplier(
                     typeUtils,
