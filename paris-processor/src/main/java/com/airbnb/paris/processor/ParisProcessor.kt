@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Attr
+import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.Errors
@@ -62,6 +63,14 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
+        var generateParisClass = true;
+
+        val configElement = roundEnv.getElementsAnnotatedWith(ParisConfig::class.java).firstOrNull()
+        if (configElement != null) {
+            val config = configElement.getAnnotation(ParisConfig::class.java)
+            generateParisClass = config.generateParisClass
+        }
+
         val classesToAttrsInfo = AttrInfo.fromEnvironment(roundEnv, elementUtils, typeUtils, resourceScanner)
                         .groupBy { it.enclosingElement }
         val classesToStyleableFieldInfo = StyleableFieldInfo.fromEnvironment(roundEnv, resourceScanner)
@@ -71,8 +80,10 @@ class ParisProcessor : AbstractProcessor() {
 
         if (!styleablesInfo.isEmpty()) {
             try {
-                ParisWriter.writeFrom(filer, styleablesInfo)
-                StyleAppliersWriter.writeFrom(filer, typeUtils, styleablesInfo)
+                if (generateParisClass) {
+                    ParisWriter.writeFrom(filer, styleablesInfo)
+                }
+                StyleAppliersWriter.writeFrom(filer, elementUtils, typeUtils, styleablesInfo)
             } catch (e: ProcessorException) {
                 Errors.log(e)
             }
