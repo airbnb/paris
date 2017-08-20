@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         // TODO  Use kotlinVersion variable
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.3"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.4-2"
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -28,7 +28,7 @@ task clean(type: Delete) {
 }
 
 ext {
-    kotlinVersion = '1.1.3'
+    kotlinVersion = '1.1.4-2'
 
     deps = [
             googleAutoValue: "com.google.auto.value:auto-value:1.4.1",
