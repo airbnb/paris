@@ -15,54 +15,54 @@ import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
 @Styleable(value = "Paris_View", dependencies = LayoutParamsStyleApplier.class)
-public class ViewProxy extends BaseProxy<ViewProxy, View> {
+class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     /**
      * This replicates what happens privately within {@link View}
      */
     private static final int[] VISIBILITY_FLAGS = new int[]{ View.VISIBLE, View.INVISIBLE, View.GONE };
 
-    public ViewProxy(View view) {
+    ViewProxy(View view) {
         super(view);
     }
 
     @Attr(R2.styleable.Paris_View_android_background)
-    public void setBackground(Drawable drawable) {
+    void setBackground(Drawable drawable) {
         getView().setBackground(drawable);
     }
 
     @Attr(R2.styleable.Paris_View_android_minWidth)
-    public void setMinWidth(@Px Integer minWidth) {
+    void setMinWidth(@Px Integer minWidth) {
         getView().setMinimumWidth(minWidth);
     }
 
     @Attr(R2.styleable.Paris_View_android_padding)
-    public void setPadding(@Px Integer padding) {
+    void setPadding(@Px Integer padding) {
         getView().setPadding(padding, padding, padding, padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingBottom)
-    public void setPaddingBottom(@Px Integer padding) {
+    void setPaddingBottom(@Px Integer padding) {
         ViewExtensionsKt.setPaddingBottom(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingLeft)
-    public void setPaddingLeft(@Px Integer padding) {
+    void setPaddingLeft(@Px Integer padding) {
         ViewExtensionsKt.setPaddingLeft(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingRight)
-    public void setPaddingRight(@Px Integer padding) {
+    void setPaddingRight(@Px Integer padding) {
         ViewExtensionsKt.setPaddingRight(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingTop)
-    public void setPaddingTop(@Px Integer padding) {
+    void setPaddingTop(@Px Integer padding) {
         ViewExtensionsKt.setPaddingTop(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_stateListAnimator)
-    public void setStateListAnimator(@AnyRes int animatorRes) {
+    void setStateListAnimator(@AnyRes int animatorRes) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             StateListAnimator animator;
             if (animatorRes != 0) {
@@ -75,7 +75,7 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     @Attr(R2.styleable.Paris_View_android_visibility)
-    public void setVisibility(int visibility) {
+    void setVisibility(int visibility) {
         getView().setVisibility(VISIBILITY_FLAGS[visibility]);
     }
 }

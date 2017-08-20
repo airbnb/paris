@@ -15,7 +15,7 @@ import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable(value = "Paris_TextView")
-public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
+class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
 
     @Nullable
     private Drawable drawableLeft;
@@ -26,12 +26,12 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     @Nullable
     private Drawable drawableBottom;
 
-    public TextViewProxy(TextView view) {
+    TextViewProxy(TextView view) {
         super(view);
     }
 
     @AfterStyle
-    public void afterStyle() {
+    void afterStyle() {
         Drawable[] drawables = getView().getCompoundDrawables();
         getView().setCompoundDrawables(
                 drawableLeft != null ? drawableLeft : drawables[0],
@@ -45,27 +45,27 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     }
 
     @Attr(R2.styleable.Paris_TextView_android_drawableLeft)
-    public void setDrawableLeft(Drawable drawable) {
+    void setDrawableLeft(Drawable drawable) {
         drawableLeft = drawable;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_drawableTop)
-    public void setDrawableTop(Drawable drawable) {
+    void setDrawableTop(Drawable drawable) {
         drawableTop = drawable;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_drawableRight)
-    public void setDrawableRight(Drawable drawable) {
+    void setDrawableRight(Drawable drawable) {
         drawableRight = drawable;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_drawableBottom)
-    public void setDrawableBottom(Drawable drawable) {
+    void setDrawableBottom(Drawable drawable) {
         drawableBottom = drawable;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_ellipsize)
-    public void setEllipsize(int ellipsize) {
+    void setEllipsize(int ellipsize) {
         TextUtils.TruncateAt where;
         switch (ellipsize) {
             case 1:
@@ -87,69 +87,69 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     }
 
     @Attr(R2.styleable.Paris_TextView_android_gravity)
-    public void setGravity(int gravity) {
+    void setGravity(int gravity) {
         getView().setGravity(gravity);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_letterSpacing)
-    public void setLetterSpacing(float letterSpacing) {
+    void setLetterSpacing(float letterSpacing) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getView().setLetterSpacing(letterSpacing);
         }
     }
 
     @Attr(R2.styleable.Paris_TextView_android_lines)
-    public void set(int lines) {
+    void set(int lines) {
         getView().setLines(lines);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_lineSpacingExtra)
-    public void setLineSpacingExtra(@Px int lineSpacingExtra) {
+    void setLineSpacingExtra(@Px int lineSpacingExtra) {
         getView().setLineSpacing(lineSpacingExtra, getView().getLineSpacingMultiplier());
     }
 
     @Attr(R2.styleable.Paris_TextView_android_lineSpacingMultiplier)
-    public void setLineSpacingMultiplier(float lineSpacingMultiplier) {
+    void setLineSpacingMultiplier(float lineSpacingMultiplier) {
         getView().setLineSpacing(getView().getLineSpacingExtra(), lineSpacingMultiplier);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_maxLines)
-    public void setMaxLines(int maxLines) {
+    void setMaxLines(int maxLines) {
         getView().setMaxLines(maxLines);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_minLines)
-    public void setMinLines(int minLines) {
+    void setMinLines(int minLines) {
         getView().setMinLines(minLines);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_minWidth)
-    public void setMinWidth(@Px int minWidth) {
+    void setMinWidth(@Px int minWidth) {
         getView().setMinWidth(minWidth);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_singleLine)
-    public void setSingleLine(boolean singleLine) {
+    void setSingleLine(boolean singleLine) {
         getView().setSingleLine(singleLine);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_textAllCaps)
-    public void setTextAllCaps(boolean textAllCaps) {
+    void setTextAllCaps(boolean textAllCaps) {
         getView().setAllCaps(textAllCaps);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_textColor)
-    public void setTextColor(ColorStateList colors) {
+    void setTextColor(ColorStateList colors) {
         getView().setTextColor(colors);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_textColorHint)
-    public void setTextColorHint(ColorStateList colors) {
+    void setTextColorHint(ColorStateList colors) {
         getView().setHintTextColor(colors);
     }
 
     @Attr(R2.styleable.Paris_TextView_android_textSize)
-    public void setTextSize(@Px int textSize) {
+    void setTextSize(@Px int textSize) {
         getView().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 }

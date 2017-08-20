@@ -287,6 +287,7 @@ internal object StyleAppliersWriter {
     private fun buildAttributeSetterMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
         val attrResourceName = attr.styleableResId.resourceName
         if (attrResourceName != null) {
+            // TODO Change naming scheme, substract the styleable name and "android_" from it
             val methodName = attrResourceName.substring(attrResourceName.lastIndexOf('_') + 1)
             return MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
