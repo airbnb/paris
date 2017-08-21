@@ -197,7 +197,7 @@ internal object StyleAppliersWriter {
         val from = if (isForDefaultValue) "res" else "a"
         if (isElementStyleable) {
             methodSpecBuilder
-                    .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.STYLE_CLASS_NAME, androidResourceId.code)
+                    .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.SIMPLE_STYLE_CLASS_NAME, androidResourceId.code)
                     .addStatement("subStyle.setDebugListener(style.getDebugListener())")
                     .addStatement("\$N().apply(subStyle)", elementName)
         } else {

@@ -39,15 +39,15 @@ abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private 
      */
     fun apply(attributeSet: AttributeSet?): S {
         if (attributeSet != null) {
-            apply(Style(attributeSet, config))
+            apply(SimpleStyle(attributeSet, config))
         } else {
-            apply(Style.EMPTY)
+            apply(SimpleStyle.EMPTY)
         }
         return this as S
     }
 
     fun apply(@StyleRes styleRes: Int): S {
-        return apply(Style(styleRes, config))
+        return apply(SimpleStyle(styleRes, config))
     }
 
     open fun apply(style: Style): S {
@@ -55,7 +55,7 @@ abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private 
 
         // Assumes that if the Style has an AttributeSet it's being applied during the View
         // initialization, in which case parents should be making the call themselves
-        if (style.attributeSet == null) {
+        if (style.shouldApplyParent) {
             applyParent(style)
         }
 

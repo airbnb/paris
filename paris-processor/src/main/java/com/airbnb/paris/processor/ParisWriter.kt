@@ -70,7 +70,7 @@ internal object ParisWriter {
                         styleVarargCodeBuilder.add(", ")
                     }
                     styleVarargCodeBuilder.add("new \$T(\$L)",
-                            ParisProcessor.STYLE_CLASS_NAME, style.androidResourceId.code)
+                            ParisProcessor.SIMPLE_STYLE_CLASS_NAME, style.androidResourceId.code)
                 }
 
                 val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",

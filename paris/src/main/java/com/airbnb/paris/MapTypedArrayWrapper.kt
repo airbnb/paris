@@ -23,7 +23,11 @@ class MapTypedArrayWrapper constructor(
         private val styleableAttrs: IntArray,
         private val attrResToValueResMap: Map<Int, Int>) : TypedArrayWrapper() {
 
-    private val attributes by lazy { attrResToValueResMap.keys.toList() }
+    val styleableAttrIndexes by lazy {
+        attrResToValueResMap.keys
+                .map { styleableAttrs.indexOf(it) }
+                .filter { it != -1 }
+    }
 
     private fun styleableAttrIndexToAttrRes(styleableAttrIndex: Int): Int =
             styleableAttrs[styleableAttrIndex]
@@ -36,9 +40,9 @@ class MapTypedArrayWrapper constructor(
 
     override fun isNull(index: Int): Boolean = isNullRes(getResourceId(index, 0))
 
-    override fun getIndexCount(): Int = attrResToValueResMap.size
+    override fun getIndexCount(): Int = styleableAttrIndexes.size
 
-    override fun getIndex(at: Int): Int = attributes[at]
+    override fun getIndex(at: Int): Int = styleableAttrIndexes[at]
 
     override fun hasValue(index: Int): Boolean = styleableAttrIndexToValueRes(index) != null
 

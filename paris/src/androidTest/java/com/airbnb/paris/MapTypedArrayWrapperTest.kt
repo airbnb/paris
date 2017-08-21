@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import com.airbnb.paris.test.R
 import com.airbnb.paris.utils.getFloat
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -23,7 +24,10 @@ class MapTypedArrayWrapperTest {
     private val bigAttrResToValueResMap = mapOf(
             R.attr.formatBoolean to R.bool.format_boolean,
             R.attr.formatColor to R.color.format_color,
-            R.attr.formatDimension to R.dimen.format_dimension
+            R.attr.formatDimension to R.dimen.format_dimension,
+            // This attr is not included in R.styleable.Format, as a result it should be ignored by
+            // the MapTypedArrayWrapper
+            R.attr.background to R.color.format_color
     )
     private val attrResToValueResMaps = listOf(
             emptyMap(),
@@ -48,7 +52,8 @@ class MapTypedArrayWrapperTest {
     fun getIndexCount() {
         attrResToValueResMaps.forEach {
             wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, it)
-            assertEquals(it.size, wrapper.getIndexCount())
+            val indexes = it.keys.map { R.styleable.Formats.indexOf(it) }.filter { it != -1 }
+            assertEquals(indexes.size, wrapper.getIndexCount())
         }
     }
 
@@ -56,10 +61,12 @@ class MapTypedArrayWrapperTest {
     fun getIndex() {
         attrResToValueResMaps.forEach { attributeMap ->
             wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, attributeMap)
-            // TODO There's an assumption here about the way keys are ordered
-            val keys = attributeMap.keys.toList()
-            (0 until attributeMap.size).forEach { at ->
-                assertEquals(keys[at], wrapper.getIndex(at))
+            // TODO There's an assumption here about the way indexes are ordered
+            val indexes = attributeMap.keys.map { R.styleable.Formats.indexOf(it) }.filter { it != -1 }
+            (0 until indexes.size).forEach { at ->
+                // Ensures that all the indexes are valid
+                Assert.assertNotEquals(-1, indexes[at])
+                assertEquals(indexes[at], wrapper.getIndex(at))
             }
         }
     }

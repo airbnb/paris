@@ -29,7 +29,7 @@ class ParisBaseTest {
 
     @Test
     fun getLastStyleApplied() {
-        val style = Style(666)
+        val style = SimpleStyle(666)
         ParisBase.setLastStyleApplied(view, style)
         assertEquals(style, ParisBase.getLastStyleApplied(view))
     }

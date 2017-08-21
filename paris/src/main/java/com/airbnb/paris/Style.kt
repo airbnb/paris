@@ -1,20 +1,8 @@
 package com.airbnb.paris
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.AttrRes
-import android.support.annotation.StyleRes
-import android.util.AttributeSet
 
-class Style private constructor(
-        private val attributeMap: Map<Int, Int>?,
-        val attributeSet: AttributeSet?,
-        @StyleRes val styleRes: Int,
-        val config: Config?) {
-
-    private constructor(builder: Builder) : this(builder.attributeMap, null, 0, null)
-    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(null, attributeSet, 0, config)
-    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, null, styleRes, config)
+interface Style {
 
     /**
      * Config objects are automatically passed from [Style] to [Style]. They
@@ -71,18 +59,6 @@ class Style private constructor(
         }
     }
 
-    class Builder internal constructor() {
-
-        internal val attributeMap = HashMap<Int, Int>()
-
-        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder {
-            attributeMap.put(attrRes, valueRes)
-            return this
-        }
-
-        fun build(): Style = Style(this)
-    }
-
     /**
      * Visible for debug
      */
@@ -90,26 +66,18 @@ class Style private constructor(
         fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper)
     }
 
-    companion object {
-        internal val EMPTY = Style(null, null, 0, null)
-
-        fun builder(): Builder = Builder()
-    }
+    // TODO Better name
+    val shouldApplyParent: Boolean
 
     /**
      * Visible for debug
      */
-    var debugListener: DebugListener? = null
+    var debugListener: DebugListener?
 
-    @SuppressLint("Recycle")
-    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper = when {
-        attributeMap != null -> MapTypedArrayWrapper(context.resources, attrs, attributeMap)
-        attributeSet != null -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
-        styleRes != 0 -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
-        else -> EmptyTypedArrayWrapper
-    }
+    fun name(context: Context): String
 
-    fun hasOption(option: Config.Option): Boolean {
-        return config != null && config.contains(option)
-    }
+    fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper
+
+    fun hasOption(option: Config.Option): Boolean
+
 }

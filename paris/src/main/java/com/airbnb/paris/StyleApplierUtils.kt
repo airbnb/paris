@@ -46,12 +46,12 @@ class StyleApplierUtils {
                 if (mismatchedStyle != null) {
                     val context = applier.view.context
                     val viewSimpleName = applier.view.javaClass.simpleName
-                    val isSubStyle = mismatchedStyle.first.styleRes != styleReference.styleRes
-                    val styleReferenceName = context.resources.getResourceEntryName(mismatchedStyle.first.styleRes)
-                    val otherStyleName = context.resources.getResourceEntryName(mismatchedStyle.second.styleRes)
+                    val isSubStyle = mismatchedStyle.first != styleReference
+                    val styleReferenceName = mismatchedStyle.first.name(context)
+                    val otherStyleName = mismatchedStyle.second.name(context)
                     if (isSubStyle) {
-                        val parentStyleReferenceName = context.resources.getResourceEntryName(styleReference.styleRes)
-                        val otherParentStyleName = context.resources.getResourceEntryName(style.styleRes)
+                        val parentStyleReferenceName = styleReference.name(context)
+                        val otherParentStyleName = style.name(context)
                         throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" (referenced in \"$parentStyleReferenceName\") and \"$otherStyleName\" (referenced in \"$otherParentStyleName\") linked to $viewSimpleName have different attributes.")
                     } else {
                         throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" and \"$otherStyleName\" linked to $viewSimpleName have different attributes.")

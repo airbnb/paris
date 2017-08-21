@@ -139,6 +139,15 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+    <style name="StyleApplierUtilsTest_TextView_textColor">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="StyleApplierUtilsTest_TextView_textColorTextSize">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
     <style name="StyleApplierUtilsTest_TextView_textColorTextSizePadding_withInheritance" parent="StyleApplierUtilsTest_TextView_textSizePadding">
         <item name="android:textColor">@android:color/black</item>
     </style>
