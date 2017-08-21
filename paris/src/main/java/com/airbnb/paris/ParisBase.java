@@ -14,6 +14,7 @@ import static android.support.annotation.VisibleForTesting.PRIVATE;
  */
 class ParisBase {
 
+    // TODO Remove?
     static <T extends StyleApplier> T process(final T applier) {
         applier.setOnStyleApply(new Function1<Style, Unit>() {
             @Override
