@@ -9,10 +9,11 @@ import android.view.View
 import com.airbnb.paris.proxy.Proxy
 
 @UiThread
-abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private constructor(val proxy: P, val view: V) {
+abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private constructor(val proxy: P?, val view: V?) {
 
     protected constructor(proxy: Proxy<P, V>) : this(proxy.proxy, proxy.view)
     constructor(view: V) : this(view as P, view)
+    constructor() : this(null, null)
 
     /**
      * This is only public because the internal visibility Java interop is weird, do not use
@@ -52,33 +53,45 @@ abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private 
         return apply(SimpleStyle(styleRes, config))
     }
 
+    fun apply(styleApplier: S): S {
+        for (style in appliedStyles) {
+            apply(style)
+        }
+        return this as S
+    }
+
     open fun apply(style: Style): S {
         appliedStyles.add(style)
 
         onStyleApply?.invoke(style)
 
-        // Assumes that if the Style has an AttributeSet it's being applied during the View
-        // initialization, in which case parents should be making the call themselves
-        if (style.shouldApplyParent) {
-            applyParent(style)
-        }
-
-        applyDependencies(style)
-
-        val attributes = attributes()
-        if (attributes != null) {
-            val typedArray = style.obtainStyledAttributes(view.context, attributes)
-
-            processStyleableFields(style, typedArray)
-
-            // For debug purposes
-            if (style.debugListener != null) {
-                style.debugListener!!.beforeTypedArrayProcessed(style, typedArray)
-            } else {
-                processAttributes(style, typedArray)
+        if (view == null) {
+            // If the view is null then this StyleApplier is only used as a builder of styles, no
+            // need to actually apply or process anything
+        } else {
+            // Assumes that if the Style has an AttributeSet it's being applied during the View
+            // initialization, in which case parents should be making the call themselves
+            if (style.shouldApplyParent) {
+                applyParent(style)
             }
 
-            typedArray.recycle()
+            applyDependencies(style)
+
+            val attributes = attributes()
+            if (attributes != null) {
+                val typedArray = style.obtainStyledAttributes(view.context, attributes)
+
+                processStyleableFields(style, typedArray)
+
+                // For debug purposes
+                if (style.debugListener != null) {
+                    style.debugListener!!.beforeTypedArrayProcessed(style, typedArray)
+                } else {
+                    processAttributes(style, typedArray)
+                }
+
+                typedArray.recycle()
+            }
         }
 
         return this as S
