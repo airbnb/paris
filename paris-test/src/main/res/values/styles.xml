@@ -134,13 +134,17 @@
         <item name="android:textSize">19sp</item>
     </style>
 
-    <style name="StyleApplierUtilsTest_TextView_textSizePadding">
-        <item name="android:padding">24dp</item>
+    <style name="StyleApplierUtilsTest_TextView_textColor">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="StyleApplierUtilsTest_TextView_textSize">
         <item name="android:textSize">17sp</item>
     </style>
 
-    <style name="StyleApplierUtilsTest_TextView_textColor">
-        <item name="android:textColor">@android:color/white</item>
+    <style name="StyleApplierUtilsTest_TextView_textSizePadding">
+        <item name="android:padding">24dp</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="StyleApplierUtilsTest_TextView_textColorTextSize">

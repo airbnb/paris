@@ -79,6 +79,28 @@ class StyleApplierUtilsTest {
         )
     }
 
+    @Test(expected = AssertionError::class)
+    fun multiStyleResCombinationMissingAttribute() {
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
+                MultiStyle(
+                        R.style.StyleApplierUtilsTest_TextView_textColor,
+                        R.style.StyleApplierUtilsTest_TextView_textSize
+                )
+        )
+    }
+
+    @Test(expected = AssertionError::class)
+    fun multiStyleResCombinationAdditionalAttribute() {
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSize),
+                MultiStyle(
+                        R.style.StyleApplierUtilsTest_TextView_textColorTextSize,
+                        R.style.StyleApplierUtilsTest_TextView_textSizePadding
+                )
+        )
+    }
+
     @Test
     fun multiStyleCombinationWithOverlap() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
@@ -97,6 +119,31 @@ class StyleApplierUtilsTest {
     fun multiStyleCombinationNoOverlap() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
+                MultiStyle(
+                        SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColor),
+                        textViewApplier.builder()
+                                .textSize(R.dimen.test_text_view_text_size)
+                                .padding(R.dimen.test_view_padding)
+                                .build()
+                )
+        )
+    }
+
+    @Test(expected = AssertionError::class)
+    fun multiStyleCombinationMissingAttribute() {
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
+                MultiStyle(
+                        SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColor),
+                        textViewApplier.builder().textSize(R.dimen.test_text_view_text_size).build()
+                )
+        )
+    }
+
+    @Test(expected = AssertionError::class)
+    fun multiStyleCombinationAdditionalAttribute() {
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSize),
                 MultiStyle(
                         SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColor),
                         textViewApplier.builder()
