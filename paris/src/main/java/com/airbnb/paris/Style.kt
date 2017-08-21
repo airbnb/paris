@@ -63,6 +63,7 @@ interface Style {
      * Visible for debug
      */
     interface DebugListener {
+        // TODO Rename
         fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper)
     }
 

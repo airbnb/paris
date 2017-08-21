@@ -33,6 +33,8 @@ internal class BeforeStyleInfo private constructor(
                 "Methods annotated with @BeforeStyle can't be private or protected"
             }
 
+            // TODO Check that the method takes a style as a parameter
+
             val enclosingElement = element.enclosingElement
             val elementName = element.simpleName.toString()
 

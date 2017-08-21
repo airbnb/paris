@@ -17,7 +17,7 @@ class TextViewProxyTest : StringSpec() {
             val drawableLeft = Mockito.mock(Drawable::class.java)
             proxy.setDrawableBottom(drawableBottom)
             proxy.setDrawableLeft(drawableLeft)
-            proxy.afterStyle()
+            proxy.afterStyle(null)
             Mockito.verify(view).setCompoundDrawables(drawableLeft, null, null, drawableBottom)
         }
 

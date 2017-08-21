@@ -69,6 +69,8 @@ abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private 
         if (attributes != null) {
             val typedArray = style.obtainStyledAttributes(view.context, attributes)
 
+            processStyleableFields(style, typedArray)
+
             // For debug purposes
             if (style.debugListener != null) {
                 style.debugListener!!.beforeTypedArrayProcessed(style, typedArray)
@@ -96,6 +98,8 @@ abstract class StyleApplier<out S : StyleApplier<S, P, V>, P, V : View> private 
     protected open fun applyParent(style: Style) {}
 
     protected open fun applyDependencies(style: Style) {}
+
+    protected open fun processStyleableFields(style: Style, a: TypedArrayWrapper) {}
 
     protected open fun processAttributes(style: Style, a: TypedArrayWrapper) {}
 

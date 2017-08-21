@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="Paris_LayoutParams">
+    <declare-styleable name="Paris_View">
         <attr name="android:layout_width" />
         <attr name="android:layout_height" />
         <attr name="android:layout_margin" />
@@ -9,9 +9,6 @@
         <attr name="android:layout_marginLeft" />
         <attr name="android:layout_marginRight" />
         <attr name="android:layout_marginTop" />
-    </declare-styleable>
-
-    <declare-styleable name="Paris_View">
         <attr name="android:background" />
         <attr name="android:minWidth" />
         <attr name="android:padding" />

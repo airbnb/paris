@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.airbnb.paris.R2;
+import com.airbnb.paris.Style;
 import com.airbnb.paris.annotations.AfterStyle;
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
@@ -31,7 +32,7 @@ class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     }
 
     @AfterStyle
-    void afterStyle() {
+    void afterStyle(Style style) {
         Drawable[] drawables = getView().getCompoundDrawables();
         getView().setCompoundDrawables(
                 drawableLeft != null ? drawableLeft : drawables[0],

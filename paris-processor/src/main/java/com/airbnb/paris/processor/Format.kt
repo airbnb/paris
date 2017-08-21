@@ -32,6 +32,7 @@ internal class Format private constructor(
             FRACTION,
             INT,
             INTEGER,
+            LAYOUT_DIMENSION,
             NON_RESOURCE_STRING,
             RESOURCE_ID,
             STRING
@@ -94,6 +95,9 @@ internal class Format private constructor(
                 val fraction = element.getAnnotation(Fraction::class.java)
                 return Format(Type.FRACTION, fraction.base, fraction.pbase)
             }
+            if (element.hasAnnotation("LayoutDimension")) {
+                return Format(Type.LAYOUT_DIMENSION)
+            }
             if (element.hasAnnotation("Px")) {
                 return Format(Type.DIMENSION_PIXEL_SIZE)
             }
@@ -132,6 +136,7 @@ internal class Format private constructor(
             Type.FRACTION -> "getFraction(\$L, %d, %d)".format(base, pbase)
             Type.INT -> "getInteger(\$L)"
             Type.INTEGER -> "getInteger(\$L)"
+            Type.LAYOUT_DIMENSION -> TODO()
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
             // Special case
             Type.RESOURCE_ID -> "The parameter is the resource id, this should never be used"
@@ -154,6 +159,7 @@ internal class Format private constructor(
             Type.FRACTION -> "getFraction(\$L, %d, %d, -1f)".format(base, pbase)
             Type.INT -> "getInt(\$L, -1)"
             Type.INTEGER -> "getInteger(\$L, -1)"
+            Type.LAYOUT_DIMENSION -> "getLayoutDimension(\$L, -1)"
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
             Type.RESOURCE_ID -> "getResourceId(\$L, -1)"
             Type.STRING -> "getString(\$L)"

@@ -7,23 +7,146 @@ import android.os.Build;
 import android.support.annotation.AnyRes;
 import android.support.annotation.Px;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 
-import com.airbnb.paris.LayoutParamsStyleApplier;
 import com.airbnb.paris.R2;
+import com.airbnb.paris.Style;
+import com.airbnb.paris.annotations.AfterStyle;
 import com.airbnb.paris.annotations.Attr;
+import com.airbnb.paris.annotations.BeforeStyle;
+import com.airbnb.paris.annotations.LayoutDimension;
 import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
-@Styleable(value = "Paris_View", dependencies = LayoutParamsStyleApplier.class)
+@Styleable(value = "Paris_View")
 class ViewProxy extends BaseProxy<ViewProxy, View> {
+
+    enum Option implements Style.Config.Option {
+        IgnoreLayoutWidthAndHeight
+    }
+
+    private static final int NOT_SET = -10;
+
+    private static int ifSetElse(int value, int ifNotSet) {
+            return value != NOT_SET ? value : ifNotSet;
+    }
+
+    private static boolean isAnySet(int... values) {
+        for (int value : values) {
+            if (value != NOT_SET) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * This replicates what happens privately within {@link View}
      */
     private static final int[] VISIBILITY_FLAGS = new int[]{ View.VISIBLE, View.INVISIBLE, View.GONE };
 
+    private boolean ignoreLayoutWidthAndHeight;
+    private int width;
+    private int height;
+    private int margin;
+    private int marginBottom;
+    private int marginLeft;
+    private int marginRight;
+    private int marginTop;
+
     ViewProxy(View view) {
         super(view);
+    }
+
+    @BeforeStyle
+    void beforeStyle(Style style) {
+        ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight);
+        width = NOT_SET;
+        height = NOT_SET;
+        margin = NOT_SET;
+        marginBottom = NOT_SET;
+        marginLeft = NOT_SET;
+        marginRight = NOT_SET;
+        marginTop = NOT_SET;
+    }
+
+    @AfterStyle
+    void afterStyle(Style style) {
+        if ((width != NOT_SET) ^ (height != NOT_SET)) {
+            throw new IllegalArgumentException("Width and height must either both be set, or not be set at all. It can't be one and not the other.");
+        }
+
+        boolean isWidthHeightSet = width != NOT_SET; // Height follows given the XOR condition above
+        boolean isMarginSet = isAnySet(margin, marginBottom, marginLeft, marginRight, marginTop);
+
+        if (isWidthHeightSet) {
+            LayoutParams params = getView().getLayoutParams();
+            if (params == null) {
+                params = isMarginSet ? new MarginLayoutParams(width, height) : new LayoutParams(width, height);
+            } else {
+                params.width = width;
+                params.height = height;
+            }
+            getView().setLayoutParams(params);
+        }
+
+        if (isMarginSet) {
+            MarginLayoutParams marginParams;
+            if (getView().getLayoutParams() != null) {
+                marginParams = (MarginLayoutParams) getView().getLayoutParams();
+            } else {
+                //noinspection ResourceType
+                marginParams = new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            }
+            if (margin != NOT_SET) {
+                marginParams.setMargins(margin, margin, margin, margin);
+            }
+            marginParams.bottomMargin = ifSetElse(marginBottom, marginParams.bottomMargin);
+            marginParams.leftMargin = ifSetElse(marginLeft, marginParams.leftMargin);
+            marginParams.rightMargin = ifSetElse(marginRight, marginParams.rightMargin);
+            marginParams.topMargin = ifSetElse(marginTop, marginParams.topMargin);
+            getView().setLayoutParams(marginParams);
+        }
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_width)
+    void setLayoutWidth(@LayoutDimension int width) {
+        if (!ignoreLayoutWidthAndHeight) {
+            this.width = width;
+        }
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_height)
+    void setLayoutHeight(@LayoutDimension int height) {
+        if (!ignoreLayoutWidthAndHeight) {
+            this.height = height;
+        }
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_margin)
+    void setLayoutMargin(@Px int margin) {
+        this.margin = margin;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginBottom)
+    void setLayoutMarginBottom(@Px int marginBottom) {
+        this.marginBottom = marginBottom;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginLeft)
+    void setLayoutMarginLeft(@Px int marginLeft) {
+        this.marginLeft = marginLeft;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginRight)
+    void setLayoutMarginRight(@Px int marginRight) {
+        this.marginRight = marginRight;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginTop)
+    void setLayoutMarginTop(@Px int marginTop) {
+        this.marginTop = marginTop;
     }
 
     @Attr(R2.styleable.Paris_View_android_background)

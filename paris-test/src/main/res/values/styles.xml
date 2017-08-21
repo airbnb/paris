@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <dimen name="test_layout_params_width">42dp</dimen>
-    <dimen name="test_layout_params_height">51dp</dimen>
-    <style name="Test_LayoutParams_width_height">
-        <item name="android:layout_width">@dimen/test_layout_params_width</item>
-        <item name="android:layout_height">@dimen/test_layout_params_height</item>
-    </style>
-
-    <dimen name="test_layout_params_margin">42dp</dimen>
-    <style name="Test_LayoutParams_margin">
-        <item name="android:layout_margin">@dimen/test_layout_params_margin</item>
-    </style>
-
-    <dimen name="test_layout_params_marginBottom">11dp</dimen>
-    <dimen name="test_layout_params_marginLeft">22dp</dimen>
-    <dimen name="test_layout_params_marginRight">33dp</dimen>
-    <dimen name="test_layout_params_marginTop">44dp</dimen>
-    <style name="Test_LayoutParams_margins">
-        <item name="android:layout_marginBottom">@dimen/test_layout_params_marginBottom</item>
-        <item name="android:layout_marginLeft">@dimen/test_layout_params_marginLeft</item>
-        <item name="android:layout_marginRight">@dimen/test_layout_params_marginRight</item>
-        <item name="android:layout_marginTop">@dimen/test_layout_params_marginTop</item>
-    </style>
-
     <style name="Test_View_background">
         <item name="android:background">@android:drawable/ic_delete</item>
     </style>

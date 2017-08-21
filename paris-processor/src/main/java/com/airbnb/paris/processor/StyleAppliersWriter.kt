@@ -56,7 +56,8 @@ internal object StyleAppliersWriter {
                     .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
                     // TODO Only add if there are attributes with a default value?
                     .addMethod(buildAttributesWithDefaultValueMethod(styleableInfo.attrs))
-                    .addMethod(buildProcessAttributesMethod(styleableInfo.styleableFields, styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
+                    .addMethod(buildProcessStyleableFieldsMethod(styleableInfo.styleableFields))
+                    .addMethod(buildProcessAttributesMethod(styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
 
             addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
         }
@@ -141,11 +142,8 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildProcessAttributesMethod(styleableFields: List<StyleableFieldInfo>,
-                                             beforeStyles: List<BeforeStyleInfo>,
-                                             afterStyles: List<AfterStyleInfo>,
-                                             attrs: List<AttrInfo>): MethodSpec {
-        val methodBuilder = MethodSpec.methodBuilder("processAttributes")
+    private fun buildProcessStyleableFieldsMethod(styleableFields: List<StyleableFieldInfo>): MethodSpec {
+        val methodBuilder = MethodSpec.methodBuilder("processStyleableFields")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
@@ -156,13 +154,26 @@ internal object StyleAppliersWriter {
             methodBuilder.addStatement("\$T subStyle", ParisProcessor.STYLE_CLASS_NAME)
         }
 
-        for (beforeStyle in beforeStyles) {
-            methodBuilder.addStatement("getProxy().\$N()", beforeStyle.elementName)
-        }
-
         for (styleableField in styleableFields) {
             addControlFlow(methodBuilder, Format.RESOURCE_ID, styleableField.elementName,
                     styleableField.styleableResId, styleableField.defaultValueResId, true)
+        }
+
+        return methodBuilder.build()
+    }
+
+    private fun buildProcessAttributesMethod(beforeStyles: List<BeforeStyleInfo>,
+                                             afterStyles: List<AfterStyleInfo>,
+                                             attrs: List<AttrInfo>): MethodSpec {
+        val methodBuilder = MethodSpec.methodBuilder("processAttributes")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PROTECTED)
+                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
+                .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
+
+        for (beforeStyle in beforeStyles) {
+            methodBuilder.addStatement("getProxy().\$N(style)", beforeStyle.elementName)
         }
 
         for (attr in attrs) {
@@ -171,7 +182,7 @@ internal object StyleAppliersWriter {
         }
 
         for (afterStyle in afterStyles) {
-            methodBuilder.addStatement("getProxy().\$N()", afterStyle.elementName)
+            methodBuilder.addStatement("getProxy().\$N(style)", afterStyle.elementName)
         }
 
         return methodBuilder.build()
