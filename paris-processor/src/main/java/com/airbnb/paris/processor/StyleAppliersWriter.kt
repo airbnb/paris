@@ -263,11 +263,13 @@ internal object StyleAppliersWriter {
             baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddMethod(it))
         }
 
+        // TODO Remove duplicate attribute names
         for (styleableFieldInfo in styleableInfo.styleableFields) {
             baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(styleableFieldInfo))
         }
 
         styleableInfo.attrs
+                .distinctBy { it.styleableResId.resourceName }
                 .mapNotNull { buildAttributeSetterMethod(rClassName, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
         baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))

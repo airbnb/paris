@@ -13,6 +13,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
     }
 
     @Override
+    protected void applyParent(Style style) {
+        new ViewProxyStyleApplier(getView()).apply(style);
+    }
+
+    @Override
     protected int[] attributes() {
         return R.styleable.Formats;
     }
@@ -20,6 +25,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
     @Override
     public int[] attributesWithDefaultValue() {
         return new int[] {R.styleable.Formats_formatBoolean,R.styleable.Formats_formatColor,R.styleable.Formats_formatDimension,R.styleable.Formats_formatEnum,R.styleable.Formats_formatFlag,R.styleable.Formats_formatFraction,R.styleable.Formats_formatInteger,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatString,R.styleable.Formats_formatString,};
+    }
+
+    @Override
+    protected void processStyleableFields(Style style, TypedArrayWrapper a) {
+        Resources res = getView().getContext().getResources();
     }
 
     @Override
@@ -105,8 +115,75 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         }
     }
 
-    @Override
-    protected void applyParent(Style style) {
-        new ViewProxyStyleApplier(getView()).apply(style);
+    public StyleBuilder builder() {
+        return new StyleBuilder(this);
+    }
+
+    public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
+        public BaseStyleBuilder(A applier) {
+            super(applier);
+        }
+
+        public BaseStyleBuilder() {
+        }
+
+        public B formatBoolean(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatBoolean], res);
+            return (B) this;
+        }
+
+        public B formatColor(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatColor], res);
+            return (B) this;
+        }
+
+        public B formatDimension(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatDimension], res);
+            return (B) this;
+        }
+
+        public B formatEnum(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatEnum], res);
+            return (B) this;
+        }
+
+        public B formatFlag(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFlag], res);
+            return (B) this;
+        }
+
+        public B formatFraction(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFraction], res);
+            return (B) this;
+        }
+
+        public B formatInteger(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatInteger], res);
+            return (B) this;
+        }
+
+        public B formatReference(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference], res);
+            return (B) this;
+        }
+
+        public B formatString(int res) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString], res);
+            return (B) this;
+        }
+
+        public B applyTo(MyView view) {
+            new MyViewStyleApplier(view).apply(build());
+            return (B) this;
+        }
+    }
+
+    public static final class StyleBuilder extends BaseStyleBuilder<StyleBuilder, MyViewStyleApplier> {
+        public StyleBuilder(MyViewStyleApplier applier) {
+            super(applier);
+        }
+
+        public StyleBuilder() {
+        }
     }
 }

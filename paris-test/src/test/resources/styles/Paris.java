@@ -26,6 +26,6 @@ public final class Paris extends ParisBase {
      * For debugging */
     public static void assertStylesContainSameAttributes(Context context) {
         MyView MyView = new MyView(context);
-        StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new Style(R.style.MyView_Red), new Style(R.style.MyView_Green), new Style(R.style.MyView_Blue));
+        StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new SimpleStyle(R.style.MyView_Red), new SimpleStyle(R.style.MyView_Green), new SimpleStyle(R.style.MyView_Blue));
     }
 }
