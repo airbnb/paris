@@ -85,7 +85,7 @@ internal object ParisWriter {
                 .addParameter(ClassNames.ANDROID_CONTEXT, "context")
 
         for (styleableClassInfo in styleableClassesInfo) {
-            if (styleableClassInfo.styles.size > 1) {
+            if (styleableClassInfo.styles.size + styleableClassInfo.newStyles.size > 1) {
                 builder.addStatement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
 
                 val styleVarargCodeBuilder = CodeBlock.builder()
@@ -95,6 +95,13 @@ internal object ParisWriter {
                     }
                     styleVarargCodeBuilder.add("new \$T(\$L)",
                             ParisProcessor.SIMPLE_STYLE_CLASS_NAME, style.androidResourceId.code)
+                }
+                for ((i, style) in styleableClassInfo.newStyles.withIndex()) {
+                    if (i > 0 || styleableClassInfo.styles.isNotEmpty()) {
+                        styleVarargCodeBuilder.add(", ")
+                    }
+                    styleVarargCodeBuilder.add("styleBuilder(\$T).add\$L().build()",
+                            styleableClassInfo.elementType, style.elementName.capitalize())
                 }
 
                 val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",

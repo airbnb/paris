@@ -6,15 +6,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
+import com.airbnb.paris.annotations.NewStyle;
 import com.airbnb.paris.annotations.Style;
 import com.airbnb.paris.annotations.Styleable;
+import com.airbnb.paris.test.MyViewStyleApplier.StyleBuilder;
 
 @Styleable(styles = {
-        @Style(name = "Red", id = R2.style.MyView_Red),
-        @Style(name = "Green", id = R2.style.MyView_Green),
         @Style(name = "Blue", id = R2.style.MyView_Blue)
 })
 public class MyView extends View {
+
+    @NewStyle static int green = R2.style.MyView_Green;
 
     public MyView(Context context) {
         super(context);
@@ -26,5 +28,9 @@ public class MyView extends View {
 
     public MyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    @NewStyle
+    static void red(StyleBuilder builder) {
     }
 }

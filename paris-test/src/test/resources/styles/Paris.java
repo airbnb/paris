@@ -38,6 +38,6 @@ public final class Paris {
      * For debugging */
     public static void assertStylesContainSameAttributes(Context context) {
         MyView MyView = new MyView(context);
-        StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new SimpleStyle(R.style.MyView_Red), new SimpleStyle(R.style.MyView_Green), new SimpleStyle(R.style.MyView_Blue));
+        StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new SimpleStyle(R.style.MyView_Blue), styleBuilder(MyView).addGreen().build(), styleBuilder(MyView).addRed().build());
     }
 }

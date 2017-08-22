@@ -71,6 +71,7 @@ internal object StyleAppliersWriter {
 
         }
 
+        val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
 
         for (styleableFieldInfo in styleableInfo.styleableFields) {
@@ -84,6 +85,10 @@ internal object StyleAppliersWriter {
 
         for (styleInfo in styleableInfo.styles) {
             styleTypeBuilder.addMethod(buildApplyStyleMethod(styleInfo))
+        }
+
+        for (styleInfo in styleableInfo.newStyles) {
+            styleTypeBuilder.addMethod(buildApplyNewStyleMethod(styleBuilderClassName, styleInfo))
         }
 
         JavaFile.builder(styleApplierClassName.packageName(), styleTypeBuilder.build())
@@ -215,7 +220,6 @@ internal object StyleAppliersWriter {
         }
     }
 
-    // TODO Remove?
     private fun buildSubMethod(styleableFieldInfo: StyleableFieldInfo, styleApplierClassName: ClassName): MethodSpec {
         return MethodSpec.methodBuilder(styleableFieldInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
@@ -224,12 +228,27 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    // TODO Remove?
     private fun buildApplyStyleMethod(styleInfo: StyleInfo): MethodSpec {
         return MethodSpec.methodBuilder("apply${styleInfo.name.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
                 .addStatement("apply(\$L)", styleInfo.androidResourceId.code)
                 .build()
+    }
+
+    private fun buildApplyNewStyleMethod(styleBuilderClassName: ClassName, styleInfo: NewStyleInfo): MethodSpec {
+        val builder = MethodSpec.methodBuilder("apply${styleInfo.elementName.capitalize()}")
+                .addModifiers(Modifier.PUBLIC)
+        when (styleInfo.elementKind) {
+            NewStyleInfo.Kind.FIELD -> {
+                builder.addStatement("apply(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
+            }
+            NewStyleInfo.Kind.METHOD -> {
+                builder.addStatement("\$T builder = new \$T()", styleBuilderClassName, styleBuilderClassName)
+                        .addStatement("\$T.\$L(builder)", styleInfo.enclosingElement, styleInfo.elementName)
+                        .addStatement("apply(builder.build())")
+            }
+        }
+        return builder.build()
     }
 
     private fun addStyleBuilderInnerClass(styleApplierTypeBuilder: TypeSpec.Builder,
@@ -238,11 +257,11 @@ internal object StyleAppliersWriter {
                                           styleableInfo: StyleableInfo,
                                           parentStyleApplierClassName: ClassName?) {
         // BaseStyleBuilder inner class
-        val parentClassName: ClassName?
+        val baseStyleBuilderClassName: ClassName?
         if (parentStyleApplierClassName != null) {
-            parentClassName = ClassName.get(parentStyleApplierClassName.packageName(), parentStyleApplierClassName.simpleName(), "BaseStyleBuilder")
+            baseStyleBuilderClassName = parentStyleApplierClassName.nestedClass("BaseStyleBuilder")
         } else {
-            parentClassName = ParisProcessor.STYLE_BUILDER_CLASS_NAME
+            baseStyleBuilderClassName = ParisProcessor.STYLE_BUILDER_CLASS_NAME
         }
         val wildcardTypeName = WildcardTypeName.subtypeOf(Object::class.java)
         val baseClassName = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
@@ -250,13 +269,9 @@ internal object StyleAppliersWriter {
                 .addTypeVariable(TypeVariableName.get("B", ParameterizedTypeName.get(baseClassName, TypeVariableName.get("B"), TypeVariableName.get("A"))))
                 .addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName)))
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
-                .superclass(ParameterizedTypeName.get(parentClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
+                .superclass(ParameterizedTypeName.get(baseStyleBuilderClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderEmptyConstructorMethod())
-
-        styleableInfo.styles.forEach {
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddMethod(it))
-        }
 
         // TODO Remove duplicate attribute names
         for (styleableFieldInfo in styleableInfo.styleableFields) {
@@ -276,19 +291,27 @@ internal object StyleAppliersWriter {
         styleApplierTypeBuilder.addType(baseStyleBuilderTypeBuilder.build())
 
         // StyleBuilder inner class
-        val className = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "StyleBuilder")
-        val styleBuilderTypeBuilder = TypeSpec.classBuilder(className)
+        val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
+        val styleBuilderTypeBuilder = TypeSpec.classBuilder(styleBuilderClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(baseClassName, className, styleApplierClassName))
+                .superclass(ParameterizedTypeName.get(baseClassName, styleBuilderClassName, styleApplierClassName))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(styleApplierClassName))
                 .addMethod(buildStyleBuilderEmptyConstructorMethod())
+
+        styleableInfo.styles.forEach {
+            styleBuilderTypeBuilder.addMethod(buildStyleBuilderAddMethod(styleBuilderClassName, it))
+        }
+        styleableInfo.newStyles.forEach {
+            styleBuilderTypeBuilder.addMethod(buildNewStyleBuilderAddMethod(styleBuilderClassName, it))
+        }
+
         styleApplierTypeBuilder.addType(styleBuilderTypeBuilder.build())
 
         // builder() method
         styleApplierTypeBuilder.addMethod(MethodSpec.methodBuilder("builder")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(className)
-                .addStatement("return new \$T(this)", className)
+                .returns(styleBuilderClassName)
+                .addStatement("return new \$T(this)", styleBuilderClassName)
                 .build())
     }
 
@@ -306,12 +329,25 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildStyleBuilderAddMethod(styleInfo: StyleInfo): MethodSpec {
+    private fun buildStyleBuilderAddMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
         return MethodSpec.methodBuilder("add${styleInfo.name.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(TypeVariableName.get("B"))
+                .returns(styleBuilderClassName)
                 .addStatement("add(\$L)", styleInfo.androidResourceId.code)
-                .addStatement("return (B) this")
+                .addStatement("return this")
+                .build()
+    }
+
+    private fun buildNewStyleBuilderAddMethod(styleBuilderClassName: ClassName, styleInfo: NewStyleInfo): MethodSpec {
+        val builder = MethodSpec.methodBuilder("add${styleInfo.elementName.capitalize()}")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(styleBuilderClassName)
+        when (styleInfo.elementKind) {
+            NewStyleInfo.Kind.FIELD -> builder.addStatement("add(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
+            NewStyleInfo.Kind.METHOD -> builder.addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
+        }
+        return builder
+                .addStatement("return this")
                 .build()
     }
 
@@ -409,7 +445,7 @@ internal object StyleAppliersWriter {
             if (c == '_') {
                 acc
             } else {
-                if (index == 0 || formattedName[index-1] != '_') {
+                if (index == 0 || formattedName[index - 1] != '_') {
                     c + acc
                 } else {
                     c.toUpperCase() + acc

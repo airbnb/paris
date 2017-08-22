@@ -35,11 +35,11 @@ internal class StyleableInfo private constructor(
          */
         val viewElementType: TypeMirror,
         val styleableResourceName: String,
-        val styles: List<StyleInfo>) {
+        val styles: List<StyleInfo>,
+        val newStyles: List<NewStyleInfo>) {
 
-    fun styleApplierClassName(): ClassName {
-        return ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
-    }
+    fun styleApplierClassName(): ClassName =
+            ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
 
     companion object {
 
@@ -48,7 +48,8 @@ internal class StyleableInfo private constructor(
                             classesToStyleableFieldInfo: Map<Element, List<StyleableFieldInfo>>,
                             classesToBeforeStyleInfo: Map<Element, List<BeforeStyleInfo>>,
                             classesToAfterStyleInfo: Map<Element, List<AfterStyleInfo>>,
-                            classesToAttrsInfo: Map<Element, List<AttrInfo>>): List<StyleableInfo> {
+                            classesToAttrsInfo: Map<Element, List<AttrInfo>>,
+                            classesToNewStylesInfo: Map<Element, List<NewStyleInfo>>): List<StyleableInfo> {
             return roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                     .mapNotNull {
                         try {
@@ -56,7 +57,8 @@ internal class StyleableInfo private constructor(
                                     classesToStyleableFieldInfo[it] ?: emptyList(),
                                     classesToBeforeStyleInfo[it] ?: emptyList(),
                                     classesToAfterStyleInfo[it] ?: emptyList(),
-                                    classesToAttrsInfo[it] ?: emptyList())
+                                    classesToAttrsInfo[it] ?: emptyList(),
+                                    classesToNewStylesInfo[it] ?: emptyList())
                         } catch(e: ProcessorException) {
                             Errors.log(e)
                             null
@@ -72,7 +74,8 @@ internal class StyleableInfo private constructor(
                                 styleableFields: List<StyleableFieldInfo>,
                                 beforeStyles: List<BeforeStyleInfo>,
                                 afterStyles: List<AfterStyleInfo>,
-                                attrs: List<AttrInfo>): StyleableInfo {
+                                attrs: List<AttrInfo>,
+                                newStyles: List<NewStyleInfo>): StyleableInfo {
 
             val elementPackageName = element.packageName
             val elementName = element.simpleName.toString()
@@ -93,12 +96,14 @@ internal class StyleableInfo private constructor(
                 StyleInfo(it.name, resourceScanner.getId(Style::class.java, element, it.id))
             }
 
-            check(!styleableResourceName.isEmpty() || !styles.isEmpty(), element) {
+            check(!styleableResourceName.isEmpty() || !styles.isEmpty() || !newStyles.isEmpty(), element) {
                 "@Styleable declaration must have at least a value or a style"
             }
             check(styleableResourceName.isEmpty() || !(styleableFields.isEmpty() && attrs.isEmpty())) {
                 "Do not specify the @Styleable value parameter if no class members are annotated with @Attr"
             }
+
+            // TODO Make sure value is specified if @Attr's or @StyleableField's are
 
             return StyleableInfo(
                     styleableFields,
@@ -110,7 +115,8 @@ internal class StyleableInfo private constructor(
                     elementType,
                     viewElementType,
                     styleableResourceName,
-                    styles)
+                    styles,
+                    newStyles)
         }
     }
 }

@@ -19,16 +19,18 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         return new StyleBuilder(this);
     }
 
-    public void applyRed() {
-        apply(R.style.MyView_Red);
+    public void applyBlue() {
+        apply(R.style.MyView_Blue);
     }
 
     public void applyGreen() {
-        apply(R.style.MyView_Green);
+        apply(MyView.green);
     }
 
-    public void applyBlue() {
-        apply(R.style.MyView_Blue);
+    public void applyRed() {
+        StyleBuilder builder = new StyleBuilder();
+        MyView.red(builder);
+        apply(builder.build());
     }
 
     public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
@@ -37,21 +39,6 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public BaseStyleBuilder() {
-        }
-
-        public B addRed() {
-            add(R.style.MyView_Red);
-            return (B) this;
-        }
-
-        public B addGreen() {
-            add(R.style.MyView_Green);
-            return (B) this;
-        }
-
-        public B addBlue() {
-            add(R.style.MyView_Blue);
-            return (B) this;
         }
 
         public B applyTo(MyView view) {
@@ -66,6 +53,21 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public StyleBuilder() {
+        }
+
+        public StyleBuilder addBlue() {
+            add(R.style.MyView_Blue);
+            return this;
+        }
+
+        public StyleBuilder addGreen() {
+            add(MyView.green);
+            return this;
+        }
+
+        public StyleBuilder addRed() {
+            MyView.red(this);
+            return this;
         }
     }
 }

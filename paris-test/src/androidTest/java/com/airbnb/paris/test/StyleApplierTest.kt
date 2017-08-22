@@ -54,6 +54,5 @@ class StyleApplierTest {
         assertTrue(style_ is SimpleStyle)
         assertEquals(null, (style_ as SimpleStyle).attributeSet)
         assertEquals(0, (style_ as SimpleStyle).styleRes)
-        assertEquals(null, (style_ as SimpleStyle).config)
     }
 }
