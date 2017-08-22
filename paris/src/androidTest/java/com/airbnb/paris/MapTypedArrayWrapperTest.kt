@@ -22,16 +22,16 @@ class MapTypedArrayWrapperTest {
     private lateinit var wrapper: MapTypedArrayWrapper
 
     private val bigAttrResToValueResMap = mapOf(
-            R.attr.formatBoolean to R.bool.format_boolean,
-            R.attr.formatColor to R.color.format_color,
-            R.attr.formatDimension to R.dimen.format_dimension,
+            R.attr.formatBoolean to ResourceId(R.bool.format_boolean),
+            R.attr.formatColor to ResourceId(R.color.format_color),
+            R.attr.formatDimension to ResourceId(R.dimen.format_dimension),
             // This attr is not included in R.styleable.Format, as a result it should be ignored by
             // the MapTypedArrayWrapper
-            R.attr.background to R.color.format_color
+            R.attr.background to ResourceId(R.color.format_color)
     )
     private val attrResToValueResMaps = listOf(
             emptyMap(),
-            mapOf(R.attr.formatBoolean to R.bool.format_boolean),
+            mapOf(R.attr.formatBoolean to ResourceId(R.bool.format_boolean)),
             bigAttrResToValueResMap
     )
 
@@ -43,7 +43,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun isNull() {
-        val map = mapOf(R.attr.formatReference to R.drawable.null_)
+        val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.null_))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         assertTrue(wrapper.isNull(R.styleable.Formats_formatReference))
     }
@@ -84,7 +84,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getBoolean() {
-        val map = mapOf(R.attr.formatBoolean to R.bool.format_boolean)
+        val map = mapOf(R.attr.formatBoolean to ResourceId(R.bool.format_boolean))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getBoolean(R.bool.format_boolean)
         assertEquals(actual, wrapper.getBoolean(R.styleable.Formats_formatBoolean, !actual))
@@ -92,7 +92,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getColor() {
-        val map = mapOf(R.attr.formatColor to R.color.format_color)
+        val map = mapOf(R.attr.formatColor to ResourceId(R.color.format_color))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getColor(R.color.format_color)
         assertEquals(actual, wrapper.getColor(R.styleable.Formats_formatColor, actual-1))
@@ -100,7 +100,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getColorStateList() {
-        val map = mapOf(R.attr.formatColor to R.color.format_color)
+        val map = mapOf(R.attr.formatColor to ResourceId(R.color.format_color))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getColorStateList(R.color.format_color)
         assertEquals(actual, wrapper.getColorStateList(R.styleable.Formats_formatColor))
@@ -108,7 +108,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getDimensionPixelSize() {
-        val map = mapOf(R.attr.formatDimension to R.dimen.format_dimension)
+        val map = mapOf(R.attr.formatDimension to ResourceId(R.dimen.format_dimension))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getDimensionPixelSize(R.dimen.format_dimension)
         assertEquals(actual, wrapper.getDimensionPixelSize(R.styleable.Formats_formatDimension, actual-1))
@@ -116,7 +116,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getDrawable() {
-        val map = mapOf(R.attr.formatReference to R.drawable.format_drawable)
+        val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.format_drawable))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getDrawable(R.drawable.format_drawable)
         assertEquals(actual.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference).constantState)
@@ -124,7 +124,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getFloat() {
-        val map = mapOf(R.attr.formatFloat to R.dimen.format_float)
+        val map = mapOf(R.attr.formatFloat to ResourceId(R.dimen.format_float))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getFloat(R.dimen.format_float)
         assertEquals(actual, wrapper.getFloat(R.styleable.Formats_formatFloat, actual-1))
@@ -132,7 +132,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getFraction() {
-        val map = mapOf(R.attr.formatFraction to R.fraction.format_fraction)
+        val map = mapOf(R.attr.formatFraction to ResourceId(R.fraction.format_fraction))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getFraction(R.fraction.format_fraction, 1, 2)
         assertEquals(actual, wrapper.getFraction(R.styleable.Formats_formatFraction, 1, 2, actual-1))
@@ -140,7 +140,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getInt() {
-        val map = mapOf(R.attr.formatInteger to R.integer.format_integer)
+        val map = mapOf(R.attr.formatInteger to ResourceId(R.integer.format_integer))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getInteger(R.integer.format_integer)
         assertEquals(actual, wrapper.getInt(R.styleable.Formats_formatInteger, actual-1))
@@ -148,7 +148,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getLayoutDimension_matchParent() {
-        val map = mapOf(R.attr.formatDimension to R.dimen.format_layout_dimension_match_parent)
+        val map = mapOf(R.attr.formatDimension to ResourceId(R.dimen.format_layout_dimension_match_parent))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = ViewGroup.LayoutParams.MATCH_PARENT
         assertEquals(actual, wrapper.getLayoutDimension(R.styleable.Formats_formatDimension, actual-1))
@@ -156,7 +156,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getLayoutDimension_wrapContent() {
-        val map = mapOf(R.attr.formatDimension to R.dimen.format_layout_dimension_wrap_content)
+        val map = mapOf(R.attr.formatDimension to ResourceId(R.dimen.format_layout_dimension_wrap_content))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = ViewGroup.LayoutParams.WRAP_CONTENT
         assertEquals(actual, wrapper.getLayoutDimension(R.styleable.Formats_formatDimension, actual-1))
@@ -164,7 +164,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getLayoutDimension_px() {
-        val map = mapOf(R.attr.formatDimension to R.dimen.format_dimension)
+        val map = mapOf(R.attr.formatDimension to ResourceId(R.dimen.format_dimension))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getDimensionPixelSize(R.dimen.format_dimension)
         assertEquals(actual, wrapper.getLayoutDimension(R.styleable.Formats_formatDimension, actual-1))
@@ -173,7 +173,7 @@ class MapTypedArrayWrapperTest {
     @Test
     fun getResourceId() {
         // Using R.string.format_string as an arbitrary resource
-        val map = mapOf(R.attr.formatReference to R.string.format_string)
+        val map = mapOf(R.attr.formatReference to ResourceId(R.string.format_string))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = R.string.format_string
         assertEquals(actual, wrapper.getResourceId(R.styleable.Formats_formatReference, actual-1))
@@ -181,7 +181,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getString() {
-        val map = mapOf(R.attr.formatString to R.string.format_string)
+        val map = mapOf(R.attr.formatString to ResourceId(R.string.format_string))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getString(R.string.format_string)
         assertEquals(actual, wrapper.getString(R.styleable.Formats_formatString))
@@ -189,7 +189,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getText() {
-        val map = mapOf(R.attr.formatString to R.string.format_char_sequence)
+        val map = mapOf(R.attr.formatString to ResourceId(R.string.format_char_sequence))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getText(R.string.format_char_sequence)
         assertEquals(actual, wrapper.getText(R.styleable.Formats_formatString))
@@ -197,7 +197,7 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getTextArray() {
-        val map = mapOf(R.attr.formatReference to R.array.format_string_array)
+        val map = mapOf(R.attr.formatReference to ResourceId(R.array.format_string_array))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getTextArray(R.array.format_string_array)
         assertEquals(actual, wrapper.getTextArray(R.styleable.Formats_formatReference))
