@@ -15,19 +15,6 @@ abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private cons
     constructor(view: V) : this(view as P, view)
     constructor() : this(null, null)
 
-    /**
-     * This is only public because the internal visibility Java interop is weird, do not use
-     */
-    // TODO  Fix visibility
-    var onStyleApply: ((Style) -> Unit)? = null
-        set(value) {
-            if (field == null) {
-                field = value
-            } else {
-                throw IllegalStateException("onStyleApply was already set")
-            }
-        }
-
     private var appliedStyles = ArrayList<Style>()
 
     /**
@@ -53,8 +40,6 @@ abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private cons
 
     open fun apply(style: Style) {
         appliedStyles.add(style)
-
-        onStyleApply?.invoke(style)
 
         if (view == null) {
             // If the view is null then this StyleApplier is only used as a builder of styles, no

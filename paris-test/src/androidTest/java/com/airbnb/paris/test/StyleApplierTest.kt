@@ -34,26 +34,6 @@ class StyleApplierTest {
     }
 
     @Test
-    fun onStyleApply() {
-        var styleReceived: Style? = null
-        applier.onStyleApply = {
-            styleReceived = it
-        }
-        val style = SimpleStyle(666)
-        applier.apply(style)
-        assertEquals(style, styleReceived)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun onStyleApply_protectedSetter() {
-        // This setter isn't meant to be used publicly so we throw an exception if it's set more
-        // than once (this way it cannot be unset)
-
-        applier.onStyleApply = {}
-        applier.onStyleApply = {}
-    }
-
-    @Test
     fun nullAttributeSet() {
         // Applying a null AttributeSet should still call processAttributes(...) so that default
         // values can be applied even when views are created programmatically
