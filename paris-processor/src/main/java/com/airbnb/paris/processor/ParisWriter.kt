@@ -18,12 +18,10 @@ internal object ParisWriter {
         ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
             val styleApplierClassName = styleApplierQualifiedName.className()
             parisTypeBuilder.addMethod(buildStyleMethod(
-                    styleApplierClassName.packageName(),
-                    styleApplierClassName.simpleName(),
+                    styleApplierClassName,
                     viewQualifiedName.className()))
             parisTypeBuilder.addMethod(buildStyleBuilderMethod(
-                    styleApplierClassName.packageName(),
-                    styleApplierClassName.simpleName(),
+                    styleApplierClassName,
                     viewQualifiedName.className()))
         }
 
@@ -39,17 +37,23 @@ internal object ParisWriter {
                 .writeTo(filer)
     }
 
+    private fun getStyleApplierClassName(styleableClassInfo: StyleableInfo): ClassName {
+        return ClassName.get(
+                styleableClassInfo.elementPackageName,
+                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName)
+        )
+    }
+
+    private fun getStyleBuilderClassName(styleableClassInfo: StyleableInfo): ClassName =
+            getStyleApplierClassName(styleableClassInfo).nestedClass("StyleBuilder")
+
     private fun buildStyleMethod(styleableClassInfo: StyleableInfo): MethodSpec {
         return buildStyleMethod(
-                styleableClassInfo.elementPackageName,
-                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
+                getStyleApplierClassName(styleableClassInfo),
                 TypeName.get(styleableClassInfo.viewElementType))
     }
 
-    private fun buildStyleMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {
-        val styleApplierClassName = ClassName.get(
-                styleApplierPackageName,
-                styleApplierSimpleName)
+    private fun buildStyleMethod(styleApplierClassName: ClassName, viewParameterTypeName: TypeName): MethodSpec {
         return MethodSpec.methodBuilder("style")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(styleApplierClassName)
@@ -60,15 +64,11 @@ internal object ParisWriter {
 
     private fun buildStyleBuilderMethod(styleableClassInfo: StyleableInfo): MethodSpec {
         return buildStyleBuilderMethod(
-                styleableClassInfo.elementPackageName,
-                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
+                getStyleApplierClassName(styleableClassInfo),
                 TypeName.get(styleableClassInfo.viewElementType))
     }
 
-    private fun buildStyleBuilderMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {
-        val styleApplierClassName = ClassName.get(
-                styleApplierPackageName,
-                styleApplierSimpleName)
+    private fun buildStyleBuilderMethod(styleApplierClassName: ClassName,  viewParameterTypeName: TypeName): MethodSpec {
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         return MethodSpec.methodBuilder("styleBuilder")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -93,8 +93,8 @@ internal object ParisWriter {
                     if (i > 0) {
                         styleVarargCodeBuilder.add(", ")
                     }
-                    styleVarargCodeBuilder.add("styleBuilder(\$T).add\$L().build()",
-                            styleableClassInfo.elementType, style.elementName.capitalize())
+                    styleVarargCodeBuilder.add("new \$T().add\$L().build()",
+                            getStyleBuilderClassName(styleableClassInfo), style.elementName.capitalize())
                 }
 
                 val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
