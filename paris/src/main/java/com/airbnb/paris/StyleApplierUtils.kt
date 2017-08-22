@@ -44,7 +44,7 @@ class StyleApplierUtils {
                 val mismatchedStyle = getMismatchedStyles(styleReference, debugListenerReference.attributeIndexes,
                         style, debugListener.attributeIndexes)
                 if (mismatchedStyle != null) {
-                    val context = applier.view.context
+                    val context = applier.view!!.context
                     val viewSimpleName = applier.view.javaClass.simpleName
                     val isSubStyle = mismatchedStyle.first != styleReference
                     val styleReferenceName = mismatchedStyle.first.name(context)

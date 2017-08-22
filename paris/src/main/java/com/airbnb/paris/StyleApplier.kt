@@ -54,7 +54,7 @@ abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private cons
     }
 
     fun apply(styleApplier: S): S {
-        for (style in appliedStyles) {
+        for (style in styleApplier.appliedStyles) {
             apply(style)
         }
         return this as S

@@ -24,6 +24,8 @@ data class SimpleStyle internal constructor(
 
         internal val attrResToValueResMap = HashMap<Int, Int>()
 
+        fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
+
         fun put(@AttrRes attrRes: Int, valueRes: Int): Builder {
             attrResToValueResMap.put(attrRes, valueRes)
             return this

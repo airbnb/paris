@@ -258,10 +258,20 @@ internal object StyleAppliersWriter {
                 .superclass(ParameterizedTypeName.get(parentClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderEmptyConstructorMethod())
+
+        styleableInfo.styles.forEach {
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddMethod(it))
+        }
+
+        for (styleableFieldInfo in styleableInfo.styleableFields) {
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(styleableFieldInfo))
+        }
+
         styleableInfo.attrs
                 .mapNotNull { buildAttributeSetterMethod(rClassName, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
         baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))
+
         styleApplierTypeBuilder.addType(baseStyleBuilderTypeBuilder.build())
 
         // StyleBuilder inner class
@@ -295,11 +305,29 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
+    private fun buildStyleBuilderAddMethod(styleInfo: StyleInfo): MethodSpec {
+        return MethodSpec.methodBuilder("add${styleInfo.name.capitalize()}")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(TypeVariableName.get("B"))
+                .addStatement("add(\$L)", styleInfo.androidResourceId.code)
+                .addStatement("return (B) this")
+                .build()
+    }
+
+    private fun buildStyleBuilderAddSubResMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+        return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec.builder(Integer.TYPE, "res").build())
+                .returns(TypeVariableName.get("B"))
+                .addStatement("getBuilder().put(\$L, res)", styleableFieldInfo.styleableResId.code)
+                .addStatement("return (B) this")
+                .build()
+    }
+
     private fun buildAttributeSetterMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
         val attrResourceName = attr.styleableResId.resourceName
         if (attrResourceName != null) {
-            // TODO Change naming scheme, substract the styleable name and "android_" from it
-            val methodName = attrResourceName.substring(attrResourceName.lastIndexOf('_') + 1)
+            val methodName = formatStyleableAttrResourceName(attrResourceName)
             return MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
                     // TODO Add @AnyRes
@@ -321,5 +349,10 @@ internal object StyleAppliersWriter {
                 .addStatement("new \$T(view).apply(build())", styleApplierClassName)
                 .addStatement("return (B) this")
         return methodBuilder.build()
+    }
+
+    private fun formatStyleableAttrResourceName(name: String): String {
+        // TODO Change naming scheme, substract the styleable name and "android_" from it
+        return name.substring(name.lastIndexOf('_') + 1)
     }
 }
