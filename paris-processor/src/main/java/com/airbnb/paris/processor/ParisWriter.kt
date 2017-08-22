@@ -29,10 +29,7 @@ internal object ParisWriter {
 
         for (styleableClassInfo in styleableClassesInfo) {
             parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
-
-            if (!styleableClassInfo.attrs.isEmpty() || !styleableClassInfo.styleableFields.isEmpty()) {
-                parisTypeBuilder.addMethod(buildStyleBuilderMethod(styleableClassInfo))
-            }
+            parisTypeBuilder.addMethod(buildStyleBuilderMethod(styleableClassInfo))
         }
 
         parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))

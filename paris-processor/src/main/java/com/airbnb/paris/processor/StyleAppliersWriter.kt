@@ -50,6 +50,7 @@ internal object StyleAppliersWriter {
             styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
         }
 
+        var rClassName: ClassName? = null
         if (!styleableInfo.styleableResourceName.isEmpty()) {
             // Use an arbitrary AndroidResourceId to get R's ClassName. Per the StyleableInfo doc
             // it's safe to assume that either styleableFields or attrs won't be empty if
@@ -59,7 +60,7 @@ internal object StyleAppliersWriter {
             } else {
                 styleableInfo.attrs[0].styleableResId
             }
-            val rClassName = arbitraryResId.className!!.enclosingClassName()
+            rClassName = arbitraryResId.className!!.enclosingClassName()
 
             styleTypeBuilder
                     .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
@@ -68,8 +69,9 @@ internal object StyleAppliersWriter {
                     .addMethod(buildProcessStyleableFieldsMethod(styleableInfo.styleableFields))
                     .addMethod(buildProcessAttributesMethod(styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
 
-            addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
         }
+
+        addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
 
         for (styleableFieldInfo in styleableInfo.styleableFields) {
             // TODO Enable @StyleableField for proxies? Why not
@@ -81,7 +83,7 @@ internal object StyleAppliersWriter {
         }
 
         for (styleInfo in styleableInfo.styles) {
-            styleTypeBuilder.addMethod(buildApplyStyleMethod(styleApplierClassName, styleInfo))
+            styleTypeBuilder.addMethod(buildApplyStyleMethod(styleInfo))
         }
 
         JavaFile.builder(styleApplierClassName.packageName(), styleTypeBuilder.build())
@@ -213,6 +215,7 @@ internal object StyleAppliersWriter {
         }
     }
 
+    // TODO Remove?
     private fun buildSubMethod(styleableFieldInfo: StyleableFieldInfo, styleApplierClassName: ClassName): MethodSpec {
         return MethodSpec.methodBuilder(styleableFieldInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
@@ -221,7 +224,8 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildApplyStyleMethod(styleApplierClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
+    // TODO Remove?
+    private fun buildApplyStyleMethod(styleInfo: StyleInfo): MethodSpec {
         return MethodSpec.methodBuilder("apply${styleInfo.name.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
                 .addStatement("apply(\$L)", styleInfo.androidResourceId.code)
@@ -230,7 +234,7 @@ internal object StyleAppliersWriter {
 
     private fun addStyleBuilderInnerClass(styleApplierTypeBuilder: TypeSpec.Builder,
                                           styleApplierClassName: ClassName,
-                                          rClassName: ClassName,
+                                          rClassName: ClassName?,
                                           styleableInfo: StyleableInfo,
                                           parentStyleApplierClassName: ClassName?) {
         // BaseStyleBuilder inner class
@@ -262,9 +266,9 @@ internal object StyleAppliersWriter {
         }
 
         val distinctAttrs = styleableInfo.attrs.distinctBy { it.styleableResId.resourceName }
-        distinctAttrs.mapNotNull { buildAttributeSetterResMethod(rClassName, styleableInfo.styleableResourceName, it) }
+        distinctAttrs.mapNotNull { buildAttributeSetterResMethod(rClassName!!, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
-        distinctAttrs.mapNotNull { buildAttributeSetterMethod(rClassName, styleableInfo.styleableResourceName, it) }
+        distinctAttrs.mapNotNull { buildAttributeSetterMethod(rClassName!!, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
 
         baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))

@@ -30,6 +30,10 @@ public final class Paris {
         return new MyViewStyleApplier(view);
     }
 
+    public static MyViewStyleApplier.StyleBuilder styleBuilder(MyView view) {
+        return new MyViewStyleApplier.StyleBuilder(new MyViewStyleApplier(view));
+    }
+
     /**
      * For debugging */
     public static void assertStylesContainSameAttributes(Context context) {

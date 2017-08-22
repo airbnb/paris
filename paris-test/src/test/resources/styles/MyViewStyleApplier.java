@@ -1,4 +1,3 @@
-
 package com.airbnb.paris.test;
 
 import com.airbnb.paris.Style;
@@ -16,6 +15,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         new ViewProxyStyleApplier(getView()).apply(style);
     }
 
+    public StyleBuilder builder() {
+        return new StyleBuilder(this);
+    }
+
     public void applyRed() {
         apply(R.style.MyView_Red);
     }
@@ -26,5 +29,43 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     public void applyBlue() {
         apply(R.style.MyView_Blue);
+    }
+
+    public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
+        public BaseStyleBuilder(A applier) {
+            super(applier);
+        }
+
+        public BaseStyleBuilder() {
+        }
+
+        public B addRed() {
+            add(R.style.MyView_Red);
+            return (B) this;
+        }
+
+        public B addGreen() {
+            add(R.style.MyView_Green);
+            return (B) this;
+        }
+
+        public B addBlue() {
+            add(R.style.MyView_Blue);
+            return (B) this;
+        }
+
+        public B applyTo(MyView view) {
+            new MyViewStyleApplier(view).apply(build());
+            return (B) this;
+        }
+    }
+
+    public static final class StyleBuilder extends BaseStyleBuilder<StyleBuilder, MyViewStyleApplier> {
+        public StyleBuilder(MyViewStyleApplier applier) {
+            super(applier);
+        }
+
+        public StyleBuilder() {
+        }
     }
 }
