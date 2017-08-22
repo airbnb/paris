@@ -9,23 +9,17 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
     protected var builder = SimpleStyle.builder()
 
     private var styles = ArrayList<Style>()
-    private var config: Style.Config = Style.Config.builder().build()
-
-    fun add(option: Style.Config.Option): B {
-        config = config.toBuilder().addOption(option).build()
-        return this as B
-    }
 
     fun add(attributeSet: AttributeSet?): B {
         if (attributeSet != null) {
-            add(SimpleStyle(attributeSet, config))
+            add(SimpleStyle(attributeSet))
         } else {
             add(SimpleStyle.EMPTY)
         }
         return this as B
     }
 
-    fun add(@StyleRes styleRes: Int): B = add(SimpleStyle(styleRes, config))
+    fun add(@StyleRes styleRes: Int): B = add(SimpleStyle(styleRes))
 
     fun add(style: Style): B {
         consumeStyleBuilder()
@@ -38,7 +32,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
         return when (styles.size) {
             0 -> SimpleStyle.EMPTY
             1 -> styles.first()
-            else -> MultiStyle(styles, null)
+            else -> MultiStyle(styles)
         }
     }
 

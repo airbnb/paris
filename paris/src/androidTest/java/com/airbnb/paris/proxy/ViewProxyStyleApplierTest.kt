@@ -49,7 +49,7 @@ class ViewProxyStyleApplierTest {
 
         ViewProxyStyleApplier(view)
                 .builder()
-                .add(ViewProxy.Option.IgnoreLayoutWidthAndHeight)
+                .ignoreLayoutWidthAndHeight(true)
                 .add(R.style.Test_View_width_height)
                 .apply()
 

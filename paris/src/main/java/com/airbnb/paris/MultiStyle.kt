@@ -3,12 +3,10 @@ package com.airbnb.paris
 import android.annotation.SuppressLint
 import android.content.Context
 
-data class MultiStyle internal constructor(
-        private val styles: List<Style>,
-        private val config: Style.Config?) : Style {
+data class MultiStyle internal constructor(private val styles: List<Style>) : Style {
 
-    constructor(vararg styles: Style) : this(styles.toList(), null)
-    constructor(vararg styleRes: Int) : this(styleRes.map { SimpleStyle(it) }, null)
+    constructor(vararg styles: Style) : this(styles.toList())
+    constructor(vararg styleRes: Int) : this(styleRes.map { SimpleStyle(it) })
 
     /**
      * Presumably multistyles would never be constructed with a SimpleStyle containing an
@@ -29,7 +27,4 @@ data class MultiStyle internal constructor(
         val wrappers = styles.map { it.obtainStyledAttributes(context, attrs) }
         return MultiTypedArrayWrapper(wrappers)
     }
-
-    override fun hasOption(option: Style.Config.Option): Boolean =
-            config != null && config.contains(option)
 }

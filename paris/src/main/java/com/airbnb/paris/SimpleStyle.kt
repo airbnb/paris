@@ -5,7 +5,6 @@ import android.content.Context
 import android.support.annotation.AttrRes
 import android.support.annotation.StyleRes
 import android.util.AttributeSet
-import com.airbnb.paris.Style.Config
 import com.airbnb.paris.Style.DebugListener
 import java.util.*
 
@@ -13,12 +12,11 @@ import java.util.*
 data class SimpleStyle internal constructor(
         private val attributeMap: Map<Int, Any>?,
         val attributeSet: AttributeSet?,
-        @StyleRes val styleRes: Int,
-        val config: Config?) : Style {
+        @StyleRes val styleRes: Int) : Style {
 
-    private constructor(builder: Builder) : this(builder.attrResToValueResMap, null, 0, null)
-    @JvmOverloads constructor(attributeSet: AttributeSet, config: Config? = null) : this(null, attributeSet, 0, config)
-    @JvmOverloads constructor(@StyleRes styleRes: Int, config: Config? = null) : this(null, null, styleRes, config)
+    private constructor(builder: Builder) : this(builder.attrResToValueResMap, null, 0)
+    constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0)
+    constructor(@StyleRes styleRes: Int) : this(null, null, styleRes)
 
     class Builder internal constructor() {
 
@@ -38,7 +36,7 @@ data class SimpleStyle internal constructor(
     }
 
     companion object {
-        internal val EMPTY = SimpleStyle(null, null, 0, null)
+        internal val EMPTY = SimpleStyle(null, null, 0)
 
         fun builder(): Builder = Builder()
     }
@@ -62,7 +60,4 @@ data class SimpleStyle internal constructor(
         styleRes != 0 -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
         else -> EmptyTypedArrayWrapper
     }
-
-    override fun hasOption(option: Config.Option): Boolean =
-            config != null && config.contains(option)
 }

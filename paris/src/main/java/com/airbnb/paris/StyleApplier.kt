@@ -87,6 +87,6 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
      * attributes already applied by this [StyleApplier]
      */
     fun assertAppliedSameAttributes(style: Style) {
-        StyleApplierUtils.assertSameAttributes(this, style, MultiStyle(appliedStyles, null))
+        StyleApplierUtils.assertSameAttributes(this, style, MultiStyle(appliedStyles))
     }
 }

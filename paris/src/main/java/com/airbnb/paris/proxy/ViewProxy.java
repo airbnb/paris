@@ -22,10 +22,6 @@ import com.airbnb.paris.utils.ViewExtensionsKt;
 @Styleable(value = "Paris_View")
 class ViewProxy extends BaseProxy<ViewProxy, View> {
 
-    enum Option implements Style.Config.Option {
-        IgnoreLayoutWidthAndHeight
-    }
-
     private static final int NOT_SET = -10;
 
     private static int ifSetElse(int value, int ifNotSet) {
@@ -61,7 +57,7 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     @BeforeStyle
     void beforeStyle(Style style) {
-        ignoreLayoutWidthAndHeight = style.hasOption(Option.IgnoreLayoutWidthAndHeight);
+        ignoreLayoutWidthAndHeight = false;
         width = NOT_SET;
         height = NOT_SET;
         margin = NOT_SET;
@@ -73,22 +69,25 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     @AfterStyle
     void afterStyle(Style style) {
-        if ((width != NOT_SET) ^ (height != NOT_SET)) {
-            throw new IllegalArgumentException("Width and height must either both be set, or not be set at all. It can't be one and not the other.");
-        }
-
-        boolean isWidthHeightSet = width != NOT_SET; // Height follows given the XOR condition above
         boolean isMarginSet = isAnySet(margin, marginBottom, marginLeft, marginRight, marginTop);
 
-        if (isWidthHeightSet) {
-            LayoutParams params = getView().getLayoutParams();
-            if (params == null) {
-                params = isMarginSet ? new MarginLayoutParams(width, height) : new LayoutParams(width, height);
-            } else {
-                params.width = width;
-                params.height = height;
+        if (!ignoreLayoutWidthAndHeight) {
+            if ((width != NOT_SET) ^ (height != NOT_SET)) {
+                throw new IllegalArgumentException("Width and height must either both be set, or not be set at all. It can't be one and not the other.");
             }
-            getView().setLayoutParams(params);
+
+            boolean isWidthHeightSet = width != NOT_SET; // Height follows given the XOR condition above
+
+            if (isWidthHeightSet) {
+                LayoutParams params = getView().getLayoutParams();
+                if (params == null) {
+                    params = isMarginSet ? new MarginLayoutParams(width, height) : new LayoutParams(width, height);
+                } else {
+                    params.width = width;
+                    params.height = height;
+                }
+                getView().setLayoutParams(params);
+            }
         }
 
         if (isMarginSet) {
@@ -112,16 +111,12 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     @Attr(R2.styleable.Paris_View_android_layout_width)
     void setLayoutWidth(@LayoutDimension int width) {
-        if (!ignoreLayoutWidthAndHeight) {
-            this.width = width;
-        }
+        this.width = width;
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_height)
     void setLayoutHeight(@LayoutDimension int height) {
-        if (!ignoreLayoutWidthAndHeight) {
-            this.height = height;
-        }
+        this.height = height;
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_margin)
@@ -200,5 +195,10 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     @Attr(R2.styleable.Paris_View_android_visibility)
     void setVisibility(int visibility) {
         getView().setVisibility(VISIBILITY_FLAGS[visibility]);
+    }
+
+    @Attr(R2.styleable.Paris_View_ignoreLayoutWidthAndHeight)
+    void setVisibility(boolean ignore) {
+        ignoreLayoutWidthAndHeight = ignore;
     }
 }

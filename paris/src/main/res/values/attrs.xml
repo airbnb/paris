@@ -18,6 +18,8 @@
         <attr name="android:paddingTop" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />
+
+        <attr name="ignoreLayoutWidthAndHeight" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="Paris_TextView">
