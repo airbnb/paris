@@ -260,9 +260,9 @@ internal object StyleAppliersWriter {
 
         // TODO Remove duplicate attribute names
         for (styleableFieldInfo in styleableInfo.styleableFields) {
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(styleableFieldInfo))
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(styleableFieldInfo))
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(styleableInfo.styleableResourceName, styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(styleableInfo.styleableResourceName, styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(styleableInfo.styleableResourceName, styleableFieldInfo))
         }
 
         val distinctAttrs = styleableInfo.attrs.distinctBy { it.styleableResId.resourceName }
@@ -315,8 +315,8 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildStyleBuilderAddSubResMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
-        return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
+    private fun buildStyleBuilderAddSubResMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+        return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
                 .returns(TypeVariableName.get("B"))
@@ -325,8 +325,8 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildStyleBuilderAddSubMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
-        return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
+    private fun buildStyleBuilderAddSubMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+        return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "value").build())
                 .returns(TypeVariableName.get("B"))
@@ -335,13 +335,13 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildStyleBuilderAddSubBuilderMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+    private fun buildStyleBuilderAddSubBuilderMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
         val styleApplierClassName = styleablesTree.findStyleApplier(
                 typeUtils,
                 styleablesInfo,
                 styleableFieldInfo.elementType.asTypeElement(typeUtils))
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
-        return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
+        return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(ClassName.get(Function1::class.java), styleBuilderClassName, TypeName.get(Void::class.java)), "function").build())
                 .returns(TypeVariableName.get("B"))
@@ -355,7 +355,7 @@ internal object StyleAppliersWriter {
     private fun buildAttributeSetterResMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
         val attrResourceName = attr.styleableResId.resourceName
         if (attrResourceName != null) {
-            var methodName = formatStyleableAttrResourceName(attrResourceName)
+            var methodName = styleableAttrResourceNameToCamelCase(styleableResourceName, attrResourceName)
             if (TypeKind.INT == attr.targetType.kind) {
                 methodName += "Res"
             }
@@ -376,7 +376,7 @@ internal object StyleAppliersWriter {
     private fun buildAttributeSetterMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
         val attrResourceName = attr.styleableResId.resourceName
         if (attrResourceName != null) {
-            val methodName = formatStyleableAttrResourceName(attrResourceName)
+            val methodName = styleableAttrResourceNameToCamelCase(styleableResourceName, attrResourceName)
             return MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
                     .addParameter(ParameterSpec.builder(TypeName.get(attr.targetType), "value").build())
@@ -399,8 +399,24 @@ internal object StyleAppliersWriter {
         return methodBuilder.build()
     }
 
-    private fun formatStyleableAttrResourceName(name: String): String {
-        // TODO Change naming scheme, substract the styleable name and "android_" from it
-        return name.substring(name.lastIndexOf('_') + 1)
+    /**
+     * Applies lower camel case formatting
+     */
+    private fun styleableAttrResourceNameToCamelCase(styleableResourceName: String, name: String): String {
+        var formattedName = name.removePrefix("${styleableResourceName}_")
+        formattedName = formattedName.removePrefix("android_")
+        formattedName = formattedName.foldRightIndexed("") { index, c, acc ->
+            if (c == '_') {
+                acc
+            } else {
+                if (index == 0 || formattedName[index-1] != '_') {
+                    c + acc
+                } else {
+                    c.toUpperCase() + acc
+                }
+            }
+        }
+        formattedName = formattedName.first().toLowerCase() + formattedName.drop(1)
+        return formattedName
     }
 }
