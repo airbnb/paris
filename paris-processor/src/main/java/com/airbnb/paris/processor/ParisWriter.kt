@@ -22,10 +22,15 @@ internal object ParisWriter {
                     styleApplierClassName.packageName(),
                     styleApplierClassName.simpleName(),
                     viewQualifiedName.className()))
+            parisTypeBuilder.addMethod(buildStyleBuilderMethod(
+                    styleApplierClassName.packageName(),
+                    styleApplierClassName.simpleName(),
+                    viewQualifiedName.className()))
         }
 
         for (styleableClassInfo in styleableClassesInfo) {
             parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
+            parisTypeBuilder.addMethod(buildStyleBuilderMethod(styleableClassInfo))
         }
 
         parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
@@ -51,6 +56,26 @@ internal object ParisWriter {
                 .returns(styleApplierClassName)
                 .addParameter(ParameterSpec.builder(viewParameterTypeName, "view").build())
                 .addStatement("return process(new \$T(view))", styleApplierClassName)
+                .build()
+    }
+
+    private fun buildStyleBuilderMethod(styleableClassInfo: StyleableInfo): MethodSpec {
+        return buildStyleBuilderMethod(
+                styleableClassInfo.elementPackageName,
+                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName),
+                TypeName.get(styleableClassInfo.viewElementType))
+    }
+
+    private fun buildStyleBuilderMethod(styleApplierPackageName: String, styleApplierSimpleName: String, viewParameterTypeName: TypeName): MethodSpec {
+        val styleApplierClassName = ClassName.get(
+                styleApplierPackageName,
+                styleApplierSimpleName)
+        val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
+        return MethodSpec.methodBuilder("styleBuilder")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(styleBuilderClassName)
+                .addParameter(ParameterSpec.builder(viewParameterTypeName, "view").build())
+                .addStatement("return new \$T(process(new \$T(view)))", styleBuilderClassName, styleApplierClassName)
                 .build()
     }
 
