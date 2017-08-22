@@ -7,7 +7,6 @@ import com.airbnb.paris.proxy.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxy.ViewProxyStyleApplier;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
-import com.airbnb.paris.test.R;
 
 public final class Paris {
     public static ViewProxyStyleApplier style(View view) {
@@ -38,6 +37,6 @@ public final class Paris {
      * For debugging */
     public static void assertStylesContainSameAttributes(Context context) {
         MyView MyView = new MyView(context);
-        StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new SimpleStyle(R.style.MyView_Blue), styleBuilder(MyView).addGreen().build(), styleBuilder(MyView).addRed().build());
+        StyleApplierUtils.Companion.assertSameAttributes(style(MyView), styleBuilder(MyView).addGreen().build(), styleBuilder(MyView).addRed().build());
     }
 }

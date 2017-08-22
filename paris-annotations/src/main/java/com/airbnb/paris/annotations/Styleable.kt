@@ -2,6 +2,4 @@ package com.airbnb.paris.annotations
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Styleable(
-        val value: String = "",
-        val styles: Array<Style> = emptyArray())
+annotation class Styleable(val value: String = "")

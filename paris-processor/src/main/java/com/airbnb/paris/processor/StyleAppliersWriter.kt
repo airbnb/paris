@@ -84,11 +84,7 @@ internal object StyleAppliersWriter {
         }
 
         for (styleInfo in styleableInfo.styles) {
-            styleTypeBuilder.addMethod(buildApplyStyleMethod(styleInfo))
-        }
-
-        for (styleInfo in styleableInfo.newStyles) {
-            styleTypeBuilder.addMethod(buildApplyNewStyleMethod(styleBuilderClassName, styleInfo))
+            styleTypeBuilder.addMethod(buildApplyStyleMethod(styleBuilderClassName, styleInfo))
         }
 
         JavaFile.builder(styleApplierClassName.packageName(), styleTypeBuilder.build())
@@ -228,21 +224,14 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildApplyStyleMethod(styleInfo: StyleInfo): MethodSpec {
-        return MethodSpec.methodBuilder("apply${styleInfo.name.capitalize()}")
-                .addModifiers(Modifier.PUBLIC)
-                .addStatement("apply(\$L)", styleInfo.androidResourceId.code)
-                .build()
-    }
-
-    private fun buildApplyNewStyleMethod(styleBuilderClassName: ClassName, styleInfo: NewStyleInfo): MethodSpec {
+    private fun buildApplyStyleMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
         val builder = MethodSpec.methodBuilder("apply${styleInfo.elementName.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
         when (styleInfo.elementKind) {
-            NewStyleInfo.Kind.FIELD -> {
+            StyleInfo.Kind.FIELD -> {
                 builder.addStatement("apply(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
             }
-            NewStyleInfo.Kind.METHOD -> {
+            StyleInfo.Kind.METHOD -> {
                 builder.addStatement("\$T builder = new \$T()", styleBuilderClassName, styleBuilderClassName)
                         .addStatement("\$T.\$L(builder)", styleInfo.enclosingElement, styleInfo.elementName)
                         .addStatement("apply(builder.build())")
@@ -301,9 +290,6 @@ internal object StyleAppliersWriter {
         styleableInfo.styles.forEach {
             styleBuilderTypeBuilder.addMethod(buildStyleBuilderAddMethod(styleBuilderClassName, it))
         }
-        styleableInfo.newStyles.forEach {
-            styleBuilderTypeBuilder.addMethod(buildNewStyleBuilderAddMethod(styleBuilderClassName, it))
-        }
 
         styleApplierTypeBuilder.addType(styleBuilderTypeBuilder.build())
 
@@ -330,21 +316,12 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildStyleBuilderAddMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
-        return MethodSpec.methodBuilder("add${styleInfo.name.capitalize()}")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(styleBuilderClassName)
-                .addStatement("add(\$L)", styleInfo.androidResourceId.code)
-                .addStatement("return this")
-                .build()
-    }
-
-    private fun buildNewStyleBuilderAddMethod(styleBuilderClassName: ClassName, styleInfo: NewStyleInfo): MethodSpec {
         val builder = MethodSpec.methodBuilder("add${styleInfo.elementName.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleBuilderClassName)
         when (styleInfo.elementKind) {
-            NewStyleInfo.Kind.FIELD -> builder.addStatement("add(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
-            NewStyleInfo.Kind.METHOD -> builder.addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
+            StyleInfo.Kind.FIELD -> builder.addStatement("add(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
+            StyleInfo.Kind.METHOD -> builder.addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
         }
         return builder
                 .addStatement("return this")

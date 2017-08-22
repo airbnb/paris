@@ -1,7 +1,8 @@
 package com.airbnb.paris.annotations
 
-@Target
+import kotlin.annotation.AnnotationTarget.FIELD
+import kotlin.annotation.AnnotationTarget.FUNCTION
+
+@Target(FIELD, FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Style(
-        val name: String,
-        val id: Int)
+annotation class Style

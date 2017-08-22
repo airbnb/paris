@@ -80,7 +80,7 @@ class ParisProcessor : AbstractProcessor() {
                 .groupBy { it.enclosingElement }
         val classesToStyleableFieldInfo = StyleableFieldInfo.fromEnvironment(roundEnv, resourceScanner)
                 .groupBy { it.enclosingElement }
-        val classesToNewStylesInfo = NewStyleInfo.fromEnvironment(roundEnv, elementUtils, typeUtils)
+        val classesToStylesInfo = StyleInfo.fromEnvironment(roundEnv, elementUtils, typeUtils)
                 .groupBy { it.enclosingElement }
         val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(
                 roundEnv, elementUtils, typeUtils, resourceScanner,
@@ -88,7 +88,7 @@ class ParisProcessor : AbstractProcessor() {
                 classesToBeforeStyleInfo,
                 classesToAfterStyleInfo,
                 classesToAttrsInfo,
-                classesToNewStylesInfo)
+                classesToStylesInfo)
 
         if (!styleablesInfo.isEmpty()) {
             try {

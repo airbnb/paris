@@ -1,6 +1,5 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.*
@@ -35,8 +34,7 @@ internal class StyleableInfo private constructor(
          */
         val viewElementType: TypeMirror,
         val styleableResourceName: String,
-        val styles: List<StyleInfo>,
-        val newStyles: List<NewStyleInfo>) {
+        val styles: List<StyleInfo>) {
 
     fun styleApplierClassName(): ClassName =
             ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
@@ -49,7 +47,7 @@ internal class StyleableInfo private constructor(
                             classesToBeforeStyleInfo: Map<Element, List<BeforeStyleInfo>>,
                             classesToAfterStyleInfo: Map<Element, List<AfterStyleInfo>>,
                             classesToAttrsInfo: Map<Element, List<AttrInfo>>,
-                            classesToNewStylesInfo: Map<Element, List<NewStyleInfo>>): List<StyleableInfo> {
+                            classesToStylesInfo: Map<Element, List<StyleInfo>>): List<StyleableInfo> {
             return roundEnv.getElementsAnnotatedWith(Styleable::class.java)
                     .mapNotNull {
                         try {
@@ -58,7 +56,7 @@ internal class StyleableInfo private constructor(
                                     classesToBeforeStyleInfo[it] ?: emptyList(),
                                     classesToAfterStyleInfo[it] ?: emptyList(),
                                     classesToAttrsInfo[it] ?: emptyList(),
-                                    classesToNewStylesInfo[it] ?: emptyList())
+                                    classesToStylesInfo[it] ?: emptyList())
                         } catch(e: ProcessorException) {
                             Errors.log(e)
                             null
@@ -75,7 +73,7 @@ internal class StyleableInfo private constructor(
                                 beforeStyles: List<BeforeStyleInfo>,
                                 afterStyles: List<AfterStyleInfo>,
                                 attrs: List<AttrInfo>,
-                                newStyles: List<NewStyleInfo>): StyleableInfo {
+                                styles: List<StyleInfo>): StyleableInfo {
 
             val elementPackageName = element.packageName
             val elementName = element.simpleName.toString()
@@ -92,11 +90,7 @@ internal class StyleableInfo private constructor(
             val styleable = element.getAnnotation(Styleable::class.java)
             val styleableResourceName = styleable.value
 
-            val styles = styleable.styles.map {
-                StyleInfo(it.name, resourceScanner.getId(Style::class.java, element, it.id))
-            }
-
-            check(!styleableResourceName.isEmpty() || !styles.isEmpty() || !newStyles.isEmpty(), element) {
+            check(!styleableResourceName.isEmpty() || !styles.isEmpty(), element) {
                 "@Styleable declaration must have at least a value or a style"
             }
             check(styleableResourceName.isEmpty() || !(styleableFields.isEmpty() && attrs.isEmpty())) {
@@ -115,8 +109,7 @@ internal class StyleableInfo private constructor(
                     elementType,
                     viewElementType,
                     styleableResourceName,
-                    styles,
-                    newStyles)
+                    styles)
         }
     }
 }

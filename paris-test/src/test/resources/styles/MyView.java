@@ -3,20 +3,16 @@ package com.airbnb.paris.test;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
-import com.airbnb.paris.annotations.Attr;
-import com.airbnb.paris.annotations.NewStyle;
 import com.airbnb.paris.annotations.Style;
 import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.test.MyViewStyleApplier.StyleBuilder;
 
-@Styleable(styles = {
-        @Style(name = "Blue", id = R2.style.MyView_Blue)
-})
+@Styleable
 public class MyView extends View {
 
-    @NewStyle static int green = R2.style.MyView_Green;
+    @Style
+    static int green = R2.style.MyView_Green;
 
     public MyView(Context context) {
         super(context);
@@ -30,7 +26,7 @@ public class MyView extends View {
         super(context, attrs, defStyle);
     }
 
-    @NewStyle
+    @Style
     static void red(StyleBuilder builder) {
     }
 }
