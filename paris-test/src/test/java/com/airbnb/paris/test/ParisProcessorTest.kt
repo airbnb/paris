@@ -38,11 +38,6 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun dependencies() {
-        assertCase("dependencies")
-    }
-
-    @Test
     fun styleableFields() {
         assertCase("styleable_fields")
     }

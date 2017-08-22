@@ -8,17 +8,29 @@ import com.airbnb.paris.proxy.ViewProxyStyleApplier;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 
-public final class Paris extends ParisBase {
+public final class Paris {
     public static ViewProxyStyleApplier style(View view) {
-        return process(new ViewProxyStyleApplier(view));
+        return new ViewProxyStyleApplier(view);
+    }
+
+    public static ViewProxyStyleApplier.StyleBuilder styleBuilder(View view) {
+        return new ViewProxyStyleApplier.StyleBuilder(new ViewProxyStyleApplier(view));
     }
 
     public static TextViewProxyStyleApplier style(TextView view) {
-        return process(new TextViewProxyStyleApplier(view));
+        return new TextViewProxyStyleApplier(view);
+    }
+
+    public static TextViewProxyStyleApplier.StyleBuilder styleBuilder(TextView view) {
+        return new TextViewProxyStyleApplier.StyleBuilder(new TextViewProxyStyleApplier(view));
     }
 
     public static MyViewStyleApplier style(MyView view) {
-        return process(new MyViewStyleApplier(view));
+        return new MyViewStyleApplier(view);
+    }
+
+    public static MyViewStyleApplier.StyleBuilder styleBuilder(MyView view) {
+        return new MyViewStyleApplier.StyleBuilder(new MyViewStyleApplier(view));
     }
 
     /**

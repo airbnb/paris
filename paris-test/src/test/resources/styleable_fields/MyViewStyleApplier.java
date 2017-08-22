@@ -1,15 +1,16 @@
 package com.airbnb.paris.test;
 
 import android.content.res.Resources;
-import com.airbnb.paris.SimpleStyle;
 import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
 import com.airbnb.paris.proxy.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxy.ViewProxyStyleApplier;
 import java.lang.Override;
+import java.lang.Void;
+import kotlin.jvm.functions.Function1;
 
-public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, MyView, MyView> {
+public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public MyViewStyleApplier(MyView view) {
         super(view);
     }
@@ -34,17 +35,17 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         Resources res = getView().getContext().getResources();
         Style subStyle;
         if (a.hasValue(R.styleable.MyView_titleStyle)) {
-            subStyle = new SimpleStyle(a.getResourceId(R.styleable.MyView_titleStyle, -1));
+            subStyle = a.getStyle(R.styleable.MyView_titleStyle);
             subStyle.setDebugListener(style.getDebugListener());
             title().apply(subStyle);
         }
         if (a.hasValue(R.styleable.MyView_subtitleStyle)) {
-            subStyle = new SimpleStyle(a.getResourceId(R.styleable.MyView_subtitleStyle, -1));
+            subStyle = a.getStyle(R.styleable.MyView_subtitleStyle);
             subStyle.setDebugListener(style.getDebugListener());
             subtitle().apply(subStyle);
         }
         if (a.hasValue(R.styleable.MyView_dividerStyle)) {
-            subStyle = new SimpleStyle(a.getResourceId(R.styleable.MyView_dividerStyle, -1));
+            subStyle = a.getStyle(R.styleable.MyView_dividerStyle);
             subStyle.setDebugListener(style.getDebugListener());
             divider().apply(subStyle);
         }
@@ -71,7 +72,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         return new ViewProxyStyleApplier(getProxy().divider);
     }
 
-    public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
+    public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
         public BaseStyleBuilder(A applier) {
             super(applier);
         }
@@ -79,18 +80,54 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         public BaseStyleBuilder() {
         }
 
-        public B titleStyle(int res) {
-            getBuilder().put(R.styleable.MyView_titleStyle, res);
+        public B titleStyle(int value) {
+            getBuilder().put(R.styleable.MyView_titleStyle, value);
             return (B) this;
         }
 
-        public B subtitleStyle(int res) {
-            getBuilder().put(R.styleable.MyView_subtitleStyle, res);
+        public B titleStyle(Style value) {
+            getBuilder().put(R.styleable.MyView_titleStyle, value);
             return (B) this;
         }
 
-        public B dividerStyle(int res) {
-            getBuilder().put(R.styleable.MyView_dividerStyle, res);
+        public B titleStyle(Function1<TextViewProxyStyleApplier.StyleBuilder, Void> function) {
+            TextViewProxyStyleApplier.StyleBuilder subBuilder = new TextViewProxyStyleApplier.StyleBuilder();
+            function.invoke(subBuilder);
+            getBuilder().put(R.styleable.MyView_titleStyle, subBuilder.build());
+            return (B) this;
+        }
+
+        public B subtitleStyle(int value) {
+            getBuilder().put(R.styleable.MyView_subtitleStyle, value);
+            return (B) this;
+        }
+
+        public B subtitleStyle(Style value) {
+            getBuilder().put(R.styleable.MyView_subtitleStyle, value);
+            return (B) this;
+        }
+
+        public B subtitleStyle(Function1<TextViewProxyStyleApplier.StyleBuilder, Void> function) {
+            TextViewProxyStyleApplier.StyleBuilder subBuilder = new TextViewProxyStyleApplier.StyleBuilder();
+            function.invoke(subBuilder);
+            getBuilder().put(R.styleable.MyView_subtitleStyle, subBuilder.build());
+            return (B) this;
+        }
+
+        public B dividerStyle(int value) {
+            getBuilder().put(R.styleable.MyView_dividerStyle, value);
+            return (B) this;
+        }
+
+        public B dividerStyle(Style value) {
+            getBuilder().put(R.styleable.MyView_dividerStyle, value);
+            return (B) this;
+        }
+
+        public B dividerStyle(Function1<ViewProxyStyleApplier.StyleBuilder, Void> function) {
+            ViewProxyStyleApplier.StyleBuilder subBuilder = new ViewProxyStyleApplier.StyleBuilder();
+            function.invoke(subBuilder);
+            getBuilder().put(R.styleable.MyView_dividerStyle, subBuilder.build());
             return (B) this;
         }
 

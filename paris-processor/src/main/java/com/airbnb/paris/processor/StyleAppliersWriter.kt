@@ -71,10 +71,6 @@ internal object StyleAppliersWriter {
             addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
         }
 
-        if (styleableInfo.dependencies.isNotEmpty()) {
-            styleTypeBuilder.addMethod(buildApplyDependenciesMethod(styleableInfo))
-        }
-
         for (styleableFieldInfo in styleableInfo.styleableFields) {
             // TODO Enable @StyleableField for proxies? Why not
             val subStyleApplierClassName = styleablesTree.findStyleApplier(
@@ -113,19 +109,6 @@ internal object StyleAppliersWriter {
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
                 .addStatement("new \$T(getView()).apply(style)", parentStyleApplierClassName)
                 .build()
-    }
-
-    private fun buildApplyDependenciesMethod(classInfo: StyleableInfo): MethodSpec {
-        val methodBuilder = MethodSpec.methodBuilder("applyDependencies")
-                .addAnnotation(Override::class.java)
-                .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
-
-        for (dependency in classInfo.dependencies) {
-            methodBuilder.addStatement("new \$T(getView()).apply(style)", dependency)
-        }
-
-        return methodBuilder.build()
     }
 
     private fun buildAttributesMethod(rClassName: ClassName, resourceName: String): MethodSpec {
@@ -241,8 +224,7 @@ internal object StyleAppliersWriter {
     private fun buildApplyStyleMethod(styleApplierClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
         return MethodSpec.methodBuilder("apply${styleInfo.name.capitalize()}")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(styleApplierClassName)
-                .addStatement("return apply(\$L)", styleInfo.androidResourceId.code)
+                .addStatement("apply(\$L)", styleInfo.androidResourceId.code)
                 .build()
     }
 

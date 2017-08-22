@@ -5,7 +5,6 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.ClassName
-import com.sun.tools.javac.code.Attribute
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
@@ -36,7 +35,6 @@ internal class StyleableInfo private constructor(
          */
         val viewElementType: TypeMirror,
         val styleableResourceName: String,
-        val dependencies: List<TypeMirror>,
         val styles: List<StyleInfo>) {
 
     fun styleApplierClassName(): ClassName {
@@ -91,24 +89,12 @@ internal class StyleableInfo private constructor(
             val styleable = element.getAnnotation(Styleable::class.java)
             val styleableResourceName = styleable.value
 
-            val styleableName: String = Styleable::class.java.name
-            // We use annotation mirrors here because the dependency classes might not exist yet
-            val dependencies = element.annotationMirrors
-                    // Find @Styleable
-                    .find { styleableName == it.annotationType.toString() }!!
-                    // Find the "dependencies" parameter
-                    .elementValues.filterKeys { "dependencies" == it.simpleName.toString() }
-                    .flatMap {
-                        @Suppress("UNCHECKED_CAST")
-                        (it.value.value as List<Attribute.Class>).map { it.value }
-                    }
-
             val styles = styleable.styles.map {
                 StyleInfo(it.name, resourceScanner.getId(Style::class.java, element, it.id))
             }
 
-            check(!styleableResourceName.isEmpty() || !dependencies.isEmpty() || !styles.isEmpty(), element) {
-                "@Styleable declaration must have at least a value, or a dependency, or a style"
+            check(!styleableResourceName.isEmpty() || !styles.isEmpty(), element) {
+                "@Styleable declaration must have at least a value or a style"
             }
             check(styleableResourceName.isEmpty() || !(styleableFields.isEmpty() && attrs.isEmpty())) {
                 "Do not specify the @Styleable value parameter if no class members are annotated with @Attr"
@@ -124,7 +110,6 @@ internal class StyleableInfo private constructor(
                     elementType,
                     viewElementType,
                     styleableResourceName,
-                    dependencies,
                     styles)
         }
     }

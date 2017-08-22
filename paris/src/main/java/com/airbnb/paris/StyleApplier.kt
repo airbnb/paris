@@ -40,8 +40,6 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
             applyParent(style)
         }
 
-        applyDependencies(style)
-
         val attributes = attributes()
         if (attributes != null) {
             val typedArray = style.obtainStyledAttributes(view.context, attributes)
@@ -67,8 +65,6 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
     open fun attributesWithDefaultValue(): IntArray? = null
 
     protected open fun applyParent(style: Style) {}
-
-    protected open fun applyDependencies(style: Style) {}
 
     protected open fun processStyleableFields(style: Style, a: TypedArrayWrapper) {}
 

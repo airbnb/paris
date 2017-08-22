@@ -1,3 +1,4 @@
+
 package com.airbnb.paris.test;
 
 import com.airbnb.paris.Style;
@@ -5,7 +6,7 @@ import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.proxy.ViewProxyStyleApplier;
 import java.lang.Override;
 
-public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, MyView, MyView> {
+public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public MyViewStyleApplier(MyView view) {
         super(view);
     }
@@ -15,15 +16,15 @@ public final class MyViewStyleApplier extends StyleApplier<MyViewStyleApplier, M
         new ViewProxyStyleApplier(getView()).apply(style);
     }
 
-    public MyViewStyleApplier applyRed() {
-        return apply(R.style.MyView_Red);
+    public void applyRed() {
+        apply(R.style.MyView_Red);
     }
 
-    public MyViewStyleApplier applyGreen() {
-        return apply(R.style.MyView_Green);
+    public void applyGreen() {
+        apply(R.style.MyView_Green);
     }
 
-    public MyViewStyleApplier applyBlue() {
-        return apply(R.style.MyView_Blue);
+    public void applyBlue() {
+        apply(R.style.MyView_Blue);
     }
 }
