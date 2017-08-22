@@ -21,22 +21,13 @@ import com.airbnb.paris.utils.getLayoutDimension
 class MapTypedArrayWrapper constructor(
         private val resources: Resources,
         private val styleableAttrs: IntArray,
-        private val attrResToValueResMap: Map<Int, Int>) : TypedArrayWrapper() {
+        private val attrResToValueResMap: Map<Int, Any>) : TypedArrayWrapper() {
 
-    val styleableAttrIndexes by lazy {
+    private val styleableAttrIndexes by lazy {
         attrResToValueResMap.keys
                 .map { styleableAttrs.indexOf(it) }
                 .filter { it != -1 }
     }
-
-    private fun styleableAttrIndexToAttrRes(styleableAttrIndex: Int): Int =
-            styleableAttrs[styleableAttrIndex]
-
-    private fun attrResToValueRes(@AttrRes attributeRes: Int): Int? =
-            attrResToValueResMap[attributeRes]
-
-    private fun styleableAttrIndexToValueRes(styleableAttrIndex: Int): Int? =
-            attrResToValueRes(styleableAttrIndexToAttrRes(styleableAttrIndex))
 
     override fun isNull(index: Int): Boolean = isNullRes(getResourceId(index, 0))
 
@@ -47,55 +38,93 @@ class MapTypedArrayWrapper constructor(
     override fun hasValue(index: Int): Boolean = styleableAttrIndexToValueRes(index) != null
 
     override fun getBoolean(index: Int, defValue: Boolean): Boolean =
-            resources.getBoolean(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getBoolean(resId) }
 
     override fun getColor(index: Int, defValue: Int): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            resources.getColor(styleableAttrIndexToValueRes(index)!!, null)
-        } else {
-            resources.getColor(styleableAttrIndexToValueRes(index)!!)
+        return getValue(index) { resId ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                resources.getColor(resId, null)
+            } else {
+                resources.getColor(resId)
+            }
         }
     }
 
-    override fun getColorStateList(index: Int): ColorStateList =
-            resources.getColorStateList(styleableAttrIndexToValueRes(index)!!)
+    override fun getColorStateList(index: Int): ColorStateList {
+        return getValue(index) { resId ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                resources.getColorStateList(resId, null)
+            } else {
+                resources.getColorStateList(resId)
+            }
+        }
+    }
 
     override fun getDimensionPixelSize(index: Int, defValue: Int): Int =
-            resources.getDimensionPixelSize(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getDimensionPixelSize(resId) }
 
     override fun getDrawable(index: Int): Drawable {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            resources.getDrawable(styleableAttrIndexToValueRes(index)!!, null)
-        } else {
-            resources.getDrawable(styleableAttrIndexToValueRes(index)!!)
+        return getValue(index) { resId ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                resources.getDrawable(resId, null)
+            } else {
+                resources.getDrawable(resId)
+            }
         }
     }
 
     override fun getFloat(index: Int, defValue: Float): Float =
-            resources.getFloat(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getFloat(resId) }
 
     override fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float =
-            resources.getFraction(styleableAttrIndexToValueRes(index)!!, base, pbase)
+            getValue(index) { resId -> resources.getFraction(resId, base, pbase) }
 
     override fun getInt(index: Int, defValue: Int): Int =
-            resources.getInteger(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getInteger(resId) }
 
     override fun getLayoutDimension(index: Int, defValue: Int): Int =
-            resources.getLayoutDimension(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getLayoutDimension(resId) }
 
     override fun getResourceId(index: Int, defValue: Int): Int =
-            styleableAttrIndexToValueRes(index)!!
+            getValue(index) { resId -> resId }
 
     override fun getString(index: Int): String =
-            resources.getString(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getString(resId) }
 
     override fun getText(index: Int): CharSequence =
-            resources.getText(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getText(resId) }
 
     override fun getTextArray(index: Int): Array<CharSequence> =
-            resources.getTextArray(styleableAttrIndexToValueRes(index)!!)
+            getValue(index) { resId -> resources.getTextArray(resId) }
+
+    override fun getStyle(index: Int): Style =
+            getValue(index) { resId -> SimpleStyle(resId) }
 
     override fun recycle() {
         //
     }
+
+    fun <T> getValue(index: Int): T {
+        @Suppress("UNCHECKED_CAST")
+        return styleableAttrIndexToValueRes(index)!! as T
+    }
+
+    private fun <T> getValue(index: Int, resourceGetter: (Int) -> T): T {
+        val value = styleableAttrIndexToValueRes(index)!!
+        return if (value is ResourceId) {
+            resourceGetter(value.resId)
+        } else {
+            @Suppress("UNCHECKED_CAST")
+            return value as T
+        }
+    }
+
+    private fun styleableAttrIndexToAttrRes(styleableAttrIndex: Int): Int =
+            styleableAttrs[styleableAttrIndex]
+
+    private fun attrResToValueRes(@AttrRes attributeRes: Int): Any? =
+            attrResToValueResMap[attributeRes]
+
+    private fun styleableAttrIndexToValueRes(styleableAttrIndex: Int): Any? =
+            attrResToValueRes(styleableAttrIndexToAttrRes(styleableAttrIndex))
 }

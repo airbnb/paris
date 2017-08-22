@@ -52,5 +52,7 @@ abstract class TypedArrayWrapper {
 
     abstract fun getTextArray(index: Int): Array<CharSequence>
 
+    abstract fun getStyle(index: Int): Style
+
     abstract fun recycle()
 }

@@ -11,7 +11,7 @@ import java.util.*
 
 // TODO Can all the parameters be private?
 data class SimpleStyle internal constructor(
-        private val attributeMap: Map<Int, Int>?,
+        private val attributeMap: Map<Int, Any>?,
         val attributeSet: AttributeSet?,
         @StyleRes val styleRes: Int,
         val config: Config?) : Style {
@@ -22,12 +22,15 @@ data class SimpleStyle internal constructor(
 
     class Builder internal constructor() {
 
-        internal val attrResToValueResMap = HashMap<Int, Int>()
+        internal val attrResToValueResMap = HashMap<Int, Any>()
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
 
-        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder {
-            attrResToValueResMap.put(attrRes, valueRes)
+        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder =
+                put(attrRes, ResourceId(valueRes))
+
+        fun put(@AttrRes attrRes: Int, value: Any): Builder {
+            attrResToValueResMap.put(attrRes, value)
             return this
         }
 
@@ -60,7 +63,6 @@ data class SimpleStyle internal constructor(
         else -> EmptyTypedArrayWrapper
     }
 
-    override fun hasOption(option: Config.Option): Boolean {
-        return config != null && config.contains(option)
-    }
+    override fun hasOption(option: Config.Option): Boolean =
+            config != null && config.contains(option)
 }

@@ -73,6 +73,10 @@ internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
         throw illegalStateException()
     }
 
+    override fun getStyle(index: Int): Style {
+        throw illegalStateException()
+    }
+
     override fun recycle() {
         // Nothing to do here
     }

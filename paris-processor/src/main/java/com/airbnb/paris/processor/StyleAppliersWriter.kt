@@ -8,22 +8,31 @@ import com.squareup.javapoet.*
 import java.io.IOException
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
+import javax.lang.model.type.TypeKind
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 // TODO  Add @UiThread annotation to StyleApplier classes
 internal object StyleAppliersWriter {
 
+    val styleablesTree = StyleablesTree()
+
+    lateinit var elementUtils: Elements
+    lateinit var typeUtils: Types
+    lateinit var styleablesInfo: List<StyleableInfo>
+
     @Throws(IOException::class)
     fun writeFrom(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>) {
-        val styleableClassesTree = StyleablesTree()
+        this.elementUtils = elementUtils
+        this.typeUtils = typeUtils
+        this.styleablesInfo = styleablesInfo
 
         for (styleableInfo in styleablesInfo) {
-            writeStyleApplier(filer, elementUtils, typeUtils, styleablesInfo, styleableInfo, styleableClassesTree)
+            writeStyleApplier(filer, elementUtils, typeUtils, styleableInfo)
         }
     }
 
-    private fun writeStyleApplier(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>, styleableInfo: StyleableInfo, styleablesTree: StyleablesTree) {
+    private fun writeStyleApplier(filer: Filer, elementUtils: Elements, typeUtils: Types, styleableInfo: StyleableInfo) {
         val styleApplierClassName = styleableInfo.styleApplierClassName()
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
@@ -155,7 +164,7 @@ internal object StyleAppliersWriter {
         }
 
         for (styleableField in styleableFields) {
-            addControlFlow(methodBuilder, Format.RESOURCE_ID, styleableField.elementName,
+            addControlFlow(methodBuilder, Format.STYLE, styleableField.elementName,
                     styleableField.styleableResId, styleableField.defaultValueResId, true)
         }
 
@@ -208,7 +217,7 @@ internal object StyleAppliersWriter {
         val from = if (isForDefaultValue) "res" else "a"
         if (isElementStyleable) {
             methodSpecBuilder
-                    .addStatement("subStyle = new \$T($from.$statement)", ParisProcessor.SIMPLE_STYLE_CLASS_NAME, androidResourceId.code)
+                    .addStatement("subStyle = $from.$statement", androidResourceId.code)
                     .addStatement("subStyle.setDebugListener(style.getDebugListener())")
                     .addStatement("\$N().apply(subStyle)", elementName)
         } else {
@@ -266,12 +275,16 @@ internal object StyleAppliersWriter {
         // TODO Remove duplicate attribute names
         for (styleableFieldInfo in styleableInfo.styleableFields) {
             baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(styleableFieldInfo))
         }
 
-        styleableInfo.attrs
-                .distinctBy { it.styleableResId.resourceName }
-                .mapNotNull { buildAttributeSetterMethod(rClassName, styleableInfo.styleableResourceName, it) }
+        val distinctAttrs = styleableInfo.attrs.distinctBy { it.styleableResId.resourceName }
+        distinctAttrs.mapNotNull { buildAttributeSetterResMethod(rClassName, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
+        distinctAttrs.mapNotNull { buildAttributeSetterMethod(rClassName, styleableInfo.styleableResourceName, it) }
+                .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
+
         baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))
 
         styleApplierTypeBuilder.addType(baseStyleBuilderTypeBuilder.build())
@@ -319,11 +332,58 @@ internal object StyleAppliersWriter {
     private fun buildStyleBuilderAddSubResMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
         return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(Integer.TYPE, "res").build())
+                .addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
                 .returns(TypeVariableName.get("B"))
-                .addStatement("getBuilder().put(\$L, res)", styleableFieldInfo.styleableResId.code)
+                .addStatement("getBuilder().put(\$L, value)", styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
                 .build()
+    }
+
+    private fun buildStyleBuilderAddSubMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+        return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "value").build())
+                .returns(TypeVariableName.get("B"))
+                .addStatement("getBuilder().put(\$L, value)", styleableFieldInfo.styleableResId.code)
+                .addStatement("return (B) this")
+                .build()
+    }
+
+    private fun buildStyleBuilderAddSubBuilderMethod(styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+        val styleApplierClassName = styleablesTree.findStyleApplier(
+                typeUtils,
+                styleablesInfo,
+                styleableFieldInfo.elementType.asTypeElement(typeUtils))
+        val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
+        return MethodSpec.methodBuilder(formatStyleableAttrResourceName(styleableFieldInfo.styleableResId.resourceName!!))
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(ClassName.get(Function1::class.java), styleBuilderClassName, TypeName.get(Void::class.java)), "function").build())
+                .returns(TypeVariableName.get("B"))
+                .addStatement("\$T subBuilder = new \$T()", styleBuilderClassName, styleBuilderClassName)
+                .addStatement("function.invoke(subBuilder)")
+                .addStatement("getBuilder().put(\$L, subBuilder.build())", styleableFieldInfo.styleableResId.code)
+                .addStatement("return (B) this")
+                .build()
+    }
+
+    private fun buildAttributeSetterResMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
+        val attrResourceName = attr.styleableResId.resourceName
+        if (attrResourceName != null) {
+            var methodName = formatStyleableAttrResourceName(attrResourceName)
+            if (TypeKind.INT == attr.targetType.kind) {
+                methodName += "Res"
+            }
+            return MethodSpec.methodBuilder(methodName)
+                    .addModifiers(Modifier.PUBLIC)
+                    // TODO Add @AnyRes
+                    .addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
+                    .returns(TypeVariableName.get("B"))
+                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
+                    .addStatement("return (B) this")
+                    .build()
+        } else {
+            return null
+        }
     }
 
     private fun buildAttributeSetterMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
@@ -332,10 +392,9 @@ internal object StyleAppliersWriter {
             val methodName = formatStyleableAttrResourceName(attrResourceName)
             return MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
-                    // TODO Add @AnyRes
-                    .addParameter(ParameterSpec.builder(Integer.TYPE, "res").build())
+                    .addParameter(ParameterSpec.builder(TypeName.get(attr.targetType), "value").build())
                     .returns(TypeVariableName.get("B"))
-                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], res)", rClassName, styleableResourceName, attr.styleableResId.code)
+                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
                     .addStatement("return (B) this")
                     .build()
         } else {

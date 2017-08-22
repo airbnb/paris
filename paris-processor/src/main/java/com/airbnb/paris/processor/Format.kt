@@ -3,6 +3,7 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.annotations.Fraction
 import com.airbnb.paris.processor.utils.hasAnnotation
 import com.airbnb.paris.processor.utils.hasAnyAnnotation
+import com.airbnb.paris.processor.utils.isView
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -17,6 +18,7 @@ internal class Format private constructor(
     companion object {
 
         val RESOURCE_ID = Format(Type.RESOURCE_ID)
+        val STYLE = Format(Type.STYLE)
 
         private enum class Type {
             BOOLEAN,
@@ -35,7 +37,8 @@ internal class Format private constructor(
             LAYOUT_DIMENSION,
             NON_RESOURCE_STRING,
             RESOURCE_ID,
-            STRING
+            STRING,
+            STYLE
         }
 
         private val RES_ANNOTATIONS = hashSetOf(
@@ -72,10 +75,9 @@ internal class Format private constructor(
 
         private fun forField(elementUtils: Elements, typeUtils: Types, element: Element): Format {
             val type = element.asType()
-            val viewType = elementUtils.getTypeElement("android.view.View").asType()
-            if (typeUtils.isSubtype(type, viewType)) {
-                // If the field is a View then the attribute must be a resource to style it
-                return Format(Type.RESOURCE_ID)
+            if (typeUtils.isView(elementUtils, type)) {
+                // If the field is a View then the attribute must be a style or style resource id
+                return Format(Type.STYLE)
             }
 
             return forEitherFieldOrMethodParameter(element)
@@ -141,6 +143,7 @@ internal class Format private constructor(
             // Special case
             Type.RESOURCE_ID -> "The parameter is the resource id, this should never be used"
             Type.STRING -> "getString(\$L)"
+            Type.STYLE -> TODO()
         }
     }
 
@@ -163,6 +166,7 @@ internal class Format private constructor(
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
             Type.RESOURCE_ID -> "getResourceId(\$L, -1)"
             Type.STRING -> "getString(\$L)"
+            Type.STYLE -> "getStyle(\$L)"
         }
     }
 }

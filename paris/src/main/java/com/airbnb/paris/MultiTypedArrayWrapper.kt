@@ -74,6 +74,9 @@ internal class MultiTypedArrayWrapper constructor(private val wrappers: List<Typ
     override fun getTextArray(index: Int): Array<CharSequence> =
             styleableAttrIndexToWrapperMap[index]!!.getTextArray(index)
 
+    override fun getStyle(index: Int): Style =
+            styleableAttrIndexToWrapperMap[index]!!.getStyle(index)
+
     override fun recycle() {
         wrappers.forEach { it.recycle() }
     }

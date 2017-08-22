@@ -45,6 +45,8 @@ internal class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArra
 
     override fun getTextArray(index: Int): Array<CharSequence> = typedArray.getTextArray(index)
 
+    override fun getStyle(index: Int): Style = SimpleStyle(getResourceId(index, -1))
+
     override fun recycle() {
         typedArray.recycle()
     }
