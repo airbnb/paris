@@ -361,10 +361,11 @@ internal object StyleAppliersWriter {
             }
             return MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
-                    // TODO Add @AnyRes
-                    .addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
+                    .addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
+                            .addAnnotation(ClassNames.ANDROID_ANY_RES)
+                            .build())
                     .returns(TypeVariableName.get("B"))
-                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
+                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, attr.styleableResId.code)
                     .addStatement("return (B) this")
                     .build()
         } else {

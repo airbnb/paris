@@ -7,4 +7,5 @@ internal object ClassNames {
     val ANDROID_RESOURCES = "android.content.res.Resources".className()
     val ANDROID_VIEW = "android.view.View".className()
     val ANDROID_TEXT_VIEW = "android.widget.TextView".className()
+    val ANDROID_ANY_RES = "android.support.annotation.AnyRes".className()
 }

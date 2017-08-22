@@ -1,6 +1,7 @@
 package com.airbnb.paris.test;
 
 import android.content.res.Resources;
+import android.support.annotation.AnyRes;
 import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
@@ -92,53 +93,53 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         public BaseStyleBuilder() {
         }
 
-        public B formatBoolean(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatBoolean], value);
+        public B formatBoolean(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatBoolean], resId);
             return (B) this;
         }
 
-        public B formatColorRes(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatColor], value);
+        public B formatColorRes(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatColor], resId);
             return (B) this;
         }
 
-        public B formatDimensionRes(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
+        public B formatDimensionRes(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatDimension], resId);
             return (B) this;
         }
 
-        public B formatEnumRes(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatEnum], value);
+        public B formatEnumRes(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatEnum], resId);
             return (B) this;
         }
 
-        public B formatFlagRes(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFlag], value);
+        public B formatFlagRes(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFlag], resId);
             return (B) this;
         }
 
-        public B formatFloat(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFloat], value);
+        public B formatFloat(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFloat], resId);
             return (B) this;
         }
 
-        public B formatFraction(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFraction], value);
+        public B formatFraction(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFraction], resId);
             return (B) this;
         }
 
-        public B formatIntegerRes(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatInteger], value);
+        public B formatIntegerRes(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatInteger], resId);
             return (B) this;
         }
 
-        public B formatReference(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference], value);
+        public B formatReference(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference], resId);
             return (B) this;
         }
 
-        public B formatString(int value) {
-            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString], value);
+        public B formatString(@AnyRes int resId) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString], resId);
             return (B) this;
         }
 
