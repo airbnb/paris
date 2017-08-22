@@ -37,7 +37,7 @@ internal object StyleAppliersWriter {
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, styleApplierClassName, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
+                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
 
         // If the view type is "View" then there is no parent
@@ -262,7 +262,7 @@ internal object StyleAppliersWriter {
         val baseClassName = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
         val baseStyleBuilderTypeBuilder = TypeSpec.classBuilder(baseClassName)
                 .addTypeVariable(TypeVariableName.get("B", ParameterizedTypeName.get(baseClassName, TypeVariableName.get("B"), TypeVariableName.get("A"))))
-                .addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName, wildcardTypeName)))
+                .addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName)))
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
                 .superclass(ParameterizedTypeName.get(parentClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(TypeVariableName.get("A")))

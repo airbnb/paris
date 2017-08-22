@@ -9,11 +9,10 @@ import android.view.View
 import com.airbnb.paris.proxy.Proxy
 
 @UiThread
-abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private constructor(val proxy: P?, val view: V?) {
+abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val view: V) {
 
     protected constructor(proxy: Proxy<P, V>) : this(proxy.proxy, proxy.view)
     constructor(view: V) : this(view as P, view)
-    constructor() : this(null, null)
 
     private var appliedStyles = ArrayList<Style>()
 
@@ -32,55 +31,40 @@ abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private cons
         apply(SimpleStyle(styleRes))
     }
 
-    fun apply(styleApplier: S) {
-        for (style in styleApplier.appliedStyles) {
-            apply(style)
-        }
-    }
-
     open fun apply(style: Style) {
         appliedStyles.add(style)
 
-        if (view == null) {
-            // If the view is null then this StyleApplier is only used as a builder of styles, no
-            // need to actually apply or process anything
-        } else {
-            // Assumes that if the Style has an AttributeSet it's being applied during the View
-            // initialization, in which case parents should be making the call themselves
-            if (style.shouldApplyParent) {
-                applyParent(style)
+        // Assumes that if the Style has an AttributeSet it's being applied during the View
+        // initialization, in which case parents should be making the call themselves
+        if (style.shouldApplyParent) {
+            applyParent(style)
+        }
+
+        applyDependencies(style)
+
+        val attributes = attributes()
+        if (attributes != null) {
+            val typedArray = style.obtainStyledAttributes(view.context, attributes)
+
+            processStyleableFields(style, typedArray)
+
+            // For debug purposes
+            if (style.debugListener != null) {
+                style.debugListener!!.beforeTypedArrayProcessed(style, typedArray)
+            } else {
+                processAttributes(style, typedArray)
             }
 
-            applyDependencies(style)
-
-            val attributes = attributes()
-            if (attributes != null) {
-                val typedArray = style.obtainStyledAttributes(view.context, attributes)
-
-                processStyleableFields(style, typedArray)
-
-                // For debug purposes
-                if (style.debugListener != null) {
-                    style.debugListener!!.beforeTypedArrayProcessed(style, typedArray)
-                } else {
-                    processAttributes(style, typedArray)
-                }
-
-                typedArray.recycle()
-            }
+            typedArray.recycle()
         }
     }
 
-    protected open fun attributes(): IntArray? {
-        return null
-    }
+    protected open fun attributes(): IntArray? = null
 
     /**
      * Visible for debug
      */
-    open fun attributesWithDefaultValue(): IntArray? {
-        return null
-    }
+    open fun attributesWithDefaultValue(): IntArray? = null
 
     protected open fun applyParent(style: Style) {}
 

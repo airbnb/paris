@@ -4,7 +4,7 @@ import android.support.annotation.StyleRes
 import android.util.AttributeSet
 
 @Suppress("UNCHECKED_CAST")
-abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *, *>>(private val applier: A? = null) {
+abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *>>(private val applier: A? = null) {
 
     protected var builder = SimpleStyle.builder()
 

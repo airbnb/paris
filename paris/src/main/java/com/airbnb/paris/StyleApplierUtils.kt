@@ -23,7 +23,7 @@ class StyleApplierUtils {
         }
 
         @VisibleForTesting
-        fun assertSameAttributes(applier: StyleApplier<*, *, *>, vararg styles: Style) {
+        fun assertSameAttributes(applier: StyleApplier<*, *>, vararg styles: Style) {
             if (styles.size <= 1) {
                 return
             }
