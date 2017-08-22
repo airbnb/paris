@@ -48,8 +48,10 @@ class ViewProxyStyleApplierTest {
         assertNull(params)
 
         ViewProxyStyleApplier(view)
-                .addOption(ViewProxy.Option.IgnoreLayoutWidthAndHeight)
-                .apply(R.style.Test_View_width_height)
+                .builder()
+                .add(ViewProxy.Option.IgnoreLayoutWidthAndHeight)
+                .add(R.style.Test_View_width_height)
+                .apply()
 
         params = view.layoutParams
         assertNull(params)

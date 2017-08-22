@@ -30,37 +30,28 @@ abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private cons
 
     private var appliedStyles = ArrayList<Style>()
 
-    private var config: Style.Config = Style.Config.builder().build()
-
-    fun addOption(option: Style.Config.Option): S {
-        config = config.toBuilder().addOption(option).build()
-        return this as S
-    }
-
     /**
      * Passing a null [AttributeSet] will apply default values, if any
      */
-    fun apply(attributeSet: AttributeSet?): S {
+    fun apply(attributeSet: AttributeSet?) {
         if (attributeSet != null) {
-            apply(SimpleStyle(attributeSet, config))
+            apply(SimpleStyle(attributeSet))
         } else {
             apply(SimpleStyle.EMPTY)
         }
-        return this as S
     }
 
-    fun apply(@StyleRes styleRes: Int): S {
-        return apply(SimpleStyle(styleRes, config))
+    fun apply(@StyleRes styleRes: Int) {
+        apply(SimpleStyle(styleRes))
     }
 
-    fun apply(styleApplier: S): S {
+    fun apply(styleApplier: S) {
         for (style in styleApplier.appliedStyles) {
             apply(style)
         }
-        return this as S
     }
 
-    open fun apply(style: Style): S {
+    open fun apply(style: Style) {
         appliedStyles.add(style)
 
         onStyleApply?.invoke(style)
@@ -93,8 +84,6 @@ abstract class StyleApplier<S : StyleApplier<S, P, V>, P, V : View> private cons
                 typedArray.recycle()
             }
         }
-
-        return this as S
     }
 
     protected open fun attributes(): IntArray? {
