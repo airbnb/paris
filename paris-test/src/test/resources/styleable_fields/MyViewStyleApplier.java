@@ -1,6 +1,7 @@
 package com.airbnb.paris.test;
 
 import android.content.res.Resources;
+import android.support.annotation.StyleRes;
 import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
@@ -80,8 +81,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         public BaseStyleBuilder() {
         }
 
-        public B titleStyle(int value) {
-            getBuilder().put(R.styleable.MyView_titleStyle, value);
+        public B titleStyle(@StyleRes int resId) {
+            getBuilder().put(R.styleable.MyView_titleStyle, resId);
             return (B) this;
         }
 
@@ -97,8 +98,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
-        public B subtitleStyle(int value) {
-            getBuilder().put(R.styleable.MyView_subtitleStyle, value);
+        public B subtitleStyle(@StyleRes int resId) {
+            getBuilder().put(R.styleable.MyView_subtitleStyle, resId);
             return (B) this;
         }
 
@@ -114,8 +115,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
-        public B dividerStyle(int value) {
-            getBuilder().put(R.styleable.MyView_dividerStyle, value);
+        public B dividerStyle(@StyleRes int resId) {
+            getBuilder().put(R.styleable.MyView_dividerStyle, resId);
             return (B) this;
         }
 

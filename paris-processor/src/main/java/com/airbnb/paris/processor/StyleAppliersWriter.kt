@@ -335,7 +335,7 @@ internal object StyleAppliersWriter {
                         .addAnnotation(ClassNames.ANDROID_STYLE_RES)
                         .build())
                 .returns(TypeVariableName.get("B"))
-                .addStatement("getBuilder().put(\$L, value)", styleableFieldInfo.styleableResId.code)
+                .addStatement("getBuilder().put(\$L, resId)", styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
                 .build()
     }
