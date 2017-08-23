@@ -94,7 +94,7 @@ internal object ParisWriter {
                         styleVarargCodeBuilder.add(", ")
                     }
                     styleVarargCodeBuilder.add("new \$T().add\$L().build()",
-                            getStyleBuilderClassName(styleableClassInfo), style.elementName.capitalize())
+                            getStyleBuilderClassName(styleableClassInfo), style.formattedName)
                 }
 
                 val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",

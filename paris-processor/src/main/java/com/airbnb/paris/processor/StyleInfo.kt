@@ -18,7 +18,8 @@ internal class StyleInfo private constructor(
         val elementKind: Kind,
         val enclosingElement: Element,
         val targetType: TypeMirror,
-        val elementName: String) {
+        val elementName: String,
+        val formattedName: String) {
 
     companion object {
 
@@ -70,7 +71,32 @@ internal class StyleInfo private constructor(
 
             val elementName = element.simpleName.toString()
 
-            return StyleInfo(elementKind!!, enclosingElement, targetType!!, elementName)
+            // Converts any name to CamelCase
+            val isNameAllCaps = elementName.all { it.isUpperCase() || !it.isLetter() }
+            val formattedName = elementName.foldRightIndexed("") { index, c, acc ->
+                if (c == '_') {
+                    acc
+                } else {
+                    if (index == 0) {
+                        c.toUpperCase() + acc
+                    } else if (elementName[index - 1] != '_') {
+                        if (isNameAllCaps) {
+                            c.toLowerCase() + acc
+                        } else {
+                            c + acc
+                        }
+                    } else {
+                        c.toUpperCase() + acc
+                    }
+                }
+            }
+
+            return StyleInfo(
+                    elementKind!!,
+                    enclosingElement,
+                    targetType!!,
+                    elementName,
+                    formattedName)
         }
     }
 

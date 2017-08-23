@@ -19,13 +19,17 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         return new StyleBuilder(this);
     }
 
-    public void applyGreen() {
-        apply(MyView.green);
+    public void applyRedStyle() {
+        apply(MyView.RED_STYLE);
     }
 
-    public void applyRed() {
+    public void applyGreenStyle() {
+        apply(MyView.greenStyle);
+    }
+
+    public void applyBlue() {
         StyleBuilder builder = new StyleBuilder();
-        MyView.red(builder);
+        MyView.blue(builder);
         apply(builder.build());
     }
 
@@ -51,13 +55,18 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         public StyleBuilder() {
         }
 
-        public StyleBuilder addGreen() {
-            add(MyView.green);
+        public StyleBuilder addRedStyle() {
+            add(MyView.RED_STYLE);
             return this;
         }
 
-        public StyleBuilder addRed() {
-            MyView.red(this);
+        public StyleBuilder addGreenStyle() {
+            add(MyView.greenStyle);
+            return this;
+        }
+
+        public StyleBuilder addBlue() {
+            MyView.blue(this);
             return this;
         }
     }

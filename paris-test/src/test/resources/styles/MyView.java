@@ -12,7 +12,10 @@ import com.airbnb.paris.test.MyViewStyleApplier.StyleBuilder;
 public class MyView extends View {
 
     @Style
-    static int green = R2.style.MyView_Green;
+    static final int RED_STYLE = R2.style.MyView_Red;
+
+    @Style
+    static final int greenStyle = R2.style.MyView_Red;
 
     public MyView(Context context) {
         super(context);
@@ -27,6 +30,6 @@ public class MyView extends View {
     }
 
     @Style
-    static void red(StyleBuilder builder) {
+    static void blue(StyleBuilder builder) {
     }
 }

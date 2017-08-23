@@ -225,7 +225,7 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildApplyStyleMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
-        val builder = MethodSpec.methodBuilder("apply${styleInfo.elementName.capitalize()}")
+        val builder = MethodSpec.methodBuilder("apply${styleInfo.formattedName}")
                 .addModifiers(Modifier.PUBLIC)
         when (styleInfo.elementKind) {
             StyleInfo.Kind.FIELD -> {
@@ -316,7 +316,7 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildStyleBuilderAddMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
-        val builder = MethodSpec.methodBuilder("add${styleInfo.elementName.capitalize()}")
+        val builder = MethodSpec.methodBuilder("add${styleInfo.formattedName}")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleBuilderClassName)
         when (styleInfo.elementKind) {
