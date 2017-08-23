@@ -264,9 +264,9 @@ internal object StyleAppliersWriter {
 
         // TODO Remove duplicate attribute names
         for (styleableFieldInfo in styleableInfo.styleableFields) {
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(styleableInfo.styleableResourceName, styleableFieldInfo))
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(styleableInfo.styleableResourceName, styleableFieldInfo))
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(styleableInfo.styleableResourceName, styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(rClassName!!, styleableInfo.styleableResourceName, styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
+            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
         }
 
         val distinctAttrs = styleableInfo.attrs.distinctBy { it.styleableResId.resourceName }
@@ -328,29 +328,29 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildStyleBuilderAddSubResMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+    private fun buildStyleBuilderAddSubResMethod(rClassName: ClassName, styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
                         .addAnnotation(ClassNames.ANDROID_STYLE_RES)
                         .build())
                 .returns(TypeVariableName.get("B"))
-                .addStatement("getBuilder().put(\$L, resId)", styleableFieldInfo.styleableResId.code)
+                .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
                 .build()
     }
 
-    private fun buildStyleBuilderAddSubMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+    private fun buildStyleBuilderAddSubMethod(rClassName: ClassName, styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "value").build())
+                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
                 .returns(TypeVariableName.get("B"))
-                .addStatement("getBuilder().put(\$L, value)", styleableFieldInfo.styleableResId.code)
+                .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], style)", rClassName, styleableResourceName, styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
                 .build()
     }
 
-    private fun buildStyleBuilderAddSubBuilderMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
+    private fun buildStyleBuilderAddSubBuilderMethod(rClassName: ClassName, styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
         val styleApplierClassName = styleablesTree.findStyleApplier(
                 typeUtils,
                 styleablesInfo,
@@ -362,7 +362,7 @@ internal object StyleAppliersWriter {
                 .returns(TypeVariableName.get("B"))
                 .addStatement("\$T subBuilder = new \$T()", styleBuilderClassName, styleBuilderClassName)
                 .addStatement("function.invoke(subBuilder)")
-                .addStatement("getBuilder().put(\$L, subBuilder.build())", styleableFieldInfo.styleableResId.code)
+                .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], subBuilder.build())", rClassName, styleableResourceName, styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
                 .build()
     }
