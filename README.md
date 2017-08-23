@@ -1,7 +1,8 @@
 # Paris
-Programmatic style application for Android views, including custom attributes.
+Programmatic style creation and application for Android views, including custom attributes.
 
-* Apply styles programmatically at any time, in addition to XML
+* Apply styles programmatically at any time
+* Create styles programmatically (as opposed to using XML)
 * Use annotations to easily support custom attributes (inspired by [Barber](https://github.com/hzsweers/barber))
 * Declare explicitly supported styles for your custom views
 
