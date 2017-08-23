@@ -331,7 +331,9 @@ internal object StyleAppliersWriter {
     private fun buildStyleBuilderAddSubResMethod(styleableResourceName: String, styleableFieldInfo: StyleableFieldInfo): MethodSpec {
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
+                .addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
+                        .addAnnotation(ClassNames.ANDROID_STYLE_RES)
+                        .build())
                 .returns(TypeVariableName.get("B"))
                 .addStatement("getBuilder().put(\$L, value)", styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
