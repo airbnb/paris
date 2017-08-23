@@ -9,6 +9,8 @@ import android.support.annotation.Px;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.airbnb.paris.R2;
 import com.airbnb.paris.Style;
@@ -117,6 +119,19 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     @Attr(R2.styleable.Paris_View_android_layout_height)
     void setLayoutHeight(@LayoutDimension int height) {
         this.height = height;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_gravity)
+    void setLayoutGravity(int gravity) {
+        LayoutParams params = getView().getLayoutParams();
+        if (params != null) {
+            if (params instanceof FrameLayout.LayoutParams) {
+                ((FrameLayout.LayoutParams) params).gravity = gravity;
+            } else if (params instanceof LinearLayout.LayoutParams) {
+                ((LinearLayout.LayoutParams) params).gravity = gravity;
+            }
+            getView().setLayoutParams(params);
+        }
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_margin)

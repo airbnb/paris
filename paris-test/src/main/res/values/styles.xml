@@ -5,6 +5,11 @@
         <item name="android:background">@android:drawable/ic_delete</item>
     </style>
 
+    <integer name="test_view_layout_gravity">4</integer>
+    <style name="Test_View_layoutGravity">
+        <item name="android:layout_gravity">@integer/test_view_layout_gravity</item>
+    </style>
+
     <dimen name="test_view_min_width">100dp</dimen>
     <style name="Test_View_minWidth">
         <item name="android:minWidth">@dimen/test_view_min_width</item>

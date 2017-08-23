@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import android.widget.FrameLayout
 import com.airbnb.paris.proxy.ViewProxyStyleApplier
 import org.junit.Assert.*
 import org.junit.Before
@@ -30,6 +31,15 @@ class ViewStyleTest {
         assertNull(view.background)
         ViewProxyStyleApplier(view).apply(R.style.Test_View_background)
         assertNotNull(view.background)
+    }
+
+    @Test
+    fun viewLayoutGravity() {
+        ViewProxyStyleApplier(view).apply(R.style.Test_View_layoutGravity)
+        assertNull(view.layoutParams)
+        view.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        ViewProxyStyleApplier(view).apply(R.style.Test_View_layoutGravity)
+        assertEquals(res.getInteger(R.integer.test_view_layout_gravity), (view.layoutParams as FrameLayout.LayoutParams).gravity)
     }
 
     @Test
