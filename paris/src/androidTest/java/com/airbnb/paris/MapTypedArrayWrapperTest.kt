@@ -21,18 +21,17 @@ class MapTypedArrayWrapperTest {
     private lateinit var res: Resources
     private lateinit var wrapper: MapTypedArrayWrapper
 
-    private val bigAttrResToValueResMap = mapOf(
-            R.attr.formatBoolean to ResourceId(R.bool.format_boolean),
-            R.attr.formatColor to ResourceId(R.color.format_color),
-            R.attr.formatDimension to ResourceId(R.dimen.format_dimension),
-            // This attr is not included in R.styleable.Format, as a result it should be ignored by
-            // the MapTypedArrayWrapper
-            R.attr.background to ResourceId(R.color.format_color)
-    )
     private val attrResToValueResMaps = listOf(
             emptyMap(),
             mapOf(R.attr.formatBoolean to ResourceId(R.bool.format_boolean)),
-            bigAttrResToValueResMap
+            mapOf(
+                    R.attr.formatBoolean to ResourceId(R.bool.format_boolean),
+                    R.attr.formatColor to ResourceId(R.color.format_color),
+                    R.attr.formatDimension to ResourceId(R.dimen.format_dimension),
+                    // This attr is not included in R.styleable.Format, as a result it should be ignored by
+                    // the MapTypedArrayWrapper
+                    R.attr.background to ResourceId(R.color.format_color)
+            )
     )
 
     @Before

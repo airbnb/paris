@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.AttrRes
 import android.support.annotation.VisibleForTesting
+import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
 import com.airbnb.paris.utils.getFloat
 import com.airbnb.paris.utils.getLayoutDimension
 
@@ -17,7 +18,7 @@ import com.airbnb.paris.utils.getLayoutDimension
  */
 // TODO Add support for default values? Doesn't seem like we need it since this is only used internally
 // TODO There seems to be a bug where if this class is internal it can't be accessed by androidTests
-@VisibleForTesting
+@VisibleForTesting(otherwise = PACKAGE_PRIVATE)
 class MapTypedArrayWrapper constructor(
         private val resources: Resources,
         private val styleableAttrs: IntArray,
