@@ -2,6 +2,7 @@ package com.airbnb.paris
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.annotation.AnyRes
 import android.support.annotation.AttrRes
 import android.support.annotation.StyleRes
 import android.util.AttributeSet
@@ -18,13 +19,11 @@ data class SimpleStyle internal constructor(
     constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0)
     constructor(@StyleRes styleRes: Int) : this(null, null, styleRes)
 
-    class Builder internal constructor() {
-
-        internal val attrResToValueResMap = HashMap<Int, Any>()
+    data class Builder internal constructor(internal val attrResToValueResMap: HashMap<Int, Any> = HashMap<Int, Any>()) {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
 
-        fun put(@AttrRes attrRes: Int, valueRes: Int): Builder =
+        fun putRes(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
                 put(attrRes, ResourceId(valueRes))
 
         fun put(@AttrRes attrRes: Int, value: Any): Builder {

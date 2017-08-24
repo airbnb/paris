@@ -335,7 +335,7 @@ internal object StyleAppliersWriter {
                         .addAnnotation(ClassNames.ANDROID_STYLE_RES)
                         .build())
                 .returns(TypeVariableName.get("B"))
-                .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, styleableFieldInfo.styleableResId.code)
+                .addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, styleableFieldInfo.styleableResId.code)
                 .addStatement("return (B) this")
                 .build()
     }
@@ -380,7 +380,7 @@ internal object StyleAppliersWriter {
                             .addAnnotation(ClassNames.ANDROID_ANY_RES)
                             .build())
                     .returns(TypeVariableName.get("B"))
-                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, attr.styleableResId.code)
+                    .addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, attr.styleableResId.code)
                     .addStatement("return (B) this")
                     .build()
         } else {

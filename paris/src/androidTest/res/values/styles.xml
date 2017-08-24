@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="Red" />
+    <style name="Green" />
+    <style name="Blue" />
+
     <dimen name="test_view_width">42dp</dimen>
     <dimen name="test_view_height">51dp</dimen>
     <style name="Test_View_width_height">
