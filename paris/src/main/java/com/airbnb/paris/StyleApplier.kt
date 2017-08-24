@@ -14,8 +14,6 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
     protected constructor(proxy: Proxy<P, V>) : this(proxy.proxy, proxy.view)
     constructor(view: V) : this(view as P, view)
 
-    private var appliedStyles = ArrayList<Style>()
-
     /**
      * Passing a null [AttributeSet] will apply default values, if any
      */
@@ -32,8 +30,6 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
     }
 
     open fun apply(style: Style) {
-        appliedStyles.add(style)
-
         // Assumes that if the Style has an AttributeSet it's being applied during the View
         // initialization, in which case parents should be making the call themselves
         if (style.shouldApplyParent) {
@@ -70,23 +66,21 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
 
     protected open fun processAttributes(style: Style, a: TypedArrayWrapper) {}
 
-    /**
-     * For debug purposes.
-     *
-     * Asserts that the attributes applied when using [styleRes] are the same as the aggregated
-     * attributes already applied by this [StyleApplier]
-     */
-    fun assertAppliedSameAttributes(@StyleRes styleRes: Int) {
-        assertAppliedSameAttributes(SimpleStyle(styleRes))
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as StyleApplier<*, *>
+
+        if (proxy != other.proxy) return false
+        if (view != other.view) return false
+
+        return true
     }
 
-    /**
-     * For debug purposes.
-     *
-     * Asserts that the attributes applied when using [style] are the same as the aggregated
-     * attributes already applied by this [StyleApplier]
-     */
-    fun assertAppliedSameAttributes(style: Style) {
-        StyleApplierUtils.assertSameAttributes(this, style, MultiStyle(appliedStyles))
+    override fun hashCode(): Int {
+        var result = proxy?.hashCode() ?: 0
+        result = 31 * result + view.hashCode()
+        return result
     }
 }
