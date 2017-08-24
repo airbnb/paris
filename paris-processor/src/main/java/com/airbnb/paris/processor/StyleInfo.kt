@@ -46,7 +46,7 @@ internal class StyleInfo private constructor(
             check(element.modifiers.contains(Modifier.STATIC)
                     && !element.modifiers.contains(Modifier.PRIVATE)
                     && !element.modifiers.contains(Modifier.PROTECTED), element) {
-                "Field and methods annotated with @Style must be static and can't be private or protected"
+                "Fields and methods annotated with @Style must be static and can't be private or protected"
             }
 
             val enclosingElement = element.enclosingElement
@@ -54,6 +54,10 @@ internal class StyleInfo private constructor(
             var elementKind: Kind? = null
             var targetType: TypeMirror? = null
             if (element.kind == ElementKind.FIELD) {
+                check(element.modifiers.contains(Modifier.FINAL), element) {
+                    "Fields annotated with @Style must be final"
+                }
+
                 elementKind = Kind.FIELD
                 targetType = element.asType()
 
