@@ -2,7 +2,6 @@ import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply from: 'build.workaround-missing-resource.gradle'
 
 android {
     compileSdkVersion 25
