@@ -236,6 +236,9 @@ internal object StyleAppliersWriter {
                         .addStatement("\$T.\$L(builder)", styleInfo.enclosingElement, styleInfo.elementName)
                         .addStatement("apply(builder.build())")
             }
+            StyleInfo.Kind.STYLE_RES -> {
+                builder.addStatement("apply(\$L)", styleInfo.styleResourceCode)
+            }
         }
         return builder.build()
     }
@@ -327,6 +330,9 @@ internal object StyleAppliersWriter {
                         .addStatement("debugName(\$S)", styleInfo.formattedName)
                         .addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
                         .addStatement("consumeSimpleStyleBuilder()")
+            }
+            StyleInfo.Kind.STYLE_RES -> {
+                builder.addStatement("add(\$L)", styleInfo.styleResourceCode)
             }
         }
         return builder

@@ -11,6 +11,9 @@ import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.MirroredTypeException
+import javax.lang.model.type.TypeKind
+import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -36,12 +39,15 @@ class ParisProcessor : AbstractProcessor() {
         private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }
 
+    var defaultStyleNameFormat: String = ""
+    var rType: TypeMirror? = null
+
     private val resourceScanner = AndroidResourceScanner()
 
-    private lateinit var filer: Filer
-    private lateinit var messager: Messager
-    private lateinit var elementUtils: Elements
-    private lateinit var typeUtils: Types
+    lateinit var filer: Filer
+    lateinit var messager: Messager
+    lateinit var elementUtils: Elements
+    lateinit var typeUtils: Types
 
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
@@ -64,12 +70,20 @@ class ParisProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        var generateParisClass = true;
+        var generateParisClass = true
 
         val configElement = roundEnv.getElementsAnnotatedWith(ParisConfig::class.java).firstOrNull()
         if (configElement != null) {
             val config = configElement.getAnnotation(ParisConfig::class.java)
+            defaultStyleNameFormat = config.defaultStyleNameFormat
+            rType = getRType(config)
             generateParisClass = config.generateParisClass
+
+            check(defaultStyleNameFormat.isBlank() || rType != null) {
+                "If defaultStyleNameFormat is specified, rClass must be as well"
+            }
+
+            // TODO Check that rType is R
         }
 
         val classesToBeforeStyleInfo = BeforeStyleInfo.fromEnvironment(roundEnv)
@@ -80,7 +94,7 @@ class ParisProcessor : AbstractProcessor() {
                 .groupBy { it.enclosingElement }
         val classesToStyleableFieldInfo = StyleableFieldInfo.fromEnvironment(roundEnv, resourceScanner)
                 .groupBy { it.enclosingElement }
-        val classesToStylesInfo = StyleInfo.fromEnvironment(roundEnv, elementUtils, typeUtils)
+        val classesToStylesInfo = StyleInfo.fromEnvironment(this, roundEnv)
                 .groupBy { it.enclosingElement }
         val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(
                 roundEnv, elementUtils, typeUtils, resourceScanner,
@@ -106,5 +120,20 @@ class ParisProcessor : AbstractProcessor() {
         }
 
         return true
+    }
+
+    private fun getRType(config: ParisConfig): TypeMirror? {
+        var rType: TypeMirror? = null
+        try {
+            config.rClass
+        } catch (mte: MirroredTypeException) {
+            rType = mte.typeMirror
+        }
+
+        return if (rType!!.kind == TypeKind.VOID) {
+            null
+        } else {
+            rType
+        }
     }
 }

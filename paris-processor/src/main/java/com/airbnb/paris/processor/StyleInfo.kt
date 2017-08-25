@@ -1,10 +1,13 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Style
+import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
+import com.airbnb.paris.processor.utils.asTypeElement
 import com.airbnb.paris.processor.utils.check
-import com.airbnb.paris.processor.utils.fail
+import com.squareup.javapoet.CodeBlock
+import java.util.*
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -17,32 +20,85 @@ import javax.lang.model.util.Types
 internal class StyleInfo private constructor(
         val elementKind: Kind,
         val enclosingElement: Element,
-        val targetType: TypeMirror,
         val elementName: String,
-        val formattedName: String) {
+        val formattedName: String,
+        val styleResourceCode: CodeBlock?) {
+
+    enum class Kind {
+        FIELD, METHOD, STYLE_RES
+    }
 
     companion object {
 
+        lateinit var processor: ParisProcessor
         lateinit var elementUtils: Elements
         lateinit var typeUtils: Types
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types): List<StyleInfo> {
-            this.elementUtils = elementUtils
-            this.typeUtils = typeUtils
+        fun fromEnvironment(processor: ParisProcessor, roundEnv: RoundEnvironment): List<StyleInfo> {
+            this.processor = processor
+            this.elementUtils = processor.elementUtils
+            this.typeUtils = processor.typeUtils
 
-            return roundEnv.getElementsAnnotatedWith(Style::class.java)
+            val stylesFromDefaultNameFormat: List<StyleInfo>
+            if (processor.defaultStyleNameFormat.isBlank()) {
+                stylesFromDefaultNameFormat = emptyList()
+            } else {
+                stylesFromDefaultNameFormat = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+                        .mapNotNull {
+                            try {
+                                fromDefaultNameFormat(it)
+                            } catch (e: ProcessorException) {
+                                Errors.log(e)
+                                null
+                            }
+                        }
+            }
+
+            val stylesFromStyleAnnotation = roundEnv.getElementsAnnotatedWith(Style::class.java)
                     .mapNotNull {
                         try {
-                            fromElement(it)
+                            fromStyleElement(it)
                         } catch (e: ProcessorException) {
                             Errors.log(e)
                             null
                         }
                     }
+
+            return stylesFromDefaultNameFormat.plus(stylesFromStyleAnnotation)
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(element: Element): StyleInfo {
+        private fun fromDefaultNameFormat(styleableElement: Element): StyleInfo? {
+            check(processor.rType != null)
+            check(processor.defaultStyleNameFormat.isNotBlank())
+
+            val elementName = styleableElement.simpleName.toString()
+            val defaultStyleName = String.format(Locale.US, processor.defaultStyleNameFormat, elementName)
+
+            val rStyleTypeElement = elementUtils.getTypeElement("${processor.rType!!.asTypeElement(typeUtils).qualifiedName}.style")
+            val defaultStyleExists = elementUtils.getAllMembers(rStyleTypeElement).any {
+                it.simpleName.toString() == defaultStyleName
+            }
+
+            if (defaultStyleExists) {
+                val styleResourceCode = CodeBlock.of("\$T.\$L", rStyleTypeElement, defaultStyleName)
+
+                return StyleInfo(
+                        Kind.STYLE_RES,
+                        styleableElement,
+                        defaultStyleName,
+                        "Default",
+                        styleResourceCode
+                )
+            } else {
+                return null
+            }
+        }
+
+        @Throws(ProcessorException::class)
+        private fun fromStyleElement(element: Element): StyleInfo {
+            // TODO Get Javadoc from field/method and add it to the generated methods
+
             check(element.modifiers.contains(Modifier.STATIC)
                     && !element.modifiers.contains(Modifier.PRIVATE)
                     && !element.modifiers.contains(Modifier.PROTECTED), element) {
@@ -50,28 +106,6 @@ internal class StyleInfo private constructor(
             }
 
             val enclosingElement = element.enclosingElement
-
-            var elementKind: Kind? = null
-            var targetType: TypeMirror? = null
-            if (element.kind == ElementKind.FIELD) {
-                check(element.modifiers.contains(Modifier.FINAL), element) {
-                    "Fields annotated with @Style must be final"
-                }
-
-                elementKind = Kind.FIELD
-                targetType = element.asType()
-
-                // TODO Check that the target type is an int
-            } else if (element.kind == ElementKind.METHOD) {
-                elementKind = Kind.METHOD
-                targetType = (element as ExecutableElement).parameters[0].asType()
-
-                // TODO Check that the target type is a builder
-            } else {
-                fail(element) {
-                    "@Style can only be used on fields and methods"
-                }
-            }
 
             val elementName = element.simpleName.toString()
 
@@ -95,16 +129,35 @@ internal class StyleInfo private constructor(
                 }
             }
 
-            return StyleInfo(
-                    elementKind!!,
-                    enclosingElement,
-                    targetType!!,
-                    elementName,
-                    formattedName)
-        }
-    }
+            check(element.kind == ElementKind.FIELD || element.kind == ElementKind.METHOD) {
+                "@Style can only be used on fields and methods"
+            }
 
-    enum class Kind {
-        FIELD, METHOD
+            val elementKind: Kind
+            val targetType: TypeMirror
+            if (element.kind == ElementKind.FIELD) {
+                check(element.modifiers.contains(Modifier.FINAL), element) {
+                    "Fields annotated with @Style must be final"
+                }
+
+                elementKind = Kind.FIELD
+                // TODO Check that the target type is an int
+                targetType = element.asType()
+
+            } else { // Method
+                elementKind = Kind.METHOD
+                // TODO Check that the target type is a builder
+                targetType = (element as ExecutableElement).parameters[0].asType()
+
+            }
+
+            return StyleInfo(
+                    elementKind,
+                    enclosingElement,
+                    elementName,
+                    formattedName,
+                    null // No style resource
+            )
+        }
     }
 }
