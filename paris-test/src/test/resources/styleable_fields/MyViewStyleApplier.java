@@ -82,7 +82,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public B titleStyle(@StyleRes int resId) {
-            getBuilder().put(R.styleable.MyView[R.styleable.MyView_titleStyle], resId);
+            getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_titleStyle], resId);
             return (B) this;
         }
 
@@ -99,7 +99,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public B subtitleStyle(@StyleRes int resId) {
-            getBuilder().put(R.styleable.MyView[R.styleable.MyView_subtitleStyle], resId);
+            getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_subtitleStyle], resId);
             return (B) this;
         }
 
@@ -116,7 +116,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public B dividerStyle(@StyleRes int resId) {
-            getBuilder().put(R.styleable.MyView[R.styleable.MyView_dividerStyle], resId);
+            getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_dividerStyle], resId);
             return (B) this;
         }
 
