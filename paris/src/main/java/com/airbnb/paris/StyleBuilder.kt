@@ -6,11 +6,20 @@ import android.util.AttributeSet
 @Suppress("UNCHECKED_CAST")
 abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *>> @JvmOverloads constructor(
         private val applier: A? = null,
-        private val name: String = "a_programmatic_StyleBuilder") {
+        private var name: String = "a_programmatic_StyleBuilder") {
 
     protected var builder = SimpleStyle.builder()
 
     private var styles = ArrayList<Style>()
+
+    /**
+     * Assigns a name to the style which will be displayed in "same attributes" assertions, ie this
+     * is only useful for debugging
+     */
+    fun debugName(name: String): B {
+        this.name = name
+        return this as B
+    }
 
     fun add(attributeSet: AttributeSet?): B {
         if (attributeSet != null) {
@@ -24,13 +33,19 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
     fun add(@StyleRes styleRes: Int): B = add(SimpleStyle(styleRes))
 
     fun add(style: Style): B {
-        consumeStyleBuilder()
+        consumeSimpleStyleBuilder()
         styles.add(style)
         return this as B
     }
 
     fun build(): Style {
-        consumeStyleBuilder()
+        // If no other styles were added then the style from the builder will be returned, this
+        // ensures the name from this builder is correctly set on the returned style
+        if (styles.size == 0) {
+            builder.debugName(name)
+        }
+
+        consumeSimpleStyleBuilder()
         return when (styles.size) {
             0 -> SimpleStyle.EMPTY
             1 -> styles.first()
@@ -43,7 +58,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
         return applier
     }
 
-    private fun consumeStyleBuilder() {
+    protected fun consumeSimpleStyleBuilder() {
         if (!builder.isEmpty()) {
             styles.add(builder.build())
             builder = SimpleStyle.builder()

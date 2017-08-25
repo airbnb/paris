@@ -13,15 +13,23 @@ import java.util.*
 data class SimpleStyle internal constructor(
         private val attributeMap: Map<Int, Any>?,
         val attributeSet: AttributeSet?,
-        @StyleRes val styleRes: Int) : Style {
+        @StyleRes val styleRes: Int,
+        var name: String? = null) : Style {
 
-    private constructor(builder: Builder) : this(builder.attrResToValueResMap, null, 0)
+    private constructor(builder: Builder) : this(builder.attrResToValueResMap, null, 0, builder.name)
     constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0)
     constructor(@StyleRes styleRes: Int) : this(null, null, styleRes)
 
-    data class Builder internal constructor(internal val attrResToValueResMap: HashMap<Int, Any> = HashMap<Int, Any>()) {
+    data class Builder internal constructor(
+            internal val attrResToValueResMap: HashMap<Int, Any> = HashMap<Int, Any>(),
+            internal var name: String = "a_programmatic_SimpleStyleBuilder") {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
+
+        fun debugName(name: String): Builder {
+            this.name = name
+            return this
+        }
 
         fun putRes(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
                 put(attrRes, ResourceId(valueRes))
@@ -48,6 +56,7 @@ data class SimpleStyle internal constructor(
     override var debugListener: DebugListener? = null
 
     override fun name(context: Context): String = when {
+        name != null -> name!!
         styleRes != 0 -> context.resources.getResourceEntryName(styleRes)
         else -> "a_programmatic_SimpleStyle"
     }

@@ -321,7 +321,13 @@ internal object StyleAppliersWriter {
                 .returns(styleBuilderClassName)
         when (styleInfo.elementKind) {
             StyleInfo.Kind.FIELD -> builder.addStatement("add(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
-            StyleInfo.Kind.METHOD -> builder.addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
+            StyleInfo.Kind.METHOD -> {
+                builder
+                        .addStatement("consumeSimpleStyleBuilder()")
+                        .addStatement("debugName(\$S)", styleInfo.formattedName)
+                        .addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
+                        .addStatement("consumeSimpleStyleBuilder()")
+            }
         }
         return builder
                 .addStatement("return this")

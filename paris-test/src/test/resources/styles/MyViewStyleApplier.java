@@ -66,7 +66,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public StyleBuilder addBlue() {
+            consumeSimpleStyleBuilder();
+            debugName("Blue");
             MyView.blue(this);
+            consumeSimpleStyleBuilder();
             return this;
         }
     }
