@@ -44,7 +44,7 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
 
             // For debug purposes
             if (style.debugListener != null) {
-                style.debugListener!!.beforeTypedArrayProcessed(style, typedArray)
+                style.debugListener!!.beforeTypedArrayProcessed(view, style, attributes, attributesWithDefaultValue(), typedArray)
             } else {
                 processAttributes(style, typedArray)
             }

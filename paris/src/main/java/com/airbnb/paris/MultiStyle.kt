@@ -3,10 +3,10 @@ package com.airbnb.paris
 import android.annotation.SuppressLint
 import android.content.Context
 
-data class MultiStyle internal constructor(private val styles: List<Style>) : Style {
+data class MultiStyle internal constructor(private val name: String, private val styles: List<Style>) : Style {
 
-    constructor(vararg styles: Style) : this(styles.toList())
-    constructor(vararg styleRes: Int) : this(styleRes.map { SimpleStyle(it) })
+    constructor(name: String, vararg styles: Style) : this(name, styles.toList())
+    constructor(name: String, vararg styleRes: Int) : this(name, styleRes.map { SimpleStyle(it) })
 
     /**
      * Presumably multistyles would never be constructed with a SimpleStyle containing an
@@ -20,7 +20,7 @@ data class MultiStyle internal constructor(private val styles: List<Style>) : St
     override var debugListener: Style.DebugListener? = null
 
     // TODO Construct name that makes sense
-    override fun name(context: Context): String = "multistyle"
+    override fun name(context: Context): String = name
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper {

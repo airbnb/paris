@@ -49,7 +49,7 @@ data class SimpleStyle internal constructor(
 
     override fun name(context: Context): String = when {
         styleRes != 0 -> context.resources.getResourceEntryName(styleRes)
-        else -> "unknown name"
+        else -> "a_programmatic_SimpleStyle"
     }
 
     @SuppressLint("Recycle")

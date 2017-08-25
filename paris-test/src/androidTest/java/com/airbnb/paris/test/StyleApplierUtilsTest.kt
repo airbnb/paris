@@ -1,6 +1,7 @@
 package com.airbnb.paris.test
 
 import android.content.Context
+import android.graphics.Color
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.widget.TextView
@@ -61,7 +62,7 @@ class StyleApplierUtilsTest {
     fun multiStyleResCombinationNoOverlap() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSizePadding",
                         R.style.StyleApplierUtilsTest_TextView_textColor,
                         R.style.StyleApplierUtilsTest_TextView_textSizePadding
                 )
@@ -72,7 +73,7 @@ class StyleApplierUtilsTest {
     fun multiStyleResCombinationWithOverlap() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSizePadding",
                         R.style.StyleApplierUtilsTest_TextView_textColorTextSize,
                         R.style.StyleApplierUtilsTest_TextView_textSizePadding
                 )
@@ -83,7 +84,7 @@ class StyleApplierUtilsTest {
     fun multiStyleResCombinationMissingAttribute() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSize",
                         R.style.StyleApplierUtilsTest_TextView_textColor,
                         R.style.StyleApplierUtilsTest_TextView_textSize
                 )
@@ -94,7 +95,7 @@ class StyleApplierUtilsTest {
     fun multiStyleResCombinationAdditionalAttribute() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSize),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSizePadding",
                         R.style.StyleApplierUtilsTest_TextView_textColorTextSize,
                         R.style.StyleApplierUtilsTest_TextView_textSizePadding
                 )
@@ -105,7 +106,7 @@ class StyleApplierUtilsTest {
     fun multiStyleCombinationWithOverlap() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSizePadding",
                         SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSize),
                         textViewApplier.builder()
                                 .textSize(R.dimen.test_text_view_text_size)
@@ -119,7 +120,7 @@ class StyleApplierUtilsTest {
     fun multiStyleCombinationNoOverlap() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSizePadding",
                         SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColor),
                         textViewApplier.builder()
                                 .textSize(R.dimen.test_text_view_text_size)
@@ -133,7 +134,7 @@ class StyleApplierUtilsTest {
     fun multiStyleCombinationMissingAttribute() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSizePadding_1),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSize",
                         SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColor),
                         textViewApplier.builder().textSize(R.dimen.test_text_view_text_size).build()
                 )
@@ -144,7 +145,7 @@ class StyleApplierUtilsTest {
     fun multiStyleCombinationAdditionalAttribute() {
         StyleApplierUtils.assertSameAttributes(textViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColorTextSize),
-                MultiStyle(
+                MultiStyle("MultiStyle_textColorTextSizePadding",
                         SimpleStyle(R.style.StyleApplierUtilsTest_TextView_textColor),
                         textViewApplier.builder()
                                 .textSize(R.dimen.test_text_view_text_size)
@@ -204,5 +205,20 @@ class StyleApplierUtilsTest {
         StyleApplierUtils.assertSameAttributes(myViewApplier,
                 SimpleStyle(R.style.StyleApplierUtilsTest_MyView_active),
                 SimpleStyle(R.style.Empty))
+    }
+
+    @Test(expected = AssertionError::class)
+    fun missingFromBoth() {
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                textViewApplier.builder()
+                        .textSize(R.dimen.test_text_view_text_size)
+                        .build(),
+                textViewApplier.builder()
+                        .padding(R.dimen.test_view_padding)
+                        .build(),
+                textViewApplier.builder()
+                        .textColor(Color.GREEN)
+                        .build()
+        )
     }
 }

@@ -4,7 +4,8 @@ import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 
-internal class TypedArrayTypedArrayWrapper constructor(val typedArray: TypedArray) : TypedArrayWrapper() {
+internal class TypedArrayTypedArrayWrapper constructor(
+        private val typedArray: TypedArray) : TypedArrayWrapper() {
 
     override fun isNull(index: Int): Boolean = isNullRes(typedArray.getResourceId(index, 0))
 

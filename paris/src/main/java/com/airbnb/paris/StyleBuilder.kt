@@ -4,7 +4,9 @@ import android.support.annotation.StyleRes
 import android.util.AttributeSet
 
 @Suppress("UNCHECKED_CAST")
-abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *>>(private val applier: A? = null) {
+abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *>> @JvmOverloads constructor(
+        private val applier: A? = null,
+        private val name: String = "a_programmatic_StyleBuilder") {
 
     protected var builder = SimpleStyle.builder()
 
@@ -32,7 +34,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
         return when (styles.size) {
             0 -> SimpleStyle.EMPTY
             1 -> styles.first()
-            else -> MultiStyle(styles)
+            else -> MultiStyle(name, styles)
         }
     }
 
@@ -54,6 +56,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
 
         other as StyleBuilder<*, *>
 
+        if (name != other.name) return false
         if (applier != other.applier) return false
         if (builder != other.builder) return false
         if (styles != other.styles) return false
@@ -62,7 +65,8 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
     }
 
     override fun hashCode(): Int {
-        var result = applier?.hashCode() ?: 0
+        var result = name.hashCode()
+        result = 31 * result + (applier?.hashCode() ?: 0)
         result = 31 * result + builder.hashCode()
         result = 31 * result + styles.hashCode()
         return result

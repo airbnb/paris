@@ -1,6 +1,7 @@
 package com.airbnb.paris
 
 import android.content.Context
+import android.view.View
 
 interface Style {
 
@@ -9,7 +10,7 @@ interface Style {
      */
     interface DebugListener {
         // TODO Rename
-        fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper)
+        fun beforeTypedArrayProcessed(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper)
     }
 
     // TODO Better name

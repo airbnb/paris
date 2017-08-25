@@ -1,89 +1,96 @@
 package com.airbnb.paris
 
+import android.content.Context
 import android.support.annotation.VisibleForTesting
+import android.view.View
 
 @VisibleForTesting
 class StyleApplierUtils {
 
-    companion object {
+    class DebugListener(
+            private val viewToStyles: HashMap<View, MutableSet<Style>>,
+            private val styleToAttrNames: HashMap<Style, MutableSet<String>>,
+            private val ignoredAttributeIndexes: IntArray?) : Style.DebugListener {
 
-        private class DebugListener(val ignoredAttributeIndexes: IntArray?) : Style.DebugListener {
-
-            /**
-             * For each TypedArray processed during the application of a style we save the style
-             * and the set of attribute indexes. We save the style because it may be a sub-style of
-             * the parent and we'll need that information to display a user friendly error
-             */
-            val attributeIndexes = ArrayList<Pair<Style, Set<Int>?>>()
-
-            override fun beforeTypedArrayProcessed(style: Style, typedArray: TypedArrayWrapper) {
-                val pair = Pair(style, Companion.getAttributeIndexes(typedArray, ignoredAttributeIndexes))
-                attributeIndexes.add(pair)
+        private fun <K, V> getOrDefault(map: Map<K, V>, key: K, default: V): V {
+            return if (map.containsKey(key)) {
+                map[key]!!
+            } else {
+                default
             }
         }
 
+        override fun beforeTypedArrayProcessed(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper) {
+            val styles = getOrDefault(viewToStyles, view, HashSet())
+            styles.add(style)
+            viewToStyles.put(view, styles)
+
+            val attrIndexes = getAttributeIndexes(typedArray, attributesWithDefaultValue)
+            val newAttrNames = getAttrNames(view.context, attributes, attrIndexes)
+            val attrNames = getOrDefault(styleToAttrNames, style, HashSet())
+            attrNames.addAll(newAttrNames)
+            styleToAttrNames.put(style, attrNames)
+        }
+    }
+
+    companion object {
+
+        private fun getAttrNames(context: Context, attrs: IntArray, attrIndexes: Set<Int>) =
+                attrIndexes.map { index -> context.resources.getResourceEntryName(attrs[index]) }.toSet()
+
         @VisibleForTesting
-        fun assertSameAttributes(applier: StyleApplier<*, *>, vararg styles: Style) {
-            if (styles.size <= 1) {
+        fun assertSameAttributes(applier: StyleApplier<*, *>, vararg parentStyles: Style) {
+            if (parentStyles.size <= 1) {
                 return
             }
+
+            // TODO What about substyles???
 
             // These can be safely ignored since a value is always applied
             val attributesWithDefaultValue = applier.attributesWithDefaultValue()
 
-            val styleReference = styles.first()
-            val debugListenerReference = DebugListener(attributesWithDefaultValue)
-            styleReference.debugListener = debugListenerReference
-            applier.apply(styleReference)
+            val viewToStyles = HashMap<View, MutableSet<Style>>()
+            val styleToAttrNames = HashMap<Style, MutableSet<String>>()
 
-            for (style in styles.drop(1)) {
-                val debugListener = DebugListener(attributesWithDefaultValue)
-                style.debugListener = debugListener
-                applier.apply(style)
+            for (parentStyle in parentStyles) {
+                parentStyle.debugListener = DebugListener(viewToStyles, styleToAttrNames, attributesWithDefaultValue)
+                applier.apply(parentStyle)
+            }
 
-                val mismatchedStyle = getMismatchedStyles(styleReference, debugListenerReference.attributeIndexes,
-                        style, debugListener.attributeIndexes)
-                if (mismatchedStyle != null) {
-                    val context = applier.view!!.context
-                    val viewSimpleName = applier.view.javaClass.simpleName
-                    val isSubStyle = mismatchedStyle.first != styleReference
-                    val styleReferenceName = mismatchedStyle.first.name(context)
-                    val otherStyleName = mismatchedStyle.second.name(context)
-                    if (isSubStyle) {
-                        val parentStyleReferenceName = styleReference.name(context)
-                        val otherParentStyleName = style.name(context)
-                        throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" (referenced in \"$parentStyleReferenceName\") and \"$otherStyleName\" (referenced in \"$otherParentStyleName\") linked to $viewSimpleName have different attributes.")
-                    } else {
-                        throw AssertionError("Styles listed in @Styleable must have the same attributes. \"$styleReferenceName\" and \"$otherStyleName\" linked to $viewSimpleName have different attributes.")
+            var hasError = false
+            val errorBuilder = StringBuilder()
+            for ((view, styles) in viewToStyles) {
+                val allAttrNames = styles.flatMap { style ->
+                    styleToAttrNames[style]!!
+                }.toSet()
+
+                for (style in styles) {
+                    val missingAttrNames = allAttrNames.subtract(styleToAttrNames[style]!!)
+                    if (missingAttrNames.isNotEmpty()) {
+                        hasError = true
+                        errorBuilder.append(getMissingStyleAttributesError(view, style, styles.minus(style), missingAttrNames))
                     }
                 }
             }
-        }
 
-        private fun getMismatchedStyles(style1: Style, attributeIndexes1: ArrayList<Pair<Style, Set<Int>?>>,
-                                        style2: Style, attributeIndexes2: ArrayList<Pair<Style, Set<Int>?>>): Pair<Style, Style>? {
-            val iterator1 = attributeIndexes1.listIterator()
-            val iterator2 = attributeIndexes2.listIterator()
-
-            while (iterator1.hasNext() && iterator2.hasNext()) {
-                val pair1 = iterator1.next()
-                val pair2 = iterator2.next()
-                if (pair1.second != pair2.second) {
-                    // The sets of attributes are mismatched, they could be from a sub-style so we
-                    // return the styles from the attribute maps
-                    return Pair(pair1.first, pair2.first)
-                }
-            }
-
-            if (iterator1.hasNext() || iterator2.hasNext()) {
-                // One parent style is the same as the other plus other attributes: mismatch
-                return Pair(style1, style2)
-            } else {
-                return null
+            if (hasError) {
+                throw AssertionError(errorBuilder)
             }
         }
 
-        private fun getAttributeIndexes(typedArray: TypedArrayWrapper, ignoredAttributeIndexes: IntArray?): Set<Int> {
+        private fun getMissingStyleAttributesError(view: View, style: Style, otherStyles: Set<Style>, missingAttrNames: Set<String>): String {
+            val context = view.context
+            val viewName = view.javaClass.simpleName
+            val styleName = style.name(context)
+            return """
+                The $viewName style "$styleName" is missing the following attributes:
+                ${missingAttrNames.joinToString("\n") { "✕ $it" }}
+                It must declare the same attributes as the following styles:
+                ${otherStyles.joinToString(", ") { it.name(context) }}
+                """
+        }
+
+        internal fun getAttributeIndexes(typedArray: TypedArrayWrapper, ignoredAttributeIndexes: IntArray?): Set<Int> {
             return (0 until typedArray.getIndexCount())
                     .map { typedArray.getIndex(it) }
                     .filter { ignoredAttributeIndexes == null || !ignoredAttributeIndexes.contains(it) }

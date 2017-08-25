@@ -9,7 +9,8 @@ import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
  * @param wrappers These are assumed to have been created with the same styleable attribute list
  */
 @VisibleForTesting(otherwise = PACKAGE_PRIVATE)
-class MultiTypedArrayWrapper constructor(private val wrappers: List<TypedArrayWrapper>) : TypedArrayWrapper() {
+class MultiTypedArrayWrapper constructor(
+        private val wrappers: List<TypedArrayWrapper>) : TypedArrayWrapper() {
 
     private val styleableAttrIndexes by lazy { styleableAttrIndexToWrapperMap.keys.toList() }
 
