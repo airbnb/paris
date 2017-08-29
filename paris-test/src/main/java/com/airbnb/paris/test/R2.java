@@ -49,25 +49,29 @@ public final class R2 {
 
     public static final class styleable {
         public static final int Formats_formatBoolean = 1000;
-        public static final int Formats_formatColor = 401;
-        public static final int Formats_formatDimension = 1002;
-        public static final int Formats_formatEnum = 1003;
-        public static final int Formats_formatFlag = 10010;
-        public static final int Formats_formatFloat = 1005;
-        public static final int Formats_formatFraction = 1006;
-        public static final int Formats_formatInteger = 1007;
-        public static final int Formats_formatReference = 1008;
-        public static final int Formats_formatString = 1009;
-        public static final int ManuallyWritten_attribute1 = 1010;
-        public static final int MyView_active = 1011;
-        public static final int MyView_dividerStyle = 1012;
-        public static final int MyView_factor = 1013;
-        public static final int MyView_image = 10110;
-        public static final int MyView_index = 1015;
-        public static final int MyView_subtitle = 1016;
-        public static final int MyView_subtitleStyle = 1017;
-        public static final int MyView_title = 1018;
-        public static final int MyView_titleStyle = 1019;
-        public static final int MyView_verticalPadding = 1020;
+        public static final int Formats_formatBoolean2 = 1001;
+        public static final int Formats_formatColor = 1002;
+        public static final int Formats_formatDimension = 1003;
+        public static final int Formats_formatEnum = 1004;
+        public static final int Formats_formatFlag = 1005;
+        public static final int Formats_formatFloat = 1006;
+        public static final int Formats_formatFraction = 1007;
+        public static final int Formats_formatInteger = 1008;
+        public static final int Formats_formatReference = 1009;
+        public static final int Formats_formatReference2 = 1010;
+        public static final int Formats_formatReference3 = 1011;
+        public static final int Formats_formatString = 1012;
+        public static final int Formats_formatString2 = 1013;
+        public static final int ManuallyWritten_attribute1 = 1014;
+        public static final int MyView_active = 1015;
+        public static final int MyView_dividerStyle = 1016;
+        public static final int MyView_factor = 1017;
+        public static final int MyView_image = 10118;
+        public static final int MyView_index = 1019;
+        public static final int MyView_subtitle = 1020;
+        public static final int MyView_subtitleStyle = 1021;
+        public static final int MyView_title = 1022;
+        public static final int MyView_titleStyle = 1023;
+        public static final int MyView_verticalPadding = 1024;
     }
 }

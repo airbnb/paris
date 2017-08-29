@@ -268,10 +268,12 @@ internal object StyleAppliersWriter {
             baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
         }
 
-        val distinctAttrs = styleableInfo.attrs.distinctBy { it.styleableResId.resourceName }
-        distinctAttrs.mapNotNull { buildAttributeSetterResMethod(rClassName!!, styleableInfo.styleableResourceName, it) }
-                .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
-        distinctAttrs.flatMap { buildAttributeSetterMethods(rClassName!!, styleableInfo.styleableResourceName, it) }
+        styleableInfo.attrs
+                // Multiple @Attr can have the same value
+                .groupBy { it.styleableResId.resourceName }
+                .flatMap { (_, attrInfos) ->
+                    buildAttributeSetterMethods(rClassName!!, styleableInfo.styleableResourceName, attrInfos)
+                }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
 
         baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))
@@ -396,35 +398,59 @@ internal object StyleAppliersWriter {
         }
     }
 
-    private fun buildAttributeSetterMethods(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): List<MethodSpec> {
-        val attrResourceName = attr.styleableResId.resourceName
-        if (attrResourceName != null) {
-            val methodSpecs = ArrayList<MethodSpec>()
-            val methodName = styleableAttrResourceNameToCamelCase(styleableResourceName, attrResourceName)
+    /**
+     * @param groupedAttrs Grouped by styleable index resource name
+     */
+    private fun buildAttributeSetterMethods(rClassName: ClassName, styleableResourceName: String, groupedAttrs: List<AttrInfo>): List<MethodSpec> {
+        // TODO Get resource type if possible
 
-            methodSpecs.add(MethodSpec.methodBuilder(methodName).apply {
+        val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
+
+        check(nonResTargetAttrs.isEmpty() || nonResTargetAttrs.distinctBy { it.targetType }.size == 1) {
+            "The same @Attr value can't be used on methods with different parameter types (excluding resource id types)"
+        }
+
+        val isTargetIntType = nonResTargetAttrs.any { TypeKind.INT == it.targetType.kind }
+        val isTargetDimensionType = nonResTargetAttrs.any { it.targetFormat.isDimensionType }
+
+        val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
+        val attrResourceName = attr.styleableResId.resourceName!!
+        val baseMethodName = styleableAttrResourceNameToCamelCase(styleableResourceName, attrResourceName)
+        val methodSpecs = ArrayList<MethodSpec>()
+
+        if (nonResTargetAttrs.isNotEmpty()) {
+            methodSpecs.add(MethodSpec.methodBuilder(baseMethodName).apply {
                 addModifiers(Modifier.PUBLIC)
                 addParameter(ParameterSpec.builder(TypeName.get(attr.targetType), "value").build())
                 returns(TypeVariableName.get("B"))
                 addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
                 addStatement("return (B) this")
             }.build())
-
-            // Adds special <attribute>Dp methods that automatically convert a dp value to pixels for dimensions
-            if (attr.targetFormat.isDimensionType && TypeKind.INT == attr.targetType.kind) {
-                methodSpecs.add(MethodSpec.methodBuilder(methodName + "Dp").apply {
-                    addModifiers(Modifier.PUBLIC)
-                    addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
-                    returns(TypeVariableName.get("B"))
-                    addStatement("getBuilder().putDp(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
-                    addStatement("return (B) this")
-                }.build())
-            }
-
-            return methodSpecs
-        } else {
-            return emptyList()
         }
+
+        val resMethodName = baseMethodName + if (isTargetIntType) "Res" else ""
+        methodSpecs.add(MethodSpec.methodBuilder(resMethodName).apply {
+            addModifiers(Modifier.PUBLIC)
+            addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
+                    .addAnnotation(ClassNames.ANDROID_ANY_RES)
+                    .build())
+            returns(TypeVariableName.get("B"))
+            addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, attr.styleableResId.code)
+            addStatement("return (B) this")
+        }.build())
+
+        // Adds special <attribute>Dp methods that automatically convert a dp value to pixels for dimensions
+        if (isTargetDimensionType) {
+            methodSpecs.add(MethodSpec.methodBuilder(baseMethodName + "Dp").apply {
+                addModifiers(Modifier.PUBLIC)
+                addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
+                returns(TypeVariableName.get("B"))
+                addStatement("getBuilder().putDp(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
+                addStatement("return (B) this")
+            }.build())
+        }
+
+        return methodSpecs
     }
 
     private fun buildApplyToMethod(styleableInfo: StyleableInfo, styleApplierClassName: ClassName): MethodSpec? {

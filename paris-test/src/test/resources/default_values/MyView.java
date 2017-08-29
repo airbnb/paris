@@ -59,19 +59,19 @@ public class MyView extends View {
     @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.array.format_string_array)
     public void formatReference_CharSequenceArray(CharSequence[] value) {}
 
-    @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.color.format_color_state_list)
-    public void formatReference_ColorStateList(ColorStateList value) {}
-
-    @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.drawable.format_drawable)
-    public void formatReference_Drawable(Drawable value) {}
-
     // Arbitrary resource used as a default value
     @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.bool.active)
     public void formatReference_res(@AnyRes int value) {}
 
+    @Attr(value = R2.styleable.Formats_formatReference2, defaultValue = R2.color.format_color_state_list)
+    public void formatReference_ColorStateList(ColorStateList value) {}
+
+    @Attr(value = R2.styleable.Formats_formatReference3, defaultValue = R2.drawable.format_drawable)
+    public void formatReference_Drawable(Drawable value) {}
+
     @Attr(value = R2.styleable.Formats_formatString, defaultValue = R2.string.format_char_sequence)
     public void formatString_CharSequence(CharSequence value) {}
 
-    @Attr(value = R2.styleable.Formats_formatString, defaultValue = R2.string.format_string)
+    @Attr(value = R2.styleable.Formats_formatString2, defaultValue = R2.string.format_string)
     public void formatString_String(String value) {}
 }

@@ -3,6 +3,7 @@
 
     <declare-styleable name="Formats">
         <attr name="formatBoolean" format="boolean" />
+        <attr name="formatBoolean2" format="boolean" />
         <attr name="formatColor" format="color" />
         <attr name="formatDimension" format="dimension" />
         <attr name="formatEnum" format="enum">
@@ -19,7 +20,10 @@
         <attr name="formatFraction" format="fraction" />
         <attr name="formatInteger" format="integer" />
         <attr name="formatReference" format="reference" />
+        <attr name="formatReference2" format="reference" />
+        <attr name="formatReference3" format="reference" />
         <attr name="formatString" format="string" />
+        <attr name="formatString2" format="string" />
     </declare-styleable>
 
     <bool name="format_boolean">true</bool>

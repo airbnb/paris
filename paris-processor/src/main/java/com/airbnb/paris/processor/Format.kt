@@ -89,7 +89,8 @@ internal class Format private constructor(
         }
 
         private fun forEitherFieldOrMethodParameter(element: Element): Format {
-            // TODO  Use qualified name of annotations
+            // TODO Use qualified name of annotations
+            // TODO Check that the type of the parameters corresponds to the annotation
 
             if (element.hasAnnotation("ColorInt")) {
                 return Format(Type.COLOR)
@@ -124,7 +125,12 @@ internal class Format private constructor(
         }
     }
 
-    val isDimensionType = type in listOf(Type.DIMENSION, Type.DIMENSION_PIXEL_OFFSET, Type.DIMENSION_PIXEL_SIZE)
+    val isDimensionType = type in listOf(
+            Type.LAYOUT_DIMENSION,
+            Type.DIMENSION,
+            Type.DIMENSION_PIXEL_OFFSET,
+            Type.DIMENSION_PIXEL_SIZE
+    )
 
     fun resourcesMethodCode(resourcesVar: String, valueResIdCode: CodeBlock): CodeBlock {
         val statement = when (type) {
@@ -189,5 +195,25 @@ internal class Format private constructor(
             Type.STRING -> "getString(\$L)"
             Type.STYLE -> "getStyle(\$L)"
         }, typedArrayVariable, attrResIdCode)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Format
+
+        if (type != other.type) return false
+        if (base != other.base) return false
+        if (pbase != other.pbase) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = type.hashCode()
+        result = 31 * result + base
+        result = 31 * result + pbase
+        return result
     }
 }

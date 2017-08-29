@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.AnyRes;
+import android.support.annotation.BoolRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Px;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.view.View;
 
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Fraction;
+import com.airbnb.paris.annotations.LayoutDimension;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable("Formats")
@@ -31,11 +33,23 @@ public class MyView extends View {
     @Attr(R2.styleable.Formats_formatBoolean)
     public void formatBoolean(boolean value) {}
 
+    @Attr(R2.styleable.Formats_formatBoolean)
+    public void formatBoolean(@BoolRes int value) {}
+
+    @Attr(R2.styleable.Formats_formatBoolean2)
+    public void formatBoolean2(@BoolRes int value) {}
+
     @Attr(R2.styleable.Formats_formatColor)
     public void formatColor(@ColorInt int value) {}
 
     @Attr(R2.styleable.Formats_formatDimension)
-    public void formatDimension(@Px int value) {}
+    public void formatDimension_res(@AnyRes int value) {}
+
+    @Attr(R2.styleable.Formats_formatDimension)
+    public void formatDimension_px(@Px int value) {}
+
+    @Attr(R2.styleable.Formats_formatDimension)
+    public void formatDimension_LayoutDimension(@LayoutDimension int value) {}
 
     @Attr(R2.styleable.Formats_formatEnum)
     public void formatEnum(int value) {}
@@ -56,17 +70,17 @@ public class MyView extends View {
     public void formatReference_CharSequenceArray(CharSequence[] value) {}
 
     @Attr(R2.styleable.Formats_formatReference)
-    public void formatReference_ColorStateList(ColorStateList value) {}
+    public void formatReference_res(@AnyRes int value) {}
 
-    @Attr(R2.styleable.Formats_formatReference)
-    public void formatReference_Drawable(Drawable value) {}
+    @Attr(R2.styleable.Formats_formatReference2)
+    public void formatReference2_ColorStateList(ColorStateList value) {}
 
-    @Attr(R2.styleable.Formats_formatReference)
-    public void formatReference_int(@AnyRes int value) {}
+    @Attr(R2.styleable.Formats_formatReference3)
+    public void formatReference3_Drawable(Drawable value) {}
 
     @Attr(R2.styleable.Formats_formatString)
     public void formatString_CharSequence(CharSequence value) {}
 
-    @Attr(R2.styleable.Formats_formatString)
-    public void formatString_String(String value) {}
+    @Attr(R2.styleable.Formats_formatString2)
+    public void formatString2_String(String value) {}
 }
