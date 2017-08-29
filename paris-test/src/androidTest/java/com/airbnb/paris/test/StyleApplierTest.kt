@@ -52,7 +52,5 @@ class StyleApplierTest {
         assertEquals(0, a_!!.getIndexCount())
         assertFalse(a_!!.hasValue(42))
         assertTrue(style_ is SimpleStyle)
-        assertEquals(null, (style_ as SimpleStyle).attributeSet)
-        assertEquals(0, (style_ as SimpleStyle).styleRes)
     }
 }

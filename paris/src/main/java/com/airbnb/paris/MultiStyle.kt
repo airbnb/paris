@@ -19,7 +19,6 @@ data class MultiStyle internal constructor(private val name: String, private val
      */
     override var debugListener: Style.DebugListener? = null
 
-    // TODO Construct name that makes sense
     override fun name(context: Context): String = name
 
     @SuppressLint("Recycle")

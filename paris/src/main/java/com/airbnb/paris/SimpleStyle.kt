@@ -9,12 +9,11 @@ import android.util.AttributeSet
 import com.airbnb.paris.Style.DebugListener
 import java.util.*
 
-// TODO Can all the parameters be private?
 data class SimpleStyle internal constructor(
         private val attributeMap: Map<Int, Any>?,
-        val attributeSet: AttributeSet?,
-        @StyleRes val styleRes: Int,
-        var name: String? = null) : Style {
+        private val attributeSet: AttributeSet?,
+        @StyleRes private val styleRes: Int,
+        private var name: String? = null) : Style {
 
     private constructor(builder: Builder) : this(builder.attrResToValueResMap, null, 0, builder.name)
     constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0)
