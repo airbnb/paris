@@ -271,7 +271,7 @@ internal object StyleAppliersWriter {
         val distinctAttrs = styleableInfo.attrs.distinctBy { it.styleableResId.resourceName }
         distinctAttrs.mapNotNull { buildAttributeSetterResMethod(rClassName!!, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
-        distinctAttrs.mapNotNull { buildAttributeSetterMethod(rClassName!!, styleableInfo.styleableResourceName, it) }
+        distinctAttrs.flatMap { buildAttributeSetterMethods(rClassName!!, styleableInfo.styleableResourceName, it) }
                 .forEach { baseStyleBuilderTypeBuilder.addMethod(it) }
 
         baseStyleBuilderTypeBuilder.addMethod(buildApplyToMethod(styleableInfo, styleApplierClassName))
@@ -396,19 +396,34 @@ internal object StyleAppliersWriter {
         }
     }
 
-    private fun buildAttributeSetterMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
+    private fun buildAttributeSetterMethods(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): List<MethodSpec> {
         val attrResourceName = attr.styleableResId.resourceName
         if (attrResourceName != null) {
+            val methodSpecs = ArrayList<MethodSpec>()
             val methodName = styleableAttrResourceNameToCamelCase(styleableResourceName, attrResourceName)
-            return MethodSpec.methodBuilder(methodName)
-                    .addModifiers(Modifier.PUBLIC)
-                    .addParameter(ParameterSpec.builder(TypeName.get(attr.targetType), "value").build())
-                    .returns(TypeVariableName.get("B"))
-                    .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
-                    .addStatement("return (B) this")
-                    .build()
+
+            methodSpecs.add(MethodSpec.methodBuilder(methodName).apply {
+                addModifiers(Modifier.PUBLIC)
+                addParameter(ParameterSpec.builder(TypeName.get(attr.targetType), "value").build())
+                returns(TypeVariableName.get("B"))
+                addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
+                addStatement("return (B) this")
+            }.build())
+
+            // Adds special <attribute>Dp methods that automatically convert a dp value to pixels for dimensions
+            if (attr.targetFormat.isDimensionType && TypeKind.INT == attr.targetType.kind) {
+                methodSpecs.add(MethodSpec.methodBuilder(methodName + "Dp").apply {
+                    addModifiers(Modifier.PUBLIC)
+                    addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
+                    returns(TypeVariableName.get("B"))
+                    addStatement("getBuilder().putDp(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
+                    addStatement("return (B) this")
+                }.build())
+            }
+
+            return methodSpecs
         } else {
-            return null
+            return emptyList()
         }
     }
 

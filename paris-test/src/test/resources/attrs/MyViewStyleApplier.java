@@ -26,7 +26,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     @Override
     public int[] attributesWithDefaultValue() {
-        return new int[] {};
+        return new int[]{};
     }
 
     @Override
@@ -155,6 +155,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
         public B formatDimension(int value) {
             getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
+            return (B) this;
+        }
+
+        public B formatDimensionDp(int value) {
+            getBuilder().putDp(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
             return (B) this;
         }
 

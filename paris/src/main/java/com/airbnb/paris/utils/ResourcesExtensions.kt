@@ -7,6 +7,9 @@ import android.support.annotation.StyleRes
 import android.util.TypedValue
 import com.airbnb.paris.SimpleStyle
 
+fun Resources.dpToPx(dps: Int) =
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dps.toFloat(), displayMetrics).toInt()
+
 fun Resources.getFloat(@AnyRes res: Int): Float {
     val outValue = TypedValue()
     getValue(res, outValue, true)

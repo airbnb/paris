@@ -207,6 +207,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
+        public B formatDimensionDp(int value) {
+            getBuilder().putDp(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
+            return (B) this;
+        }
+
         public B formatEnum(int value) {
             getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatEnum], value);
             return (B) this;

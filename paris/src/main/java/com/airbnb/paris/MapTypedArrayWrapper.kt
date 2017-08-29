@@ -7,6 +7,7 @@ import android.os.Build
 import android.support.annotation.AttrRes
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
+import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat
 import com.airbnb.paris.utils.getLayoutDimension
 
@@ -112,11 +113,13 @@ class MapTypedArrayWrapper constructor(
 
     private fun <T> getValue(index: Int, resourceGetter: (Int) -> T): T {
         val value = styleableAttrIndexToValueRes(index)!!
-        return if (value is ResourceId) {
-            resourceGetter(value.resId)
-        } else {
-            @Suppress("UNCHECKED_CAST")
-            return value as T
+        @Suppress("UNCHECKED_CAST")
+        return when (value) {
+            is ResourceId -> resourceGetter(value.resId)
+            is DpValue -> resources.dpToPx(value.dpValue) as T
+            else -> {
+                return value as T
+            }
         }
     }
 

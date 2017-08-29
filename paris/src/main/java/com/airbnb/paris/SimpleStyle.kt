@@ -33,6 +33,9 @@ data class SimpleStyle internal constructor(
         fun putRes(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
                 put(attrRes, ResourceId(valueRes))
 
+        fun putDp(@AttrRes attrRes: Int, dps: Int): Builder =
+                put(attrRes, DpValue(dps))
+
         fun put(@AttrRes attrRes: Int, value: Any): Builder {
             attrResToValueResMap.put(attrRes, value)
             return this
