@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Fraction;
+import com.airbnb.paris.annotations.LayoutDimension;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable("Formats")
@@ -35,7 +36,10 @@ public class MyView extends View {
     public void formatColor(@ColorInt int value) {}
 
     @Attr(value = R2.styleable.Formats_formatDimension, defaultValue = R2.dimen.format_dimension)
-    public void formatDimension(@Px int value) {}
+    public void formatDimension_px(@Px int value) {}
+
+    @Attr(value = R2.styleable.Formats_formatDimension, defaultValue = R2.dimen.format_dimension)
+    public void formatDimension_LayoutDimension(@LayoutDimension int value) {}
 
     @Attr(value = R2.styleable.Formats_formatEnum, defaultValue = R2.integer.format_enum)
     public void formatEnum(int value) {}
@@ -43,9 +47,8 @@ public class MyView extends View {
     @Attr(value = R2.styleable.Formats_formatFlag, defaultValue = R2.integer.format_flag)
     public void formatFlag(int value) {}
 
-    // TODO
-    //@Attr(value = R2.styleable.Formats_formatFloat, defaultValue = R2.dimen.format_float)
-    //public void formatFloat(float value) {}
+    @Attr(value = R2.styleable.Formats_formatFloat, defaultValue = R2.dimen.format_float)
+    public void formatFloat(float value) {}
 
     @Attr(value = R2.styleable.Formats_formatFraction, defaultValue = R2.fraction.format_fraction)
     public void formatFraction(@Fraction(base = 2, pbase = 3) float value) {}
@@ -64,7 +67,7 @@ public class MyView extends View {
 
     // Arbitrary resource used as a default value
     @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.bool.active)
-    public void formatReference_int(@AnyRes int value) {}
+    public void formatReference_res(@AnyRes int value) {}
 
     @Attr(value = R2.styleable.Formats_formatString, defaultValue = R2.string.format_char_sequence)
     public void formatString_CharSequence(CharSequence value) {}

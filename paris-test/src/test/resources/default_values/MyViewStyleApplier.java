@@ -6,6 +6,7 @@ import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
 import com.airbnb.paris.proxy.ViewProxyStyleApplier;
+import com.airbnb.paris.utils.ResourcesExtensionsKt;
 import java.lang.CharSequence;
 import java.lang.Override;
 
@@ -26,7 +27,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     @Override
     public int[] attributesWithDefaultValue() {
-        return new int[] {R.styleable.Formats_formatBoolean,R.styleable.Formats_formatColor,R.styleable.Formats_formatDimension,R.styleable.Formats_formatEnum,R.styleable.Formats_formatFlag,R.styleable.Formats_formatFraction,R.styleable.Formats_formatInteger,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatReference,R.styleable.Formats_formatString,R.styleable.Formats_formatString,};
+        return new int[] {R.styleable.Formats_formatBoolean,R.styleable.Formats_formatColor,R.styleable.Formats_formatDimension,R.styleable.Formats_formatEnum,R.styleable.Formats_formatFlag,R.styleable.Formats_formatFloat,R.styleable.Formats_formatFraction,R.styleable.Formats_formatInteger,R.styleable.Formats_formatReference,R.styleable.Formats_formatString,};
     }
 
     @Override
@@ -50,10 +51,16 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             getProxy().formatColor(res.getColor(R.color.format_color));
         }
         if (a.hasValue(R.styleable.Formats_formatDimension)) {
-            getProxy().formatDimension(a.getDimensionPixelSize(R.styleable.Formats_formatDimension, -1));
+            getProxy().formatDimension_px(a.getDimensionPixelSize(R.styleable.Formats_formatDimension, -1));
         }
         else {
-            getProxy().formatDimension(res.getDimensionPixelSize(R.dimen.format_dimension));
+            getProxy().formatDimension_px(res.getDimensionPixelSize(R.dimen.format_dimension));
+        }
+        if (a.hasValue(R.styleable.Formats_formatDimension)) {
+            getProxy().formatDimension_LayoutDimension(a.getLayoutDimension(R.styleable.Formats_formatDimension, -1));
+        }
+        else {
+            getProxy().formatDimension_LayoutDimension(ResourcesExtensionsKt.getLayoutDimension(res, R.dimen.format_dimension));
         }
         if (a.hasValue(R.styleable.Formats_formatEnum)) {
             getProxy().formatEnum(a.getInt(R.styleable.Formats_formatEnum, -1));
@@ -66,6 +73,12 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
         else {
             getProxy().formatFlag(res.getInteger(R.integer.format_flag));
+        }
+        if (a.hasValue(R.styleable.Formats_formatFloat)) {
+            getProxy().formatFloat(a.getFloat(R.styleable.Formats_formatFloat, -1f));
+        }
+        else {
+            getProxy().formatFloat(ResourcesExtensionsKt.getFloat(res, R.dimen.format_float));
         }
         if (a.hasValue(R.styleable.Formats_formatFraction)) {
             getProxy().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3, -1f));
@@ -98,10 +111,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             getProxy().formatReference_Drawable(res.getDrawable(R.drawable.format_drawable));
         }
         if (a.hasValue(R.styleable.Formats_formatReference)) {
-            getProxy().formatReference_int(a.getResourceId(R.styleable.Formats_formatReference, -1));
+            getProxy().formatReference_res(a.getResourceId(R.styleable.Formats_formatReference, -1));
         }
         else {
-            getProxy().formatReference_int(R.bool.active);
+            getProxy().formatReference_res(R.bool.active);
         }
         if (a.hasValue(R.styleable.Formats_formatString)) {
             getProxy().formatString_CharSequence(a.getText(R.styleable.Formats_formatString));
@@ -154,6 +167,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
+        public B formatFloat(@AnyRes int resId) {
+            getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFloat], resId);
+            return (B) this;
+        }
+
         public B formatFraction(@AnyRes int resId) {
             getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFraction], resId);
             return (B) this;
@@ -196,6 +214,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
         public B formatFlag(int value) {
             getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFlag], value);
+            return (B) this;
+        }
+
+        public B formatFloat(float value) {
+            getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFloat], value);
             return (B) this;
         }
 

@@ -4,6 +4,7 @@ import com.airbnb.paris.annotations.Fraction
 import com.airbnb.paris.processor.utils.hasAnnotation
 import com.airbnb.paris.processor.utils.hasAnyAnnotation
 import com.airbnb.paris.processor.utils.isView
+import com.squareup.javapoet.CodeBlock
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -123,8 +124,10 @@ internal class Format private constructor(
         }
     }
 
-    fun resourcesMethodStatement(): String {
-        return when (type) {
+    val isDimensionType = type in listOf(Type.DIMENSION, Type.DIMENSION_PIXEL_OFFSET, Type.DIMENSION_PIXEL_SIZE)
+
+    fun resourcesMethodCode(resourcesVar: String, valueResIdCode: CodeBlock): CodeBlock {
+        val statement = when (type) {
             Type.BOOLEAN -> "getBoolean(\$L)"
             Type.CHARSEQUENCE -> "getText(\$L)"
             Type.CHARSEQUENCE_ARRAY -> "getTextArray(\$L)"
@@ -134,21 +137,39 @@ internal class Format private constructor(
             Type.DIMENSION_PIXEL_OFFSET -> "getDimensionPixelOffset(\$L)"
             Type.DIMENSION_PIXEL_SIZE -> "getDimensionPixelSize(\$L)"
             Type.DRAWABLE -> "getDrawable(\$L)"
-            Type.FLOAT -> TODO()
             Type.FRACTION -> "getFraction(\$L, %d, %d)".format(base, pbase)
             Type.INT -> "getInteger(\$L)"
             Type.INTEGER -> "getInteger(\$L)"
-            Type.LAYOUT_DIMENSION -> TODO()
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
-            // Special case
-            Type.RESOURCE_ID -> "The parameter is the resource id, this should never be used"
             Type.STRING -> "getString(\$L)"
-            Type.STYLE -> TODO()
+
+            // Using extension functions because unsupported by Resources
+            Type.LAYOUT_DIMENSION -> "\$T.getLayoutDimension(\$L, \$L)"
+            Type.FLOAT -> "\$T.getFloat(\$L, \$L)"
+            Type.STYLE -> "\$T.getStyle(\$L, \$L)"
+
+            // Special case, the resource id is the value
+            Type.RESOURCE_ID -> "\$L"
+        }
+
+        return when (type) {
+            Type.BOOLEAN, Type.CHARSEQUENCE, Type.CHARSEQUENCE_ARRAY, Type.COLOR,
+            Type.COLOR_STATE_LIST, Type.DIMENSION, Type.DIMENSION_PIXEL_OFFSET,
+            Type.DIMENSION_PIXEL_SIZE, Type.DRAWABLE, Type.FRACTION, Type.INT, Type.INTEGER,
+            Type.NON_RESOURCE_STRING, Type.STRING -> {
+                CodeBlock.of("\$L.$statement", resourcesVar, valueResIdCode)
+            }
+            Type.FLOAT, Type.LAYOUT_DIMENSION, Type.STYLE -> {
+                CodeBlock.of(statement, ParisProcessor.RESOURCES_EXTENSIONS_CLASS_NAME, resourcesVar, valueResIdCode)
+            }
+            Type.RESOURCE_ID -> {
+                CodeBlock.of(statement, valueResIdCode)
+            }
         }
     }
 
-    fun typedArrayMethodStatement(): String {
-        return when (type) {
+    fun typedArrayMethodCode(typedArrayVariable: String, attrResIdCode: CodeBlock): CodeBlock {
+        return CodeBlock.of("\$L." + when (type) {
             Type.BOOLEAN -> "getBoolean(\$L, false)"
             Type.CHARSEQUENCE -> "getText(\$L)"
             Type.CHARSEQUENCE_ARRAY -> "getTextArray(\$L)"
@@ -167,6 +188,6 @@ internal class Format private constructor(
             Type.RESOURCE_ID -> "getResourceId(\$L, -1)"
             Type.STRING -> "getString(\$L)"
             Type.STYLE -> "getStyle(\$L)"
-        }
+        }, typedArrayVariable, attrResIdCode)
     }
 }

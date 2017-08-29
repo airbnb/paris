@@ -129,9 +129,12 @@ internal object StyleAppliersWriter {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(ArrayTypeName.of(Integer.TYPE))
                 .addCode("return new int[] {")
-        val attrsWithDefaultValue = attrs.filter { it.defaultValueResId != null }
+        val attrsWithDefaultValue = attrs
+                .filter { it.defaultValueResId != null }
+                .map { it.styleableResId}
+                .toSet()
         for (attr in attrsWithDefaultValue) {
-            builder.addCode("\$L,", attr.styleableResId.code)
+            builder.addCode("\$L,", attr.code)
         }
         return builder.addCode("};\n")
                 .build()
@@ -187,32 +190,25 @@ internal object StyleAppliersWriter {
                                elementName: String, styleableResId: AndroidResourceId,
                                defaultValueResId: AndroidResourceId?, isElementStyleable: Boolean) {
         methodBuilder.beginControlFlow("if (a.hasValue(\$L))", styleableResId.code)
-        addStatement(methodBuilder, format, elementName, false, format.typedArrayMethodStatement(), styleableResId, isElementStyleable)
+        addStatement(methodBuilder, format.typedArrayMethodCode("a", styleableResId.code), elementName, isElementStyleable)
         methodBuilder.endControlFlow()
 
         if (defaultValueResId != null) {
             methodBuilder.beginControlFlow("else")
-            addStatement(methodBuilder, format, elementName, true, format.resourcesMethodStatement(), defaultValueResId, isElementStyleable)
+            addStatement(methodBuilder, format.resourcesMethodCode("res", defaultValueResId.code), elementName, isElementStyleable)
             methodBuilder.endControlFlow()
         }
     }
 
-    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, format: Format,
-                             elementName: String, isForDefaultValue: Boolean, statement: String,
-                             androidResourceId: AndroidResourceId, isElementStyleable: Boolean) {
-        val from = if (isForDefaultValue) "res" else "a"
+    private fun addStatement(methodSpecBuilder: MethodSpec.Builder, valueCode: CodeBlock,
+                             elementName: String, isElementStyleable: Boolean) {
         if (isElementStyleable) {
             methodSpecBuilder
-                    .addStatement("subStyle = $from.$statement", androidResourceId.code)
+                    .addStatement("subStyle = \$L", valueCode)
                     .addStatement("subStyle.setDebugListener(style.getDebugListener())")
                     .addStatement("\$N().apply(subStyle)", elementName)
         } else {
-            if (isForDefaultValue && format == Format.RESOURCE_ID) {
-                // The parameter is the resource id
-                methodSpecBuilder.addStatement("getProxy().\$N(\$L)", elementName, androidResourceId.code)
-            } else {
-                methodSpecBuilder.addStatement("getProxy().\$N($from.$statement)", elementName, androidResourceId.code)
-            }
+            methodSpecBuilder.addStatement("getProxy().\$N(\$L)", elementName, valueCode)
         }
     }
 

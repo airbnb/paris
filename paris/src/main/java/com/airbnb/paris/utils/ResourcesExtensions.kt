@@ -3,7 +3,9 @@ package com.airbnb.paris.utils
 import android.content.res.Resources
 import android.support.annotation.AnyRes
 import android.support.annotation.DimenRes
+import android.support.annotation.StyleRes
 import android.util.TypedValue
+import com.airbnb.paris.SimpleStyle
 
 fun Resources.getFloat(@AnyRes res: Int): Float {
     val outValue = TypedValue()
@@ -21,3 +23,5 @@ fun Resources.getLayoutDimension(@DimenRes res: Int): Int {
         return outValue.getDimension(displayMetrics).toInt()
     }
 }
+
+fun Resources.getStyle(@StyleRes res: Int) = SimpleStyle(res)

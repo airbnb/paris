@@ -31,6 +31,7 @@ class ParisProcessor : AbstractProcessor() {
         internal val STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleBuilder".className()
         internal val STYLE_APPLIER_UTILS_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplierUtils".className()
         internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.TypedArrayWrapper".className()
+        internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
 
         internal val BUILT_IN_STYLE_APPLIERS = mapOf(
                 Pair("com.airbnb.paris.proxy.ViewProxyStyleApplier", "android.view.View"),
