@@ -83,11 +83,11 @@ class StyleApplierUtils {
             val viewName = view.javaClass.simpleName
             val styleName = style.name(context)
             return """
-                The $viewName style "$styleName" is missing the following attributes:
-                ${missingAttrNames.joinToString("\n") { "✕ $it" }}
-                It must declare the same attributes as the following styles:
-                ${otherStyles.joinToString(", ") { it.name(context) }}
-                """
+                |The $viewName style "$styleName" is missing the following attributes:
+                |${missingAttrNames.joinToString("\n") { "✕ $it" }}
+                |It must declare the same attributes as the following styles:
+                |${otherStyles.joinToString(", ") { it.name(context) }}
+                """.trimMargin()
         }
 
         internal fun getAttributeIndexes(typedArray: TypedArrayWrapper, ignoredAttributeIndexes: IntArray?): Set<Int> {
