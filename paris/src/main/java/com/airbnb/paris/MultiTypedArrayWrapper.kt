@@ -16,7 +16,7 @@ class MultiTypedArrayWrapper constructor(
 
     private val styleableAttrIndexToWrapperMap by lazy {
         val attrResToWrapperMap = HashMap<Int, TypedArrayWrapper>()
-        wrappers.forEach { wrapper ->
+        for (wrapper in wrappers) {
             (0 until wrapper.getIndexCount()).forEach { at ->
                 val index = wrapper.getIndex(at)
                 if (wrapper.hasValue(index)) {

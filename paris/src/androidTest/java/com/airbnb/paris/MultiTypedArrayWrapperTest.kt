@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.airbnb.paris.test.R
 import com.airbnb.paris.utils.getFloat
+import com.airbnb.paris.utils.getStyle
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -227,6 +228,18 @@ class MultiTypedArrayWrapperTest {
         )
         val actual = res.getString(R.string.format_string_2)
         assertEquals(actual, multi.getString(R.styleable.Formats_formatString))
+    }
+
+    @Test
+    fun getStyle() {
+        multi = MultiTypedArrayWrapper(
+                listOf(
+                        mapOf(R.attr.formatReference to ResourceId(R.style.Green)),
+                        mapOf(R.attr.formatReference to ResourceId(R.style.Red))
+                ).map { newFormatWrapper(it) }
+        )
+        val actual = res.getStyle(R.style.Red)
+        assertEquals(actual, multi.getStyle(R.styleable.Formats_formatReference))
     }
 
     @Test

@@ -19,8 +19,8 @@ class ViewProxyStyleApplierTest {
     lateinit var res: Resources
     lateinit var view: View
 
-    var params: ViewGroup.LayoutParams? = null
-    var marginParams: ViewGroup.MarginLayoutParams? = null
+    private var params: ViewGroup.LayoutParams? = null
+    private var marginParams: ViewGroup.MarginLayoutParams? = null
 
     @Before
     fun setup() {
