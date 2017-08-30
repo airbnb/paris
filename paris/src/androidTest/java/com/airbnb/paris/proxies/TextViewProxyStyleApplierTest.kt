@@ -1,4 +1,4 @@
-package com.airbnb.paris.test
+package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.content.res.Resources
@@ -9,7 +9,7 @@ import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
-import com.airbnb.paris.proxies.TextViewProxyStyleApplier
+import com.airbnb.paris.test.R;
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +19,7 @@ import org.mockito.Mockito.spy
 
 
 @RunWith(AndroidJUnit4::class)
-class TextViewStyleTest {
+class TextViewProxyStyleApplierTest {
 
     lateinit var context: Context
     lateinit var res: Resources

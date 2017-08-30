@@ -14,8 +14,4 @@
         <attr name="verticalPadding" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="ManuallyWritten">
-        <attr name="attribute1" format="string" />
-    </declare-styleable>
-
 </resources>

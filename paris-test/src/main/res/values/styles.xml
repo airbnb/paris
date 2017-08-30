@@ -1,109 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Test_View_background">
-        <item name="android:background">@android:drawable/ic_delete</item>
-    </style>
-
-    <integer name="test_view_layout_gravity">4</integer>
-    <style name="Test_View_layoutGravity">
-        <item name="android:layout_gravity">@integer/test_view_layout_gravity</item>
-    </style>
-
-    <dimen name="test_view_min_width">100dp</dimen>
-    <style name="Test_View_minWidth">
-        <item name="android:minWidth">@dimen/test_view_min_width</item>
-    </style>
-
-    <dimen name="test_view_padding">42dp</dimen>
-    <style name="Test_View_padding">
-        <item name="android:padding">@dimen/test_view_padding</item>
-    </style>
-
-    <dimen name="test_view_paddingBottom">11dp</dimen>
-    <dimen name="test_view_paddingLeft">22dp</dimen>
-    <dimen name="test_view_paddingRight">33dp</dimen>
-    <dimen name="test_view_paddingTop">44dp</dimen>
-    <style name="Test_View_paddings">
-        <item name="android:paddingBottom">@dimen/test_view_paddingBottom</item>
-        <item name="android:paddingLeft">@dimen/test_view_paddingLeft</item>
-        <item name="android:paddingRight">@dimen/test_view_paddingRight</item>
-        <item name="android:paddingTop">@dimen/test_view_paddingTop</item>
-    </style>
-
-    <style name="Test_View_visibility">
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="Test_TextView_drawables">
-        <item name="android:drawableBottom">@android:drawable/ic_delete</item>
-        <item name="android:drawableLeft">@android:drawable/ic_delete</item>
-        <item name="android:drawableRight">@android:drawable/ic_delete</item>
-        <item name="android:drawableTop">@android:drawable/ic_delete</item>
-    </style>
-
-    <style name="Test_TextView_no_drawables">
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <integer name="test_text_view_ellipsize">3</integer>
-    <style name="Test_TextView_ellipsize">
-        <item name="android:ellipsize">@integer/test_text_view_ellipsize</item>
-    </style>
-
-    <style name="Test_TextView_gravity">
-        <item name="android:gravity">center</item>
-    </style>
-
-    <item format="float" type="dimen" name="test_text_view_letter_spacing">1.4</item>
-    <style name="Test_TextView_letterSpacing">
-        <item name="android:letterSpacing" tools:targetApi="lollipop">@dimen/test_text_view_letter_spacing</item>
-    </style>
-
-    <integer name="test_text_view_lines">4</integer>
-    <style name="Test_TextView_lines">
-        <item name="android:lines">@integer/test_text_view_lines</item>
-    </style>
-
-    <dimen name="test_text_view_line_spacing_extra">4dp</dimen>
-    <style name="Test_TextView_lineSpacingExtra">
-        <item name="android:lineSpacingExtra">@dimen/test_text_view_line_spacing_extra</item>
-    </style>
-
-    <item format="float" type="dimen" name="test_text_view_line_spacing_multiplier">1.5</item>
-    <style name="Test_TextView_lineSpacingMultiplier">
-        <item name="android:lineSpacingMultiplier">@dimen/test_text_view_line_spacing_multiplier</item>
-    </style>
-
-    <integer name="test_text_view_max_lines">3</integer>
-    <style name="Test_TextView_maxLines">
-        <item name="android:maxLines">@integer/test_text_view_max_lines</item>
-    </style>
-
-    <integer name="test_text_view_min_lines">4</integer>
-    <style name="Test_TextView_minLines">
-        <item name="android:minLines">@integer/test_text_view_min_lines</item>
-    </style>
-
-    <dimen name="test_text_view_min_width">99dp</dimen>
-    <style name="Test_TextView_minWidth">
-        <item name="android:minWidth">@dimen/test_text_view_min_width</item>
-    </style>
-
-    <style name="Test_TextView_singleLine">
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <bool name="test_text_view_text_all_caps">true</bool>
-    <style name="Test_TextView_textAllCaps">
-        <item name="android:textAllCaps">@bool/test_text_view_text_all_caps</item>
-    </style>
-
-    <dimen name="test_text_view_text_size">24sp</dimen>
-    <style name="Test_TextView_textSize">
-        <item name="android:textSize">@dimen/test_text_view_text_size</item>
-    </style>
-
     <style name="StyleApplierUtilsTest_TextView_textColorTextSizePadding_1">
         <item name="android:padding">24dp</item>
         <item name="android:textColor">@android:color/black</item>
@@ -114,14 +11,6 @@
         <item name="android:padding">24dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">19sp</item>
-    </style>
-
-    <style name="StyleApplierUtilsTest_TextView_textColor">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="StyleApplierUtilsTest_TextView_textSize">
-        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="StyleApplierUtilsTest_TextView_textSizePadding">
