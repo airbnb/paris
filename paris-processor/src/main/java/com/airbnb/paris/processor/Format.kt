@@ -104,6 +104,7 @@ internal class Format private constructor(
             if (element.hasAnnotation("LayoutDimension")) {
                 return Format(Type.LAYOUT_DIMENSION)
             }
+            // TODO What about Sp?
             if (element.hasAnnotation("Px")) {
                 return Format(Type.DIMENSION_PIXEL_SIZE)
             }

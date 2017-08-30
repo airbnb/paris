@@ -368,6 +368,7 @@ internal object StyleAppliersWriter {
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
+                // TODO Set return type to builder for lambdas to work properly
                 .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(ClassName.get(Function1::class.java), styleBuilderClassName, TypeName.get(Void::class.java)), "function").build())
                 .returns(TypeVariableName.get("B"))
                 .addStatement("\$T subBuilder = new \$T()", styleBuilderClassName, styleBuilderClassName)
