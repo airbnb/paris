@@ -11,7 +11,7 @@ import com.airbnb.paris.test.MyViewStyleApplier.StyleBuilder;
 @Styleable
 public class MyView extends View {
 
-    @Style
+    @Style(isDefault = true)
     static final int RED_STYLE = R2.style.MyView_Red;
 
     @Style

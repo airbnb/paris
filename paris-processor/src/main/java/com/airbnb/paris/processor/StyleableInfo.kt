@@ -48,11 +48,11 @@ internal class StyleableInfo private constructor(
                             classesToStylesInfo: Map<Element, List<StyleInfo>>): List<StyleableInfo> {
             val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
 
-            val classesMissingStyleableAnnotation = (classesToStyleableFieldInfo + classesToAttrsInfo)
+            val classesMissingStyleableAnnotation = (classesToStyleableFieldInfo + classesToAttrsInfo + classesToStylesInfo)
                     .filter { (`class`, _) -> `class` !in styleableElements }
                     .keys
             check(classesMissingStyleableAnnotation.isEmpty()) {
-                "The class \"${classesMissingStyleableAnnotation.first().simpleName}\" uses @Attr and/or @StyleableField but is not annotated with @Styleable"
+                "The class \"${classesMissingStyleableAnnotation.first().simpleName}\" uses @Attr, @StyleableField and/or @Style but is not annotated with @Styleable"
             }
 
             return styleableElements

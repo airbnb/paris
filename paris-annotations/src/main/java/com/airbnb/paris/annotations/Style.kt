@@ -5,4 +5,4 @@ import kotlin.annotation.AnnotationTarget.FUNCTION
 
 @Target(FIELD, FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Style
+annotation class Style(val isDefault: Boolean = false)

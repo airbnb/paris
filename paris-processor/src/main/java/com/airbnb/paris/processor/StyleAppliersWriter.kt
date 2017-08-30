@@ -241,6 +241,9 @@ internal object StyleAppliersWriter {
             StyleInfo.Kind.STYLE_RES -> {
                 builder.addStatement("apply(\$L)", styleInfo.styleResourceCode)
             }
+            StyleInfo.Kind.EMPTY -> {
+                // Do nothing!
+            }
         }
         return builder.build()
     }
@@ -338,6 +341,9 @@ internal object StyleAppliersWriter {
             }
             StyleInfo.Kind.STYLE_RES -> {
                 builder.addStatement("add(\$L)", styleInfo.styleResourceCode)
+            }
+            StyleInfo.Kind.EMPTY -> {
+                // Do nothing!
             }
         }
         return builder

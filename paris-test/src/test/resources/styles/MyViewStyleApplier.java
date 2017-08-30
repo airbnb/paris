@@ -33,6 +33,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         apply(builder.build());
     }
 
+    public void applyDefault() {
+        apply(MyView.RED_STYLE);
+    }
+
     public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
         public BaseStyleBuilder(A applier) {
             super(applier);
@@ -70,6 +74,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             debugName("Blue");
             MyView.blue(this);
             consumeSimpleStyleBuilder();
+            return this;
+        }
+
+        public StyleBuilder addDefault() {
+            add(MyView.RED_STYLE);
             return this;
         }
     }

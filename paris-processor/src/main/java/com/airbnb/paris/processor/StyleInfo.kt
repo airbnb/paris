@@ -17,15 +17,16 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-internal class StyleInfo private constructor(
+internal data class StyleInfo constructor(
         val elementKind: Kind,
         val enclosingElement: Element,
         val elementName: String,
         val formattedName: String,
-        val styleResourceCode: CodeBlock?) {
+        val styleResourceCode: CodeBlock?,
+        private val isDefault: Boolean = false) {
 
     enum class Kind {
-        FIELD, METHOD, STYLE_RES
+        FIELD, METHOD, STYLE_RES, EMPTY
     }
 
     companion object {
@@ -39,21 +40,9 @@ internal class StyleInfo private constructor(
             this.elementUtils = processor.elementUtils
             this.typeUtils = processor.typeUtils
 
-            val stylesFromDefaultNameFormat: List<StyleInfo>
-            if (processor.defaultStyleNameFormat.isBlank()) {
-                stylesFromDefaultNameFormat = emptyList()
-            } else {
-                stylesFromDefaultNameFormat = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
-                        .mapNotNull {
-                            try {
-                                fromDefaultNameFormat(it)
-                            } catch (e: ProcessorException) {
-                                Errors.log(e)
-                                null
-                            }
-                        }
-            }
+            val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
 
+            // TODO Make sure there aren't conflicting names?
             val stylesFromStyleAnnotation = roundEnv.getElementsAnnotatedWith(Style::class.java)
                     .mapNotNull {
                         try {
@@ -63,14 +52,61 @@ internal class StyleInfo private constructor(
                             null
                         }
                     }
+                    .groupBy { it.enclosingElement }
 
-            return stylesFromDefaultNameFormat.plus(stylesFromStyleAnnotation)
+            // TODO Check that no style was left behind?
+
+            return styleableElements
+                    .map { it to (stylesFromStyleAnnotation[it] ?: emptyList()) }
+                    .flatMap { (styleableElement, styles) ->
+                        val styleWithNameDefault = styles.find { it.formattedName == "Default" }
+                        val styleMarkedAsDefault = styles.find { it.isDefault }
+
+                        check(styleWithNameDefault == styleMarkedAsDefault
+                                || styleWithNameDefault == null
+                                || styleMarkedAsDefault == null) {
+                            "Naming a linked style \"default\" and annotating another with @Style(isDefault = true) is invalid"
+                        }
+
+                        if (styleWithNameDefault != null) {
+                            // Great! There's already a style named "default"
+                            styles
+                        } else if (styleMarkedAsDefault != null) {
+                            // One style is marked as being the default so let's duplicate it with the name "default"
+                            styles + styleMarkedAsDefault.copy(formattedName = "Default")
+                        } else {
+                            // Next we check to see if a style exists that matches the default name
+                            // format, otherwise we add an empty, no-op style as a default
+                            val defaultNameFormatStyle = fromDefaultNameFormat(styleableElement)
+                            if (defaultNameFormatStyle != null) {
+                                styles + defaultNameFormatStyle
+                            } else {
+                                styles + emptyDefaultFromStyleableElement(styleableElement)
+                            }
+                        }
+                    }
+        }
+
+        @Throws(ProcessorException::class)
+        private fun emptyDefaultFromStyleableElement(styleableElement: Element): StyleInfo {
+            val elementName = styleableElement.simpleName.toString()
+
+            return StyleInfo(
+                    Kind.EMPTY,
+                    styleableElement,
+                    "empty_default",
+                    "Default",
+                    null
+            )
         }
 
         @Throws(ProcessorException::class)
         private fun fromDefaultNameFormat(styleableElement: Element): StyleInfo? {
+            if (processor.defaultStyleNameFormat.isBlank()) {
+                return null
+            }
+
             check(processor.rType != null)
-            check(processor.defaultStyleNameFormat.isNotBlank())
 
             val elementName = styleableElement.simpleName.toString()
             val defaultStyleName = String.format(Locale.US, processor.defaultStyleNameFormat, elementName)
@@ -104,6 +140,9 @@ internal class StyleInfo private constructor(
                     && !element.modifiers.contains(Modifier.PROTECTED), element) {
                 "Fields and methods annotated with @Style must be static and can't be private or protected"
             }
+
+            val style = element.getAnnotation(Style::class.java)
+            val isDefault = style.isDefault
 
             val enclosingElement = element.enclosingElement
 
@@ -156,7 +195,8 @@ internal class StyleInfo private constructor(
                     enclosingElement,
                     elementName,
                     formattedName,
-                    null // No style resource
+                    null, // No style resource
+                    isDefault
             )
         }
     }

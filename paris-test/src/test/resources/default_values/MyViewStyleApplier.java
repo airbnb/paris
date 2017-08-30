@@ -145,6 +145,9 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         return new StyleBuilder(this);
     }
 
+    public void applyDefault() {
+    }
+
     public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
         public BaseStyleBuilder(A applier) {
             super(applier);
@@ -300,6 +303,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public StyleBuilder() {
+        }
+
+        public StyleBuilder addDefault() {
+            return this;
         }
     }
 }
