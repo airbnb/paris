@@ -1,5 +1,6 @@
 package com.airbnb.paris
 
+import com.airbnb.paris.typed_array_wrappers.EmptyTypedArrayWrapper
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.properties.forAll

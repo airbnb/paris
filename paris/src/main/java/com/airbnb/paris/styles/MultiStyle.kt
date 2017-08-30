@@ -2,7 +2,7 @@ package com.airbnb.paris.styles
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.airbnb.paris.MultiTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
 import com.airbnb.paris.Style
 import com.airbnb.paris.TypedArrayWrapper
 

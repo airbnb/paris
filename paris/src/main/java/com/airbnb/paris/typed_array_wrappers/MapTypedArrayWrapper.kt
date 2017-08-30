@@ -1,4 +1,4 @@
-package com.airbnb.paris
+package com.airbnb.paris.typed_array_wrappers
 
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -7,6 +7,10 @@ import android.os.Build
 import android.support.annotation.AttrRes
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
+import com.airbnb.paris.DpValue
+import com.airbnb.paris.ResourceId
+import com.airbnb.paris.Style
+import com.airbnb.paris.TypedArrayWrapper
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat

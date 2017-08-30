@@ -5,7 +5,7 @@ import android.content.Context
 import android.support.annotation.IntRange
 import android.support.annotation.StyleRes
 import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
 import com.airbnb.paris.TypedArrayWrapper
 
 data class ResourceStyle constructor(

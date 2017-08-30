@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
 import com.airbnb.paris.TypedArrayWrapper
 import java.lang.UnsupportedOperationException
 

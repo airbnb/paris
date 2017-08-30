@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.test.R
+import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
 import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat
 import org.junit.Assert

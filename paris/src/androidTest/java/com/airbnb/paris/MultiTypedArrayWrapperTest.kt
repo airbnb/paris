@@ -5,6 +5,8 @@ import android.content.res.Resources
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.airbnb.paris.test.R
+import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
 import com.airbnb.paris.utils.getFloat
 import com.airbnb.paris.utils.getStyle
 import org.junit.Assert.assertEquals

@@ -5,6 +5,8 @@ import android.content.Context
 import android.support.annotation.AnyRes
 import android.support.annotation.AttrRes
 import com.airbnb.paris.*
+import com.airbnb.paris.typed_array_wrappers.EmptyTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
 import java.util.*
 
 data class ProgrammaticStyle constructor(

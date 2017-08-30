@@ -1,9 +1,11 @@
-package com.airbnb.paris
+package com.airbnb.paris.typed_array_wrappers
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
+import com.airbnb.paris.Style
+import com.airbnb.paris.TypedArrayWrapper
 
 /**
  * @param wrappers These are assumed to have been created with the same styleable attribute list
