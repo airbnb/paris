@@ -15,6 +15,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,10 +30,7 @@ dependencies {
 
     compile deps.kotlin
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-
-    provided deps.googleAutoValue
-    annotationProcessor deps.googleAutoValue
+    compile deps.androidAppcompatV7
 
     provided project(':paris-processor')
     annotationProcessor project(':paris-processor')

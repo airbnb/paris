@@ -16,7 +16,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
+        // One of the dependencies seems to be importing the AutoValue processor incorrectly
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,16 +36,18 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile deps.kotlin
     compile project(':paris')
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile deps.androidAppcompatV7
     testCompile 'junit:junit:4.12'
     testCompile files(getRuntimeJar())
     testCompile files(Jvm.current().getToolsJar())
     testCompile deps.googleTestingCompile
-    testCompile project(':paris-processor')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    testCompile project(':paris-processor')
     annotationProcessor project(':paris-processor')
+    testAnnotationProcessor project(':paris-processor')
 }
 
 static def getRuntimeJar() {
