@@ -6,7 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import android.widget.FrameLayout
-import com.airbnb.paris.proxy.ViewProxyStyleApplier
+import com.airbnb.paris.proxies.ViewProxyStyleApplier
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

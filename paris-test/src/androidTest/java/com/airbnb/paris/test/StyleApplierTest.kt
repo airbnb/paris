@@ -4,11 +4,11 @@ import android.content.Context
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import com.airbnb.paris.SimpleStyle
 import com.airbnb.paris.Style
 import com.airbnb.paris.StyleApplier
 import com.airbnb.paris.TypedArrayWrapper
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,6 +51,5 @@ class StyleApplierTest {
         assertEquals(1, methodCallCount)
         assertEquals(0, a_!!.getIndexCount())
         assertFalse(a_!!.hasValue(42))
-        assertTrue(style_ is SimpleStyle)
     }
 }

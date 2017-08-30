@@ -1,12 +1,15 @@
-package com.airbnb.paris
+package com.airbnb.paris.styles
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.airbnb.paris.MultiTypedArrayWrapper
+import com.airbnb.paris.Style
+import com.airbnb.paris.TypedArrayWrapper
 
 data class MultiStyle internal constructor(private val name: String, private val styles: List<Style>) : Style {
 
     constructor(name: String, vararg styles: Style) : this(name, styles.toList())
-    constructor(name: String, vararg styleRes: Int) : this(name, styleRes.map { SimpleStyle(it) })
+    constructor(name: String, vararg styleRes: Int) : this(name, styleRes.map { ResourceStyle(it) })
 
     /**
      * Presumably multistyles would never be constructed with a SimpleStyle containing an

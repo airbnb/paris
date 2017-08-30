@@ -3,6 +3,7 @@ package com.airbnb.paris
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
+import com.airbnb.paris.styles.ResourceStyle
 
 internal class TypedArrayTypedArrayWrapper constructor(
         private val typedArray: TypedArray) : TypedArrayWrapper() {
@@ -46,7 +47,7 @@ internal class TypedArrayTypedArrayWrapper constructor(
 
     override fun getTextArray(index: Int): Array<CharSequence> = typedArray.getTextArray(index)
 
-    override fun getStyle(index: Int): Style = SimpleStyle(getResourceId(index, -1))
+    override fun getStyle(index: Int): Style = ResourceStyle(getResourceId(index, -1))
 
     override fun recycle() {
         typedArray.recycle()

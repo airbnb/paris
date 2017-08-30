@@ -6,7 +6,9 @@ import android.support.annotation.StyleRes
 import android.support.annotation.UiThread
 import android.util.AttributeSet
 import android.view.View
-import com.airbnb.paris.proxy.Proxy
+import com.airbnb.paris.styles.AttributeSetStyle
+import com.airbnb.paris.styles.ProgrammaticStyle
+import com.airbnb.paris.styles.ResourceStyle
 
 @UiThread
 abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val view: V) {
@@ -19,14 +21,14 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
      */
     fun apply(attributeSet: AttributeSet?) {
         if (attributeSet != null) {
-            apply(SimpleStyle(attributeSet))
+            apply(AttributeSetStyle(attributeSet))
         } else {
-            apply(SimpleStyle.EMPTY)
+            apply(ProgrammaticStyle.EMPTY)
         }
     }
 
     fun apply(@StyleRes styleRes: Int) {
-        apply(SimpleStyle(styleRes))
+        apply(ResourceStyle(styleRes))
     }
 
     open fun apply(style: Style) {

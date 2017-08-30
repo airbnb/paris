@@ -3,8 +3,8 @@ package com.airbnb.paris;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
-import com.airbnb.paris.proxy.TextViewProxyStyleApplier;
-import com.airbnb.paris.proxy.ViewProxyStyleApplier;
+import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
+import com.airbnb.paris.proxies.ViewProxyStyleApplier;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 

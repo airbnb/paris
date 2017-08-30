@@ -1,4 +1,4 @@
-package com.airbnb.paris.proxy;
+package com.airbnb.paris.proxies;
 
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;

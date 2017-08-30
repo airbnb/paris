@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
+import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.test.R
 import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat
@@ -199,7 +200,7 @@ class MapTypedArrayWrapperTest {
     fun getStyle() {
         val map = mapOf(R.attr.formatReference to ResourceId(R.style.Green))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
-        val actual = SimpleStyle(R.style.Green)
+        val actual = ResourceStyle(R.style.Green)
         assertEquals(actual, wrapper.getStyle(R.styleable.Formats_formatReference))
     }
 

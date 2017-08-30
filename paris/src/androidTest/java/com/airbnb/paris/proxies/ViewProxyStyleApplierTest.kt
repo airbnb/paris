@@ -1,4 +1,4 @@
-package com.airbnb.paris.proxy
+package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.content.res.Resources

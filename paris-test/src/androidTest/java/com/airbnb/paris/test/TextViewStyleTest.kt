@@ -9,7 +9,7 @@ import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
-import com.airbnb.paris.proxy.TextViewProxyStyleApplier
+import com.airbnb.paris.proxies.TextViewProxyStyleApplier
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

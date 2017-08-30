@@ -15,7 +15,7 @@ import android.support.annotation.StringRes;
 import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
-import com.airbnb.paris.proxy.ViewProxyStyleApplier;
+import com.airbnb.paris.proxies.ViewProxyStyleApplier;
 import java.lang.CharSequence;
 import java.lang.Override;
 import java.lang.String;

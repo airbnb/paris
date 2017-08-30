@@ -2,7 +2,7 @@ package com.airbnb.paris.test;
 
 import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
-import com.airbnb.paris.proxy.ViewProxyStyleApplier;
+import com.airbnb.paris.proxies.ViewProxyStyleApplier;
 import java.lang.Override;
 
 public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {

@@ -1,4 +1,4 @@
-package com.airbnb.paris.proxy
+package com.airbnb.paris
 
 import android.view.View
 

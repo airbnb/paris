@@ -5,7 +5,7 @@ import android.support.annotation.AnyRes
 import android.support.annotation.DimenRes
 import android.support.annotation.StyleRes
 import android.util.TypedValue
-import com.airbnb.paris.SimpleStyle
+import com.airbnb.paris.styles.ResourceStyle
 
 fun Resources.dpToPx(dps: Int) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dps.toFloat(), displayMetrics).toInt()
@@ -27,4 +27,4 @@ fun Resources.getLayoutDimension(@DimenRes res: Int): Int {
     }
 }
 
-fun Resources.getStyle(@StyleRes res: Int) = SimpleStyle(res)
+fun Resources.getStyle(@StyleRes res: Int) = ResourceStyle(res)

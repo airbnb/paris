@@ -7,6 +7,7 @@ import android.os.Build
 import android.support.annotation.AttrRes
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
+import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat
 import com.airbnb.paris.utils.getLayoutDimension
@@ -100,7 +101,7 @@ class MapTypedArrayWrapper constructor(
             getValue(index) { resId -> resources.getTextArray(resId) }
 
     override fun getStyle(index: Int): Style =
-            getValue(index) { resId -> SimpleStyle(resId) }
+            getValue(index) { resId -> ResourceStyle(resId) }
 
     override fun recycle() {
         //

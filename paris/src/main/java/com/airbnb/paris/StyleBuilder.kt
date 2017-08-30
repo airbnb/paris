@@ -2,13 +2,17 @@ package com.airbnb.paris
 
 import android.support.annotation.StyleRes
 import android.util.AttributeSet
+import com.airbnb.paris.styles.AttributeSetStyle
+import com.airbnb.paris.styles.MultiStyle
+import com.airbnb.paris.styles.ProgrammaticStyle
+import com.airbnb.paris.styles.ResourceStyle
 
 @Suppress("UNCHECKED_CAST")
 abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *>> @JvmOverloads constructor(
         private val applier: A? = null,
         private var name: String = "a_programmatic_StyleBuilder") {
 
-    protected var builder = SimpleStyle.builder()
+    protected var builder = ProgrammaticStyle.builder()
 
     private var styles = ArrayList<Style>()
 
@@ -23,14 +27,14 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
 
     fun add(attributeSet: AttributeSet?): B {
         if (attributeSet != null) {
-            add(SimpleStyle(attributeSet))
+            add(AttributeSetStyle(attributeSet))
         } else {
-            add(SimpleStyle.EMPTY)
+            add(ProgrammaticStyle.EMPTY)
         }
         return this as B
     }
 
-    fun add(@StyleRes styleRes: Int): B = add(SimpleStyle(styleRes))
+    fun add(@StyleRes styleRes: Int): B = add(ResourceStyle(styleRes))
 
     fun add(style: Style): B {
         consumeSimpleStyleBuilder()
@@ -47,7 +51,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
 
         consumeSimpleStyleBuilder()
         return when (styles.size) {
-            0 -> SimpleStyle.EMPTY
+            0 -> ProgrammaticStyle.EMPTY
             1 -> styles.first()
             else -> MultiStyle(name, styles)
         }
@@ -61,7 +65,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
     protected fun consumeSimpleStyleBuilder() {
         if (!builder.isEmpty()) {
             styles.add(builder.build())
-            builder = SimpleStyle.builder()
+            builder = ProgrammaticStyle.builder()
         }
     }
 

@@ -1,23 +1,17 @@
-package com.airbnb.paris
+package com.airbnb.paris.styles
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.AnyRes
 import android.support.annotation.AttrRes
-import android.support.annotation.StyleRes
-import android.util.AttributeSet
-import com.airbnb.paris.Style.DebugListener
+import com.airbnb.paris.*
 import java.util.*
 
-data class SimpleStyle internal constructor(
+data class ProgrammaticStyle constructor(
         private val attributeMap: Map<Int, Any>?,
-        private val attributeSet: AttributeSet?,
-        @StyleRes private val styleRes: Int,
         private var name: String? = null) : Style {
 
-    private constructor(builder: Builder) : this(builder.attrResToValueResMap, null, 0, builder.name)
-    constructor(attributeSet: AttributeSet) : this(null, attributeSet, 0)
-    constructor(@StyleRes styleRes: Int) : this(null, null, styleRes)
+    private constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
 
     data class Builder internal constructor(
             internal val attrResToValueResMap: HashMap<Int, Any> = HashMap<Int, Any>(),
@@ -41,33 +35,30 @@ data class SimpleStyle internal constructor(
             return this
         }
 
-        fun build(): SimpleStyle = SimpleStyle(this)
+        fun build(): ProgrammaticStyle = ProgrammaticStyle(this)
     }
 
     companion object {
-        internal val EMPTY = SimpleStyle(null, null, 0)
+        internal val EMPTY = ProgrammaticStyle(null, null)
 
         fun builder(): Builder = Builder()
     }
 
-    override val shouldApplyParent = attributeSet == null
+    override val shouldApplyParent = true
 
     /**
      * Visible for debug
      */
-    override var debugListener: DebugListener? = null
+    override var debugListener: Style.DebugListener? = null
 
     override fun name(context: Context): String = when {
         name != null -> name!!
-        styleRes != 0 -> context.resources.getResourceEntryName(styleRes)
         else -> "a_programmatic_SimpleStyle"
     }
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper = when {
         attributeMap != null -> MapTypedArrayWrapper(context.resources, attrs, attributeMap)
-        attributeSet != null -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, styleRes))
-        styleRes != 0 -> TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
         else -> EmptyTypedArrayWrapper
     }
 }
