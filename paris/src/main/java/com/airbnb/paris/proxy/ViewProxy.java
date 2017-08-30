@@ -165,32 +165,32 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     @Attr(R2.styleable.Paris_View_android_minWidth)
-    void setMinWidth(@Px Integer minWidth) {
+    void setMinWidth(@Px int minWidth) {
         getView().setMinimumWidth(minWidth);
     }
 
     @Attr(R2.styleable.Paris_View_android_padding)
-    void setPadding(@Px Integer padding) {
+    void setPadding(@Px int padding) {
         getView().setPadding(padding, padding, padding, padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingBottom)
-    void setPaddingBottom(@Px Integer padding) {
+    void setPaddingBottom(@Px int padding) {
         ViewExtensionsKt.setPaddingBottom(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingLeft)
-    void setPaddingLeft(@Px Integer padding) {
+    void setPaddingLeft(@Px int padding) {
         ViewExtensionsKt.setPaddingLeft(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingRight)
-    void setPaddingRight(@Px Integer padding) {
+    void setPaddingRight(@Px int padding) {
         ViewExtensionsKt.setPaddingRight(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingTop)
-    void setPaddingTop(@Px Integer padding) {
+    void setPaddingTop(@Px int padding) {
         ViewExtensionsKt.setPaddingTop(getView(), padding);
     }
 
