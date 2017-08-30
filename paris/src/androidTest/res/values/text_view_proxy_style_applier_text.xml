@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="TextViewProxyStyleApplierTest_drawables">
+        <item name="android:drawableBottom">@android:drawable/ic_delete</item>
+        <item name="android:drawableLeft">@android:drawable/ic_delete</item>
+        <item name="android:drawableRight">@android:drawable/ic_delete</item>
+        <item name="android:drawableTop">@android:drawable/ic_delete</item>
+    </style>
+
+    <style name="TextViewProxyStyleApplierTest_no_drawables">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <integer name="text_view_proxy_style_applier_test_ellipsize">3</integer>
+    <style name="TextViewProxyStyleApplierTest_ellipsize">
+        <item name="android:ellipsize">@integer/text_view_proxy_style_applier_test_ellipsize</item>
+    </style>
+
+    <style name="TextViewProxyStyleApplierTest_gravity">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <item format="float" type="dimen" name="text_view_proxy_style_applier_test_letter_spacing">1.4</item>
+    <style name="TextViewProxyStyleApplierTest_letterSpacing">
+        <item name="android:letterSpacing" tools:targetApi="lollipop">@dimen/text_view_proxy_style_applier_test_letter_spacing</item>
+    </style>
+
+    <integer name="text_view_proxy_style_applier_test_lines">4</integer>
+    <style name="TextViewProxyStyleApplierTest_lines">
+        <item name="android:lines">@integer/text_view_proxy_style_applier_test_lines</item>
+    </style>
+
+    <dimen name="text_view_proxy_style_applier_test_line_spacing_extra">4dp</dimen>
+    <style name="TextViewProxyStyleApplierTest_lineSpacingExtra">
+        <item name="android:lineSpacingExtra">@dimen/text_view_proxy_style_applier_test_line_spacing_extra</item>
+    </style>
+
+    <item format="float" type="dimen" name="text_view_proxy_style_applier_test_line_spacing_multiplier">1.5</item>
+    <style name="TextViewProxyStyleApplierTest_lineSpacingMultiplier">
+        <item name="android:lineSpacingMultiplier">@dimen/text_view_proxy_style_applier_test_line_spacing_multiplier</item>
+    </style>
+
+    <integer name="text_view_proxy_style_applier_test_max_lines">3</integer>
+    <style name="TextViewProxyStyleApplierTest_maxLines">
+        <item name="android:maxLines">@integer/text_view_proxy_style_applier_test_max_lines</item>
+    </style>
+
+    <integer name="text_view_proxy_style_applier_test_min_lines">4</integer>
+    <style name="TextViewProxyStyleApplierTest_minLines">
+        <item name="android:minLines">@integer/text_view_proxy_style_applier_test_min_lines</item>
+    </style>
+
+    <dimen name="text_view_proxy_style_applier_test_min_width">99dp</dimen>
+    <style name="TextViewProxyStyleApplierTest_minWidth">
+        <item name="android:minWidth">@dimen/text_view_proxy_style_applier_test_min_width</item>
+    </style>
+
+    <style name="TextViewProxyStyleApplierTest_singleLine">
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <bool name="text_view_proxy_style_applier_test_text_all_caps">true</bool>
+    <style name="TextViewProxyStyleApplierTest_textAllCaps">
+        <item name="android:textAllCaps">@bool/text_view_proxy_style_applier_test_text_all_caps</item>
+    </style>
+
+    <dimen name="text_view_proxy_style_applier_test_text_size">24sp</dimen>
+    <style name="TextViewProxyStyleApplierTest_textSize">
+        <item name="android:textSize">@dimen/text_view_proxy_style_applier_test_text_size</item>
+    </style>
+
+</resources>

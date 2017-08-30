@@ -45,24 +45,24 @@ class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         drawableBottom = null;
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_drawableBottom)
+    void setDrawableBottom(@Nullable Drawable drawable) {
+        drawableBottom = drawable;
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_drawableLeft)
-    void setDrawableLeft(Drawable drawable) {
+    void setDrawableLeft(@Nullable Drawable drawable) {
         drawableLeft = drawable;
     }
 
-    @Attr(R2.styleable.Paris_TextView_android_drawableTop)
-    void setDrawableTop(Drawable drawable) {
-        drawableTop = drawable;
-    }
-
     @Attr(R2.styleable.Paris_TextView_android_drawableRight)
-    void setDrawableRight(Drawable drawable) {
+    void setDrawableRight(@Nullable Drawable drawable) {
         drawableRight = drawable;
-    }
 
-    @Attr(R2.styleable.Paris_TextView_android_drawableBottom)
-    void setDrawableBottom(Drawable drawable) {
-        drawableBottom = drawable;
+    }
+    @Attr(R2.styleable.Paris_TextView_android_drawableTop)
+    void setDrawableTop(@Nullable Drawable drawable) {
+        drawableTop = drawable;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_ellipsize)
@@ -100,10 +100,14 @@ class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     }
 
     @Attr(R2.styleable.Paris_TextView_android_lines)
-    void set(int lines) {
+    void setLines(int lines) {
         getView().setLines(lines);
     }
 
+    /**
+     * View.setLineSpacing(...) takes a float for extra spacing but it's treated as pixels so seems
+     * to make more sense to use an int here and mark it as a dimension
+     */
     @Attr(R2.styleable.Paris_TextView_android_lineSpacingExtra)
     void setLineSpacingExtra(@Px int lineSpacingExtra) {
         getView().setLineSpacing(lineSpacingExtra, getView().getLineSpacingMultiplier());
@@ -151,6 +155,7 @@ class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
 
     @Attr(R2.styleable.Paris_TextView_android_textSize)
     void setTextSize(@Px int textSize) {
+        // TODO Change to SP?
         getView().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 }

@@ -38,7 +38,7 @@ class TextViewProxyStyleApplierTest {
         assertNull(view.compoundDrawables[1])
         assertNull(view.compoundDrawables[2])
         assertNull(view.compoundDrawables[3])
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_drawables)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_drawables)
         assertNotNull(view.compoundDrawables[0])
         assertNotNull(view.compoundDrawables[1])
         assertNotNull(view.compoundDrawables[2])
@@ -50,24 +50,24 @@ class TextViewProxyStyleApplierTest {
         // If a style is applied that doesn't change the drawable then it should still be there
 
         assertNull(view.compoundDrawables[0])
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_drawables)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_drawables)
         val drawableLeft = view.compoundDrawables[0];
         assertNotNull(drawableLeft)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_no_drawables)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_no_drawables)
         assertEquals(drawableLeft, view.compoundDrawables[0])
     }
 
     @Test
     fun textViewEllipsize() {
         assertNull(view.ellipsize)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_ellipsize)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_ellipsize)
         assertEquals(TextUtils.TruncateAt.END, view.ellipsize)
     }
 
     @Test
     fun textViewGravity() {
         assertNotEquals(Gravity.CENTER, view.gravity)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_gravity)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_gravity)
         assertEquals(Gravity.CENTER, view.gravity)
     }
 
@@ -75,9 +75,9 @@ class TextViewProxyStyleApplierTest {
     fun textViewLetterSpacing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             assertEquals(0.0f, view.letterSpacing)
-            TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_letterSpacing)
+            TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_letterSpacing)
             val typedValue = TypedValue()
-            res.getValue(R.dimen.test_text_view_letter_spacing, typedValue, true)
+            res.getValue(R.dimen.text_view_proxy_style_applier_test_letter_spacing, typedValue, true)
             assertEquals(typedValue.float, view.letterSpacing)
         }
     }
@@ -85,66 +85,66 @@ class TextViewProxyStyleApplierTest {
     @Test
     fun textViewLines() {
         val spy = spy(view)
-        TextViewProxyStyleApplier(spy).apply(R.style.Test_TextView_lines)
-        Mockito.verify(spy).setLines(view.resources.getInteger(R.integer.test_text_view_lines))
+        TextViewProxyStyleApplier(spy).apply(R.style.TextViewProxyStyleApplierTest_lines)
+        Mockito.verify(spy).setLines(view.resources.getInteger(R.integer.text_view_proxy_style_applier_test_lines))
     }
 
     @Test
     fun textViewLineSpacingExtra() {
         assertEquals(0.0f, view.lineSpacingExtra)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_lineSpacingExtra)
-        assertEquals(res.getDimensionPixelSize(R.dimen.test_text_view_line_spacing_extra) * 1.0f, view.lineSpacingExtra)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_lineSpacingExtra)
+        assertEquals(res.getDimensionPixelSize(R.dimen.text_view_proxy_style_applier_test_line_spacing_extra) * 1.0f, view.lineSpacingExtra)
     }
 
     @Test
     fun textViewLineSpacingMultiplier() {
         assertEquals(1.0f, view.lineSpacingMultiplier)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_lineSpacingMultiplier)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_lineSpacingMultiplier)
         val typedValue = TypedValue()
-        res.getValue(R.dimen.test_text_view_line_spacing_multiplier, typedValue, true)
+        res.getValue(R.dimen.text_view_proxy_style_applier_test_line_spacing_multiplier, typedValue, true)
         assertEquals(typedValue.float, view.lineSpacingMultiplier)
     }
 
     @Test
     fun textViewMaxLines() {
         assertEquals(Integer.MAX_VALUE, view.maxLines)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_maxLines)
-        assertEquals(res.getInteger(R.integer.test_text_view_max_lines), view.maxLines)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_maxLines)
+        assertEquals(res.getInteger(R.integer.text_view_proxy_style_applier_test_max_lines), view.maxLines)
     }
 
     @Test
     fun textViewMinLines() {
         assertEquals(0, view.minLines)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_minLines)
-        assertEquals(res.getInteger(R.integer.test_text_view_min_lines), view.minLines)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_minLines)
+        assertEquals(res.getInteger(R.integer.text_view_proxy_style_applier_test_min_lines), view.minLines)
     }
 
     @Test
     fun textViewMinWidth() {
         assertEquals(0, view.minWidth)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_minWidth)
-        assertEquals(res.getDimensionPixelSize(R.dimen.test_text_view_min_width), view.minWidth)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_minWidth)
+        assertEquals(res.getDimensionPixelSize(R.dimen.text_view_proxy_style_applier_test_min_width), view.minWidth)
     }
 
     @Test
     fun textViewSingleLine() {
         val spy = spy(view)
-        TextViewProxyStyleApplier(spy).apply(R.style.Test_TextView_singleLine)
+        TextViewProxyStyleApplier(spy).apply(R.style.TextViewProxyStyleApplierTest_singleLine)
         Mockito.verify(spy).setSingleLine(true)
     }
 
     @Test
     fun textViewTextAllCaps() {
         val spy = spy(view)
-        TextViewProxyStyleApplier(spy).apply(R.style.Test_TextView_textAllCaps)
+        TextViewProxyStyleApplier(spy).apply(R.style.TextViewProxyStyleApplierTest_textAllCaps)
         Mockito.verify(spy).setAllCaps(true)
     }
 
     @Test
     fun textViewTextSize() {
-        val textSize = res.getDimensionPixelSize(R.dimen.test_text_view_text_size) * 1.0f
+        val textSize = res.getDimensionPixelSize(R.dimen.text_view_proxy_style_applier_test_text_size) * 1.0f
         assertNotEquals(textSize, view.textSize)
-        TextViewProxyStyleApplier(view).apply(R.style.Test_TextView_textSize)
+        TextViewProxyStyleApplier(view).apply(R.style.TextViewProxyStyleApplierTest_textSize)
         assertEquals(textSize, view.textSize)
     }
 }
