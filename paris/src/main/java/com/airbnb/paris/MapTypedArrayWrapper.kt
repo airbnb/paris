@@ -106,11 +106,6 @@ class MapTypedArrayWrapper constructor(
         //
     }
 
-    fun <T> getValue(index: Int): T {
-        @Suppress("UNCHECKED_CAST")
-        return styleableAttrIndexToValueRes(index)!! as T
-    }
-
     private fun <T> getValue(index: Int, resourceGetter: (Int) -> T): T {
         val value = styleableAttrIndexToValueRes(index)!!
         @Suppress("UNCHECKED_CAST")

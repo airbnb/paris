@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import com.airbnb.paris.test.R
+import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat
 import org.junit.Assert
 import org.junit.Assert.assertEquals
@@ -114,6 +115,14 @@ class MapTypedArrayWrapperTest {
     }
 
     @Test
+    fun getDimensionPixelSizeDpConversion() {
+        val map = mapOf(R.attr.formatDimension to DpValue(10))
+        wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
+        val actual = res.dpToPx(10)
+        assertEquals(actual, wrapper.getDimensionPixelSize(R.styleable.Formats_formatDimension, actual-1))
+    }
+
+    @Test
     fun getDrawable() {
         val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.format_drawable))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
@@ -184,6 +193,14 @@ class MapTypedArrayWrapperTest {
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getString(R.string.format_string)
         assertEquals(actual, wrapper.getString(R.styleable.Formats_formatString))
+    }
+
+    @Test
+    fun getStyle() {
+        val map = mapOf(R.attr.formatReference to ResourceId(R.style.Green))
+        wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
+        val actual = SimpleStyle(R.style.Green)
+        assertEquals(actual, wrapper.getStyle(R.styleable.Formats_formatReference))
     }
 
     @Test
