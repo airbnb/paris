@@ -1,14 +1,16 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext {
+        kotlinVersion = '1.1.4-2'
+    }
     repositories {
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        // TODO  Use kotlinVersion variable
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.4-2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -28,8 +30,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    kotlinVersion = '1.1.4-2'
-
     deps = [
             googleAutoValue: "com.google.auto.value:auto-value:1.4.1",
             googleGuava: "com.google.guava:guava:22.0-rc1-android",

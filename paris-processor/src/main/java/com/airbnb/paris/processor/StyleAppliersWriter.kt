@@ -62,12 +62,15 @@ internal object StyleAppliersWriter {
             }
             rClassName = arbitraryResId.className!!.enclosingClassName()
 
-            styleTypeBuilder
-                    .addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
-                    // TODO Only add if there are attributes with a default value?
-                    .addMethod(buildAttributesWithDefaultValueMethod(styleableInfo.attrs))
-                    .addMethod(buildProcessStyleableFieldsMethod(styleableInfo.styleableFields))
-                    .addMethod(buildProcessAttributesMethod(styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
+            val attributesWithDefaultValueMethod = buildAttributesWithDefaultValueMethod(styleableInfo.attrs)
+            styleTypeBuilder.apply {
+                addMethod(buildAttributesMethod(rClassName!!, styleableInfo.styleableResourceName))
+                attributesWithDefaultValueMethod?.let {
+                    addMethod(attributesWithDefaultValueMethod)
+                }
+                addMethod(buildProcessStyleableFieldsMethod(styleableInfo.styleableFields))
+                addMethod(buildProcessAttributesMethod(styleableInfo.beforeStyles, styleableInfo.afterStyles, styleableInfo.attrs))
+            }
 
         }
 
@@ -75,7 +78,6 @@ internal object StyleAppliersWriter {
         addStyleBuilderInnerClass(styleTypeBuilder, styleApplierClassName, rClassName, styleableInfo, parentStyleApplierClassName)
 
         for (styleableFieldInfo in styleableInfo.styleableFields) {
-            // TODO Enable @StyleableField for proxies? Why not
             val subStyleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
                     styleablesInfo,
@@ -123,21 +125,25 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildAttributesWithDefaultValueMethod(attrs: List<AttrInfo>): MethodSpec {
-        val builder = MethodSpec.methodBuilder("attributesWithDefaultValue")
-                .addAnnotation(Override::class.java)
-                .addModifiers(Modifier.PUBLIC)
-                .returns(ArrayTypeName.of(Integer.TYPE))
-                .addCode("return new int[] {")
+    private fun buildAttributesWithDefaultValueMethod(attrs: List<AttrInfo>): MethodSpec? {
         val attrsWithDefaultValue = attrs
                 .filter { it.defaultValueResId != null }
                 .map { it.styleableResId}
                 .toSet()
-        for (attr in attrsWithDefaultValue) {
-            builder.addCode("\$L,", attr.code)
+        if (attrsWithDefaultValue.isNotEmpty()) {
+            val builder = MethodSpec.methodBuilder("attributesWithDefaultValue")
+                    .addAnnotation(Override::class.java)
+                    .addModifiers(Modifier.PUBLIC)
+                    .returns(ArrayTypeName.of(Integer.TYPE))
+                    .addCode("return new int[] {")
+            for (attr in attrsWithDefaultValue) {
+                builder.addCode("\$L,", attr.code)
+            }
+            return builder.addCode("};\n")
+                    .build()
+        } else {
+            return null
         }
-        return builder.addCode("};\n")
-                .build()
     }
 
     private fun buildProcessStyleableFieldsMethod(styleableFields: List<StyleableFieldInfo>): MethodSpec {
@@ -261,12 +267,13 @@ internal object StyleAppliersWriter {
                 .addMethod(buildStyleBuilderApplierConstructorMethod(TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderEmptyConstructorMethod())
 
-        // TODO Remove duplicate attribute names
-        for (styleableFieldInfo in styleableInfo.styleableFields) {
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(rClassName!!, styleableInfo.styleableResourceName, styleableFieldInfo))
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
-            baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
-        }
+        styleableInfo.styleableFields
+                .distinctBy { it.styleableResId.resourceName }
+                .forEach { styleableFieldInfo ->
+                    baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubResMethod(rClassName!!, styleableInfo.styleableResourceName, styleableFieldInfo))
+                    baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
+                    baseStyleBuilderTypeBuilder.addMethod(buildStyleBuilderAddSubBuilderMethod(rClassName, styleableInfo.styleableResourceName, styleableFieldInfo))
+                }
 
         styleableInfo.attrs
                 // Multiple @Attr can have the same value
@@ -368,8 +375,7 @@ internal object StyleAppliersWriter {
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableFieldInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
-                // TODO Set return type to builder for lambdas to work properly
-                .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(ClassName.get(Function1::class.java), styleBuilderClassName, TypeName.get(Void::class.java)), "function").build())
+                .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(ParisProcessor.STYLE_BUILDER_FUNCTION_CLASS_NAME, styleBuilderClassName), "function").build())
                 .returns(TypeVariableName.get("B"))
                 .addStatement("\$T subBuilder = new \$T()", styleBuilderClassName, styleBuilderClassName)
                 .addStatement("function.invoke(subBuilder)")
@@ -403,8 +409,6 @@ internal object StyleAppliersWriter {
      * @param groupedAttrs Grouped by styleable index resource name
      */
     private fun buildAttributeSetterMethods(rClassName: ClassName, styleableResourceName: String, groupedAttrs: List<AttrInfo>): List<MethodSpec> {
-        // TODO Get resource type if possible
-
         val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
         check(nonResTargetAttrs.isEmpty() || nonResTargetAttrs.distinctBy { it.targetType }.size == 1) {

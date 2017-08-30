@@ -36,11 +36,6 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     @Override
-    public int[] attributesWithDefaultValue() {
-        return new int[] {};
-    }
-
-    @Override
     protected void processStyleableFields(Style style, TypedArrayWrapper a) {
         Resources res = getView().getContext().getResources();
     }

@@ -7,9 +7,8 @@ import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.TypedArrayWrapper;
 import com.airbnb.paris.proxy.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxy.ViewProxyStyleApplier;
+import com.airbnb.paris.utils.StyleBuilderFunction;
 import java.lang.Override;
-import java.lang.Void;
-import kotlin.jvm.functions.Function1;
 
 public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public MyViewStyleApplier(MyView view) {
@@ -24,11 +23,6 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     @Override
     protected int[] attributes() {
         return R.styleable.MyView;
-    }
-
-    @Override
-    public int[] attributesWithDefaultValue() {
-        return new int[] {};
     }
 
     @Override
@@ -91,7 +85,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
-        public B titleStyle(Function1<TextViewProxyStyleApplier.StyleBuilder, Void> function) {
+        public B titleStyle(StyleBuilderFunction<TextViewProxyStyleApplier.StyleBuilder> function) {
             TextViewProxyStyleApplier.StyleBuilder subBuilder = new TextViewProxyStyleApplier.StyleBuilder();
             function.invoke(subBuilder);
             getBuilder().put(R.styleable.MyView[R.styleable.MyView_titleStyle], subBuilder.build());
@@ -108,7 +102,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
-        public B subtitleStyle(Function1<TextViewProxyStyleApplier.StyleBuilder, Void> function) {
+        public B subtitleStyle(StyleBuilderFunction<TextViewProxyStyleApplier.StyleBuilder> function) {
             TextViewProxyStyleApplier.StyleBuilder subBuilder = new TextViewProxyStyleApplier.StyleBuilder();
             function.invoke(subBuilder);
             getBuilder().put(R.styleable.MyView[R.styleable.MyView_subtitleStyle], subBuilder.build());
@@ -125,7 +119,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
             return (B) this;
         }
 
-        public B dividerStyle(Function1<ViewProxyStyleApplier.StyleBuilder, Void> function) {
+        public B dividerStyle(StyleBuilderFunction<ViewProxyStyleApplier.StyleBuilder> function) {
             ViewProxyStyleApplier.StyleBuilder subBuilder = new ViewProxyStyleApplier.StyleBuilder();
             function.invoke(subBuilder);
             getBuilder().put(R.styleable.MyView[R.styleable.MyView_dividerStyle], subBuilder.build());

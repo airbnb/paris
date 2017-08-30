@@ -1,7 +1,6 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.ClassName
 import javax.annotation.processing.RoundEnvironment
@@ -42,16 +41,24 @@ internal class StyleableInfo private constructor(
     companion object {
 
         fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types,
-                            resourceScanner: AndroidResourceScanner,
                             classesToStyleableFieldInfo: Map<Element, List<StyleableFieldInfo>>,
                             classesToBeforeStyleInfo: Map<Element, List<BeforeStyleInfo>>,
                             classesToAfterStyleInfo: Map<Element, List<AfterStyleInfo>>,
                             classesToAttrsInfo: Map<Element, List<AttrInfo>>,
                             classesToStylesInfo: Map<Element, List<StyleInfo>>): List<StyleableInfo> {
-            return roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+            val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+
+            val classesMissingStyleableAnnotation = (classesToStyleableFieldInfo + classesToAttrsInfo)
+                    .filter { (`class`, _) -> `class` !in styleableElements }
+                    .keys
+            check(classesMissingStyleableAnnotation.isEmpty()) {
+                "The class \"${classesMissingStyleableAnnotation.first().simpleName}\" uses @Attr and/or @StyleableField but is not annotated with @Styleable"
+            }
+
+            return styleableElements
                     .mapNotNull {
                         try {
-                            fromElement(elementUtils, typeUtils, resourceScanner, it as TypeElement,
+                            fromElement(elementUtils, typeUtils, it as TypeElement,
                                     classesToStyleableFieldInfo[it] ?: emptyList(),
                                     classesToBeforeStyleInfo[it] ?: emptyList(),
                                     classesToAfterStyleInfo[it] ?: emptyList(),
@@ -67,7 +74,6 @@ internal class StyleableInfo private constructor(
         @Throws(ProcessorException::class)
         private fun fromElement(elementUtils: Elements,
                                 typeUtils: Types,
-                                resourceScanner: AndroidResourceScanner,
                                 element: TypeElement,
                                 styleableFields: List<StyleableFieldInfo>,
                                 beforeStyles: List<BeforeStyleInfo>,
@@ -90,14 +96,12 @@ internal class StyleableInfo private constructor(
             val styleable = element.getAnnotation(Styleable::class.java)
             val styleableResourceName = styleable.value
 
-            check(!styleableResourceName.isEmpty() || !styles.isEmpty(), element) {
-                "@Styleable declaration must have at least a value or a style"
+            check(styleableResourceName.isNotEmpty() || (attrs.isEmpty() && styleableFields.isEmpty())) {
+                "@Styleable is missing its value parameter (@Attr or @StyleableField won't work otherwise)"
             }
             check(styleableResourceName.isEmpty() || !(styleableFields.isEmpty() && attrs.isEmpty())) {
-                "Do not specify the @Styleable value parameter if no class members are annotated with @Attr"
+                "No need to specify the @Styleable value parameter if no class members are annotated with @Attr"
             }
-
-            // TODO Make sure value is specified if @Attr's or @StyleableField's are
 
             return StyleableInfo(
                     styleableFields,

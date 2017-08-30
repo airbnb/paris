@@ -9,8 +9,7 @@ class StyleApplierUtils {
 
     class DebugListener(
             private val viewToStyles: HashMap<View, MutableSet<Style>>,
-            private val styleToAttrNames: HashMap<Style, MutableSet<String>>,
-            private val ignoredAttributeIndexes: IntArray?) : Style.DebugListener {
+            private val styleToAttrNames: HashMap<Style, MutableSet<String>>) : Style.DebugListener {
 
         private fun <K, V> getOrDefault(map: Map<K, V>, key: K, default: V): V {
             return if (map.containsKey(key)) {
@@ -20,7 +19,7 @@ class StyleApplierUtils {
             }
         }
 
-        override fun beforeTypedArrayProcessed(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper) {
+        override fun processAttributes(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper) {
             val styles = getOrDefault(viewToStyles, view, HashSet())
             styles.add(style)
             viewToStyles.put(view, styles)
@@ -44,16 +43,11 @@ class StyleApplierUtils {
                 return
             }
 
-            // TODO What about substyles???
-
-            // These can be safely ignored since a value is always applied
-            val attributesWithDefaultValue = applier.attributesWithDefaultValue()
-
             val viewToStyles = HashMap<View, MutableSet<Style>>()
             val styleToAttrNames = HashMap<Style, MutableSet<String>>()
 
             for (parentStyle in parentStyles) {
-                parentStyle.debugListener = DebugListener(viewToStyles, styleToAttrNames, attributesWithDefaultValue)
+                parentStyle.debugListener = DebugListener(viewToStyles, styleToAttrNames)
                 applier.apply(parentStyle)
             }
 

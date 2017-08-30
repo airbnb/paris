@@ -6,13 +6,13 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
+import com.airbnb.paris.processor.utils.asTypeElement
 import com.airbnb.paris.processor.utils.className
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.MirroredTypeException
-import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -31,6 +31,7 @@ class ParisProcessor : AbstractProcessor() {
         internal val STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleBuilder".className()
         internal val STYLE_APPLIER_UTILS_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplierUtils".className()
         internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.TypedArrayWrapper".className()
+        internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
         internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
 
         internal val BUILT_IN_STYLE_APPLIERS = mapOf(
@@ -66,9 +67,7 @@ class ParisProcessor : AbstractProcessor() {
         return types
     }
 
-    override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.latestSupported()
-    }
+    override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         var generateParisClass = true
@@ -83,13 +82,14 @@ class ParisProcessor : AbstractProcessor() {
             check(defaultStyleNameFormat.isBlank() || rType != null) {
                 "If defaultStyleNameFormat is specified, rClass must be as well"
             }
-
-            // TODO Check that rType is R
+            check(rType == null || rType!!.asTypeElement(typeUtils).simpleName.toString() == "R") {
+                "@ParisConfig's rClass parameter is pointing to a non-R class"
+            }
         }
 
-        val classesToBeforeStyleInfo = BeforeStyleInfo.fromEnvironment(roundEnv)
+        val classesToBeforeStyleInfo = BeforeStyleInfo.fromEnvironment(this, roundEnv)
                 .groupBy { it.enclosingElement }
-        val classesToAfterStyleInfo = AfterStyleInfo.fromEnvironment(roundEnv)
+        val classesToAfterStyleInfo = AfterStyleInfo.fromEnvironment(this, roundEnv)
                 .groupBy { it.enclosingElement }
         val classesToAttrsInfo = AttrInfo.fromEnvironment(roundEnv, elementUtils, typeUtils, resourceScanner)
                 .groupBy { it.enclosingElement }
@@ -98,7 +98,7 @@ class ParisProcessor : AbstractProcessor() {
         val classesToStylesInfo = StyleInfo.fromEnvironment(this, roundEnv)
                 .groupBy { it.enclosingElement }
         val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(
-                roundEnv, elementUtils, typeUtils, resourceScanner,
+                roundEnv, elementUtils, typeUtils,
                 classesToStyleableFieldInfo,
                 classesToBeforeStyleInfo,
                 classesToAfterStyleInfo,
@@ -131,7 +131,8 @@ class ParisProcessor : AbstractProcessor() {
             rType = mte.typeMirror
         }
 
-        return if (rType!!.kind == TypeKind.VOID) {
+        val voidType = elementUtils.getTypeElement(Void::class.java.canonicalName).asType()
+        return if (typeUtils.isSameType(voidType, rType)) {
             null
         } else {
             rType

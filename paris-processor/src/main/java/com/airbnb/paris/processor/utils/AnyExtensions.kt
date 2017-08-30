@@ -13,11 +13,11 @@ fun Any.check(value: Boolean, lazyMessage: () -> String) {
 }
 
 @Throws(ProcessorException::class)
-fun Any.fail(element: Element, lazyMessage: () -> String) {
+fun Any.fail(element: Element, lazyMessage: () -> String): Nothing {
     fail { "${element.simpleName}: ${lazyMessage()}" }
 }
 
 @Throws(ProcessorException::class)
-fun Any.fail(lazyMessage: () -> String) {
+fun Any.fail(lazyMessage: () -> String): Nothing {
     throw ProcessorException(lazyMessage())
 }
