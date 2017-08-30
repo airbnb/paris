@@ -1,9 +1,11 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Fraction
+import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.hasAnnotation
 import com.airbnb.paris.processor.utils.hasAnyAnnotation
 import com.airbnb.paris.processor.utils.isView
+import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -131,6 +133,36 @@ internal class Format private constructor(
             Type.DIMENSION_PIXEL_OFFSET,
             Type.DIMENSION_PIXEL_SIZE
     )
+
+    val resAnnotation: ClassName
+        get() = when (type) {
+            Type.BOOLEAN -> ClassNames.ANDROID_BOOL_RES
+            Type.CHARSEQUENCE,
+            Type.STRING -> {
+                ClassNames.ANDROID_STRING_RES
+            }
+            Type.CHARSEQUENCE_ARRAY -> ClassNames.ANDROID_ARRAY_RES
+            Type.COLOR,
+            Type.COLOR_STATE_LIST -> {
+                ClassNames.ANDROID_COLOR_RES
+            }
+            Type.DIMENSION,
+            Type.DIMENSION_PIXEL_OFFSET,
+            Type.DIMENSION_PIXEL_SIZE,
+            Type.LAYOUT_DIMENSION -> {
+                ClassNames.ANDROID_DIMEN_RES
+            }
+            Type.DRAWABLE -> ClassNames.ANDROID_DRAWABLE_RES
+            Type.FRACTION -> ClassNames.ANDROID_FRACTION_RES
+            Type.INT,
+            Type.INTEGER -> {
+                ClassNames.ANDROID_INTEGER_RES
+            }
+            Type.NON_RESOURCE_STRING -> ClassNames.ANDROID_ANY_RES // TODO Not sure about this one
+            Type.FLOAT -> ClassNames.ANDROID_ANY_RES // TODO There's no FloatRes so... what?
+            Type.STYLE -> ClassNames.ANDROID_STYLE_RES
+            Type.RESOURCE_ID -> ClassNames.ANDROID_ANY_RES
+        }
 
     fun resourcesMethodCode(resourcesVar: String, valueResIdCode: CodeBlock): CodeBlock {
         val statement = when (type) {

@@ -432,7 +432,7 @@ internal object StyleAppliersWriter {
         methodSpecs.add(MethodSpec.methodBuilder(resMethodName).apply {
             addModifiers(Modifier.PUBLIC)
             addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
-                    .addAnnotation(ClassNames.ANDROID_ANY_RES)
+                    .addAnnotation(attr.targetFormat.resAnnotation)
                     .build())
             returns(TypeVariableName.get("B"))
             addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, attr.styleableResId.code)
