@@ -4,6 +4,7 @@ import android.content.*
 import android.content.res.*
 import android.graphics.*
 import android.graphics.drawable.*
+import android.os.*
 import android.support.test.*
 import android.support.test.runner.*
 import android.text.*
@@ -143,10 +144,12 @@ class TextViewProxyTest {
 
     @Test
     fun setLetterSpacing() {
-        assertProxyEqualsView(
-                listOf(-5f, 0f, 8f, 10f, 11.5f, 17f),
-                TextViewProxy::setLetterSpacing,
-                TextView::getLetterSpacing)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            assertProxyEqualsView(
+                    listOf(-5f, 0f, 8f, 10f, 11.5f, 17f),
+                    TextViewProxy::setLetterSpacing,
+                    TextView::getLetterSpacing)
+        }
     }
 
     @Test
@@ -209,6 +212,7 @@ class TextViewProxyTest {
 
     @Test
     fun setSingleLine_false() {
+        view.maxLines = 1
         proxy.setSingleLine(false)
         assertEquals(Integer.MAX_VALUE, view.maxLines)
     }
@@ -223,6 +227,7 @@ class TextViewProxyTest {
     @Test
     fun setTextAllCaps_false() {
         proxy.setTextAllCaps(false)
+        // TODO This would be true regardless
         assertNull(view.transformationMethod)
     }
 
