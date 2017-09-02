@@ -1,20 +1,12 @@
 package com.airbnb.paris.typed_array_wrappers
 
-import android.content.res.ColorStateList
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.support.annotation.AttrRes
-import android.support.annotation.VisibleForTesting
-import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
-import com.airbnb.paris.DpValue
-import com.airbnb.paris.ResourceId
-import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayWrapper
-import com.airbnb.paris.styles.ResourceStyle
-import com.airbnb.paris.utils.dpToPx
-import com.airbnb.paris.utils.getFloat
-import com.airbnb.paris.utils.getLayoutDimension
+import android.content.res.*
+import android.graphics.drawable.*
+import android.os.*
+import android.support.annotation.*
+import com.airbnb.paris.*
+import com.airbnb.paris.styles.*
+import com.airbnb.paris.utils.*
 
 /*
  * Lexicon:
@@ -24,8 +16,7 @@ import com.airbnb.paris.utils.getLayoutDimension
  */
 // TODO Add support for default values? Doesn't seem like we need it since this is only used internally
 // TODO There seems to be a bug where if this class is internal it can't be accessed by androidTests
-@VisibleForTesting(otherwise = PACKAGE_PRIVATE)
-class MapTypedArrayWrapper constructor(
+internal class MapTypedArrayWrapper constructor(
         private val resources: Resources,
         private val styleableAttrs: IntArray,
         private val attrResToValueResMap: Map<Int, Any>) : TypedArrayWrapper() {

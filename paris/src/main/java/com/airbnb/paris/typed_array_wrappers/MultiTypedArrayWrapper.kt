@@ -1,17 +1,13 @@
 package com.airbnb.paris.typed_array_wrappers
 
-import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
-import android.support.annotation.VisibleForTesting
-import android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE
-import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayWrapper
+import android.content.res.*
+import android.graphics.drawable.*
+import com.airbnb.paris.*
 
 /**
  * @param wrappers These are assumed to have been created with the same styleable attribute list
  */
-@VisibleForTesting(otherwise = PACKAGE_PRIVATE)
-class MultiTypedArrayWrapper constructor(
+internal class MultiTypedArrayWrapper constructor(
         private val wrappers: List<TypedArrayWrapper>) : TypedArrayWrapper() {
 
     private val styleableAttrIndexes by lazy { styleableAttrIndexToWrapperMap.keys.toList() }
