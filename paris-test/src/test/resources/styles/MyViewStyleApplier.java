@@ -70,10 +70,10 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
         }
 
         public StyleBuilder addBlue() {
-            consumeSimpleStyleBuilder();
+            consumeProgrammaticStyleBuilder();
             debugName("Blue");
             MyView.blue(this);
-            consumeSimpleStyleBuilder();
+            consumeProgrammaticStyleBuilder();
             return this;
         }
 
