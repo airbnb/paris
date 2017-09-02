@@ -4,12 +4,10 @@ import android.content.*
 import android.content.res.*
 import android.graphics.*
 import android.graphics.drawable.*
-import android.os.*
 import android.support.test.*
 import android.support.test.runner.*
-import android.text.*
-import android.view.*
 import android.widget.*
+import com.airbnb.paris.proxies.TextViewProxyStyleApplier.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.*
@@ -20,20 +18,15 @@ import org.mockito.Mockito.*
 @RunWith(AndroidJUnit4::class)
 class TextViewProxyStyleApplierTest {
 
-    companion object {
-        private val ARBITRARY_DIMENSIONS = listOf(Integer.MIN_VALUE, -150, 0, 10, 20, 50, 200, 800, Integer.MAX_VALUE)
-        private val ARBITRARY_FLOATS = listOf(-5f, 0f, 8f, 10f, 11.5f, 17f)
-        private val ARBITRARY_INTS = listOf(Integer.MIN_VALUE, -5, 0, 1, 2, 3, 5, 15, Integer.MAX_VALUE)
-        private val BOOLS = listOf(true, false)
-    }
-
     private lateinit var context: Context
     private lateinit var res: Resources
     private lateinit var view: TextView
+    private lateinit var styleApplier: TextViewProxyStyleApplier
+    private lateinit var styleBuilder: StyleBuilder
 
-    private fun apply(builderFunctions: TextViewProxyStyleApplier.StyleBuilder.() -> TextViewProxyStyleApplier.StyleBuilder) =
+    private fun apply(builderFunctions: StyleBuilder.() -> StyleBuilder) =
             TextViewProxyStyleApplier(view).apply(
-                    TextViewProxyStyleApplier.StyleBuilder()
+                    StyleBuilder()
                             .debugName("test")
                             .builderFunctions()
                             .build())
@@ -43,6 +36,26 @@ class TextViewProxyStyleApplierTest {
         context = InstrumentationRegistry.getTargetContext()
         res = context.resources
         view = TextView(context)
+        styleApplier = TextViewProxyStyleApplier(view)
+        styleBuilder = StyleBuilder()
+    }
+
+    @Test
+    fun auto() {
+        for (mapping in (VIEW_MAPPINGS + TEXT_VIEW_MAPPINGS)) {
+            mapping as BaseViewMapping<Any, Any, TextView, Any>
+
+            setup()
+
+            mapping.testValues.forEach {
+                // Set the value on the style builder
+                mapping.setStyleBuilderValueFunction(styleBuilder, it)
+                // Apply the style to the view
+                styleApplier.apply(styleBuilder.build())
+                // Check that the value was correctly applied
+                mapping.assertViewSet(view, it)
+            }
+        }
     }
 
     @Test
@@ -80,103 +93,6 @@ class TextViewProxyStyleApplierTest {
     }
 
     @Test
-    fun applyEllipsize() {
-        mapOf(
-                1 to TextUtils.TruncateAt.START,
-                2 to TextUtils.TruncateAt.MIDDLE,
-                3 to TextUtils.TruncateAt.END,
-                4 to TextUtils.TruncateAt.MARQUEE).forEach {
-            apply {
-                ellipsize(it.key)
-            }
-
-            assertEquals(it.value, view.ellipsize)
-        }
-    }
-
-    @Test
-    fun applyGravity() {
-        listOf(
-                Gravity.BOTTOM,
-                Gravity.CENTER,
-                Gravity.CENTER_VERTICAL,
-                Gravity.START,
-                Gravity.TOP).forEach {
-            apply {
-                gravity(it)
-            }
-
-            assertTrue(view.gravity and it == it)
-        }
-    }
-
-    @Test
-    fun applyLetterSpacing() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ARBITRARY_FLOATS.forEach {
-                apply { letterSpacing(it) }
-                assertEquals(it, view.letterSpacing)
-            }
-        }
-    }
-
-    @Test
-    fun applyLines() {
-        ARBITRARY_INTS.forEach {
-            apply { lines(it) }
-            assertEquals(it, view.minLines)
-            assertEquals(it, view.maxLines)
-        }
-    }
-
-    @Test
-    fun applyLineSpacingExtra() {
-        ARBITRARY_INTS.forEach {
-            apply { lineSpacingExtra(it) }
-            assertEquals(it.toFloat(), view.lineSpacingExtra)
-        }
-    }
-
-    @Test
-    fun applyLineSpacingMultiplier() {
-        ARBITRARY_FLOATS.forEach {
-            apply { lineSpacingMultiplier(it) }
-            assertEquals(it, view.lineSpacingMultiplier)
-        }
-    }
-
-    @Test
-    fun applyMaxLines() {
-        ARBITRARY_INTS.forEach {
-            apply { maxLines(it) }
-            assertEquals(it, view.maxLines)
-        }
-    }
-
-    @Test
-    fun applyMinLines() {
-        ARBITRARY_INTS.forEach {
-            apply { minLines(it) }
-            assertEquals(it, view.minLines)
-        }
-    }
-
-    @Test
-    fun applyMinWidth() {
-        ARBITRARY_DIMENSIONS.forEach {
-            apply { minWidth(it) }
-            assertEquals(it, view.minWidth)
-        }
-    }
-
-    @Test
-    fun applySingleLine_true() {
-        apply { singleLine(true) }
-        assertEquals(1, view.minLines)
-        assertEquals(1, view.maxLines)
-    }
-
-    @Test
     fun applySingleLine_false() {
         view.maxLines = 1
         apply { singleLine(false) }
@@ -195,37 +111,5 @@ class TextViewProxyStyleApplierTest {
         view = spy(view)
         apply { textAllCaps(false) }
         Mockito.verify(view).setAllCaps(false)
-    }
-
-    @Test
-    fun applyTextColor() {
-        val states = arrayOf(
-                intArrayOf(android.R.attr.state_enabled),
-                intArrayOf(-android.R.attr.state_enabled)
-        )
-        val colorStateList = ColorStateList(states, intArrayOf(Color.RED, Color.GREEN))
-        apply { textColor(colorStateList) }
-        assertEquals(colorStateList, view.textColors)
-    }
-
-    @Test
-    fun applyTextColorHint() {
-        val states = arrayOf(
-                intArrayOf(android.R.attr.state_enabled),
-                intArrayOf(-android.R.attr.state_enabled)
-        )
-        val colorStateList = ColorStateList(states, intArrayOf(Color.RED, Color.GREEN))
-        apply { textColorHint(colorStateList) }
-        assertEquals(colorStateList, view.hintTextColors)
-    }
-
-    @Test
-    fun applyTextSize() {
-        ARBITRARY_DIMENSIONS
-                .filter { it >= 0 }
-                .forEach {
-                    apply { textSize(it) }
-                    assertEquals(it.toFloat(), view.textSize)
-                }
     }
 }

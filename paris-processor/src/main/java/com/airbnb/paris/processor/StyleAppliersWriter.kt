@@ -1,16 +1,20 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.android_resource_scanner.*
 import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.VIEW_TYPE
 import com.airbnb.paris.processor.utils.asTypeElement
 import com.squareup.javapoet.*
-import java.io.IOException
-import javax.annotation.processing.Filer
-import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeKind
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import java.io.*
+import javax.annotation.processing.*
+import javax.lang.model.element.*
+import javax.lang.model.type.*
+import javax.lang.model.util.*
+import kotlin.Boolean
+import kotlin.String
+import kotlin.apply
+import kotlin.check
+import kotlin.let
 
 // TODO  Add @UiThread annotation to StyleApplier classes
 internal object StyleAppliersWriter {
@@ -439,6 +443,7 @@ internal object StyleAppliersWriter {
             }.build())
         }
 
+        // TODO Also append res if the primary target type is numeric, like float?
         val resMethodName = baseMethodName + if (isTargetIntType) "Res" else ""
         methodSpecs.add(MethodSpec.methodBuilder(resMethodName).apply {
             addModifiers(Modifier.PUBLIC)
