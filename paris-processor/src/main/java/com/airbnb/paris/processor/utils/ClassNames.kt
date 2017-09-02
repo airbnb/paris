@@ -17,4 +17,5 @@ internal object ClassNames {
     val ANDROID_INTEGER_RES = "android.support.annotation.IntegerRes".className()
     val ANDROID_STRING_RES = "android.support.annotation.StringRes".className()
     val ANDROID_STYLE_RES = "android.support.annotation.StyleRes".className()
+    val ANDROID_UI_THREAD = "android.support.annotation.UiThread".className()
 }

@@ -10,13 +10,8 @@ import javax.annotation.processing.*
 import javax.lang.model.element.*
 import javax.lang.model.type.*
 import javax.lang.model.util.*
-import kotlin.Boolean
-import kotlin.String
-import kotlin.apply
 import kotlin.check
-import kotlin.let
 
-// TODO  Add @UiThread annotation to StyleApplier classes
 internal object StyleAppliersWriter {
 
     val styleablesTree = StyleablesTree()
@@ -40,6 +35,7 @@ internal object StyleAppliersWriter {
         val styleApplierClassName = styleableInfo.styleApplierClassName()
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
+                .addAnnotation(ClassNames.ANDROID_UI_THREAD)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
@@ -297,6 +293,7 @@ internal object StyleAppliersWriter {
         // StyleBuilder inner class
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         val styleBuilderTypeBuilder = TypeSpec.classBuilder(styleBuilderClassName)
+                .addAnnotation(ClassNames.ANDROID_UI_THREAD)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(baseClassName, styleBuilderClassName, styleApplierClassName))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(styleApplierClassName))
@@ -338,10 +335,10 @@ internal object StyleAppliersWriter {
             StyleInfo.Kind.FIELD -> builder.addStatement("add(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
             StyleInfo.Kind.METHOD -> {
                 builder
-                        .addStatement("consumeSimpleStyleBuilder()")
+                        .addStatement("consumeProgrammaticStyleBuilder()")
                         .addStatement("debugName(\$S)", styleInfo.formattedName)
                         .addStatement("\$T.\$L(this)", styleInfo.enclosingElement, styleInfo.elementName)
-                        .addStatement("consumeSimpleStyleBuilder()")
+                        .addStatement("consumeProgrammaticStyleBuilder()")
             }
             StyleInfo.Kind.STYLE_RES -> {
                 builder.addStatement("add(\$L)", styleInfo.styleResourceCode)
