@@ -1,10 +1,8 @@
 package com.airbnb.paris
 
-import android.content.Context
-import android.support.annotation.VisibleForTesting
-import android.view.View
+import android.content.*
+import android.view.*
 
-@VisibleForTesting
 class StyleApplierUtils {
 
     class DebugListener(
@@ -37,7 +35,9 @@ class StyleApplierUtils {
         private fun getAttrNames(context: Context, attrs: IntArray, attrIndexes: Set<Int>) =
                 attrIndexes.map { index -> context.resources.getResourceEntryName(attrs[index]) }.toSet()
 
-        @VisibleForTesting
+        /**
+         * TODO Add comment
+         */
         fun assertSameAttributes(applier: StyleApplier<*, *>, vararg parentStyles: Style) {
             if (parentStyles.size <= 1) {
                 return
