@@ -1,21 +1,8 @@
 package com.airbnb.paris
 
-import android.content.Context
-import android.view.View
+import android.content.*
 
 interface Style {
-
-    /**
-     * Visible for debug
-     */
-    interface DebugListener {
-        fun processAttributes(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper)
-    }
-
-    /**
-     * Visible for debug
-     */
-    var debugListener: DebugListener?
 
     // TODO Better name
     val shouldApplyParent: Boolean

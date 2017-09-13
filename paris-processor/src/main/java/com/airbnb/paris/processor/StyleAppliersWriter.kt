@@ -112,7 +112,9 @@ internal object StyleAppliersWriter {
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
-                .addStatement("new \$T(getView()).apply(style)", parentStyleApplierClassName)
+                .addStatement("\$T applier = new \$T(getView())", parentStyleApplierClassName, parentStyleApplierClassName)
+                .addStatement("applier.setDebugListener(getDebugListener())")
+                .addStatement("applier.apply(style)")
                 .build()
     }
 
@@ -153,10 +155,6 @@ internal object StyleAppliersWriter {
                 .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
                 .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
                 .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
-
-        if (styleableFields.isNotEmpty()) {
-            methodBuilder.addStatement("\$T subStyle", ParisProcessor.STYLE_CLASS_NAME)
-        }
 
         for (styleableField in styleableFields) {
             addControlFlow(methodBuilder, Format.STYLE, styleableField.elementName,
@@ -209,10 +207,7 @@ internal object StyleAppliersWriter {
     private fun addStatement(methodSpecBuilder: MethodSpec.Builder, valueCode: CodeBlock,
                              elementName: String, isElementStyleable: Boolean) {
         if (isElementStyleable) {
-            methodSpecBuilder
-                    .addStatement("subStyle = \$L", valueCode)
-                    .addStatement("subStyle.setDebugListener(style.getDebugListener())")
-                    .addStatement("\$N().apply(subStyle)", elementName)
+            methodSpecBuilder.addStatement("\$N().apply(\$L)", elementName, valueCode)
         } else {
             methodSpecBuilder.addStatement("getProxy().\$N(\$L)", elementName, valueCode)
         }

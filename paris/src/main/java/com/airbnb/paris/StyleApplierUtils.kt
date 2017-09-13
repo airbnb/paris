@@ -7,7 +7,7 @@ class StyleApplierUtils {
 
     class DebugListener(
             private val viewToStyles: HashMap<View, MutableSet<Style>>,
-            private val styleToAttrNames: HashMap<Style, MutableSet<String>>) : Style.DebugListener {
+            private val styleToAttrNames: HashMap<Style, MutableSet<String>>) : StyleApplier.DebugListener {
 
         private fun <K, V> getOrDefault(map: Map<K, V>, key: K, default: V): V {
             return if (map.containsKey(key)) {
@@ -46,10 +46,13 @@ class StyleApplierUtils {
             val viewToStyles = HashMap<View, MutableSet<Style>>()
             val styleToAttrNames = HashMap<Style, MutableSet<String>>()
 
+            applier.debugListener = DebugListener(viewToStyles, styleToAttrNames)
             for (parentStyle in parentStyles) {
-                parentStyle.debugListener = DebugListener(viewToStyles, styleToAttrNames)
                 applier.apply(parentStyle)
             }
+            // Reset to null so the applier can still be used
+            // TODO Explicitly set the applier to "debug mode" or something so it's clear it becomes non-functional
+            applier.debugListener = null
 
             var hasError = false
             val errorBuilder = StringBuilder()

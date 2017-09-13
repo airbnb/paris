@@ -1,10 +1,9 @@
 package com.airbnb.paris.styles
 
-import android.annotation.SuppressLint
-import android.content.Context
-import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
-import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayWrapper
+import android.annotation.*
+import android.content.*
+import com.airbnb.paris.*
+import com.airbnb.paris.typed_array_wrappers.*
 
 data class MultiStyle internal constructor(private val name: String, private val styles: List<Style>) : Style {
 
@@ -16,11 +15,6 @@ data class MultiStyle internal constructor(private val name: String, private val
      * AttributeSet, which is the only reason why we wouldn't want to apply the parent style applier
      */
     override val shouldApplyParent = true
-
-    /**
-     * Visible for debug
-     */
-    override var debugListener: Style.DebugListener? = null
 
     override fun name(context: Context): String = name
 

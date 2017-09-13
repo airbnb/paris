@@ -30,7 +30,9 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   @Override
   protected void applyParent(Style style) {
-    new ViewProxyStyleApplier(getView()).apply(style);
+    ViewProxyStyleApplier applier = new ViewProxyStyleApplier(getView());
+    applier.setDebugListener(getDebugListener());
+    applier.apply(style);
   }
 
   @Override

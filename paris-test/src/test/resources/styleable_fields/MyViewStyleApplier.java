@@ -19,7 +19,9 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   @Override
   protected void applyParent(Style style) {
-    new ViewProxyStyleApplier(getView()).apply(style);
+    ViewProxyStyleApplier applier = new ViewProxyStyleApplier(getView());
+    applier.setDebugListener(getDebugListener());
+    applier.apply(style);
   }
 
   @Override
@@ -30,21 +32,14 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   @Override
   protected void processStyleableFields(Style style, TypedArrayWrapper a) {
     Resources res = getView().getContext().getResources();
-    Style subStyle;
     if (a.hasValue(R.styleable.MyView_titleStyle)) {
-      subStyle = a.getStyle(R.styleable.MyView_titleStyle);
-      subStyle.setDebugListener(style.getDebugListener());
-      title().apply(subStyle);
+      title().apply(a.getStyle(R.styleable.MyView_titleStyle));
     }
     if (a.hasValue(R.styleable.MyView_subtitleStyle)) {
-      subStyle = a.getStyle(R.styleable.MyView_subtitleStyle);
-      subStyle.setDebugListener(style.getDebugListener());
-      subtitle().apply(subStyle);
+      subtitle().apply(a.getStyle(R.styleable.MyView_subtitleStyle));
     }
     if (a.hasValue(R.styleable.MyView_dividerStyle)) {
-      subStyle = a.getStyle(R.styleable.MyView_dividerStyle);
-      subStyle.setDebugListener(style.getDebugListener());
-      divider().apply(subStyle);
+      divider().apply(a.getStyle(R.styleable.MyView_dividerStyle));
     }
   }
 

@@ -2,19 +2,28 @@
 
 package com.airbnb.paris
 
-import android.support.annotation.StyleRes
-import android.support.annotation.UiThread
-import android.util.AttributeSet
-import android.view.View
-import com.airbnb.paris.styles.AttributeSetStyle
-import com.airbnb.paris.styles.ProgrammaticStyle
-import com.airbnb.paris.styles.ResourceStyle
+import android.support.annotation.*
+import android.util.*
+import android.view.*
+import com.airbnb.paris.styles.*
 
 @UiThread
 abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val view: V) {
 
+    /**
+     * Visible for debug
+     */
+    interface DebugListener {
+        fun processAttributes(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper)
+    }
+
     protected constructor(proxy: Proxy<P, V>) : this(proxy.proxy, proxy.view)
     constructor(view: V) : this(view as P, view)
+
+    /**
+     * Visible for debug
+     */
+    var debugListener: StyleApplier.DebugListener? = null
 
     /**
      * Passing a null [AttributeSet] will apply default values, if any
@@ -45,8 +54,8 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
             processStyleableFields(style, typedArray)
 
             // For debug purposes
-            if (style.debugListener != null) {
-                style.debugListener!!.processAttributes(view, style, attributes, attributesWithDefaultValue(), typedArray)
+            if (debugListener != null) {
+                debugListener!!.processAttributes(view, style, attributes, attributesWithDefaultValue(), typedArray)
             } else {
                 processAttributes(style, typedArray)
             }

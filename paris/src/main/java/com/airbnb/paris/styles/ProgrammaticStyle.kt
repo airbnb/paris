@@ -1,12 +1,10 @@
 package com.airbnb.paris.styles
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.support.annotation.AnyRes
-import android.support.annotation.AttrRes
+import android.annotation.*
+import android.content.*
+import android.support.annotation.*
 import com.airbnb.paris.*
-import com.airbnb.paris.typed_array_wrappers.EmptyTypedArrayWrapper
-import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.*
 import java.util.*
 
 data class ProgrammaticStyle constructor(
@@ -47,11 +45,6 @@ data class ProgrammaticStyle constructor(
     }
 
     override val shouldApplyParent = true
-
-    /**
-     * Visible for debug
-     */
-    override var debugListener: Style.DebugListener? = null
 
     override fun name(context: Context): String = when {
         name != null -> name!!

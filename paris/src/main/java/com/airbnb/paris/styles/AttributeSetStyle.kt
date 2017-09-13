@@ -1,12 +1,11 @@
 package com.airbnb.paris.styles
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.util.AttributeSet
-import com.airbnb.paris.Style
-import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
-import com.airbnb.paris.TypedArrayWrapper
-import java.lang.UnsupportedOperationException
+import android.annotation.*
+import android.content.*
+import android.util.*
+import com.airbnb.paris.*
+import com.airbnb.paris.typed_array_wrappers.*
+import java.lang.*
 
 data class AttributeSetStyle constructor(private val attributeSet: AttributeSet) : Style {
 
@@ -15,11 +14,6 @@ data class AttributeSetStyle constructor(private val attributeSet: AttributeSet)
      * is responsible for applying the [AttributeSet] to itself, so never apply parents
      */
     override val shouldApplyParent = false
-
-    /**
-     * Visible for debug
-     */
-    override var debugListener: Style.DebugListener? = null
 
     override fun name(context: Context): String =
             throw UnsupportedOperationException("Style names are meant to be used in a debug context and never for AttributeSetStyle")
