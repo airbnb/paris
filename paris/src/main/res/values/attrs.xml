@@ -24,6 +24,10 @@
         <attr name="ignoreLayoutWidthAndHeight" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="Paris_ImageView">
+        <attr name="android:scaleType" />
+    </declare-styleable>
+
     <declare-styleable name="Paris_TextView">
         <attr name="android:drawableBottom" />
         <attr name="android:drawableLeft" />

@@ -14,6 +14,7 @@ internal val ARBITRARY_DIMENSIONS = listOf(Integer.MIN_VALUE, -150, 0, 10, 20, 5
 internal val ARBITRARY_FLOATS = listOf(-5f, 0f, 8f, 10f, 11.5f, 17f)
 internal val ARBITRARY_INTS = listOf(Integer.MIN_VALUE, -5, 0, 1, 2, 3, 5, 15, Integer.MAX_VALUE)
 internal val BOOLS = listOf(true, false)
+internal val ARBITRARY_RESOURCE_ID = 2
 
 // TODO What about Dp methods?
 
