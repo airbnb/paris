@@ -160,6 +160,11 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         this.marginTop = marginTop;
     }
 
+    @Attr(R2.styleable.Paris_View_android_alpha)
+    void setAlpha(float alpha) {
+        getView().setAlpha(alpha);
+    }
+
     @Attr(R2.styleable.Paris_View_android_background)
     void setBackground(Drawable drawable) {
         getView().setBackground(drawable);

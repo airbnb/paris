@@ -60,6 +60,16 @@ internal class ViewMapping<I> private constructor(
 
 internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
 
+    // alpha
+    add(ViewMapping.withAssertEquals(
+            listOf(-1f, -.4f, -.33333f, 0f, .2229432489f, .666f, 1f, 2f),
+            android.R.attr.alpha,
+            ViewProxy::setAlpha,
+            BaseStyleBuilder<*, *>::alpha,
+            BaseStyleBuilder<*, *>::alpha,
+            { it.alpha }
+    ))
+
     // drawableBottom
     add(ViewMapping.withAssertEquals(
             (0..2).toList(),
