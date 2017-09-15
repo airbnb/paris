@@ -105,4 +105,24 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             BaseStyleBuilder<*, *>::foreground,
             { it.foreground }
     ))
+
+    // minHeight
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.minHeight,
+            ViewProxy::setMinHeight,
+            BaseStyleBuilder<*, *>::minHeight,
+            BaseStyleBuilder<*, *>::minHeightRes,
+            { it.minimumHeight }
+    ))
+
+    // minWidth
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.minWidth,
+            ViewProxy::setMinWidth,
+            BaseStyleBuilder<*, *>::minWidth,
+            BaseStyleBuilder<*, *>::minWidthRes,
+            { it.minimumWidth }
+    ))
 }

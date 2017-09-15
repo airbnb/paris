@@ -182,6 +182,11 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         }
     }
 
+    @Attr(R2.styleable.Paris_View_android_minHeight)
+    void setMinHeight(@Px int minHeight) {
+        getView().setMinimumHeight(minHeight);
+    }
+
     @Attr(R2.styleable.Paris_View_android_minWidth)
     void setMinWidth(@Px int minWidth) {
         getView().setMinimumWidth(minWidth);
