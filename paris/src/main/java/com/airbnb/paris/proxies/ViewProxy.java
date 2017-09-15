@@ -175,6 +175,13 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         ViewCompat.setElevation(getView(), elevation);
     }
 
+    @Attr(R2.styleable.Paris_View_android_foreground)
+    void setForeground(Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getView().setForeground(drawable);
+        }
+    }
+
     @Attr(R2.styleable.Paris_View_android_minWidth)
     void setMinWidth(@Px int minWidth) {
         getView().setMinimumWidth(minWidth);

@@ -2,6 +2,7 @@ package com.airbnb.paris.proxies
 
 import android.content.res.*
 import android.graphics.*
+import android.graphics.drawable.*
 
 
 internal val ARBITRARY_COLOR_STATE_LISTS = listOf(
@@ -10,11 +11,16 @@ internal val ARBITRARY_COLOR_STATE_LISTS = listOf(
                 intArrayOf(-android.R.attr.state_enabled)
         ), intArrayOf(Color.RED, Color.GREEN))
 )
+internal val ARBITRARY_COLOR_DRAWABLES = listOf(
+        ColorDrawable(Color.RED),
+        ColorDrawable(Color.GREEN),
+        ColorDrawable(Color.BLUE)
+)
 internal val ARBITRARY_DIMENSIONS = listOf(Integer.MIN_VALUE, -150, 0, 10, 20, 50, 200, 800, Integer.MAX_VALUE)
 internal val ARBITRARY_FLOATS = listOf(-5f, 0f, 8f, 10f, 11.5f, 17f)
 internal val ARBITRARY_INTS = listOf(Integer.MIN_VALUE, -5, 0, 1, 2, 3, 5, 15, Integer.MAX_VALUE)
-internal val BOOLS = listOf(true, false)
 internal val ARBITRARY_RESOURCE_ID = 2
+internal val BOOLS = listOf(true, false)
 
 // TODO What about Dp methods?
 

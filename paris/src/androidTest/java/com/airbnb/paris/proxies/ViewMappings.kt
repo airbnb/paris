@@ -95,4 +95,14 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             BaseStyleBuilder<*, *>::elevationRes,
             { it.elevation.toInt() }
     ))
+
+    // foreground
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_COLOR_DRAWABLES,
+            android.R.attr.foreground,
+            ViewProxy::setForeground,
+            BaseStyleBuilder<*, *>::foreground,
+            BaseStyleBuilder<*, *>::foreground,
+            { it.foreground }
+    ))
 }
