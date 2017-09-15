@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion sdkVersion
+    buildToolsVersion buildToolsVersion
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion sdkVersion
         versionCode 1
         versionName "1.0"
 

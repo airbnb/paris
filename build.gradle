@@ -35,6 +35,9 @@ task clean(type: Delete) {
 }
 
 ext {
+    sdkVersion = 26
+    buildToolsVersion = "26.0.1"
+
     deps = [
             androidAppcompatV7: "com.android.support:appcompat-v7:25.3.1",
             googleGuava: "com.google.guava:guava:22.0-rc1-android",
