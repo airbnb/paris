@@ -2,6 +2,7 @@ package com.airbnb.paris.proxies
 
 import android.view.*
 import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
+import junit.framework.Assert.*
 
 internal class ViewMapping<I> private constructor(
         testValues: List<I>,
@@ -53,7 +54,7 @@ internal class ViewMapping<I> private constructor(
                     setProxyFunction,
                     setStyleBuilderValueFunction,
                     setStyleBuilderResFunction,
-                    { View, input -> junit.framework.Assert.assertEquals(input, getViewFunction(View)) })
+                    { View, input -> assertEquals(input, getViewFunction(View)) })
         }
     }
 }
@@ -161,6 +162,21 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             { it.paddingEnd }
     ))
 
+    // paddingHorizontal
+    add(ViewMapping.withCustomAssert(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.paddingHorizontal,
+            ViewProxy::setPaddingHorizontal,
+            BaseStyleBuilder<*, *>::paddingHorizontal,
+            BaseStyleBuilder<*, *>::paddingHorizontalRes,
+            { view, input ->
+                assertEquals(input, view.paddingEnd)
+                assertEquals(input, view.paddingLeft)
+                assertEquals(input, view.paddingRight)
+                assertEquals(input, view.paddingStart)
+            }
+    ))
+
     // paddingStart
     add(ViewMapping.withAssertEquals(
             ARBITRARY_DIMENSIONS,
@@ -169,5 +185,18 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             BaseStyleBuilder<*, *>::paddingStart,
             BaseStyleBuilder<*, *>::paddingStartRes,
             { it.paddingStart }
+    ))
+
+    // paddingVertical
+    add(ViewMapping.withCustomAssert(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.paddingVertical,
+            ViewProxy::setPaddingVertical,
+            BaseStyleBuilder<*, *>::paddingVertical,
+            BaseStyleBuilder<*, *>::paddingVerticalRes,
+            { view, input ->
+                assertEquals(input, view.paddingBottom)
+                assertEquals(input, view.paddingTop)
+            }
     ))
 }
