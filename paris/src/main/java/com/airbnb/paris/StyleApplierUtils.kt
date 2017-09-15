@@ -1,6 +1,7 @@
 package com.airbnb.paris
 
 import android.content.*
+import android.support.annotation.*
 import android.view.*
 
 class StyleApplierUtils {
@@ -38,6 +39,7 @@ class StyleApplierUtils {
         /**
          * TODO Add comment
          */
+        @UiThread
         fun assertSameAttributes(applier: StyleApplier<*, *>, vararg parentStyles: Style) {
             if (parentStyles.size <= 1) {
                 return
