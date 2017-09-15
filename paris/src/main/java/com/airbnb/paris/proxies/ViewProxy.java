@@ -213,6 +213,7 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         }
     }
 
+    // TODO Can we create a method that accepts a flag for the builder? This is going to be super confusing
     @Attr(R2.styleable.Paris_View_android_visibility)
     void setVisibility(int visibility) {
         getView().setVisibility(VISIBILITY_FLAGS[visibility]);

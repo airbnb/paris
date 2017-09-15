@@ -12,6 +12,7 @@ internal class MultiTypedArrayWrapper constructor(
 
     private val styleableAttrIndexes by lazy { styleableAttrIndexToWrapperMap.keys.toList() }
 
+    // TODO Start with the last one and don't even lookup the indexes for which we already have values?
     private val styleableAttrIndexToWrapperMap by lazy {
         val attrResToWrapperMap = HashMap<Int, TypedArrayWrapper>()
         for (wrapper in wrappers) {
