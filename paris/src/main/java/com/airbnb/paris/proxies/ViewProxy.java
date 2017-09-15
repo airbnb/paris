@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.AnyRes;
 import android.support.annotation.Px;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -162,6 +163,11 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     @Attr(R2.styleable.Paris_View_android_background)
     void setBackground(Drawable drawable) {
         getView().setBackground(drawable);
+    }
+
+    @Attr(R2.styleable.Paris_View_android_elevation)
+    void setElevation(@Px int elevation) {
+        ViewCompat.setElevation(getView(), elevation);
     }
 
     @Attr(R2.styleable.Paris_View_android_minWidth)

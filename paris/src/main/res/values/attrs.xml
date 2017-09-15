@@ -11,6 +11,7 @@
         <attr name="android:layout_marginRight" />
         <attr name="android:layout_marginTop" />
         <attr name="android:background" />
+        <attr name="android:elevation" />
         <attr name="android:minWidth" />
         <attr name="android:padding" />
         <attr name="android:paddingBottom" />

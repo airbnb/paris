@@ -75,4 +75,14 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
                 )[it.visibility]!!
             }
     ))
+
+    // elevation
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.elevation,
+            ViewProxy::setElevation,
+            BaseStyleBuilder<*, *>::elevation,
+            BaseStyleBuilder<*, *>::elevationRes,
+            { it.elevation.toInt() }
+    ))
 }
