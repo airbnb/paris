@@ -18,8 +18,10 @@
         <attr name="android:minWidth" />
         <attr name="android:padding" />
         <attr name="android:paddingBottom" />
+        <attr name="android:paddingEnd" />
         <attr name="android:paddingLeft" />
         <attr name="android:paddingRight" />
+        <attr name="android:paddingStart" />
         <attr name="android:paddingTop" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />

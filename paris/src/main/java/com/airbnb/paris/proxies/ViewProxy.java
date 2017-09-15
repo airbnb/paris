@@ -202,6 +202,19 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         ViewExtensionsKt.setPaddingBottom(getView(), padding);
     }
 
+    @Attr(R2.styleable.Paris_View_android_paddingEnd)
+    void setPaddingEnd(@Px int padding) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            switch (getView().getLayoutDirection()) {
+                case View.LAYOUT_DIRECTION_RTL:
+                    ViewExtensionsKt.setPaddingLeft(getView(), padding);
+                case View.LAYOUT_DIRECTION_LTR:
+                default:
+                    ViewExtensionsKt.setPaddingRight(getView(), padding);
+            }
+        }
+    }
+
     @Attr(R2.styleable.Paris_View_android_paddingLeft)
     void setPaddingLeft(@Px int padding) {
         ViewExtensionsKt.setPaddingLeft(getView(), padding);
@@ -210,6 +223,19 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     @Attr(R2.styleable.Paris_View_android_paddingRight)
     void setPaddingRight(@Px int padding) {
         ViewExtensionsKt.setPaddingRight(getView(), padding);
+    }
+
+    @Attr(R2.styleable.Paris_View_android_paddingStart)
+    void setPaddingStart(@Px int padding) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            switch (getView().getLayoutDirection()) {
+                case View.LAYOUT_DIRECTION_RTL:
+                    ViewExtensionsKt.setPaddingRight(getView(), padding);
+                case View.LAYOUT_DIRECTION_LTR:
+                default:
+                    ViewExtensionsKt.setPaddingLeft(getView(), padding);
+            }
+        }
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingTop)

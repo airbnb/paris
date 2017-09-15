@@ -1,7 +1,7 @@
 package com.airbnb.paris.utils
 
-import android.support.annotation.Px
-import android.view.View
+import android.support.annotation.*
+import android.view.*
 
 fun View.setPadding(@Px px: Int) {
     this.setPadding(px, px, px, px)

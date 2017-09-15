@@ -58,6 +58,11 @@ internal class ViewMapping<I> private constructor(
     }
 }
 
+internal val VIEW_SETUPS = listOf(
+        { view: View -> view.layoutDirection = View.LAYOUT_DIRECTION_LTR },
+        { view: View -> view.layoutDirection = View.LAYOUT_DIRECTION_RTL }
+)
+
 internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
 
     // alpha
@@ -124,5 +129,25 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             BaseStyleBuilder<*, *>::minWidth,
             BaseStyleBuilder<*, *>::minWidthRes,
             { it.minimumWidth }
+    ))
+
+    // paddingEnd
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS.filter { it >= 0 },
+            android.R.attr.paddingEnd,
+            ViewProxy::setPaddingEnd,
+            BaseStyleBuilder<*, *>::paddingEnd,
+            BaseStyleBuilder<*, *>::paddingEndRes,
+            { it.paddingEnd }
+    ))
+
+    // paddingStart
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.paddingStart,
+            ViewProxy::setPaddingStart,
+            BaseStyleBuilder<*, *>::paddingStart,
+            BaseStyleBuilder<*, *>::paddingStartRes,
+            { it.paddingStart }
     ))
 }
