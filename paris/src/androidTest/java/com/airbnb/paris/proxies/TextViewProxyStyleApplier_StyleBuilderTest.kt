@@ -15,8 +15,8 @@ import org.junit.runner.*
 class TextViewProxyStyleApplier_StyleBuilderTest {
 
     companion object {
-        private const val ARBITRARY_RESOURCE_1 = 2
-        private const val ARBITRARY_RESOURCE_2 = 4
+        private const val ARBITRARY_RESOURCE_ID_1 = 2
+        private const val ARBITRARY_RESOURCE_ID_2 = 4
 
         private val ARBITRARY_DP_VALUES = listOf(Integer.MIN_VALUE, -150, 0, 10, 20, 50, 200, 800, Integer.MAX_VALUE)
         private val ARBITRARY_TEXT_SIZE_VALUES = listOf(0, 1, 2, 3, 5, 15, 42, Integer.MAX_VALUE)
@@ -76,8 +76,8 @@ class TextViewProxyStyleApplier_StyleBuilderTest {
             // For resource ids
             setup()
 
-            programmaticStyleBuilder.putRes(mapping.attrRes, ARBITRARY_RESOURCE_1)
-            mapping.setStyleBuilderResFunction(styleBuilder, ARBITRARY_RESOURCE_1)
+            programmaticStyleBuilder.putRes(mapping.attrRes, ARBITRARY_RESOURCE_ID_1)
+            mapping.setStyleBuilderResFunction(styleBuilder, ARBITRARY_RESOURCE_ID_1)
             assertEquals(programmaticStyleBuilder.build(), styleBuilder.build())
         }
     }
@@ -89,21 +89,21 @@ class TextViewProxyStyleApplier_StyleBuilderTest {
         programmaticStyle {
             put(android.R.attr.drawableBottom, drawableRed)
             put(android.R.attr.drawableLeft, drawableGreen)
-            putRes(android.R.attr.drawableRight, ARBITRARY_RESOURCE_1)
-            putRes(android.R.attr.drawableTop, ARBITRARY_RESOURCE_2)
+            putRes(android.R.attr.drawableRight, ARBITRARY_RESOURCE_ID_1)
+            putRes(android.R.attr.drawableTop, ARBITRARY_RESOURCE_ID_2)
 
             assertEqualsTextViewStyleBuilder {
                 drawableBottom(drawableRed)
                 drawableLeft(drawableGreen)
-                drawableRight(ARBITRARY_RESOURCE_1)
-                drawableTop(ARBITRARY_RESOURCE_2)
+                drawableRight(ARBITRARY_RESOURCE_ID_1)
+                drawableTop(ARBITRARY_RESOURCE_ID_2)
             }
 
             assertNotEqualsTextViewStyleBuilder {
                 drawableBottom(drawableGreen)
                 drawableLeft(drawableRed)
-                drawableRight(ARBITRARY_RESOURCE_2)
-                drawableTop(ARBITRARY_RESOURCE_1)
+                drawableRight(ARBITRARY_RESOURCE_ID_2)
+                drawableTop(ARBITRARY_RESOURCE_ID_1)
             }
         }
     }

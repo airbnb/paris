@@ -71,7 +71,7 @@ internal class TextViewMapping<I> private constructor(
 internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
 
     // drawableBottom
-    add(TextViewMapping.withAssertEquals(
+    add(withAssertEquals(
             listOf(ColorDrawable(Color.GREEN)),
             android.R.attr.drawableBottom,
             TextViewProxy::setDrawableBottom,
@@ -81,7 +81,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
     ))
 
     // drawableLeft
-    add(TextViewMapping.withAssertEquals(
+    add(withAssertEquals(
             listOf(ColorDrawable(Color.GREEN)),
             android.R.attr.drawableLeft,
             TextViewProxy::setDrawableLeft,
@@ -91,7 +91,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
     ))
 
     // drawableRight
-    add(TextViewMapping.withAssertEquals(
+    add(withAssertEquals(
             listOf(ColorDrawable(Color.GREEN)),
             android.R.attr.drawableRight,
             TextViewProxy::setDrawableRight,
@@ -101,7 +101,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
     ))
 
     // drawableTop
-    add(TextViewMapping.withAssertEquals(
+    add(withAssertEquals(
             listOf(ColorDrawable(Color.GREEN)),
             android.R.attr.drawableTop,
             TextViewProxy::setDrawableTop,
@@ -111,7 +111,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
     ))
 
     // ellipsize
-    add(TextViewMapping.withAssertEquals(
+    add(withAssertEquals(
             (1..4).toList(),
             android.R.attr.ellipsize,
             TextViewProxy::setEllipsize,
@@ -125,7 +125,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
     ))
 
     // gravity
-    add(TextViewMapping.withCustomAssert(
+    add(withCustomAssert(
             listOf(
                     Gravity.BOTTOM,
                     Gravity.CENTER,
@@ -143,7 +143,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
 
     // letterSpacing
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        add(TextViewMapping.withAssertEquals(
+        add(withAssertEquals(
                 ARBITRARY_FLOATS,
                 android.R.attr.letterSpacing,
                 TextViewProxy::setLetterSpacing,

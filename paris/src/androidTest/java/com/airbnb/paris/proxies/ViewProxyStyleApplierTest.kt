@@ -1,24 +1,25 @@
 package com.airbnb.paris.proxies
 
-import android.content.Context
-import android.content.res.Resources
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.content.*
+import android.content.res.*
+import android.support.test.*
+import android.support.test.runner.*
+import android.view.*
+import android.widget.*
+import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
 import com.airbnb.paris.test.R
+import org.junit.*
 import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
 class ViewProxyStyleApplierTest {
 
-    lateinit var context: Context
-    lateinit var res: Resources
-    lateinit var view: View
+    private lateinit var context: Context
+    private lateinit var res: Resources
+    private lateinit var view: View
+    private lateinit var styleApplier: ViewProxyStyleApplier
+    private lateinit var styleBuilder: StyleBuilder
 
     private var params: ViewGroup.LayoutParams? = null
     private var marginParams: ViewGroup.MarginLayoutParams? = null
@@ -28,6 +29,26 @@ class ViewProxyStyleApplierTest {
         context = InstrumentationRegistry.getTargetContext()
         res = context.resources
         view = View(context)
+        styleApplier = ViewProxyStyleApplier(view)
+        styleBuilder = StyleBuilder()
+    }
+
+    @Test
+    fun auto() {
+        for (mapping in VIEW_MAPPINGS) {
+            mapping as BaseViewMapping<Any, Any, View, Any>
+
+            setup()
+
+            mapping.testValues.forEach {
+                // Set the value on the style builder
+                mapping.setStyleBuilderValueFunction(styleBuilder, it)
+                // Apply the style to the view
+                styleApplier.apply(styleBuilder.build())
+                // Check that the value was correctly applied
+                mapping.assertViewSet(view, it)
+            }
+        }
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.airbnb.paris.proxies
 
-import android.*
 import android.view.*
 import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
 
@@ -64,7 +63,7 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
     // drawableBottom
     add(ViewMapping.withAssertEquals(
             (0..2).toList(),
-            R.attr.visibility,
+            android.R.attr.visibility,
             ViewProxy::setVisibility,
             BaseStyleBuilder<*, *>::visibility,
             BaseStyleBuilder<*, *>::visibilityRes,
