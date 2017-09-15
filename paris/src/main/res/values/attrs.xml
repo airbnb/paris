@@ -7,8 +7,10 @@
         <attr name="android:layout_gravity" />
         <attr name="android:layout_margin" />
         <attr name="android:layout_marginBottom" />
+        <attr name="android:layout_marginEnd" />
         <attr name="android:layout_marginLeft" />
         <attr name="android:layout_marginRight" />
+        <attr name="android:layout_marginStart" />
         <attr name="android:layout_marginTop" />
         <attr name="android:alpha" />
         <attr name="android:background" />

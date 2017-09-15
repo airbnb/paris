@@ -145,6 +145,19 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         this.marginBottom = marginBottom;
     }
 
+    @Attr(R2.styleable.Paris_View_android_layout_marginEnd)
+    void setLayoutMarginEnd(@Px int marginEnd) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            switch (getView().getLayoutDirection()) {
+                case View.LAYOUT_DIRECTION_RTL:
+                    marginLeft = marginEnd;
+                case View.LAYOUT_DIRECTION_LTR:
+                default:
+                    marginRight = marginEnd;
+            }
+        }
+    }
+
     @Attr(R2.styleable.Paris_View_android_layout_marginLeft)
     void setLayoutMarginLeft(@Px int marginLeft) {
         this.marginLeft = marginLeft;
@@ -153,6 +166,19 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     @Attr(R2.styleable.Paris_View_android_layout_marginRight)
     void setLayoutMarginRight(@Px int marginRight) {
         this.marginRight = marginRight;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginStart)
+    void setLayoutMarginStart(@Px int marginStart) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            switch (getView().getLayoutDirection()) {
+                case View.LAYOUT_DIRECTION_RTL:
+                    marginRight = marginStart;
+                case View.LAYOUT_DIRECTION_LTR:
+                default:
+                    marginLeft = marginStart;
+            }
+        }
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginTop)

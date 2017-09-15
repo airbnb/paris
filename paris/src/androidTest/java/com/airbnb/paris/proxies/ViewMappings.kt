@@ -65,6 +65,26 @@ internal val VIEW_SETUPS = listOf(
 
 internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
 
+    // layout_marginEnd
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.layout_marginEnd,
+            ViewProxy::setLayoutMarginEnd,
+            BaseStyleBuilder<*, *>::layoutMarginEnd,
+            BaseStyleBuilder<*, *>::layoutMarginEndRes,
+            { (it.layoutParams as ViewGroup.MarginLayoutParams).marginEnd }
+    ))
+
+    // layout_marginStart
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.layout_marginStart,
+            ViewProxy::setLayoutMarginStart,
+            BaseStyleBuilder<*, *>::layoutMarginStart,
+            BaseStyleBuilder<*, *>::layoutMarginStartRes,
+            { (it.layoutParams as ViewGroup.MarginLayoutParams).marginStart }
+    ))
+
     // alpha
     add(ViewMapping.withAssertEquals(
             listOf(-1f, -.4f, -.33333f, 0f, .2229432489f, .666f, 1f, 2f),
@@ -133,7 +153,7 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
 
     // paddingEnd
     add(ViewMapping.withAssertEquals(
-            ARBITRARY_DIMENSIONS.filter { it >= 0 },
+            ARBITRARY_DIMENSIONS,
             android.R.attr.paddingEnd,
             ViewProxy::setPaddingEnd,
             BaseStyleBuilder<*, *>::paddingEnd,
