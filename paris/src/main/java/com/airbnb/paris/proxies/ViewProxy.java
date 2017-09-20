@@ -241,7 +241,7 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         }
     }
 
-    @Attr(R2.styleable.Paris_View_android_paddingHorizontal)
+    @Attr(R2.styleable.Paris_View_paddingHorizontal)
     void setPaddingHorizontal(@Px int padding) {
         ViewExtensionsKt.setPaddingHorizontal(getView(), padding);
     }
@@ -274,7 +274,7 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         ViewExtensionsKt.setPaddingTop(getView(), padding);
     }
 
-    @Attr(R2.styleable.Paris_View_android_paddingVertical)
+    @Attr(R2.styleable.Paris_View_paddingVertical)
     void setPaddingVertical(@Px int padding) {
         ViewExtensionsKt.setPaddingVertical(getView(), padding);
     }

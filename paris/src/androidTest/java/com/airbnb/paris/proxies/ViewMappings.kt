@@ -1,6 +1,7 @@
 package com.airbnb.paris.proxies
 
 import android.view.*
+import com.airbnb.paris.*
 import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
 import junit.framework.Assert.*
 
@@ -165,7 +166,7 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
     // paddingHorizontal
     add(ViewMapping.withCustomAssert(
             ARBITRARY_DIMENSIONS,
-            android.R.attr.paddingHorizontal,
+            R.attr.paddingHorizontal,
             ViewProxy::setPaddingHorizontal,
             BaseStyleBuilder<*, *>::paddingHorizontal,
             BaseStyleBuilder<*, *>::paddingHorizontalRes,
@@ -190,7 +191,7 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
     // paddingVertical
     add(ViewMapping.withCustomAssert(
             ARBITRARY_DIMENSIONS,
-            android.R.attr.paddingVertical,
+            R.attr.paddingVertical,
             ViewProxy::setPaddingVertical,
             BaseStyleBuilder<*, *>::paddingVertical,
             BaseStyleBuilder<*, *>::paddingVerticalRes,
