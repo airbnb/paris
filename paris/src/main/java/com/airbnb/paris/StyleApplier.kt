@@ -32,6 +32,7 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
         if (attributeSet != null) {
             apply(AttributeSetStyle(attributeSet))
         } else {
+            // TODO Can we detect when neither the view or the subviews have default attributes values and skip this?
             apply(ProgrammaticStyle.EMPTY)
         }
     }
@@ -66,10 +67,7 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
 
     protected open fun attributes(): IntArray? = null
 
-    /**
-     * Visible for debug
-     */
-    open fun attributesWithDefaultValue(): IntArray? = null
+    protected open fun attributesWithDefaultValue(): IntArray? = null
 
     protected open fun applyParent(style: Style) {}
 
