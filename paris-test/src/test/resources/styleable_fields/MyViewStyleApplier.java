@@ -53,15 +53,21 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   public TextViewProxyStyleApplier title() {
-    return new TextViewProxyStyleApplier(getProxy().title);
+    TextViewProxyStyleApplier subApplier = new TextViewProxyStyleApplier(getProxy().title);
+    subApplier.setDebugListener(getDebugListener());
+    return subApplier;
   }
 
   public TextViewProxyStyleApplier subtitle() {
-    return new TextViewProxyStyleApplier(getProxy().subtitle);
+    TextViewProxyStyleApplier subApplier = new TextViewProxyStyleApplier(getProxy().subtitle);
+    subApplier.setDebugListener(getDebugListener());
+    return subApplier;
   }
 
   public ViewProxyStyleApplier divider() {
-    return new ViewProxyStyleApplier(getProxy().divider);
+    ViewProxyStyleApplier subApplier = new ViewProxyStyleApplier(getProxy().divider);
+    subApplier.setDebugListener(getDebugListener());
+    return subApplier;
   }
 
   public void applyDefault() {

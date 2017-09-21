@@ -1,31 +1,34 @@
 package com.airbnb.paris
 
-import android.content.Context
-import android.graphics.Color
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
-import android.widget.TextView
-import com.airbnb.paris.proxies.TextViewProxyStyleApplier
-import com.airbnb.paris.styles.MultiStyle
-import com.airbnb.paris.styles.ResourceStyle
+import android.graphics.*
+import android.support.test.*
+import android.support.test.runner.*
+import android.util.*
+import android.widget.*
+import com.airbnb.paris.proxies.*
+import com.airbnb.paris.styles.*
 import com.airbnb.paris.test.R
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.*
+import org.junit.Assert.*
+import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
 class StyleApplierUtilsTest {
 
-    lateinit var context: Context
+    private val context = InstrumentationRegistry.getTargetContext()!!
+    lateinit var textView: TextView
     lateinit var textViewApplier: TextViewProxyStyleApplier
 
-    @Before
-    fun setup() {
-        context = InstrumentationRegistry.getTargetContext()
+    init {
         // Necessary to test AppCompat attributes like "?attr/selectableItemBackground"
         // TODO Not working for background() test
         context.setTheme(R.style.Theme_AppCompat)
-        textViewApplier = TextViewProxyStyleApplier(TextView(context))
+    }
+
+    @Before
+    fun setup() {
+        textView = TextView(context)
+        textViewApplier = TextViewProxyStyleApplier(textView)
     }
 
     @Test
@@ -166,5 +169,23 @@ class StyleApplierUtilsTest {
                         .textColor(Color.GREEN)
                         .build()
         )
+    }
+
+    @Test
+    fun styleNotApplied() {
+        // Checks that running the same attributes assertion doesn't actually modify the applier's
+        // view in any way
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 10f)
+        assertEquals(10f, textView.textSize)
+        StyleApplierUtils.assertSameAttributes(textViewApplier,
+                textViewApplier.builder()
+                        .textSize(15)
+                        .build(),
+                textViewApplier.builder()
+                        .textSize(15)
+                        .build()
+        )
+        assertEquals(10f, textView.textSize)
     }
 }

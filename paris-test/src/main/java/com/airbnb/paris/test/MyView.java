@@ -13,7 +13,7 @@ import com.airbnb.paris.annotations.StyleableField;
 public class MyView extends View {
 
     @StyleableField(R2.styleable.MyView_titleStyle)
-    TextView title;
+    public TextView title;
 
     public MyView(Context context) {
         super(context);

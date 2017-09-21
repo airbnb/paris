@@ -217,7 +217,9 @@ internal object StyleAppliersWriter {
         return MethodSpec.methodBuilder(styleableFieldInfo.elementName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(styleApplierClassName)
-                .addStatement("return new \$T(getProxy().\$N)", styleApplierClassName, styleableFieldInfo.elementName)
+                .addStatement("\$T subApplier = new \$T(getProxy().\$N)", styleApplierClassName, styleApplierClassName, styleableFieldInfo.elementName)
+                .addStatement("subApplier.setDebugListener(getDebugListener())")
+                .addStatement("return subApplier", styleApplierClassName, styleableFieldInfo.elementName)
                 .build()
     }
 
