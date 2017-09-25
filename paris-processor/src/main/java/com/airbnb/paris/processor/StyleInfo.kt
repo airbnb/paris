@@ -1,21 +1,13 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Style
-import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.utils.Errors
-import com.airbnb.paris.processor.utils.ProcessorException
-import com.airbnb.paris.processor.utils.asTypeElement
-import com.airbnb.paris.processor.utils.check
-import com.squareup.javapoet.CodeBlock
+import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.utils.*
+import com.squareup.javapoet.*
 import java.util.*
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import javax.annotation.processing.*
+import javax.lang.model.element.*
+import javax.lang.model.type.*
+import javax.lang.model.util.*
 
 internal data class StyleInfo constructor(
         val elementKind: Kind,
@@ -148,25 +140,7 @@ internal data class StyleInfo constructor(
 
             val elementName = element.simpleName.toString()
 
-            // Converts any name to CamelCase
-            val isNameAllCaps = elementName.all { it.isUpperCase() || !it.isLetter() }
-            val formattedName = elementName.foldRightIndexed("") { index, c, acc ->
-                if (c == '_') {
-                    acc
-                } else {
-                    if (index == 0) {
-                        c.toUpperCase() + acc
-                    } else if (elementName[index - 1] != '_') {
-                        if (isNameAllCaps) {
-                            c.toLowerCase() + acc
-                        } else {
-                            c + acc
-                        }
-                    } else {
-                        c.toUpperCase() + acc
-                    }
-                }
-            }
+            val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
 
             check(element.kind == ElementKind.FIELD || element.kind == ElementKind.METHOD) {
                 "@Style can only be used on fields and methods"
