@@ -86,6 +86,7 @@ class StyleApplierUtils {
                 |${missingAttrNames.joinToString("\n") { "✕ $it" }}
                 |It must declare the same attributes as the following styles:
                 |${otherStyles.joinToString(", ") { it.name(context) }}
+                |
                 """.trimMargin()
         }
 
