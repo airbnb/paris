@@ -3,7 +3,7 @@
 buildscript {
     ext {
         butterknifeVersion = '9.0.0-SNAPSHOT'
-        kotlinVersion = '1.1.4-3'
+        kotlinVersion = '1.1.51'
     }
     repositories {
         jcenter()
