@@ -23,11 +23,11 @@ internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
         return false
     }
 
-    override fun getBoolean(index: Int, defValue: Boolean): Boolean {
+    override fun getBoolean(index: Int): Boolean {
         throw illegalStateException()
     }
 
-    override fun getColor(index: Int, defValue: Int): Int {
+    override fun getColor(index: Int): Int {
         throw illegalStateException()
     }
 
@@ -35,7 +35,7 @@ internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
         throw illegalStateException()
     }
 
-    override fun getDimensionPixelSize(index: Int, defValue: Int): Int {
+    override fun getDimensionPixelSize(index: Int): Int {
         throw illegalStateException()
     }
 
@@ -43,23 +43,23 @@ internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
         throw illegalStateException()
     }
 
-    override fun getFloat(index: Int, defValue: Float): Float {
+    override fun getFloat(index: Int): Float {
         throw illegalStateException()
     }
 
-    override fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float {
+    override fun getFraction(index: Int, base: Int, pbase: Int): Float {
         throw illegalStateException()
     }
 
-    override fun getInt(index: Int, defValue: Int): Int {
+    override fun getInt(index: Int): Int {
         throw illegalStateException()
     }
 
-    override fun getLayoutDimension(index: Int, defValue: Int): Int {
+    override fun getLayoutDimension(index: Int): Int {
         throw illegalStateException()
     }
 
-    override fun getResourceId(index: Int, defValue: Int): Int {
+    override fun getResourceId(index: Int): Int {
         throw illegalStateException()
     }
 

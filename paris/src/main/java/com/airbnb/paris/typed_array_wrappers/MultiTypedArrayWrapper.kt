@@ -27,7 +27,7 @@ internal class MultiTypedArrayWrapper constructor(
     }
 
     override fun isNull(index: Int): Boolean =
-            isNullRes(styleableAttrIndexToWrapperMap[index]!!.getResourceId(index, 0))
+            isNullRes(styleableAttrIndexToWrapperMap[index]!!.getResourceId(index))
 
     override fun getIndexCount(): Int = styleableAttrIndexToWrapperMap.size
 
@@ -38,35 +38,35 @@ internal class MultiTypedArrayWrapper constructor(
         return wrapper != null && wrapper.hasValue(index)
     }
 
-    override fun getBoolean(index: Int, defValue: Boolean): Boolean =
-            styleableAttrIndexToWrapperMap[index]!!.getBoolean(index, defValue)
+    override fun getBoolean(index: Int): Boolean =
+            styleableAttrIndexToWrapperMap[index]!!.getBoolean(index)
 
-    override fun getColor(index: Int, defValue: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getColor(index, defValue)
+    override fun getColor(index: Int): Int =
+            styleableAttrIndexToWrapperMap[index]!!.getColor(index)
 
     override fun getColorStateList(index: Int): ColorStateList =
             styleableAttrIndexToWrapperMap[index]!!.getColorStateList(index)
 
-    override fun getDimensionPixelSize(index: Int, defValue: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getDimensionPixelSize(index, defValue)
+    override fun getDimensionPixelSize(index: Int): Int =
+            styleableAttrIndexToWrapperMap[index]!!.getDimensionPixelSize(index)
 
     override fun getDrawable(index: Int): Drawable =
             styleableAttrIndexToWrapperMap[index]!!.getDrawable(index)
 
-    override fun getFloat(index: Int, defValue: Float): Float =
-            styleableAttrIndexToWrapperMap[index]!!.getFloat(index, defValue)
+    override fun getFloat(index: Int): Float =
+            styleableAttrIndexToWrapperMap[index]!!.getFloat(index)
 
-    override fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float =
-            styleableAttrIndexToWrapperMap[index]!!.getFraction(index, base, pbase, defValue)
+    override fun getFraction(index: Int, base: Int, pbase: Int): Float =
+            styleableAttrIndexToWrapperMap[index]!!.getFraction(index, base, pbase)
 
-    override fun getInt(index: Int, defValue: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getInt(index, defValue)
+    override fun getInt(index: Int): Int =
+            styleableAttrIndexToWrapperMap[index]!!.getInt(index)
 
-    override fun getLayoutDimension(index: Int, defValue: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getLayoutDimension(index, defValue)
+    override fun getLayoutDimension(index: Int): Int =
+            styleableAttrIndexToWrapperMap[index]!!.getLayoutDimension(index)
 
-    override fun getResourceId(index: Int, defValue: Int): Int =
-            if (isNull(index)) 0 else styleableAttrIndexToWrapperMap[index]!!.getResourceId(index, 0)
+    override fun getResourceId(index: Int): Int =
+            if (isNull(index)) 0 else styleableAttrIndexToWrapperMap[index]!!.getResourceId(index)
 
     override fun getString(index: Int): String =
             styleableAttrIndexToWrapperMap[index]!!.getString(index)

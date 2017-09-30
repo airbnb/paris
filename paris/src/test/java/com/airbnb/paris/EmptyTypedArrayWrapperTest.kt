@@ -1,10 +1,9 @@
 package com.airbnb.paris
 
-import com.airbnb.paris.typed_array_wrappers.EmptyTypedArrayWrapper
-import io.kotlintest.matchers.shouldBe
-import io.kotlintest.matchers.shouldThrow
-import io.kotlintest.properties.forAll
-import io.kotlintest.specs.StringSpec
+import com.airbnb.paris.typed_array_wrappers.*
+import io.kotlintest.matchers.*
+import io.kotlintest.properties.*
+import io.kotlintest.specs.*
 
 class EmptyTypedArrayWrapperTest : StringSpec() {
 
@@ -26,9 +25,9 @@ class EmptyTypedArrayWrapperTest : StringSpec() {
                 true
             }
 
-            forAll { index: Int, default: Boolean ->
+            forAll { index: Int ->
                 shouldThrow<IllegalStateException> {
-                    wrapper.getBoolean(index, default)
+                    wrapper.getBoolean(index)
                 }
                 true
             }

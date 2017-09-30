@@ -107,7 +107,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getBoolean(R.bool.format_boolean_2)
-        assertEquals(actual, multi.getBoolean(R.styleable.Formats_formatBoolean, !actual))
+        assertEquals(actual, multi.getBoolean(R.styleable.Formats_formatBoolean))
     }
 
     @Test
@@ -119,7 +119,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getColor(R.color.format_color_2)
-        assertEquals(actual, multi.getColor(R.styleable.Formats_formatColor, actual - 1))
+        assertEquals(actual, multi.getColor(R.styleable.Formats_formatColor))
     }
 
     @Test
@@ -143,7 +143,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getDimensionPixelSize(R.dimen.format_dimension_2)
-        assertEquals(actual, multi.getDimensionPixelSize(R.styleable.Formats_formatDimension, actual - 1))
+        assertEquals(actual, multi.getDimensionPixelSize(R.styleable.Formats_formatDimension))
     }
 
     @Test
@@ -167,7 +167,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getFloat(R.dimen.format_float_2)
-        assertEquals(actual, multi.getFloat(R.styleable.Formats_formatFloat, actual - 1))
+        assertEquals(actual, multi.getFloat(R.styleable.Formats_formatFloat))
     }
 
     @Test
@@ -179,7 +179,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getFraction(R.fraction.format_fraction_2, 1, 2)
-        assertEquals(actual, multi.getFraction(R.styleable.Formats_formatFraction, 1, 2, actual - 1))
+        assertEquals(actual, multi.getFraction(R.styleable.Formats_formatFraction, 1, 2))
     }
 
     @Test
@@ -191,7 +191,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getInteger(R.integer.format_integer_2)
-        assertEquals(actual, multi.getInt(R.styleable.Formats_formatInteger, actual - 1))
+        assertEquals(actual, multi.getInt(R.styleable.Formats_formatInteger))
     }
 
     @Test
@@ -204,7 +204,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = res.getDimensionPixelSize(R.dimen.format_dimension)
-        assertEquals(actual, multi.getLayoutDimension(R.styleable.Formats_formatDimension, actual - 1))
+        assertEquals(actual, multi.getLayoutDimension(R.styleable.Formats_formatDimension))
     }
 
     @Test
@@ -217,7 +217,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) }
         )
         val actual = R.string.format_string_2
-        assertEquals(actual, multi.getResourceId(R.styleable.Formats_formatReference, actual - 1))
+        assertEquals(actual, multi.getResourceId(R.styleable.Formats_formatReference))
     }
 
     @Test

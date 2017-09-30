@@ -1,11 +1,8 @@
 package com.airbnb.paris
 
-import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
-import android.support.annotation.AnyRes
-import android.support.annotation.ColorInt
-import android.support.annotation.Px
-import android.support.annotation.StyleableRes
+import android.content.res.*
+import android.graphics.drawable.*
+import android.support.annotation.*
 import java.util.*
 
 abstract class TypedArrayWrapper {
@@ -26,25 +23,25 @@ abstract class TypedArrayWrapper {
 
     abstract fun hasValue(index: Int): Boolean
 
-    abstract fun getBoolean(@StyleableRes index: Int, defValue: Boolean): Boolean
+    abstract fun getBoolean(@StyleableRes index: Int): Boolean
 
-    @ColorInt abstract fun getColor(@StyleableRes index: Int, @ColorInt defValue: Int): Int
+    @ColorInt abstract fun getColor(@StyleableRes index: Int): Int
 
     abstract fun getColorStateList(@StyleableRes index: Int): ColorStateList
 
-    @Px abstract fun getDimensionPixelSize(@StyleableRes index: Int, @Px defValue: Int): Int
+    @Px abstract fun getDimensionPixelSize(@StyleableRes index: Int): Int
 
     abstract fun getDrawable(@StyleableRes index: Int): Drawable
 
-    abstract fun getFloat(@StyleableRes index: Int, defValue: Float): Float
+    abstract fun getFloat(@StyleableRes index: Int): Float
 
-    abstract fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float
+    abstract fun getFraction(index: Int, base: Int, pbase: Int): Float
 
-    abstract fun getInt(@StyleableRes index: Int, defValue: Int): Int
+    abstract fun getInt(@StyleableRes index: Int): Int
 
-    abstract fun getLayoutDimension(@StyleableRes index: Int, defValue: Int): Int
+    abstract fun getLayoutDimension(@StyleableRes index: Int): Int
 
-    abstract fun getResourceId(@StyleableRes index: Int, defValue: Int): Int
+    abstract fun getResourceId(@StyleableRes index: Int): Int
 
     abstract fun getString(@StyleableRes index: Int): String
 

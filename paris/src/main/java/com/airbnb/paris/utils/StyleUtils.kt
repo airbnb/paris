@@ -20,7 +20,7 @@ internal object StyleUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return array.getDrawable(index)
         } else {
-            val resourceId = array.getResourceId(index, -1)
+            val resourceId = array.getResourceId(index)
             return if (resourceId != -1) {
                 AppCompatResources.getDrawable(context, resourceId)
             } else {

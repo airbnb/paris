@@ -16,29 +16,29 @@ internal class TypedArrayTypedArrayWrapper constructor(
 
     override fun hasValue(index: Int): Boolean = typedArray.hasValue(index)
 
-    override fun getBoolean(index: Int, defValue: Boolean): Boolean =
-            typedArray.getBoolean(index, defValue)
+    override fun getBoolean(index: Int): Boolean =
+            typedArray.getBoolean(index, false)
 
-    override fun getColor(index: Int, defValue: Int): Int = typedArray.getColor(index, defValue)
+    override fun getColor(index: Int): Int = typedArray.getColor(index, -1)
 
     override fun getColorStateList(index: Int): ColorStateList = typedArray.getColorStateList(index)
 
-    override fun getDimensionPixelSize(index: Int, defValue: Int): Int =
-            typedArray.getDimensionPixelSize(index, defValue)
+    override fun getDimensionPixelSize(index: Int): Int =
+            typedArray.getDimensionPixelSize(index, -1)
 
     override fun getDrawable(index: Int): Drawable = typedArray.getDrawable(index)
 
-    override fun getFloat(index: Int, defValue: Float): Float = typedArray.getFloat(index, defValue)
+    override fun getFloat(index: Int): Float = typedArray.getFloat(index, -1f)
 
-    override fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float =
-            typedArray.getFraction(index, base, pbase, defValue)
+    override fun getFraction(index: Int, base: Int, pbase: Int): Float =
+            typedArray.getFraction(index, base, pbase, -1f)
 
-    override fun getInt(index: Int, defValue: Int): Int = typedArray.getInt(index, defValue)
+    override fun getInt(index: Int): Int = typedArray.getInt(index, -1)
 
-    override fun getLayoutDimension(index: Int, defValue: Int): Int =
-            typedArray.getLayoutDimension(index, defValue)
+    override fun getLayoutDimension(index: Int): Int =
+            typedArray.getLayoutDimension(index, -1)
 
-    override fun getResourceId(index: Int, defValue: Int): Int =
+    override fun getResourceId(index: Int): Int =
             if (isNull(index)) 0 else typedArray.getResourceId(index, 0)
 
     override fun getString(index: Int): String = typedArray.getString(index)
@@ -47,7 +47,7 @@ internal class TypedArrayTypedArrayWrapper constructor(
 
     override fun getTextArray(index: Int): Array<CharSequence> = typedArray.getTextArray(index)
 
-    override fun getStyle(index: Int): Style = ResourceStyle(getResourceId(index, -1))
+    override fun getStyle(index: Int): Style = ResourceStyle(getResourceId(index))
 
     override fun recycle() {
         typedArray.recycle()

@@ -1,17 +1,10 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Fraction
-import com.airbnb.paris.processor.utils.ClassNames
-import com.airbnb.paris.processor.utils.hasAnnotation
-import com.airbnb.paris.processor.utils.hasAnyAnnotation
-import com.airbnb.paris.processor.utils.isView
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.CodeBlock
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.utils.*
+import com.squareup.javapoet.*
+import javax.lang.model.element.*
+import javax.lang.model.util.*
 
 internal class Format private constructor(
         private val type: Type,
@@ -209,22 +202,22 @@ internal class Format private constructor(
 
     fun typedArrayMethodCode(typedArrayVariable: String, attrResIdCode: CodeBlock): CodeBlock {
         return CodeBlock.of("\$L." + when (type) {
-            Type.BOOLEAN -> "getBoolean(\$L, false)"
+            Type.BOOLEAN -> "getBoolean(\$L)"
             Type.CHARSEQUENCE -> "getText(\$L)"
             Type.CHARSEQUENCE_ARRAY -> "getTextArray(\$L)"
-            Type.COLOR -> "getColor(\$L, -1)"
+            Type.COLOR -> "getColor(\$L)"
             Type.COLOR_STATE_LIST -> "getColorStateList(\$L)"
-            Type.DIMENSION -> "getDimension(\$L, -1f)"
-            Type.DIMENSION_PIXEL_OFFSET -> "getDimensionPixelOffset(\$L, -1)"
-            Type.DIMENSION_PIXEL_SIZE -> "getDimensionPixelSize(\$L, -1)"
+            Type.DIMENSION -> "getDimension(\$L)"
+            Type.DIMENSION_PIXEL_OFFSET -> "getDimensionPixelOffset(\$L)"
+            Type.DIMENSION_PIXEL_SIZE -> "getDimensionPixelSize(\$L)"
             Type.DRAWABLE -> "getDrawable(\$L)"
-            Type.FLOAT -> "getFloat(\$L, -1f)"
-            Type.FRACTION -> "getFraction(\$L, %d, %d, -1f)".format(base, pbase)
-            Type.INT -> "getInt(\$L, -1)"
-            Type.INTEGER -> "getInteger(\$L, -1)"
-            Type.LAYOUT_DIMENSION -> "getLayoutDimension(\$L, -1)"
+            Type.FLOAT -> "getFloat(\$L)"
+            Type.FRACTION -> "getFraction(\$L, %d, %d)".format(base, pbase)
+            Type.INT -> "getInt(\$L)"
+            Type.INTEGER -> "getInteger(\$L)"
+            Type.LAYOUT_DIMENSION -> "getLayoutDimension(\$L)"
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
-            Type.RESOURCE_ID -> "getResourceId(\$L, -1)"
+            Type.RESOURCE_ID -> "getResourceId(\$L)"
             Type.STRING -> "getString(\$L)"
             Type.STYLE -> "getStyle(\$L)"
         }, typedArrayVariable, attrResIdCode)

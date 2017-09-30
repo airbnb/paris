@@ -27,7 +27,7 @@ internal class MapTypedArrayWrapper constructor(
                 .filter { it != -1 }
     }
 
-    override fun isNull(index: Int): Boolean = isNullRes(getResourceId(index, 0))
+    override fun isNull(index: Int): Boolean = isNullRes(getResourceId(index))
 
     override fun getIndexCount(): Int = styleableAttrIndexes.size
 
@@ -35,10 +35,10 @@ internal class MapTypedArrayWrapper constructor(
 
     override fun hasValue(index: Int): Boolean = styleableAttrIndexToValueRes(index) != null
 
-    override fun getBoolean(index: Int, defValue: Boolean): Boolean =
+    override fun getBoolean(index: Int): Boolean =
             getValue(index) { resId -> resources.getBoolean(resId) }
 
-    override fun getColor(index: Int, defValue: Int): Int {
+    override fun getColor(index: Int): Int {
         return getValue(index) { resId ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 resources.getColor(resId, null)
@@ -58,7 +58,7 @@ internal class MapTypedArrayWrapper constructor(
         }
     }
 
-    override fun getDimensionPixelSize(index: Int, defValue: Int): Int =
+    override fun getDimensionPixelSize(index: Int): Int =
             getValue(index) { resId -> resources.getDimensionPixelSize(resId) }
 
     override fun getDrawable(index: Int): Drawable {
@@ -71,19 +71,19 @@ internal class MapTypedArrayWrapper constructor(
         }
     }
 
-    override fun getFloat(index: Int, defValue: Float): Float =
+    override fun getFloat(index: Int): Float =
             getValue(index) { resId -> resources.getFloat(resId) }
 
-    override fun getFraction(index: Int, base: Int, pbase: Int, defValue: Float): Float =
+    override fun getFraction(index: Int, base: Int, pbase: Int): Float =
             getValue(index) { resId -> resources.getFraction(resId, base, pbase) }
 
-    override fun getInt(index: Int, defValue: Int): Int =
+    override fun getInt(index: Int): Int =
             getValue(index) { resId -> resources.getInteger(resId) }
 
-    override fun getLayoutDimension(index: Int, defValue: Int): Int =
+    override fun getLayoutDimension(index: Int): Int =
             getValue(index) { resId -> resources.getLayoutDimension(resId) }
 
-    override fun getResourceId(index: Int, defValue: Int): Int =
+    override fun getResourceId(index: Int): Int =
             getValue(index) { resId -> resId }
 
     override fun getString(index: Int): String =

@@ -48,46 +48,46 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   protected void processAttributes(Style style, TypedArrayWrapper a) {
     Resources res = getView().getContext().getResources();
     if (a.hasValue(R.styleable.Formats_formatBoolean)) {
-      getProxy().formatBoolean(a.getBoolean(R.styleable.Formats_formatBoolean, false));
+      getProxy().formatBoolean(a.getBoolean(R.styleable.Formats_formatBoolean));
     }
     if (a.hasValue(R.styleable.Formats_formatBoolean)) {
-      getProxy().formatBoolean(a.getResourceId(R.styleable.Formats_formatBoolean, -1));
+      getProxy().formatBoolean(a.getResourceId(R.styleable.Formats_formatBoolean));
     }
     if (a.hasValue(R.styleable.Formats_formatBoolean2)) {
-      getProxy().formatBoolean2(a.getResourceId(R.styleable.Formats_formatBoolean2, -1));
+      getProxy().formatBoolean2(a.getResourceId(R.styleable.Formats_formatBoolean2));
     }
     if (a.hasValue(R.styleable.Formats_formatColor)) {
-      getProxy().formatColor(a.getColor(R.styleable.Formats_formatColor, -1));
+      getProxy().formatColor(a.getColor(R.styleable.Formats_formatColor));
     }
     if (a.hasValue(R.styleable.Formats_formatDimension)) {
-      getProxy().formatDimension_res(a.getResourceId(R.styleable.Formats_formatDimension, -1));
+      getProxy().formatDimension_res(a.getResourceId(R.styleable.Formats_formatDimension));
     }
     if (a.hasValue(R.styleable.Formats_formatDimension)) {
-      getProxy().formatDimension_px(a.getDimensionPixelSize(R.styleable.Formats_formatDimension, -1));
+      getProxy().formatDimension_px(a.getDimensionPixelSize(R.styleable.Formats_formatDimension));
     }
     if (a.hasValue(R.styleable.Formats_formatDimension)) {
-      getProxy().formatDimension_LayoutDimension(a.getLayoutDimension(R.styleable.Formats_formatDimension, -1));
+      getProxy().formatDimension_LayoutDimension(a.getLayoutDimension(R.styleable.Formats_formatDimension));
     }
     if (a.hasValue(R.styleable.Formats_formatEnum)) {
-      getProxy().formatEnum(a.getInt(R.styleable.Formats_formatEnum, -1));
+      getProxy().formatEnum(a.getInt(R.styleable.Formats_formatEnum));
     }
     if (a.hasValue(R.styleable.Formats_formatFlag)) {
-      getProxy().formatFlag(a.getInt(R.styleable.Formats_formatFlag, -1));
+      getProxy().formatFlag(a.getInt(R.styleable.Formats_formatFlag));
     }
     if (a.hasValue(R.styleable.Formats_formatFloat)) {
-      getProxy().formatFloat(a.getFloat(R.styleable.Formats_formatFloat, -1f));
+      getProxy().formatFloat(a.getFloat(R.styleable.Formats_formatFloat));
     }
     if (a.hasValue(R.styleable.Formats_formatFraction)) {
-      getProxy().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3, -1f));
+      getProxy().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3));
     }
     if (a.hasValue(R.styleable.Formats_formatInteger)) {
-      getProxy().formatInteger(a.getInt(R.styleable.Formats_formatInteger, -1));
+      getProxy().formatInteger(a.getInt(R.styleable.Formats_formatInteger));
     }
     if (a.hasValue(R.styleable.Formats_formatReference)) {
       getProxy().formatReference_CharSequenceArray(a.getTextArray(R.styleable.Formats_formatReference));
     }
     if (a.hasValue(R.styleable.Formats_formatReference)) {
-      getProxy().formatReference_res(a.getResourceId(R.styleable.Formats_formatReference, -1));
+      getProxy().formatReference_res(a.getResourceId(R.styleable.Formats_formatReference));
     }
     if (a.hasValue(R.styleable.Formats_formatReference2)) {
       getProxy().formatReference2_ColorStateList(a.getColorStateList(R.styleable.Formats_formatReference2));
