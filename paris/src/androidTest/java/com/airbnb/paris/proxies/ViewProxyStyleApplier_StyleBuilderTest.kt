@@ -58,7 +58,7 @@ class ViewProxyStyleApplier_StyleBuilderTest {
     fun background() {
         assertNull(view.background)
         StyleBuilder()
-                .background(R.drawable.format_drawable)
+                .backgroundRes(R.drawable.format_drawable)
                 .applyTo(view)
         Assert.assertEquals(
                 res.getDrawable(R.drawable.format_drawable).constantState,

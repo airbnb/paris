@@ -165,7 +165,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatBoolean(@BoolRes int resId) {
+    public B formatBooleanRes(@BoolRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatBoolean], resId);
       return (B) this;
     }
@@ -220,7 +220,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatFloat(@AnyRes int resId) {
+    public B formatFloatRes(@AnyRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFloat], resId);
       return (B) this;
     }
@@ -230,7 +230,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatFraction(@FractionRes int resId) {
+    public B formatFractionRes(@FractionRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFraction], resId);
       return (B) this;
     }
@@ -250,7 +250,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatReference(@ArrayRes int resId) {
+    public B formatReferenceRes(@ArrayRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference], resId);
       return (B) this;
     }
@@ -260,7 +260,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatReference2(@ColorRes int resId) {
+    public B formatReference2Res(@ColorRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference2], resId);
       return (B) this;
     }
@@ -270,7 +270,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatReference3(@DrawableRes int resId) {
+    public B formatReference3Res(@DrawableRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference3], resId);
       return (B) this;
     }
@@ -280,7 +280,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatString(@StringRes int resId) {
+    public B formatStringRes(@StringRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatString], resId);
       return (B) this;
     }
@@ -290,7 +290,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatString2(@StringRes int resId) {
+    public B formatString2Res(@StringRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatString2], resId);
       return (B) this;
     }

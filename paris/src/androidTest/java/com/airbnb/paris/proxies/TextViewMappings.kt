@@ -76,7 +76,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             android.R.attr.drawableBottom,
             TextViewProxy::setDrawableBottom,
             StyleBuilder::drawableBottom,
-            StyleBuilder::drawableBottom,
+            StyleBuilder::drawableBottomRes,
             { it.compoundDrawables[3] }
     ))
 
@@ -86,7 +86,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             android.R.attr.drawableLeft,
             TextViewProxy::setDrawableLeft,
             StyleBuilder::drawableLeft,
-            StyleBuilder::drawableLeft,
+            StyleBuilder::drawableLeftRes,
             { it.compoundDrawables[0] }
     ))
 
@@ -96,7 +96,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             android.R.attr.drawableRight,
             TextViewProxy::setDrawableRight,
             StyleBuilder::drawableRight,
-            StyleBuilder::drawableRight,
+            StyleBuilder::drawableRightRes,
             { it.compoundDrawables[2] }
     ))
 
@@ -106,7 +106,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             android.R.attr.drawableTop,
             TextViewProxy::setDrawableTop,
             StyleBuilder::drawableTop,
-            StyleBuilder::drawableTop,
+            StyleBuilder::drawableTopRes,
             { it.compoundDrawables[1] }
     ))
 
@@ -148,7 +148,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
                 android.R.attr.letterSpacing,
                 TextViewProxy::setLetterSpacing,
                 StyleBuilder::letterSpacing,
-                StyleBuilder::letterSpacing,
+                StyleBuilder::letterSpacingRes,
                 { it.letterSpacing }
         ))
     }
@@ -182,7 +182,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             R.attr.lineSpacingMultiplier,
             TextViewProxy::setLineSpacingMultiplier,
             StyleBuilder::lineSpacingMultiplier,
-            StyleBuilder::lineSpacingMultiplier,
+            StyleBuilder::lineSpacingMultiplierRes,
             { it.lineSpacingMultiplier }
     ))
 
@@ -222,7 +222,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             R.attr.singleLine,
             TextViewProxy::setSingleLine,
             StyleBuilder::singleLine,
-            StyleBuilder::singleLine,
+            StyleBuilder::singleLineRes,
             { view, _ ->
                 Assert.assertEquals(1, view.minLines)
                 Assert.assertEquals(1, view.maxLines)
@@ -235,7 +235,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             R.attr.textColor,
             TextViewProxy::setTextColor,
             StyleBuilder::textColor,
-            StyleBuilder::textColor,
+            StyleBuilder::textColorRes,
             { it.textColors }
     ))
 
@@ -245,7 +245,7 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             R.attr.textColorHint,
             TextViewProxy::setTextColorHint,
             StyleBuilder::textColorHint,
-            StyleBuilder::textColorHint,
+            StyleBuilder::textColorHintRes,
             { it.hintTextColors }
     ))
 

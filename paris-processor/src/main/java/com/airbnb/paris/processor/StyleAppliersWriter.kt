@@ -419,7 +419,6 @@ internal object StyleAppliersWriter {
             "The same @Attr value can't be used on methods with different parameter types (excluding resource id types)"
         }
 
-        val isTargetIntType = nonResTargetAttrs.any { TypeKind.INT == it.targetType.kind }
         val isTargetDimensionType = nonResTargetAttrs.any { it.targetFormat.isDimensionType }
 
         val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
@@ -437,9 +436,7 @@ internal object StyleAppliersWriter {
             }.build())
         }
 
-        // TODO Also append res if the primary target type is numeric, like float?
-        val resMethodName = baseMethodName + if (isTargetIntType) "Res" else ""
-        methodSpecs.add(MethodSpec.methodBuilder(resMethodName).apply {
+        methodSpecs.add(MethodSpec.methodBuilder("${baseMethodName}Res").apply {
             addModifiers(Modifier.PUBLIC)
             addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
                     .addAnnotation(attr.targetFormat.resAnnotation)
@@ -449,9 +446,9 @@ internal object StyleAppliersWriter {
             addStatement("return (B) this")
         }.build())
 
-        // Adds special <attribute>Dp methods that automatically convert a dp value to pixels for dimensions
+        // Adds a special <attribute>Dp method that automatically convert a dp value to pixels for dimensions
         if (isTargetDimensionType) {
-            methodSpecs.add(MethodSpec.methodBuilder(baseMethodName + "Dp").apply {
+            methodSpecs.add(MethodSpec.methodBuilder("${baseMethodName}Dp").apply {
                 addModifiers(Modifier.PUBLIC)
                 addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
                 returns(TypeVariableName.get("B"))

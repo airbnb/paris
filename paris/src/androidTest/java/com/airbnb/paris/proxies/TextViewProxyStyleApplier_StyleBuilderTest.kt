@@ -95,15 +95,15 @@ class TextViewProxyStyleApplier_StyleBuilderTest {
             assertEqualsTextViewStyleBuilder {
                 drawableBottom(drawableRed)
                 drawableLeft(drawableGreen)
-                drawableRight(ARBITRARY_RESOURCE_ID_1)
-                drawableTop(ARBITRARY_RESOURCE_ID_2)
+                drawableRightRes(ARBITRARY_RESOURCE_ID_1)
+                drawableTopRes(ARBITRARY_RESOURCE_ID_2)
             }
 
             assertNotEqualsTextViewStyleBuilder {
                 drawableBottom(drawableGreen)
                 drawableLeft(drawableRed)
-                drawableRight(ARBITRARY_RESOURCE_ID_2)
-                drawableTop(ARBITRARY_RESOURCE_ID_1)
+                drawableRightRes(ARBITRARY_RESOURCE_ID_2)
+                drawableTopRes(ARBITRARY_RESOURCE_ID_1)
             }
         }
     }

@@ -92,7 +92,7 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             android.R.attr.alpha,
             ViewProxy::setAlpha,
             BaseStyleBuilder<*, *>::alpha,
-            BaseStyleBuilder<*, *>::alpha,
+            BaseStyleBuilder<*, *>::alphaRes,
             { it.alpha }
     ))
 
@@ -112,7 +112,7 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             android.R.attr.foreground,
             ViewProxy::setForeground,
             BaseStyleBuilder<*, *>::foreground,
-            BaseStyleBuilder<*, *>::foreground,
+            BaseStyleBuilder<*, *>::foregroundRes,
             { it.foreground }
     ))
 
