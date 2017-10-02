@@ -429,8 +429,13 @@ internal object StyleAppliersWriter {
 
         if (nonResTargetAttrs.isNotEmpty()) {
             methodSpecs.add(MethodSpec.methodBuilder(baseMethodName).apply {
+                val valueParameterBuilder = ParameterSpec.builder(TypeName.get(attr.targetType), "value")
+                attr.targetFormat.valueAnnotation?.let {
+                    valueParameterBuilder.addAnnotation(it)
+                }
+
                 addModifiers(Modifier.PUBLIC)
-                addParameter(ParameterSpec.builder(TypeName.get(attr.targetType), "value").build())
+                addParameter(valueParameterBuilder.build())
                 returns(TypeVariableName.get("B"))
                 addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
                 addStatement("return (B) this")

@@ -130,6 +130,18 @@ internal class Format private constructor(
 
     val isColorStateListType = type == Type.COLOR_STATE_LIST
 
+    val valueAnnotation: ClassName?
+        get() = when (type) {
+            Type.COLOR -> ClassNames.ANDROID_COLOR_INT
+            Type.DIMENSION,
+            Type.DIMENSION_PIXEL_OFFSET,
+            Type.DIMENSION_PIXEL_SIZE -> {
+                ClassNames.ANDROID_PX
+            }
+            Type.RESOURCE_ID -> ClassNames.ANDROID_ANY_RES
+            else -> null
+        }
+
     val resAnnotation: ClassName
         get() = when (type) {
             Type.BOOLEAN -> ClassNames.ANDROID_BOOL_RES

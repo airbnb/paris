@@ -12,6 +12,7 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.FractionRes;
 import android.support.annotation.IntegerRes;
+import android.support.annotation.Px;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import com.airbnb.paris.Style;
@@ -171,7 +172,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatColor(int value) {
+    public B formatColor(@ColorInt int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatColor], value);
       return (B) this;
     }
@@ -181,7 +182,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatDimension(int value) {
+    public B formatDimension(@Px int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
       return (B) this;
     }
