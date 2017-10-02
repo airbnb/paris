@@ -10,6 +10,7 @@ internal object ClassNames {
     val ANDROID_ANY_RES = "android.support.annotation.AnyRes".className()
     val ANDROID_ARRAY_RES = "android.support.annotation.ArrayRes".className()
     val ANDROID_BOOL_RES = "android.support.annotation.BoolRes".className()
+    val ANDROID_COLOR_INT = "android.support.annotation.ColorInt".className()
     val ANDROID_COLOR_RES = "android.support.annotation.ColorRes".className()
     val ANDROID_DIMEN_RES = "android.support.annotation.DimenRes".className()
     val ANDROID_DRAWABLE_RES = "android.support.annotation.DrawableRes".className()

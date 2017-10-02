@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.AnyRes;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.BoolRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
@@ -225,6 +226,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     public B formatReference2Res(@ColorRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference2], resId);
+      return (B) this;
+    }
+
+    public B formatReference2(@ColorInt int color) {
+      getBuilder().putColor(R.styleable.Formats[R.styleable.Formats_formatReference2], color);
       return (B) this;
     }
 

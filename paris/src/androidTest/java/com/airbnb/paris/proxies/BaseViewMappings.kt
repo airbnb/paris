@@ -5,6 +5,7 @@ import android.graphics.*
 import android.graphics.drawable.*
 
 
+internal val ARBITRARY_COLORS = listOf(Color.GREEN, Color.GREEN, Color.BLUE, Color.TRANSPARENT)
 internal val ARBITRARY_COLOR_STATE_LISTS = listOf(
         ColorStateList(arrayOf(
                 intArrayOf(android.R.attr.state_enabled),
@@ -22,7 +23,7 @@ internal val ARBITRARY_INTS = listOf(Integer.MIN_VALUE, -5, 0, 1, 2, 3, 5, 15, I
 internal val ARBITRARY_RESOURCE_ID = 2
 internal val BOOLS = listOf(true, false)
 
-// TODO What about Dp methods?
+// TODO What about Dp and ColorInt methods?
 
 internal open class BaseViewMapping<in Builder, in Proxy, in View, Input> protected constructor(
         val testValues: List<Input>,

@@ -30,6 +30,9 @@ data class ProgrammaticStyle constructor(
         fun putDp(@AttrRes attrRes: Int, dps: Int): Builder =
                 put(attrRes, DpValue(dps))
 
+        fun putColor(@AttrRes attrRes: Int, @ColorInt color: Int): Builder =
+                put(attrRes, ColorValue(color))
+
         fun put(@AttrRes attrRes: Int, value: Any): Builder {
             attrResToValueResMap.put(attrRes, value)
             return this

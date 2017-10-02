@@ -420,6 +420,7 @@ internal object StyleAppliersWriter {
         }
 
         val isTargetDimensionType = nonResTargetAttrs.any { it.targetFormat.isDimensionType }
+        val isTargetColorStateListType = nonResTargetAttrs.any { it.targetFormat.isColorStateListType }
 
         val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
         val attrResourceName = attr.styleableResId.resourceName!!
@@ -453,6 +454,19 @@ internal object StyleAppliersWriter {
                 addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
                 returns(TypeVariableName.get("B"))
                 addStatement("getBuilder().putDp(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
+                addStatement("return (B) this")
+            }.build())
+        }
+
+        // Adds a special <attribute> method that automatically convert a @ColorInt to a ColorStateList
+        if (isTargetColorStateListType) {
+            methodSpecs.add(MethodSpec.methodBuilder(baseMethodName).apply {
+                addModifiers(Modifier.PUBLIC)
+                addParameter(ParameterSpec.builder(Integer.TYPE, "color")
+                        .addAnnotation(ClassNames.ANDROID_COLOR_INT)
+                        .build())
+                returns(TypeVariableName.get("B"))
+                addStatement("getBuilder().putColor(\$T.styleable.\$L[\$L], color)", rClassName, styleableResourceName, attr.styleableResId.code)
                 addStatement("return (B) this")
             }.build())
         }

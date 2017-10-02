@@ -107,6 +107,7 @@ internal class MapTypedArrayWrapper constructor(
         return when (value) {
             is ResourceId -> resourceGetter(value.resId)
             is DpValue -> resources.dpToPx(value.dpValue) as T
+            is ColorValue -> value.colorValue.toColorStateList() as T
             else -> {
                 return value as T
             }
