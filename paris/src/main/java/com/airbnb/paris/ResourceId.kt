@@ -1,3 +1,3 @@
 package com.airbnb.paris
 
-data class ResourceId(val resId: Int)
+internal data class ResourceId(val resId: Int)

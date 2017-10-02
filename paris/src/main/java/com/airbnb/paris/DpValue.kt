@@ -1,3 +1,3 @@
 package com.airbnb.paris
 
-data class DpValue(val dpValue: Int)
+internal data class DpValue(val dpValue: Int)
