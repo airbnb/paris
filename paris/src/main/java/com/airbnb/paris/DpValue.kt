@@ -1,3 +1,5 @@
 package com.airbnb.paris
 
-internal data class DpValue(val dpValue: Int)
+import android.support.annotation.*
+
+internal data class DpValue(@Dimension(unit = Dimension.DP) val dpValue: Int)

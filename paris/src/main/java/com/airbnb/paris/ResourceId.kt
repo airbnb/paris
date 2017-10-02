@@ -1,3 +1,5 @@
 package com.airbnb.paris
 
-internal data class ResourceId(val resId: Int)
+import android.support.annotation.*
+
+internal data class ResourceId(@AnyRes val resId: Int)
