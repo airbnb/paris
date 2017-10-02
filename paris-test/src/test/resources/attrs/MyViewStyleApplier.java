@@ -9,6 +9,7 @@ import android.support.annotation.BoolRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
+import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.FractionRes;
 import android.support.annotation.IntegerRes;
@@ -155,7 +156,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return (B) this;
     }
 
-    public B formatDimensionDp(int value) {
+    public B formatDimensionDp(@Dimension(unit = Dimension.DP) int value) {
       getBuilder().putDp(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
       return (B) this;
     }

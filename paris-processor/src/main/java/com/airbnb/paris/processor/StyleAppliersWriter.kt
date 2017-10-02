@@ -456,7 +456,11 @@ internal object StyleAppliersWriter {
         if (isTargetDimensionType) {
             methodSpecs.add(MethodSpec.methodBuilder("${baseMethodName}Dp").apply {
                 addModifiers(Modifier.PUBLIC)
-                addParameter(ParameterSpec.builder(Integer.TYPE, "value").build())
+                addParameter(ParameterSpec.builder(Integer.TYPE, "value")
+                        .addAnnotation(AnnotationSpec.builder(ClassNames.ANDROID_DIMENSION)
+                                .addMember("unit", "\$T.DP", ClassNames.ANDROID_DIMENSION)
+                                .build())
+                        .build())
                 returns(TypeVariableName.get("B"))
                 addStatement("getBuilder().putDp(\$T.styleable.\$L[\$L], value)", rClassName, styleableResourceName, attr.styleableResId.code)
                 addStatement("return (B) this")
