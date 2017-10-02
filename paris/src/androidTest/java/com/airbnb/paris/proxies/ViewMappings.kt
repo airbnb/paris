@@ -96,22 +96,6 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             { it.alpha }
     ))
 
-    // drawableBottom
-    add(ViewMapping.withAssertEquals(
-            (0..2).toList(),
-            android.R.attr.visibility,
-            ViewProxy::setVisibility,
-            BaseStyleBuilder<*, *>::visibility,
-            BaseStyleBuilder<*, *>::visibilityRes,
-            {
-                mapOf(
-                        View.VISIBLE to 0,
-                        View.INVISIBLE to 1,
-                        View.GONE to 2
-                )[it.visibility]!!
-            }
-    ))
-
     // elevation
     add(ViewMapping.withAssertEquals(
             ARBITRARY_DIMENSIONS,
@@ -199,4 +183,21 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
 //                assertEquals(input, view.paddingTop)
 //            }
 //    ))
+
+    // visibility
+    add(ViewMapping.withCustomAssert(
+            listOf(View.VISIBLE, View.INVISIBLE, View.GONE, 1, 2),
+            android.R.attr.visibility,
+            ViewProxy::setVisibility,
+            BaseStyleBuilder<*, *>::visibility,
+            BaseStyleBuilder<*, *>::visibilityRes,
+            { view, input ->
+                val possibleValuesMap = mapOf(
+                        View.VISIBLE to listOf(0),
+                        View.INVISIBLE to listOf(1, View.INVISIBLE),
+                        View.GONE to listOf(2, View.GONE)
+                )
+                assertTrue(possibleValuesMap[view.visibility]!!.contains(input))
+            }
+    ))
 }

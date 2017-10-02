@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.AnyRes;
 import android.support.annotation.Px;
 import android.support.v4.view.ViewCompat;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -40,10 +41,18 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         return false;
     }
 
-    /**
-     * This replicates what happens privately within {@link View}
-     */
-    private static final int[] VISIBILITY_FLAGS = new int[]{ View.VISIBLE, View.INVISIBLE, View.GONE };
+    private static final SparseIntArray VISIBILITY_MAP = new SparseIntArray();
+    static {
+        // Visibility values passed to setVisibility are assumed to be one of View.VISIBLE (0),
+        // INVISIBLE (4) and GONE (8) if passed to a style builder as a "direct" value, or an int
+        // between 0 and 2 if passed as an enum resource (either through a builder or XML style).
+        // This maps all the possible inputs to the correct visiblity
+        VISIBILITY_MAP.put(View.VISIBLE, View.VISIBLE);
+        VISIBILITY_MAP.put(View.INVISIBLE, View.INVISIBLE);
+        VISIBILITY_MAP.put(View.GONE, View.GONE);
+        VISIBILITY_MAP.put(1, View.INVISIBLE);
+        VISIBILITY_MAP.put(2, View.GONE);
+    }
 
     private boolean ignoreLayoutWidthAndHeight;
     private int width;
@@ -292,10 +301,9 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         }
     }
 
-    // TODO Can we create a method that accepts a flag for the builder? This is going to be super confusing
     @Attr(R2.styleable.Paris_View_android_visibility)
     void setVisibility(int visibility) {
-        getView().setVisibility(VISIBILITY_FLAGS[visibility]);
+        getView().setVisibility(VISIBILITY_MAP.get(visibility));
     }
 
     @Attr(R2.styleable.Paris_View_ignoreLayoutWidthAndHeight)
