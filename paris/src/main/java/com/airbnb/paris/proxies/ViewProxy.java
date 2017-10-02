@@ -299,7 +299,7 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     @Attr(R2.styleable.Paris_View_ignoreLayoutWidthAndHeight)
-    void setVisibility(boolean ignore) {
+    void setIgnoreLayoutWidthAndHeight(boolean ignore) {
         ignoreLayoutWidthAndHeight = ignore;
     }
 }
