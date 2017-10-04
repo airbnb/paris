@@ -26,14 +26,11 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
     var debugListener: StyleApplier.DebugListener? = null
 
     /**
-     * Passing a null [AttributeSet] will apply default values, if any
+     * Passing a null [AttributeSet] is a no-op, for convenience
      */
     fun apply(attributeSet: AttributeSet?) {
         if (attributeSet != null) {
             apply(AttributeSetStyle(attributeSet))
-        } else {
-            // TODO Can we detect when neither the view or the subviews have default attributes values and skip this?
-            apply(EmptyStyle)
         }
     }
 

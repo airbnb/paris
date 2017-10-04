@@ -22,11 +22,12 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
         return this as B
     }
 
+    /**
+     * Passing a null [AttributeSet] is a no-op, for convenience
+     */
     fun add(attributeSet: AttributeSet?): B {
         if (attributeSet != null) {
             add(AttributeSetStyle(attributeSet))
-        } else {
-            add(EmptyStyle)
         }
         return this as B
     }
