@@ -42,6 +42,7 @@ internal class MapTypedArrayWrapper constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 resources.getColor(resId, null)
             } else {
+                @Suppress("DEPRECATION")
                 resources.getColor(resId)
             }
         }
@@ -52,6 +53,7 @@ internal class MapTypedArrayWrapper constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 resources.getColorStateList(resId, null)
             } else {
+                @Suppress("DEPRECATION")
                 resources.getColorStateList(resId)
             }
         }
@@ -65,6 +67,7 @@ internal class MapTypedArrayWrapper constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 resources.getDrawable(resId, null)
             } else {
+                @Suppress("DEPRECATION")
                 resources.getDrawable(resId)
             }
         }

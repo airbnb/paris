@@ -26,23 +26,23 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':paris-annotations')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':paris-annotations')
 
-    compile deps.kotlin
+    implementation deps.kotlin
 
-    compile deps.androidAppcompatV7
+    implementation deps.androidAppcompatV7
 
-    provided project(':paris-processor')
+    compileOnly project(':paris-processor')
     annotationProcessor project(':paris-processor')
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'io.kotlintest:kotlintest:2.0.5'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'io.kotlintest:kotlintest:2.0.5'
 
-    testCompile 'org.mockito:mockito-core:2.8.9'
-    androidTestCompile 'org.mockito:mockito-android:2.8.9'
+    testImplementation 'org.mockito:mockito-core:2.8.9'
+    androidTestImplementation 'org.mockito:mockito-android:2.8.9'
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

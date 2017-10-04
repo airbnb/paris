@@ -33,19 +33,20 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile deps.kotlin
-    compile project(':paris')
-    compile deps.androidAppcompatV7
-    testCompile 'junit:junit:4.12'
-    testCompile files(getRuntimeJar())
-    testCompile files(Jvm.current().getToolsJar())
-    testCompile deps.googleTestingCompile
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.kotlin
+    implementation project(':paris')
+    implementation project(':paris-annotations')
+    implementation deps.androidAppcompatV7
+    testImplementation 'junit:junit:4.12'
+    testImplementation files(getRuntimeJar())
+    testImplementation files(Jvm.current().getToolsJar())
+    testImplementation deps.googleTestingCompile
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    testCompile project(':paris-processor')
+    testImplementation project(':paris-processor')
     annotationProcessor project(':paris-processor')
     testAnnotationProcessor project(':paris-processor')
 }
@@ -55,11 +56,11 @@ static def getRuntimeJar() {
         final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();
         File runtimeJar = new File(javaBase, "lib/rt.jar");
         if (runtimeJar.exists()) {
-            return runtimeJar;
+            return runtimeJar
         }
         runtimeJar = new File(javaBase, "jre/lib/rt.jar");
         return runtimeJar.exists() ? runtimeJar : null;
     } catch (IOException e) {
-        throw new RuntimeException(e);
+        throw new RuntimeException(e)
     }
 }
