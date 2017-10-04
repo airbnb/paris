@@ -1,5 +1,6 @@
 package com.airbnb.paris.proxies
 
+import android.os.*
 import android.view.*
 import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
 import junit.framework.Assert.*
@@ -107,14 +108,16 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
     ))
 
     // foreground
-    add(ViewMapping.withAssertEquals(
-            ARBITRARY_COLOR_DRAWABLES,
-            android.R.attr.foreground,
-            ViewProxy::setForeground,
-            BaseStyleBuilder<*, *>::foreground,
-            BaseStyleBuilder<*, *>::foregroundRes,
-            { it.foreground }
-    ))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        add(ViewMapping.withAssertEquals(
+                ARBITRARY_COLOR_DRAWABLES,
+                android.R.attr.foreground,
+                ViewProxy::setForeground,
+                BaseStyleBuilder<*, *>::foreground,
+                BaseStyleBuilder<*, *>::foregroundRes,
+                { it.foreground }
+        ))
+    }
 
     // minHeight
     add(ViewMapping.withAssertEquals(
