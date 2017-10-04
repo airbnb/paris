@@ -26,7 +26,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
         if (attributeSet != null) {
             add(AttributeSetStyle(attributeSet))
         } else {
-            add(ProgrammaticStyle.EMPTY)
+            add(EmptyStyle)
         }
         return this as B
     }
@@ -48,7 +48,7 @@ abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, 
 
         consumeProgrammaticStyleBuilder()
         return when (styles.size) {
-            0 -> ProgrammaticStyle.EMPTY
+            0 -> EmptyStyle
             1 -> styles.first()
             else -> MultiStyle(name, styles)
         }

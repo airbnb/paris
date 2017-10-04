@@ -7,8 +7,8 @@ import com.airbnb.paris.*
 import com.airbnb.paris.typed_array_wrappers.*
 import java.util.*
 
-data class ProgrammaticStyle constructor(
-        private val attributeMap: Map<Int, Any>?,
+data class ProgrammaticStyle internal constructor(
+        private val attributeMap: Map<Int, Any>,
         private var name: String? = null) : Style {
 
     private constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
@@ -42,8 +42,6 @@ data class ProgrammaticStyle constructor(
     }
 
     companion object {
-        internal val EMPTY = ProgrammaticStyle(null, null)
-
         fun builder(): Builder = Builder()
     }
 
@@ -55,8 +53,6 @@ data class ProgrammaticStyle constructor(
     }
 
     @SuppressLint("Recycle")
-    override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper = when {
-        attributeMap != null -> MapTypedArrayWrapper(context.resources, attrs, attributeMap)
-        else -> EmptyTypedArrayWrapper
-    }
+    override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
+        MapTypedArrayWrapper(context.resources, attrs, attributeMap)
 }
