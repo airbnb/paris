@@ -150,19 +150,19 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
     ))
 
     // paddingHorizontal
-//    add(ViewMapping.withCustomAssert(
-//            ARBITRARY_DIMENSIONS,
-//            R.attr.paddingHorizontal,
-//            ViewProxy::setPaddingHorizontal,
-//            BaseStyleBuilder<*, *>::paddingHorizontal,
-//            BaseStyleBuilder<*, *>::paddingHorizontalRes,
-//            { view, input ->
-//                assertEquals(input, view.paddingEnd)
-//                assertEquals(input, view.paddingLeft)
-//                assertEquals(input, view.paddingRight)
-//                assertEquals(input, view.paddingStart)
-//            }
-//    ))
+    add(ViewMapping.withCustomAssert(
+            ARBITRARY_DIMENSIONS,
+           android.R.attr.paddingHorizontal,
+            ViewProxy::setPaddingHorizontal,
+            BaseStyleBuilder<*, *>::paddingHorizontal,
+            BaseStyleBuilder<*, *>::paddingHorizontalRes,
+            { view, input ->
+                assertEquals(input, view.paddingEnd)
+                assertEquals(input, view.paddingLeft)
+                assertEquals(input, view.paddingRight)
+                assertEquals(input, view.paddingStart)
+            }
+    ))
 
     // paddingStart
     add(ViewMapping.withAssertEquals(
@@ -175,17 +175,17 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
     ))
 
     // paddingVertical
-//    add(ViewMapping.withCustomAssert(
-//            ARBITRARY_DIMENSIONS,
-//            R.attr.paddingVertical,
-//            ViewProxy::setPaddingVertical,
-//            BaseStyleBuilder<*, *>::paddingVertical,
-//            BaseStyleBuilder<*, *>::paddingVerticalRes,
-//            { view, input ->
-//                assertEquals(input, view.paddingBottom)
-//                assertEquals(input, view.paddingTop)
-//            }
-//    ))
+    add(ViewMapping.withCustomAssert(
+            ARBITRARY_DIMENSIONS,
+            android.R.attr.paddingVertical,
+            ViewProxy::setPaddingVertical,
+            BaseStyleBuilder<*, *>::paddingVertical,
+            BaseStyleBuilder<*, *>::paddingVerticalRes,
+            { view, input ->
+                assertEquals(input, view.paddingBottom)
+                assertEquals(input, view.paddingTop)
+            }
+    ))
 
     // visibility
     add(ViewMapping.withCustomAssert(

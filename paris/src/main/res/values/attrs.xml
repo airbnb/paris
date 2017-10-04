@@ -21,12 +21,12 @@
         <attr name="android:padding" />
         <attr name="android:paddingBottom" />
         <attr name="android:paddingEnd" />
-        <!--<attr name="android:paddingHorizontal" />-->
+        <attr name="android:paddingHorizontal" />
         <attr name="android:paddingLeft" />
         <attr name="android:paddingRight" />
         <attr name="android:paddingStart" />
         <attr name="android:paddingTop" />
-        <!--<attr name="android:paddingVertical" />-->
+        <attr name="android:paddingVertical" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />
 

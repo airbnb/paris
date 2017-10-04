@@ -250,10 +250,10 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         }
     }
 
-//    @Attr(R2.styleable.Paris_View_paddingHorizontal)
-//    void setPaddingHorizontal(@Px int padding) {
-//        ViewExtensionsKt.setPaddingHorizontal(getView(), padding);
-//    }
+    @Attr(R2.styleable.Paris_View_android_paddingHorizontal)
+    void setPaddingHorizontal(@Px int padding) {
+        ViewExtensionsKt.setPaddingHorizontal(getView(), padding);
+    }
 
     @Attr(R2.styleable.Paris_View_android_paddingLeft)
     void setPaddingLeft(@Px int padding) {
@@ -283,10 +283,10 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         ViewExtensionsKt.setPaddingTop(getView(), padding);
     }
 
-//    @Attr(R2.styleable.Paris_View_paddingVertical)
-//    void setPaddingVertical(@Px int padding) {
-//        ViewExtensionsKt.setPaddingVertical(getView(), padding);
-//    }
+    @Attr(R2.styleable.Paris_View_android_paddingVertical)
+    void setPaddingVertical(@Px int padding) {
+        ViewExtensionsKt.setPaddingVertical(getView(), padding);
+    }
 
     @Attr(R2.styleable.Paris_View_android_stateListAnimator)
     void setStateListAnimator(@AnyRes int animatorRes) {
