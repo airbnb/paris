@@ -1,19 +1,13 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.utils.Errors
-import com.airbnb.paris.processor.utils.ProcessorException
-import com.airbnb.paris.processor.utils.check
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.android_resource_scanner.*
+import com.airbnb.paris.processor.utils.*
+import com.squareup.javapoet.*
+import javax.annotation.processing.*
+import javax.lang.model.element.*
+import javax.lang.model.type.*
+import javax.lang.model.util.*
 
 /**
  * Element  The annotated element
@@ -25,7 +19,8 @@ internal class AttrInfo private constructor(
         val targetFormat: Format,
         val elementName: String,
         val styleableResId: AndroidResourceId,
-        val defaultValueResId: AndroidResourceId?) {
+        val defaultValueResId: AndroidResourceId?,
+        val javadoc: CodeBlock) {
 
     companion object {
 
@@ -51,11 +46,7 @@ internal class AttrInfo private constructor(
 
             val enclosingElement = element.enclosingElement
 
-            val targetType = if (element.kind == ElementKind.FIELD) {
-                element.asType()
-            } else {
-                element.parameters[0].asType()
-            }
+            val targetType = element.parameters[0].asType()
 
             val targetFormat = Format.forElement(elementUtils, typeUtils, element)
 
@@ -67,13 +58,16 @@ internal class AttrInfo private constructor(
                 defaultValueResId = resourceScanner.getId(Attr::class.java, element, attr.defaultValue)
             }
 
+            val javadoc = CodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, elementName, targetType)
+
             return AttrInfo(
                     enclosingElement,
                     targetType,
                     targetFormat,
                     elementName,
                     styleableResId,
-                    defaultValueResId)
+                    defaultValueResId,
+                    javadoc)
         }
     }
 }

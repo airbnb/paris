@@ -15,6 +15,7 @@ internal data class StyleInfo constructor(
         val elementName: String,
         val formattedName: String,
         val styleResourceCode: CodeBlock?,
+        val javadoc: CodeBlock,
         private val isDefault: Boolean = false) {
 
     enum class Kind {
@@ -88,7 +89,8 @@ internal data class StyleInfo constructor(
                     styleableElement,
                     "empty_default",
                     "Default",
-                    null
+                    null,
+                    CodeBlock.of("Empty style")
             )
         }
 
@@ -116,7 +118,8 @@ internal data class StyleInfo constructor(
                         styleableElement,
                         defaultStyleName,
                         "Default",
-                        styleResourceCode
+                        styleResourceCode,
+                        CodeBlock.of("See $defaultStyleName style (defined as an XML resource)")
                 )
             } else {
                 return null
@@ -148,6 +151,7 @@ internal data class StyleInfo constructor(
 
             val elementKind: Kind
             val targetType: TypeMirror
+            val javadoc: CodeBlock
             if (element.kind == ElementKind.FIELD) {
                 check(element.modifiers.contains(Modifier.FINAL), element) {
                     "Fields annotated with @Style must be final"
@@ -157,11 +161,14 @@ internal data class StyleInfo constructor(
                 // TODO Check that the target type is an int
                 targetType = element.asType()
 
+                javadoc = CodeBlock.of("@see \$T#\$N", enclosingElement, elementName)
+
             } else { // Method
                 elementKind = Kind.METHOD
                 // TODO Check that the target type is a builder
                 targetType = (element as ExecutableElement).parameters[0].asType()
 
+                javadoc = CodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, elementName, targetType)
             }
 
             return StyleInfo(
@@ -170,6 +177,7 @@ internal data class StyleInfo constructor(
                     elementName,
                     formattedName,
                     null, // No style resource
+                    javadoc,
                     isDefault
             )
         }

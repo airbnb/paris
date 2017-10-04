@@ -110,6 +110,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     return new StyleBuilder(this);
   }
 
+  /**
+   * Empty style */
   public void applyDefault() {
   }
 
@@ -121,146 +123,204 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public BaseStyleBuilder() {
     }
 
+    /**
+     * @see MyView#formatBoolean(boolean) */
     public B formatBoolean(boolean value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatBoolean], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatBoolean(boolean) */
     public B formatBooleanRes(@BoolRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatBoolean], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatBoolean2(int) */
     public B formatBoolean2Res(@AnyRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatBoolean2], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatColor(int) */
     public B formatColor(@ColorInt int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatColor], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatColor(int) */
     public B formatColorRes(@ColorRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatColor], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatDimension_px(int) */
     public B formatDimension(@Px int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatDimension_px(int) */
     public B formatDimensionRes(@DimenRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatDimension], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatDimension_px(int) */
     public B formatDimensionDp(@Dimension(unit = Dimension.DP) int value) {
       getBuilder().putDp(R.styleable.Formats[R.styleable.Formats_formatDimension], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatEnum(int) */
     public B formatEnum(int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatEnum], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatEnum(int) */
     public B formatEnumRes(@IntegerRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatEnum], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatFlag(int) */
     public B formatFlag(int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFlag], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatFlag(int) */
     public B formatFlagRes(@IntegerRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFlag], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatFloat(float) */
     public B formatFloat(float value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFloat], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatFloat(float) */
     public B formatFloatRes(@AnyRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFloat], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatFraction(float) */
     public B formatFraction(float value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatFraction], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatFraction(float) */
     public B formatFractionRes(@FractionRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatFraction], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatInteger(int) */
     public B formatInteger(int value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatInteger], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatInteger(int) */
     public B formatIntegerRes(@IntegerRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatInteger], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference_CharSequenceArray(CharSequence[]) */
     public B formatReference(CharSequence[] value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference_CharSequenceArray(CharSequence[]) */
     public B formatReferenceRes(@ArrayRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference2_ColorStateList(ColorStateList) */
     public B formatReference2(ColorStateList value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference2], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference2_ColorStateList(ColorStateList) */
     public B formatReference2Res(@ColorRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference2], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference2_ColorStateList(ColorStateList) */
     public B formatReference2(@ColorInt int color) {
       getBuilder().putColor(R.styleable.Formats[R.styleable.Formats_formatReference2], color);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference3_Drawable(Drawable) */
     public B formatReference3(Drawable value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference3], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatReference3_Drawable(Drawable) */
     public B formatReference3Res(@DrawableRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference3], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatString_CharSequence(CharSequence) */
     public B formatString(CharSequence value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatString_CharSequence(CharSequence) */
     public B formatStringRes(@StringRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatString], resId);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatString2_String(String) */
     public B formatString2(String value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString2], value);
       return (B) this;
     }
 
+    /**
+     * @see MyView#formatString2_String(String) */
     public B formatString2Res(@StringRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatString2], resId);
       return (B) this;
@@ -281,6 +341,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public StyleBuilder() {
     }
 
+    /**
+     * Empty style */
     public StyleBuilder addDefault() {
       return this;
     }

@@ -23,20 +23,28 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     return new StyleBuilder(this);
   }
 
+  /**
+   * @see MyView#RED_STYLE */
   public void applyRedStyle() {
     apply(MyView.RED_STYLE);
   }
 
+  /**
+   * @see MyView#greenStyle */
   public void applyGreenStyle() {
     apply(MyView.greenStyle);
   }
 
+  /**
+   * @see MyView#blue(StyleBuilder) */
   public void applyBlue() {
     StyleBuilder builder = new StyleBuilder();
     MyView.blue(builder);
     apply(builder.build());
   }
 
+  /**
+   * @see MyView#RED_STYLE */
   public void applyDefault() {
     apply(MyView.RED_STYLE);
   }
@@ -64,16 +72,22 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public StyleBuilder() {
     }
 
+    /**
+     * @see MyView#RED_STYLE */
     public StyleBuilder addRedStyle() {
       add(MyView.RED_STYLE);
       return this;
     }
 
+    /**
+     * @see MyView#greenStyle */
     public StyleBuilder addGreenStyle() {
       add(MyView.greenStyle);
       return this;
     }
 
+    /**
+     * @see MyView#blue(StyleBuilder) */
     public StyleBuilder addBlue() {
       consumeProgrammaticStyleBuilder();
       debugName("Blue");
@@ -82,6 +96,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       return this;
     }
 
+    /**
+     * @see MyView#RED_STYLE */
     public StyleBuilder addDefault() {
       add(MyView.RED_STYLE);
       return this;

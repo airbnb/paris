@@ -8,7 +8,6 @@ import com.squareup.javapoet.*
 import java.io.*
 import javax.annotation.processing.*
 import javax.lang.model.element.*
-import javax.lang.model.type.*
 import javax.lang.model.util.*
 import kotlin.check
 
@@ -224,8 +223,10 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildApplyStyleMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
-        val builder = MethodSpec.methodBuilder("apply${styleInfo.formattedName}")
-                .addModifiers(Modifier.PUBLIC)
+        val builder = MethodSpec.methodBuilder("apply${styleInfo.formattedName}").apply {
+            addJavadoc(styleInfo.javadoc)
+            addModifiers(Modifier.PUBLIC)
+        }
         when (styleInfo.elementKind) {
             StyleInfo.Kind.FIELD -> {
                 builder.addStatement("apply(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
@@ -325,9 +326,11 @@ internal object StyleAppliersWriter {
     }
 
     private fun buildStyleBuilderAddMethod(styleBuilderClassName: ClassName, styleInfo: StyleInfo): MethodSpec {
-        val builder = MethodSpec.methodBuilder("add${styleInfo.formattedName}")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(styleBuilderClassName)
+        val builder = MethodSpec.methodBuilder("add${styleInfo.formattedName}").apply {
+            addJavadoc(styleInfo.javadoc)
+            addModifiers(Modifier.PUBLIC)
+            returns(styleBuilderClassName)
+        }
         when (styleInfo.elementKind) {
             StyleInfo.Kind.FIELD -> builder.addStatement("add(\$T.\$L)", styleInfo.enclosingElement, styleInfo.elementName)
             StyleInfo.Kind.METHOD -> {
@@ -388,27 +391,6 @@ internal object StyleAppliersWriter {
                 .build()
     }
 
-    private fun buildAttributeSetterResMethod(rClassName: ClassName, styleableResourceName: String, attr: AttrInfo): MethodSpec? {
-        val attrResourceName = attr.styleableResId.resourceName
-        if (attrResourceName != null) {
-            var methodName = styleableAttrResourceNameToCamelCase(styleableResourceName, attrResourceName)
-            if (TypeKind.INT == attr.targetType.kind) {
-                methodName += "Res"
-            }
-            return MethodSpec.methodBuilder(methodName)
-                    .addModifiers(Modifier.PUBLIC)
-                    .addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
-                            .addAnnotation(ClassNames.ANDROID_ANY_RES)
-                            .build())
-                    .returns(TypeVariableName.get("B"))
-                    .addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, attr.styleableResId.code)
-                    .addStatement("return (B) this")
-                    .build()
-        } else {
-            return null
-        }
-    }
-
     /**
      * @param groupedAttrs Grouped by styleable index resource name
      */
@@ -429,6 +411,8 @@ internal object StyleAppliersWriter {
 
         if (nonResTargetAttrs.isNotEmpty()) {
             methodSpecs.add(MethodSpec.methodBuilder(baseMethodName).apply {
+                addJavadoc(attr.javadoc)
+
                 val valueParameterBuilder = ParameterSpec.builder(TypeName.get(attr.targetType), "value")
                 attr.targetFormat.valueAnnotation?.let {
                     valueParameterBuilder.addAnnotation(it)
@@ -443,6 +427,7 @@ internal object StyleAppliersWriter {
         }
 
         methodSpecs.add(MethodSpec.methodBuilder("${baseMethodName}Res").apply {
+            addJavadoc(attr.javadoc)
             addModifiers(Modifier.PUBLIC)
             addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
                     .addAnnotation(attr.targetFormat.resAnnotation)
@@ -455,6 +440,7 @@ internal object StyleAppliersWriter {
         // Adds a special <attribute>Dp method that automatically convert a dp value to pixels for dimensions
         if (isTargetDimensionType) {
             methodSpecs.add(MethodSpec.methodBuilder("${baseMethodName}Dp").apply {
+                addJavadoc(attr.javadoc)
                 addModifiers(Modifier.PUBLIC)
                 addParameter(ParameterSpec.builder(Integer.TYPE, "value")
                         .addAnnotation(AnnotationSpec.builder(ClassNames.ANDROID_DIMENSION)
@@ -470,6 +456,7 @@ internal object StyleAppliersWriter {
         // Adds a special <attribute> method that automatically convert a @ColorInt to a ColorStateList
         if (isTargetColorStateListType) {
             methodSpecs.add(MethodSpec.methodBuilder(baseMethodName).apply {
+                addJavadoc(attr.javadoc)
                 addModifiers(Modifier.PUBLIC)
                 addParameter(ParameterSpec.builder(Integer.TYPE, "color")
                         .addAnnotation(ClassNames.ANDROID_COLOR_INT)
