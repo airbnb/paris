@@ -21,6 +21,6 @@ data class MultiStyle internal constructor(private val name: String, private val
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper {
         val wrappers = styles.map { it.obtainStyledAttributes(context, attrs) }
-        return MultiTypedArrayWrapper(wrappers)
+        return MultiTypedArrayWrapper(wrappers, attrs)
     }
 }

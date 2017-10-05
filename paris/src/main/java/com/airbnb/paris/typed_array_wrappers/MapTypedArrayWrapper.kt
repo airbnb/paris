@@ -14,7 +14,6 @@ import com.airbnb.paris.utils.*
  * Styleable attributes: R.styleable.MyView
  * Styleable attribute index: R.styleable.MyView_attribute
  */
-// TODO Add support for default values? Doesn't seem like we need it since this is only used internally
 internal class MapTypedArrayWrapper constructor(
         private val resources: Resources,
         private val styleableAttrs: IntArray,

@@ -6,23 +6,35 @@ import com.airbnb.paris.*
 
 /**
  * @param wrappers These are assumed to have been created with the same styleable attribute list
+ * @param styleableAttrs The styleable attribute list from which the [wrappers] were created
  */
 internal class MultiTypedArrayWrapper constructor(
-        private val wrappers: List<TypedArrayWrapper>) : TypedArrayWrapper() {
+        private val wrappers: List<TypedArrayWrapper>,
+        private val styleableAttrs: IntArray) : TypedArrayWrapper() {
 
     private val styleableAttrIndexes by lazy { styleableAttrIndexToWrapperMap.keys.toList() }
 
-    // TODO Start with the last one and don't even lookup the indexes for which we already have values?
     private val styleableAttrIndexToWrapperMap by lazy {
         val attrResToWrapperMap = HashMap<Int, TypedArrayWrapper>()
-        for (wrapper in wrappers) {
+
+        // We reverse the list because the later wrappers have priority
+        for (wrapper in wrappers.reversed()) {
             (0 until wrapper.getIndexCount()).forEach { at ->
                 val index = wrapper.getIndex(at)
-                if (wrapper.hasValue(index)) {
+
+                if (!attrResToWrapperMap.containsKey(index)) {
                     attrResToWrapperMap[index] = wrapper
+                } else {
+                    // An earlier wrapper claimed this index, it has priority
                 }
             }
+
+            if (attrResToWrapperMap.size == styleableAttrs.size) {
+                // All attributes are accounted for, it doesn't matter what the remaining wrappers contain
+                break
+            }
         }
+
         attrResToWrapperMap
     }
 
