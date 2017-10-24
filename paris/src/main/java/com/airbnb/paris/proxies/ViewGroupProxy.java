@@ -13,6 +13,11 @@ class ViewGroupProxy extends BaseProxy<ViewGroupProxy, ViewGroup> {
         super(view);
     }
 
+    @Attr(R2.styleable.Paris_ViewGroup_android_clipChildren)
+    void setClipChildren(boolean clipChildren) {
+        getView().setClipChildren(clipChildren);
+    }
+
     @Attr(R2.styleable.Paris_ViewGroup_android_clipToPadding)
     void setClipToPadding(boolean clipToPadding) {
         getView().setClipToPadding(clipToPadding);

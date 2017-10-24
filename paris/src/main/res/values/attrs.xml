@@ -59,6 +59,7 @@
     </declare-styleable>
 
     <declare-styleable name="Paris_ViewGroup">
+        <attr name="android:clipChildren" />
         <attr name="android:clipToPadding" />
     </declare-styleable>
 

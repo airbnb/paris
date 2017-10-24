@@ -61,6 +61,16 @@ internal class ViewGroupMapping<I> private constructor(
 
 internal val VIEW_GROUP_MAPPINGS = ArrayList<ViewGroupMapping<*>>().apply {
 
+    // clipChildren
+    add(ViewGroupMapping.withAssertEquals(
+            BOOLS,
+            R.attr.clipChildren,
+            ViewGroupProxy::setClipChildren,
+            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::clipChildren,
+            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::clipChildrenRes,
+            { it.clipChildren }
+    ))
+
     // clipToPadding
     add(ViewGroupMapping.withAssertEquals(
             BOOLS,
