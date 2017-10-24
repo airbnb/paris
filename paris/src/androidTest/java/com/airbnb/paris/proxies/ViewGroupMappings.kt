@@ -61,6 +61,19 @@ internal class ViewGroupMapping<I> private constructor(
 
 internal val VIEW_GROUP_MAPPINGS = ArrayList<ViewGroupMapping<*>>().apply {
 
+    // animateLayoutChanges
+    add(ViewGroupMapping.withCustomAssert(
+            BOOLS,
+            R.attr.animateLayoutChanges,
+            ViewGroupProxy::setAnimateLayoutChanges,
+            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::animateLayoutChanges,
+            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::animateLayoutChangesRes,
+            { view, input ->
+                val layoutTransition = view.layoutTransition
+                Assert.assertTrue(if (input) layoutTransition != null else layoutTransition == null)
+            }
+    ))
+
     // clipChildren
     add(ViewGroupMapping.withAssertEquals(
             BOOLS,
