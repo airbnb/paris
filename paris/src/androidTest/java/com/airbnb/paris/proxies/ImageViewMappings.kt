@@ -3,7 +3,7 @@ package com.airbnb.paris.proxies
 import android.widget.*
 import android.widget.ImageView.*
 
-internal class ImageViewMapping<I> private constructor(
+internal class ImageViewMapping<I : Any> private constructor(
         testValues: List<I>,
         attrRes: Int,
         setProxyFunction: ImageViewProxy.(I) -> Unit,
@@ -24,7 +24,7 @@ internal class ImageViewMapping<I> private constructor(
 
     companion object {
 
-        fun <I> withCustomAssert(
+        fun <I : Any> withCustomAssert(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ImageViewProxy.(I) -> Unit,
@@ -40,7 +40,7 @@ internal class ImageViewMapping<I> private constructor(
                     assertViewSet)
         }
 
-        fun <I> withAssertEquals(
+        fun <I : Any> withAssertEquals(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ImageViewProxy.(I) -> Unit,

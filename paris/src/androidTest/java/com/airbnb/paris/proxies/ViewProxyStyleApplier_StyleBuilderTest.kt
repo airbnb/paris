@@ -34,7 +34,7 @@ class ViewProxyStyleApplier_StyleBuilderTest {
     @Test
     fun auto() {
         for (mapping in VIEW_MAPPINGS) {
-            mapping as BaseViewMapping<Any, Any, TextView, Any>
+            mapping as BaseViewMapping<Any, *, TextView, Any>
 
             // For normal values
             mapping.testValues.forEach {

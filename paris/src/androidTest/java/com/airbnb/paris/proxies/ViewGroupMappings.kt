@@ -4,7 +4,7 @@ import android.*
 import android.view.*
 import junit.framework.*
 
-internal class ViewGroupMapping<I> private constructor(
+internal class ViewGroupMapping<I : Any> private constructor(
         testValues: List<I>,
         attrRes: Int,
         setProxyFunction: ViewGroupProxy.(I) -> Unit,
@@ -25,7 +25,7 @@ internal class ViewGroupMapping<I> private constructor(
 
     companion object {
 
-        fun <I> withCustomAssert(
+        fun <I : Any> withCustomAssert(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ViewGroupProxy.(I) -> Unit,
@@ -41,7 +41,7 @@ internal class ViewGroupMapping<I> private constructor(
                     assertViewSet)
         }
 
-        fun <I> withAssertEquals(
+        fun <I : Any> withAssertEquals(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ViewGroupProxy.(I) -> Unit,

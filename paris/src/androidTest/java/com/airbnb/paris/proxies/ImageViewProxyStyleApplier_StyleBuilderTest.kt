@@ -22,7 +22,7 @@ class ImageViewProxyStyleApplier_StyleBuilderTest {
     @Test
     fun auto() {
         for (mapping in IMAGE_VIEW_MAPPINGS) {
-            mapping as BaseViewMapping<Any, Any, ImageView, Any>
+            mapping as BaseViewMapping<Any, ImageViewProxy, ImageView, Any>
 
             // For normal values
             mapping.testValues.forEach {

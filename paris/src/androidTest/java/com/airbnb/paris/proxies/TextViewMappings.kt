@@ -13,7 +13,7 @@ import com.airbnb.paris.proxies.TextViewProxyStyleApplier.*
 import junit.framework.Assert.*
 import org.junit.*
 
-internal class TextViewMapping<I> private constructor(
+internal class TextViewMapping<I : Any> private constructor(
         testValues: List<I>,
         attrRes: Int,
         setProxyFunction: TextViewProxy.(I) -> Unit,
@@ -34,7 +34,7 @@ internal class TextViewMapping<I> private constructor(
 
     companion object {
 
-        fun <I> withCustomAssert(
+        fun <I : Any> withCustomAssert(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: TextViewProxy.(I) -> Unit,
@@ -50,7 +50,7 @@ internal class TextViewMapping<I> private constructor(
                     assertViewSet)
         }
 
-        fun <I> withAssertEquals(
+        fun <I : Any> withAssertEquals(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: TextViewProxy.(I) -> Unit,

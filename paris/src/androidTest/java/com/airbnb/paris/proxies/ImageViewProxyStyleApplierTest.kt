@@ -25,7 +25,7 @@ class ImageViewProxyStyleApplierTest {
     @Test
     fun auto() {
         for (mapping in (VIEW_MAPPINGS + IMAGE_VIEW_MAPPINGS)) {
-            mapping as BaseViewMapping<Any, Any, ImageView, Any>
+            mapping as BaseViewMapping<Any, *, ImageView, Any>
 
             setup()
 

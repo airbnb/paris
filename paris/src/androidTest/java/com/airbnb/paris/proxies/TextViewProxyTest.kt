@@ -28,22 +28,6 @@ class TextViewProxyTest {
     }
 
     @Test
-    fun auto() {
-        for (mapping in TEXT_VIEW_MAPPINGS) {
-            mapping as BaseViewMapping<Any, Any, TextView, Any>
-
-            setup()
-
-            mapping.testValues.forEach {
-                mapping.setProxyFunction(proxy, it)
-                // Assumes the style parameter isn't used
-                proxy.afterStyle(null)
-                mapping.assertViewSet(view, it)
-            }
-        }
-    }
-
-    @Test
     fun setDrawables() {
         // Sets drawables on all sides
 

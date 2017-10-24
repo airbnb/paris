@@ -36,7 +36,7 @@ class ViewProxyStyleApplierTest {
     @Test
     fun auto() {
         for (mapping in VIEW_MAPPINGS) {
-            mapping as BaseViewMapping<Any, Any, View, Any>
+            mapping as BaseViewMapping<Any, *, View, Any>
 
             setup()
 

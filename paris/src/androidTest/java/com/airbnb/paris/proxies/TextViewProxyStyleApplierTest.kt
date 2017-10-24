@@ -43,7 +43,7 @@ class TextViewProxyStyleApplierTest {
     @Test
     fun auto() {
         for (mapping in (VIEW_MAPPINGS + TEXT_VIEW_MAPPINGS)) {
-            mapping as BaseViewMapping<Any, Any, TextView, Any>
+            mapping as BaseViewMapping<Any, *, TextView, Any>
 
             setup()
 

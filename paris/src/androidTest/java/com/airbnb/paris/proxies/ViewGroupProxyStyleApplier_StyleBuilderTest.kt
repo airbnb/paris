@@ -26,7 +26,7 @@ class ViewGroupProxyStyleApplier_StyleBuilderTest {
     @Test
     fun auto() {
         for (mapping in (VIEW_MAPPINGS + VIEW_GROUP_MAPPINGS)) {
-            mapping as BaseViewMapping<Any, Any, ViewGroup, Any>
+            mapping as BaseViewMapping<Any, *, ViewGroup, Any>
 
             // For normal values
             mapping.testValues.forEach {

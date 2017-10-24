@@ -5,7 +5,7 @@ import android.view.*
 import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
 import junit.framework.Assert.*
 
-internal class ViewMapping<I> private constructor(
+internal class ViewMapping<I : Any> private constructor(
         testValues: List<I>,
         attrRes: Int,
         setProxyFunction: ViewProxy.(I) -> Unit,
@@ -26,7 +26,7 @@ internal class ViewMapping<I> private constructor(
 
     companion object {
 
-        fun <I> withCustomAssert(
+        fun <I : Any> withCustomAssert(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ViewProxy.(I) -> Unit,
@@ -42,7 +42,7 @@ internal class ViewMapping<I> private constructor(
                     assertViewSet)
         }
 
-        fun <I> withAssertEquals(
+        fun <I : Any> withAssertEquals(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ViewProxy.(I) -> Unit,
