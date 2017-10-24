@@ -12,10 +12,6 @@ import javax.lang.model.*
 import javax.lang.model.element.*
 import javax.lang.model.type.*
 import javax.lang.model.util.*
-import kotlin.Annotation
-import kotlin.Boolean
-import kotlin.Pair
-import kotlin.String
 import kotlin.check
 
 
@@ -37,7 +33,9 @@ class ParisProcessor : AbstractProcessor() {
         internal val BUILT_IN_STYLE_APPLIERS = mapOf(
                 Pair("com.airbnb.paris.proxies.ViewProxyStyleApplier", "android.view.View"),
                 Pair("com.airbnb.paris.proxies.TextViewProxyStyleApplier", "android.widget.TextView"),
-                Pair("com.airbnb.paris.proxies.ImageViewProxyStyleApplier", "android.widget.ImageView"))
+                Pair("com.airbnb.paris.proxies.ImageViewProxyStyleApplier", "android.widget.ImageView"),
+                Pair("com.airbnb.paris.proxies.ViewGroupProxyStyleApplier", "android.view.ViewGroup")
+        )
 
         private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }

@@ -58,4 +58,8 @@
         <attr name="android:textSize" />
     </declare-styleable>
 
+    <declare-styleable name="Paris_ViewGroup">
+        <attr name="android:clipToPadding" />
+    </declare-styleable>
+
 </resources>
