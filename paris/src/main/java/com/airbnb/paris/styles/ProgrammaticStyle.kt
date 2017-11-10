@@ -15,7 +15,7 @@ data class ProgrammaticStyle internal constructor(
 
     data class Builder internal constructor(
             internal val attrResToValueResMap: HashMap<Int, Any> = HashMap<Int, Any>(),
-            internal var name: String = "a_programmatic_SimpleStyleBuilder") {
+            internal var name: String = "a_ProgrammaticStyleBuilder") {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
 
@@ -49,7 +49,7 @@ data class ProgrammaticStyle internal constructor(
 
     override fun name(context: Context): String = when {
         name != null -> name!!
-        else -> "a_programmatic_SimpleStyle"
+        else -> "a_ProgrammaticStyle"
     }
 
     @SuppressLint("Recycle")
