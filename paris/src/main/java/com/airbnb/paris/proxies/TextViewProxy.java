@@ -158,4 +158,9 @@ class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         // TODO Change to SP?
         getView().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
+
+    @Attr(R2.styleable.Paris_TextView_android_text)
+    void setText(CharSequence text) {
+        getView().setText(text);
+    }
 }
