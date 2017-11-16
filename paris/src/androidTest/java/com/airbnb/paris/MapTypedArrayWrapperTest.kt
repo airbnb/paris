@@ -10,6 +10,7 @@ import com.airbnb.paris.test.R
 import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
 import com.airbnb.paris.utils.dpToPx
 import com.airbnb.paris.utils.getFloat
+import com.airbnb.paris.utils.getLayoutDimension
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -176,7 +177,7 @@ class MapTypedArrayWrapperTest {
     fun getLayoutDimension_px() {
         val map = mapOf(R.attr.formatDimension to ResourceId(R.dimen.format_dimension))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
-        val actual = res.getDimensionPixelSize(R.dimen.format_dimension)
+        val actual = res.getDimension(R.dimen.format_dimension).toInt()
         assertEquals(actual, wrapper.getLayoutDimension(R.styleable.Formats_formatDimension))
     }
 

@@ -209,7 +209,7 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) },
                 R.styleable.Formats
         )
-        val actual = res.getDimensionPixelSize(R.dimen.format_dimension)
+        val actual = res.getDimension(R.dimen.format_dimension).toInt()
         assertEquals(actual, multi.getLayoutDimension(R.styleable.Formats_formatDimension))
     }
 

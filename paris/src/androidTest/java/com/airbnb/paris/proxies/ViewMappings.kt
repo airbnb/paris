@@ -203,4 +203,15 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
                 assertTrue(possibleValuesMap[view.visibility]!!.contains(input))
             }
     ))
+
+    // contentDescription
+    add(ViewMapping.withAssertEquals(
+            ARBITRARY_STRINGS,
+            android.R.attr.contentDescription,
+            ViewProxy::setContentDescription,
+            BaseStyleBuilder<*, *>::contentDescription,
+            BaseStyleBuilder<*, *>::contentDescriptionRes,
+            { it.contentDescription }
+    ))
+
 }

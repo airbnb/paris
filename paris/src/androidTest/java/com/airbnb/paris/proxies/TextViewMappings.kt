@@ -258,4 +258,14 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             StyleBuilder::textSizeRes,
             { it.textSize.toInt() }
     ))
+
+    // text
+    add(withAssertEquals(
+            ARBITRARY_STRINGS,
+            R.attr.text,
+            TextViewProxy::setText,
+            StyleBuilder::text,
+            StyleBuilder::textRes,
+            { it.text }
+    ))
 }
