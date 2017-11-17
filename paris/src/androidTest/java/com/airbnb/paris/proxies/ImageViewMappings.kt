@@ -60,7 +60,7 @@ internal class ImageViewMapping<I : Any> private constructor(
 
 internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
 
-    // drawableBottom
+    // scaleType
     add(ImageViewMapping.withAssertEquals(
             (0 until ScaleType.values().size).toList(),
             android.R.attr.scaleType,
@@ -79,5 +79,15 @@ internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
                         ScaleType.CENTER_INSIDE
                 ).indexOf(it.scaleType)
             }
+    ))
+
+    // tint
+    add(ImageViewMapping.withAssertEquals(
+            ARBITRARY_COLOR_STATE_LISTS,
+            android.R.attr.tint,
+            ImageViewProxy::setTint,
+            ImageViewProxyStyleApplier.StyleBuilder::tint,
+            ImageViewProxyStyleApplier.StyleBuilder::tintRes,
+            { it.imageTintList }
     ))
 }

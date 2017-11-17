@@ -36,6 +36,7 @@
 
     <declare-styleable name="Paris_ImageView">
         <attr name="android:scaleType" />
+        <attr name="android:tint" />
     </declare-styleable>
 
     <declare-styleable name="Paris_TextView">
