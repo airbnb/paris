@@ -306,6 +306,11 @@ class ViewProxy extends BaseProxy<ViewProxy, View> {
         getView().setVisibility(VISIBILITY_MAP.get(visibility));
     }
 
+    @Attr(R2.styleable.Paris_View_android_contentDescription)
+    void setContentDescription(CharSequence contentDescription) {
+        getView().setContentDescription(contentDescription);
+    }
+
     @Attr(R2.styleable.Paris_View_ignoreLayoutWidthAndHeight)
     void setIgnoreLayoutWidthAndHeight(boolean ignore) {
         ignoreLayoutWidthAndHeight = ignore;

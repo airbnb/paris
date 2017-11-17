@@ -2,10 +2,12 @@ package com.airbnb.paris;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
+import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
@@ -33,6 +35,14 @@ public final class Paris {
 
   public static ImageViewProxyStyleApplier.StyleBuilder styleBuilder(ImageView view) {
     return new ImageViewProxyStyleApplier.StyleBuilder(new ImageViewProxyStyleApplier(view));
+  }
+
+  public static ViewGroupProxyStyleApplier style(ViewGroup view) {
+    return new ViewGroupProxyStyleApplier(view);
+  }
+
+  public static ViewGroupProxyStyleApplier.StyleBuilder styleBuilder(ViewGroup view) {
+    return new ViewGroupProxyStyleApplier.StyleBuilder(new ViewGroupProxyStyleApplier(view));
   }
 
   public static MyViewStyleApplier style(MyView view) {
