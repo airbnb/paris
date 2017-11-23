@@ -1,7 +1,8 @@
 package com.airbnb.paris.proxies
 
-import android.widget.*
-import android.widget.ImageView.*
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType
+import java.util.*
 
 internal class ImageViewMapping<I : Any> private constructor(
         testValues: List<I>,
@@ -89,5 +90,15 @@ internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
             ImageViewProxyStyleApplier.StyleBuilder::tint,
             ImageViewProxyStyleApplier.StyleBuilder::tintRes,
             { it.imageTintList }
+    ))
+
+    // src
+    add(ImageViewMapping.withAssertEquals(
+            ARBITRARY_COLOR_DRAWABLES,
+            android.R.attr.src,
+            ImageViewProxy::setSrc,
+            ImageViewProxyStyleApplier.StyleBuilder::src,
+            ImageViewProxyStyleApplier.StyleBuilder::srcRes,
+            { it.drawable }
     ))
 }
