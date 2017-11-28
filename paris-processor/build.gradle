@@ -9,6 +9,9 @@ dependencies {
     compile project(':paris-annotations')
     compile deps.squareJavaPoet
     compileOnly files(Jvm.current().getToolsJar())
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'io.kotlintest:kotlintest:2.0.5'
 }
 
 sourceCompatibility = "1.7"
