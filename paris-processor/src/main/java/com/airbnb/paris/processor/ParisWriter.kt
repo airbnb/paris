@@ -3,7 +3,9 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.processor.utils.ClassNames
 import com.airbnb.paris.processor.utils.className
 import com.squareup.javapoet.*
+import com.sun.tools.doclets.internal.toolkit.builders.ClassBuilder
 import java.io.IOException
+import java.lang.reflect.Method
 import java.util.*
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
@@ -31,6 +33,7 @@ internal object ParisWriter {
         }
 
         parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
+        parisTypeBuilder.addMethod(buildSpannableBuilderMethod())
 
         JavaFile.builder(ParisProcessor.PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
                 .build()
@@ -106,5 +109,15 @@ internal object ParisWriter {
         }
 
         return builder.build()
+    }
+
+    private fun buildSpannableBuilderMethod(): MethodSpec {
+        val spannableBuilderClassName = ClassName.get("com.airbnb.paris.spannable", "SpannableBuilder")
+        return MethodSpec.methodBuilder("spannableBuilder")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(ClassName.get("android.content", "Context"), "context")
+                .returns(spannableBuilderClassName)
+                .addStatement("return new \$T(context)", spannableBuilderClassName)
+                .build()
     }
 }
