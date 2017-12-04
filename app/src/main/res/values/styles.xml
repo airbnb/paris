@@ -27,6 +27,7 @@
         <item name="android:textColor">#FF00FF00</item>
         <item name="android:textSize">20sp</item>
         <item name="android:text">This is a red text with style applied from resource</item>
+        <item name="android:fontFamily">sans-serif-smallcaps</item>
     </style>
 
     <style name="Blue">
