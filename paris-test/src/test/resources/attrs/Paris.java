@@ -9,6 +9,7 @@ import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
+import com.airbnb.paris.spannable.SpannableBuilder;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 
@@ -56,5 +57,9 @@ public final class Paris {
   /**
    * For debugging */
   public static void assertStylesContainSameAttributes(Context context) {
+  }
+
+  public static SpannableBuilder spannableBuilder(Context context) {
+    return new SpannableBuilder(context);
   }
 }
