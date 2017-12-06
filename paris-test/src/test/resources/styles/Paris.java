@@ -61,7 +61,7 @@ public final class Paris {
     StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new MyViewStyleApplier.StyleBuilder().addRedStyle().build(), new MyViewStyleApplier.StyleBuilder().addGreenStyle().build(), new MyViewStyleApplier.StyleBuilder().addBlue().build(), new MyViewStyleApplier.StyleBuilder().addDefault().build());
   }
 
-  public static SpannableBuilder spannableBuilder(Context context) {
-    return new SpannableBuilder(context);
+  public static SpannableBuilder spannableBuilder() {
+    return new SpannableBuilder();
   }
 }

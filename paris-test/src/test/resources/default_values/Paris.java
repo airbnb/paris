@@ -59,7 +59,7 @@ public final class Paris {
   public static void assertStylesContainSameAttributes(Context context) {
   }
 
-  public static SpannableBuilder spannableBuilder(Context context) {
-    return new SpannableBuilder(context);
+  public static SpannableBuilder spannableBuilder() {
+    return new SpannableBuilder();
   }
 }
