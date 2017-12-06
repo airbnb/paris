@@ -40,10 +40,7 @@ internal class StyleConverter(val context: Context) {
         val attributes = style.obtainStyledAttributes(context, attrs)
 
         val textSize = attributes.spanAt(0) { AbsoluteSizeSpan(attributes.getDimensionPixelSize(it)) }
-        val foregroundColor = attributes.spanAt(1) {
-            // Not sure why attributes.getColor(1) is a style res, it should be an index.
-            ForegroundColorSpan(attributes.getColor(it))
-        }
+        val foregroundColor = attributes.spanAt(1) { ForegroundColorSpan(attributes.getColorStateList(it).defaultColor) }
 
         return listOf(textSize, foregroundColor).filterNotNull()
     }

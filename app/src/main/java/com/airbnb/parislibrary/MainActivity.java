@@ -1,7 +1,9 @@
 package com.airbnb.parislibrary;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.airbnb.paris.Paris;
@@ -22,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
                 .append("This line is styled using R.style.Green\n", R.style.Green)
                 .append("This line is using a system style\n", android.R.style.TextAppearance_Holo_Large)
                 .append("This line is using a style created programmatically", Paris.styleBuilder(textView)
-                        // TODO(Robson) crash when using .textColor(colorInt). Need to investigate.
-                        .textColorRes(R.color.colorAccent)
+                        .textColor(Color.RED)
                         .textSize(30)
                         .build())
                 .applyTo(textView);
