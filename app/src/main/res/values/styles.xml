@@ -9,46 +9,21 @@
     </style>
 
     <style name="Green">
-        <item name="android:drawableBottom">@null</item>
-        <item name="android:drawableLeft">@null</item>
-        <item name="android:drawableRight">@null</item>
-        <item name="android:drawableTop">@null</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">center</item>
-        <!--<item name="android:letterSpacing">1dp</item>-->
-        <item name="android:lineSpacingExtra">0dp</item>
-        <item name="android:lineSpacingMultiplier">1</item>
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">20</item>
-        <item name="android:minLines">2</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:singleLine">false</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">#FF00FF00</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:text">This is a red text with style applied from resource</item>
-        <item name="android:fontFamily">sans-serif-smallcaps</item>
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:typeface">sans</item>
     </style>
 
     <style name="Blue">
-        <item name="android:drawableBottom">@null</item>
-        <item name="android:drawableLeft">@null</item>
-        <item name="android:drawableRight">@null</item>
-        <item name="android:drawableTop">@null</item>
-        <item name="android:ellipsize">start</item>
-        <item name="android:gravity">end</item>
-        <!--<item name="android:letterSpacing">1dp</item>-->
-        <item name="android:lineSpacingExtra">0dp</item>
-        <item name="android:lineSpacingMultiplier">1</item>
-        <item name="android:lines">3</item>
-        <item name="android:maxLines">20</item>
-        <item name="android:minLines">2</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:textAllCaps">false</item>
+        <item name="android:textAllCaps">true</item>
         <item name="android:textColor">#FF0000FF</item>
         <item name="android:textSize">10sp</item>
-        <item name="android:text">This is a blue text with style applied from resource</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">serif</item>
     </style>
 
 </resources>
