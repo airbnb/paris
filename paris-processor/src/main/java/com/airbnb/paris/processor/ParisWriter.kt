@@ -115,9 +115,8 @@ internal object ParisWriter {
         val spannableBuilderClassName = ClassName.get("com.airbnb.paris.spannable", "SpannableBuilder")
         return MethodSpec.methodBuilder("spannableBuilder")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addParameter(ClassName.get("android.content", "Context"), "context")
                 .returns(spannableBuilderClassName)
-                .addStatement("return new \$T(context)", spannableBuilderClassName)
+                .addStatement("return new \$T()", spannableBuilderClassName)
                 .build()
     }
 }

@@ -9,11 +9,10 @@ import com.airbnb.paris.styles.ResourceStyle
 /**
  * Class that allows you to create a CharSequence with markup objects inferred from styles.
  */
-class SpannableBuilder internal constructor(context: Context) {
+class SpannableBuilder internal constructor() {
 
     private val spans = ArrayList<StyleConverter.MarkupItem>()
     private val stringBuilder = StringBuilder()
-    private val converter = StyleConverter(context)
 
     @JvmOverloads
     fun append(text: String, @StyleRes styleRes: Int = 0): SpannableBuilder {
@@ -28,9 +27,9 @@ class SpannableBuilder internal constructor(context: Context) {
         return this
     }
 
-    fun build(): CharSequence = converter.createSpannable(stringBuilder.toString(), spans)
+    fun build(context: Context): CharSequence = StyleConverter(context).createSpannable(stringBuilder.toString(), spans)
 
     fun applyTo(textView : TextView) {
-        textView.text = build()
+        textView.text = build(textView.context)
     }
 }

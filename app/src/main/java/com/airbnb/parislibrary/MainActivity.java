@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.spanned_text);
 
-        Paris.spannableBuilder(this)
+        Paris.spannableBuilder()
                 .append("The following text is rendered using a single TextView and the spannable Apis:\n")
                 .append("This line is using the default TextAppearance\n")
                 .append("This line is styled using R.style.Blue\n", R.style.Blue)
