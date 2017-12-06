@@ -18,7 +18,7 @@ import com.airbnb.paris.styles.ResourceStyle
  */
 internal class StyleConverter(val context: Context) {
 
-    private val attrs = arrayOf(android.R.attr.textSize, android.R.attr.textColor).toIntArray()
+    private val attrs = intArrayOf(android.R.attr.textSize, android.R.attr.textColor)
 
     data class MarkupItem(val range: IntRange, val style: Style)
 
@@ -27,24 +27,14 @@ internal class StyleConverter(val context: Context) {
         val builder = SpannableStringBuilder(text)
 
         for (markupItem in markup) {
-
             val style = markupItem.style
-            if (style is ResourceStyle) {
-                val span = spanFromStyleRes(style.styleRes)
-                if (span != null) {
-                    builder.setSpan(span, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                }
-            } else {
-                for (span in spansFromStyle(style)) {
-                    builder.setSpan(span, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                }
+            for (span in spansFromStyle(style)) {
+                builder.setSpan(span, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
         }
 
         return builder
     }
-
-    private fun spanFromStyleRes(@StyleRes styleRes: Int): Any? = if (styleRes != 0) TextAppearanceSpan(context, styleRes) else null
 
     private fun spansFromStyle(style: Style): List<Any> {
         val attributes = style.obtainStyledAttributes(context, attrs)
