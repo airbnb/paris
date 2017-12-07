@@ -1,22 +1,18 @@
 package com.airbnb.paris
 
-import android.content.Context
-import android.content.res.Resources
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
-import android.view.ViewGroup
-import com.airbnb.paris.styles.ResourceStyle
+import android.content.*
+import android.content.res.*
+import android.graphics.*
+import android.support.test.*
+import android.support.test.runner.*
+import android.view.*
+import com.airbnb.paris.styles.*
 import com.airbnb.paris.test.R
-import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
-import com.airbnb.paris.utils.dpToPx
-import com.airbnb.paris.utils.getFloat
-import com.airbnb.paris.utils.getLayoutDimension
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import com.airbnb.paris.typed_array_wrappers.*
+import com.airbnb.paris.utils.*
+import org.junit.*
+import org.junit.Assert.*
+import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
 class MapTypedArrayWrapperTest {
@@ -102,11 +98,25 @@ class MapTypedArrayWrapperTest {
     }
 
     @Test
+    fun getColor_colorValueToColorInt() {
+        val map = mapOf(R.attr.formatColor to ColorValue(Color.BLUE))
+        wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
+        assertEquals(Color.BLUE, wrapper.getColor(R.styleable.Formats_formatColor))
+    }
+
+    @Test
     fun getColorStateList() {
         val map = mapOf(R.attr.formatColor to ResourceId(R.color.format_color))
         wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
         val actual = res.getColorStateList(R.color.format_color)
         assertEquals(actual, wrapper.getColorStateList(R.styleable.Formats_formatColor))
+    }
+
+    @Test
+    fun getColorStateList_colorValueToColorStateList() {
+        val map = mapOf(R.attr.formatColor to ColorValue(Color.BLUE))
+        wrapper = MapTypedArrayWrapper(res, R.styleable.Formats, map)
+        assertEquals(Color.BLUE, wrapper.getColorStateList(R.styleable.Formats_formatColor).defaultColor)
     }
 
     @Test

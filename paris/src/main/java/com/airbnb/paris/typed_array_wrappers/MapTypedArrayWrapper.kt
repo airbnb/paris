@@ -34,82 +34,87 @@ internal class MapTypedArrayWrapper constructor(
     override fun hasValue(index: Int): Boolean = styleableAttrIndexToValueRes(index) != null
 
     override fun getBoolean(index: Int): Boolean =
-            getValue(index) { resId -> resources.getBoolean(resId) }
+            getValue(index, { resId -> resources.getBoolean(resId) })
 
     override fun getColor(index: Int): Int {
-        return getValue(index) { resId ->
+        return getValue(index, { resId ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 resources.getColor(resId, null)
             } else {
                 @Suppress("DEPRECATION")
                 resources.getColor(resId)
             }
-        }
+        })
     }
 
     override fun getColorStateList(index: Int): ColorStateList {
-        return getValue(index) { resId ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                resources.getColorStateList(resId, null)
-            } else {
-                @Suppress("DEPRECATION")
-                resources.getColorStateList(resId)
-            }
-        }
+        return getValue(
+                index,
+                { resId ->
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        resources.getColorStateList(resId, null)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        resources.getColorStateList(resId)
+                    }
+                },
+                { colorValue -> colorValue.colorValue.toColorStateList() })
     }
 
     override fun getDimensionPixelSize(index: Int): Int =
-            getValue(index) { resId -> resources.getDimensionPixelSize(resId) }
+            getValue(index, { resId -> resources.getDimensionPixelSize(resId) })
 
     override fun getDrawable(index: Int): Drawable {
-        return getValue(index) { resId ->
+        return getValue(index, { resId ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 resources.getDrawable(resId, null)
             } else {
                 @Suppress("DEPRECATION")
                 resources.getDrawable(resId)
             }
-        }
+        })
     }
 
     override fun getFloat(index: Int): Float =
-            getValue(index) { resId -> resources.getFloat(resId) }
+            getValue(index, { resId -> resources.getFloat(resId) })
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
-            getValue(index) { resId -> resources.getFraction(resId, base, pbase) }
+            getValue(index, { resId -> resources.getFraction(resId, base, pbase) })
 
     override fun getInt(index: Int): Int =
-            getValue(index) { resId -> resources.getInteger(resId) }
+            getValue(index, { resId -> resources.getInteger(resId) })
 
     override fun getLayoutDimension(index: Int): Int =
-            getValue(index) { resId -> resources.getLayoutDimension(resId) }
+            getValue(index, { resId -> resources.getLayoutDimension(resId) })
 
     override fun getResourceId(index: Int): Int =
-            getValue(index) { resId -> resId }
+            getValue(index, { resId -> resId })
 
     override fun getString(index: Int): String =
-            getValue(index) { resId -> resources.getString(resId) }
+            getValue(index, { resId -> resources.getString(resId) })
 
     override fun getText(index: Int): CharSequence =
-            getValue(index) { resId -> resources.getText(resId) }
+            getValue(index, { resId -> resources.getText(resId) })
 
     override fun getTextArray(index: Int): Array<CharSequence> =
-            getValue(index) { resId -> resources.getTextArray(resId) }
+            getValue(index, { resId -> resources.getTextArray(resId) })
 
     override fun getStyle(index: Int): Style =
-            getValue(index) { resId -> ResourceStyle(resId) }
+            getValue(index, { resId -> ResourceStyle(resId) })
 
     override fun recycle() {
         //
     }
 
-    private fun <T> getValue(index: Int, resourceGetter: (Int) -> T): T {
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> getValue(index: Int,
+                             resourceGetter: (Int) -> T,
+                             colorValueGetter: ((ColorValue) -> T) = { it.colorValue as T }): T {
         val value = styleableAttrIndexToValueRes(index)!!
-        @Suppress("UNCHECKED_CAST")
         return when (value) {
             is ResourceId -> resourceGetter(value.resId)
             is DpValue -> resources.dpToPx(value.dpValue) as T
-            is ColorValue -> value.colorValue.toColorStateList() as T
+            is ColorValue -> colorValueGetter(value)
             else -> {
                 return value as T
             }
