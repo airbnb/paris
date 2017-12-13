@@ -6,6 +6,7 @@ import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
 import com.airbnb.paris.processor.utils.asTypeElement
 import com.airbnb.paris.processor.utils.className
+import com.squareup.javapoet.ClassName
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.*
@@ -29,6 +30,7 @@ class ParisProcessor : AbstractProcessor() {
         internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.TypedArrayWrapper".className()
         internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
         internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
+        internal val SPANNABLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.spannable.SpannableBuilder".className()
 
         internal val BUILT_IN_STYLE_APPLIERS = mapOf(
                 Pair("com.airbnb.paris.proxies.ViewProxyStyleApplier", "android.view.View"),
