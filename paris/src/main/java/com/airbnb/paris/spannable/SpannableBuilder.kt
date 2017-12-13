@@ -16,7 +16,11 @@ class SpannableBuilder internal constructor() {
 
     @JvmOverloads
     fun append(text: String, @StyleRes styleRes: Int = 0): SpannableBuilder {
-        append(text, ResourceStyle(styleRes))
+        if (styleRes == 0) {
+            stringBuilder.append(text)
+        } else {
+            append(text, ResourceStyle(styleRes))
+        }
         return this
     }
 
