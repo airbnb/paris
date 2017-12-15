@@ -1,4 +1,4 @@
-package com.airbnb.paris
+package com.airbnb.paris.attribute_values
 
 import android.support.annotation.*
 

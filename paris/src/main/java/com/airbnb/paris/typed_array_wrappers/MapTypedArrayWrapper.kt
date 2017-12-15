@@ -4,7 +4,7 @@ import android.content.res.*
 import android.graphics.drawable.*
 import android.os.*
 import android.support.annotation.*
-import com.airbnb.paris.*
+import com.airbnb.paris.attribute_values.*
 import com.airbnb.paris.styles.*
 import com.airbnb.paris.utils.*
 

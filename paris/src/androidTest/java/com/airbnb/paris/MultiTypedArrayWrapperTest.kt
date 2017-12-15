@@ -4,6 +4,7 @@ import android.content.*
 import android.content.res.*
 import android.support.test.*
 import android.support.test.runner.*
+import com.airbnb.paris.attribute_values.*
 import com.airbnb.paris.test.R
 import com.airbnb.paris.typed_array_wrappers.*
 import com.airbnb.paris.utils.*
