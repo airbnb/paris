@@ -7,12 +7,12 @@ import android.widget.TextView;
 
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
-import com.airbnb.paris.annotations.StyleableField;
+import com.airbnb.paris.annotations.StyleableChild;
 
 @Styleable("MyView")
 public class MyView extends View {
 
-    @StyleableField(R2.styleable.MyView_titleStyle)
+    @StyleableChild(R2.styleable.MyView_titleStyle)
     public TextView title;
 
     public MyView(Context context) {

@@ -1,18 +1,13 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.annotations.StyleableField
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.utils.Errors
-import com.airbnb.paris.processor.utils.ProcessorException
-import com.airbnb.paris.processor.utils.check
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeMirror
+import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.android_resource_scanner.*
+import com.airbnb.paris.processor.utils.*
+import javax.annotation.processing.*
+import javax.lang.model.element.*
+import javax.lang.model.type.*
 
-internal class StyleableFieldInfo private constructor(
+internal class StyleableChildInfo private constructor(
         val enclosingElement: Element,
         val elementType: TypeMirror,
         val elementName: String,
@@ -21,8 +16,8 @@ internal class StyleableFieldInfo private constructor(
 
     companion object {
 
-        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner): List<StyleableFieldInfo> {
-            return roundEnv.getElementsAnnotatedWith(StyleableField::class.java)
+        fun fromEnvironment(roundEnv: RoundEnvironment, resourceScanner: AndroidResourceScanner): List<StyleableChildInfo> {
+            return roundEnv.getElementsAnnotatedWith(StyleableChild::class.java)
                     .mapNotNull {
                         try {
                             fromElement(resourceScanner, it)
@@ -34,12 +29,12 @@ internal class StyleableFieldInfo private constructor(
         }
 
         @Throws(ProcessorException::class)
-        private fun fromElement(resourceScanner: AndroidResourceScanner, element: Element): StyleableFieldInfo {
+        private fun fromElement(resourceScanner: AndroidResourceScanner, element: Element): StyleableChildInfo {
             check(!element.modifiers.contains(Modifier.PRIVATE) && !element.modifiers.contains(Modifier.PROTECTED), element) {
-                "Fields annotated with @StyleableField can't be private or protected"
+                "Fields annotated with @StyleableChild can't be private or protected"
             }
 
-            val attr = element.getAnnotation(StyleableField::class.java)
+            val attr = element.getAnnotation(StyleableChild::class.java)
 
             val enclosingElement = element.enclosingElement
 
@@ -53,7 +48,7 @@ internal class StyleableFieldInfo private constructor(
                 defaultValueResId = resourceScanner.getId(Attr::class.java, element, attr.defaultValue)
             }
 
-            return StyleableFieldInfo(
+            return StyleableChildInfo(
                     enclosingElement,
                     elementType,
                     elementName,

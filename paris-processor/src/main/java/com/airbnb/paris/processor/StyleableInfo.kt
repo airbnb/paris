@@ -12,11 +12,11 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 /**
- * If [styleableResourceName] isn't empty then at least one of [styleableFields] or [attrs] won't be
+ * If [styleableResourceName] isn't empty then at least one of [styleableChildren] or [attrs] won't be
  * empty either
  */
 internal class StyleableInfo private constructor(
-        val styleableFields: List<StyleableFieldInfo>,
+        val styleableChildren: List<StyleableChildInfo>,
         val beforeStyles: List<BeforeStyleInfo>,
         val afterStyles: List<AfterStyleInfo>,
         val attrs: List<AttrInfo>,
@@ -41,25 +41,25 @@ internal class StyleableInfo private constructor(
     companion object {
 
         fun fromEnvironment(roundEnv: RoundEnvironment, elementUtils: Elements, typeUtils: Types,
-                            classesToStyleableFieldInfo: Map<Element, List<StyleableFieldInfo>>,
+                            classesToStyleableChildInfo: Map<Element, List<StyleableChildInfo>>,
                             classesToBeforeStyleInfo: Map<Element, List<BeforeStyleInfo>>,
                             classesToAfterStyleInfo: Map<Element, List<AfterStyleInfo>>,
                             classesToAttrsInfo: Map<Element, List<AttrInfo>>,
                             classesToStylesInfo: Map<Element, List<StyleInfo>>): List<StyleableInfo> {
             val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
 
-            val classesMissingStyleableAnnotation = (classesToStyleableFieldInfo + classesToAttrsInfo + classesToStylesInfo)
+            val classesMissingStyleableAnnotation = (classesToStyleableChildInfo + classesToAttrsInfo + classesToStylesInfo)
                     .filter { (`class`, _) -> `class` !in styleableElements }
                     .keys
             check(classesMissingStyleableAnnotation.isEmpty()) {
-                "The class \"${classesMissingStyleableAnnotation.first().simpleName}\" uses @Attr, @StyleableField and/or @Style but is not annotated with @Styleable"
+                "The class \"${classesMissingStyleableAnnotation.first().simpleName}\" uses @Attr, @StyleableChild and/or @Style but is not annotated with @Styleable"
             }
 
             return styleableElements
                     .mapNotNull {
                         try {
                             fromElement(elementUtils, typeUtils, it as TypeElement,
-                                    classesToStyleableFieldInfo[it] ?: emptyList(),
+                                    classesToStyleableChildInfo[it] ?: emptyList(),
                                     classesToBeforeStyleInfo[it] ?: emptyList(),
                                     classesToAfterStyleInfo[it] ?: emptyList(),
                                     classesToAttrsInfo[it] ?: emptyList(),
@@ -75,7 +75,7 @@ internal class StyleableInfo private constructor(
         private fun fromElement(elementUtils: Elements,
                                 typeUtils: Types,
                                 element: TypeElement,
-                                styleableFields: List<StyleableFieldInfo>,
+                                styleableChildren: List<StyleableChildInfo>,
                                 beforeStyles: List<BeforeStyleInfo>,
                                 afterStyles: List<AfterStyleInfo>,
                                 attrs: List<AttrInfo>,
@@ -96,15 +96,15 @@ internal class StyleableInfo private constructor(
             val styleable = element.getAnnotation(Styleable::class.java)
             val styleableResourceName = styleable.value
 
-            check(styleableResourceName.isNotEmpty() || (attrs.isEmpty() && styleableFields.isEmpty())) {
-                "@Styleable is missing its value parameter (@Attr or @StyleableField won't work otherwise)"
+            check(styleableResourceName.isNotEmpty() || (attrs.isEmpty() && styleableChildren.isEmpty())) {
+                "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)"
             }
-            check(styleableResourceName.isEmpty() || !(styleableFields.isEmpty() && attrs.isEmpty())) {
+            check(styleableResourceName.isEmpty() || !(styleableChildren.isEmpty() && attrs.isEmpty())) {
                 "No need to specify the @Styleable value parameter if no class members are annotated with @Attr"
             }
 
             return StyleableInfo(
-                    styleableFields,
+                    styleableChildren,
                     beforeStyles,
                     afterStyles,
                     attrs,
