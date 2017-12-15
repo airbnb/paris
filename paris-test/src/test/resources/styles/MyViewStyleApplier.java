@@ -1,9 +1,9 @@
 package com.airbnb.paris.test;
 
 import android.support.annotation.UiThread;
-import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
+import com.airbnb.paris.styles.Style;
 import java.lang.Override;
 
 @UiThread

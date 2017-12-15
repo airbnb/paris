@@ -3,11 +3,11 @@ package com.airbnb.paris.test;
 import android.content.res.Resources;
 import android.support.annotation.StyleRes;
 import android.support.annotation.UiThread;
-import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
-import com.airbnb.paris.TypedArrayWrapper;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
+import com.airbnb.paris.styles.Style;
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper;
 import com.airbnb.paris.utils.StyleBuilderFunction;
 import java.lang.Override;
 
@@ -70,6 +70,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     return subApplier;
   }
 
+  /**
+   * Empty style */
   public void applyDefault() {
   }
 
@@ -147,6 +149,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     public StyleBuilder() {
     }
 
+    /**
+     * Empty style */
     public StyleBuilder addDefault() {
       return this;
     }

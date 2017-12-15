@@ -22,11 +22,11 @@ class ParisProcessor : AbstractProcessor() {
         internal const val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
 
         internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
-        internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.Style".className()
+        internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.styles.Style".className()
         internal val STYLE_APPLIER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplier".className()
         internal val STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleBuilder".className()
         internal val STYLE_APPLIER_UTILS_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplierUtils".className()
-        internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.TypedArrayWrapper".className()
+        internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.typed_array_wrappers.TypedArrayWrapper".className()
         internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
         internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
 

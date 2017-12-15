@@ -1,6 +1,7 @@
-package com.airbnb.paris
+package com.airbnb.paris.styles
 
 import android.content.*
+import com.airbnb.paris.typed_array_wrappers.*
 
 interface Style {
 

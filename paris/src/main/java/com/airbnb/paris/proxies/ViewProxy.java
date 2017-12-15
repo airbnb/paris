@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.airbnb.paris.R2;
-import com.airbnb.paris.Style;
+import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.annotations.AfterStyle;
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.BeforeStyle;
