@@ -8,7 +8,7 @@ import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable(value = "Paris_ViewGroup")
-class ViewGroupProxy extends BaseProxy<ViewGroupProxy, ViewGroup> {
+public class ViewGroupProxy extends BaseProxy<ViewGroupProxy, ViewGroup> {
 
     ViewGroupProxy(ViewGroup view) {
         super(view);

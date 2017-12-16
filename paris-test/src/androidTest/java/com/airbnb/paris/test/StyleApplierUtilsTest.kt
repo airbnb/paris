@@ -1,19 +1,19 @@
 package com.airbnb.paris.test
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import android.support.test.*
+import android.support.test.runner.*
 import android.util.*
-import com.airbnb.paris.StyleApplierUtils
-import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.*
+import com.airbnb.paris.styles.*
 import org.junit.*
-import org.junit.runner.RunWith
+import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
 class StyleApplierUtilsTest {
 
     private val context = InstrumentationRegistry.getTargetContext()!!
-    lateinit var myView: MyView
-    lateinit var myViewApplier: MyViewStyleApplier
+    lateinit var myOtherView: MyOtherView
+    lateinit var myViewApplier: MyOtherViewStyleApplier
 
     init {
         // Necessary to test AppCompat attributes like "?attr/selectableItemBackground"
@@ -23,8 +23,8 @@ class StyleApplierUtilsTest {
 
     @Before
     fun setup() {
-        myView = MyView(context)
-        myViewApplier = MyViewStyleApplier(myView)
+        myOtherView = MyOtherView(context)
+        myViewApplier = MyOtherViewStyleApplier(myOtherView)
     }
 
     @Test
@@ -84,8 +84,8 @@ class StyleApplierUtilsTest {
         // Checks that running the same attributes assertion doesn't actually modify the applier's
         // subviews in any way
 
-        myView.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, 10f)
-        Assert.assertEquals(10f, myView.title.textSize)
+        myOtherView.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, 10f)
+        Assert.assertEquals(10f, myOtherView.title.textSize)
         StyleApplierUtils.assertSameAttributes(myViewApplier,
                 myViewApplier.builder()
                         .titleStyle({ it.textSize(15) })
@@ -94,6 +94,6 @@ class StyleApplierUtilsTest {
                         .titleStyle({ it.textSize(15) })
                         .build()
         )
-        Assert.assertEquals(10f, myView.title.textSize)
+        Assert.assertEquals(10f, myOtherView.title.textSize)
     }
 }

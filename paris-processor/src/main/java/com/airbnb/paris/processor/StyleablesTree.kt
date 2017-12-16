@@ -1,28 +1,23 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.utils.asTypeElement
-import com.airbnb.paris.processor.utils.className
-import com.squareup.javapoet.ClassName
+import com.airbnb.paris.processor.utils.*
+import com.squareup.javapoet.*
 import java.util.*
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Types
+import javax.lang.model.element.*
+import javax.lang.model.util.*
 
 internal class StyleablesTree {
 
     // This is a map of the View class qualified name to the StyleApplier ClassName
     // eg. "android.view.View" -> "com.airbnb.paris.ViewStyleApplier".className()
-    private val viewQualifiedNameToStyleApplierClassName = lazy {
-        ParisProcessor.BUILT_IN_STYLE_APPLIERS.entries
-                .map { Pair(it.value, it.key.className()) }
-                .toMap().toMutableMap()
-    }
+    private val viewQualifiedNameToStyleApplierClassName = mutableMapOf<String, ClassName>()
 
     /**
      * Traverses the class hierarchy of the given View type to find and return the first
      * corresponding style applier
      */
-    internal fun findStyleApplier(typeUtils: Types, styleablesInfo: List<StyleableInfo>, viewTypeElement: TypeElement): ClassName {
-        var styleApplierClassName = viewQualifiedNameToStyleApplierClassName.value[viewTypeElement.qualifiedName.toString()]
+    internal fun findStyleApplier(typeUtils: Types, styleablesInfo: List<BaseStyleableInfo>, viewTypeElement: TypeElement): ClassName {
+        var styleApplierClassName = viewQualifiedNameToStyleApplierClassName[viewTypeElement.qualifiedName.toString()]
         if (styleApplierClassName != null) {
             return styleApplierClassName
         }
@@ -39,7 +34,7 @@ internal class StyleablesTree {
                     viewTypeElement.superclass.asTypeElement(typeUtils))
         }
 
-        viewQualifiedNameToStyleApplierClassName.value.put(
+        viewQualifiedNameToStyleApplierClassName.put(
                 viewTypeElement.qualifiedName.toString(),
                 styleApplierClassName)
         return styleApplierClassName

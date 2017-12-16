@@ -10,22 +10,22 @@ import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.annotations.StyleableChild;
 
 @Styleable("MyView")
-public class MyView extends View {
+public class MyOtherView extends View {
 
     @StyleableChild(R2.styleable.MyView_titleStyle)
     public TextView title;
 
-    public MyView(Context context) {
+    public MyOtherView(Context context) {
         super(context);
         init();
     }
 
-    public MyView(Context context, AttributeSet attrs) {
+    public MyOtherView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyView(Context context, AttributeSet attrs, int defStyle) {
+    public MyOtherView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

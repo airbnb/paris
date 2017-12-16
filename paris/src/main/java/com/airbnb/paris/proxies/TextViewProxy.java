@@ -16,7 +16,7 @@ import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable(value = "Paris_TextView")
-class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
+public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
 
     @Nullable
     private Drawable drawableLeft;

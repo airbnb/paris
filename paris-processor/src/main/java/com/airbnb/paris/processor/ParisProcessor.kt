@@ -19,7 +19,9 @@ class ParisProcessor : AbstractProcessor() {
 
     companion object {
         internal const val PARIS_PACKAGE_NAME = "com.airbnb.paris"
+        internal const val PARIS_MODULES_PACKAGE_NAME = "com.airbnb.paris.modules"
         internal const val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
+        internal const val MODULE_CLASS_NAME_FORMAT = "GeneratedModule_%s"
 
         internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
         internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.styles.Style".className()
@@ -30,18 +32,12 @@ class ParisProcessor : AbstractProcessor() {
         internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
         internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
 
-        internal val BUILT_IN_STYLE_APPLIERS = mapOf(
-                Pair("com.airbnb.paris.proxies.ViewProxyStyleApplier", "android.view.View"),
-                Pair("com.airbnb.paris.proxies.TextViewProxyStyleApplier", "android.widget.TextView"),
-                Pair("com.airbnb.paris.proxies.ImageViewProxyStyleApplier", "android.widget.ImageView"),
-                Pair("com.airbnb.paris.proxies.ViewGroupProxyStyleApplier", "android.view.ViewGroup")
-        )
-
         private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }
 
     var defaultStyleNameFormat: String = ""
     var rType: TypeMirror? = null
+    var parisClassSuffix: String = ""
 
     private val resourceScanner = AndroidResourceScanner()
 
@@ -77,6 +73,7 @@ class ParisProcessor : AbstractProcessor() {
             defaultStyleNameFormat = config.defaultStyleNameFormat
             rType = getRType(config)
             generateParisClass = config.generateParisClass
+            parisClassSuffix = config.parisClassSuffix
 
             check(defaultStyleNameFormat.isBlank() || rType != null) {
                 "If defaultStyleNameFormat is specified, rClass must be as well"
@@ -104,12 +101,38 @@ class ParisProcessor : AbstractProcessor() {
                 classesToAttrsInfo,
                 classesToStylesInfo)
 
+        val externalStyleablesInfo = mutableListOf<BaseStyleableInfo>()
+        elementUtils.getPackageElement(PARIS_MODULES_PACKAGE_NAME)?.let { packageElement ->
+            for (moduleElement in packageElement.enclosedElements) {
+                val styleableModule = moduleElement.getAnnotation(GeneratedStyleableModule::class.java)
+                if (styleableModule == null) {
+                    throw RuntimeException(moduleElement.toString())
+                }
+                externalStyleablesInfo.addAll(
+                        styleableModule.value
+                                .mapNotNull<GeneratedStyleableClass, TypeElement> {
+                                    var typeElement: TypeElement? = null
+                                    try {
+                                        it.value
+                                    } catch (e: MirroredTypeException) {
+                                        typeElement = e.typeMirror.asTypeElement(typeUtils)
+                                    }
+                                    typeElement
+                                }
+                                .map { BaseStyleableInfo.fromElement(elementUtils, typeUtils, it) }
+                )
+            }
+        }
+
         if (!styleablesInfo.isEmpty()) {
             try {
+                ModuleWriter.writeFrom(filer, styleablesInfo)
+
                 if (generateParisClass) {
-                    ParisWriter.writeFrom(filer, styleablesInfo)
+                    ParisWriter.writeFrom(filer, parisClassSuffix, styleablesInfo, externalStyleablesInfo)
                 }
-                StyleAppliersWriter.writeFrom(filer, elementUtils, typeUtils, styleablesInfo)
+
+                StyleAppliersWriter.writeFrom(filer, elementUtils, typeUtils, styleablesInfo, externalStyleablesInfo)
             } catch (e: ProcessorException) {
                 Errors.log(e)
             }

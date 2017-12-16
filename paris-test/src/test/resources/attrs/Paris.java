@@ -9,16 +9,34 @@ import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
+import com.airbnb.paris.test.MyOtherView;
+import com.airbnb.paris.test.MyOtherViewStyleApplier;
 import com.airbnb.paris.test.MyView;
 import com.airbnb.paris.test.MyViewStyleApplier;
 
 public final class Paris {
-  public static ViewProxyStyleApplier style(View view) {
-    return new ViewProxyStyleApplier(view);
+  public static ImageViewProxyStyleApplier style(ImageView view) {
+    return new ImageViewProxyStyleApplier(view);
   }
 
-  public static ViewProxyStyleApplier.StyleBuilder styleBuilder(View view) {
-    return new ViewProxyStyleApplier.StyleBuilder(new ViewProxyStyleApplier(view));
+  public static ImageViewProxyStyleApplier.StyleBuilder styleBuilder(ImageView view) {
+    return new ImageViewProxyStyleApplier.StyleBuilder(new ImageViewProxyStyleApplier(view));
+  }
+
+  public static MyOtherViewStyleApplier style(MyOtherView view) {
+    return new MyOtherViewStyleApplier(view);
+  }
+
+  public static MyOtherViewStyleApplier.StyleBuilder styleBuilder(MyOtherView view) {
+    return new MyOtherViewStyleApplier.StyleBuilder(new MyOtherViewStyleApplier(view));
+  }
+
+  public static MyViewStyleApplier style(MyView view) {
+    return new MyViewStyleApplier(view);
+  }
+
+  public static MyViewStyleApplier.StyleBuilder styleBuilder(MyView view) {
+    return new MyViewStyleApplier.StyleBuilder(new MyViewStyleApplier(view));
   }
 
   public static TextViewProxyStyleApplier style(TextView view) {
@@ -29,14 +47,6 @@ public final class Paris {
     return new TextViewProxyStyleApplier.StyleBuilder(new TextViewProxyStyleApplier(view));
   }
 
-  public static ImageViewProxyStyleApplier style(ImageView view) {
-    return new ImageViewProxyStyleApplier(view);
-  }
-
-  public static ImageViewProxyStyleApplier.StyleBuilder styleBuilder(ImageView view) {
-    return new ImageViewProxyStyleApplier.StyleBuilder(new ImageViewProxyStyleApplier(view));
-  }
-
   public static ViewGroupProxyStyleApplier style(ViewGroup view) {
     return new ViewGroupProxyStyleApplier(view);
   }
@@ -45,12 +55,12 @@ public final class Paris {
     return new ViewGroupProxyStyleApplier.StyleBuilder(new ViewGroupProxyStyleApplier(view));
   }
 
-  public static MyViewStyleApplier style(MyView view) {
-    return new MyViewStyleApplier(view);
+  public static ViewProxyStyleApplier style(View view) {
+    return new ViewProxyStyleApplier(view);
   }
 
-  public static MyViewStyleApplier.StyleBuilder styleBuilder(MyView view) {
-    return new MyViewStyleApplier.StyleBuilder(new MyViewStyleApplier(view));
+  public static ViewProxyStyleApplier.StyleBuilder styleBuilder(View view) {
+    return new ViewProxyStyleApplier.StyleBuilder(new ViewProxyStyleApplier(view));
   }
 
   /**

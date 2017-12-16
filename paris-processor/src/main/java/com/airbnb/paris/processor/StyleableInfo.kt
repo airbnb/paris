@@ -1,15 +1,11 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.utils.*
-import com.squareup.javapoet.ClassName
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.DeclaredType
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.squareup.javapoet.*
+import javax.annotation.processing.*
+import javax.lang.model.element.*
+import javax.lang.model.util.*
 
 /**
  * If [styleableResourceName] isn't empty then at least one of [styleableChildren] or [attrs] won't be
@@ -20,20 +16,15 @@ internal class StyleableInfo private constructor(
         val beforeStyles: List<BeforeStyleInfo>,
         val afterStyles: List<AfterStyleInfo>,
         val attrs: List<AttrInfo>,
-        val elementPackageName: String,
-        val elementName: String,
-        /**
-         * If the styleable class is not a proxy, will be equal to [viewElementType]. Otherwise,
-         * will refer to the proxy class
-         */
-        val elementType: TypeMirror,
-        /**
-         * If the styleable class is not a proxy, will be equal to [elementType]. Refers to the view
-         * class
-         */
-        val viewElementType: TypeMirror,
-        val styleableResourceName: String,
-        val styles: List<StyleInfo>) {
+        val styles: List<StyleInfo>,
+        baseStyleableInfo: BaseStyleableInfo
+) : BaseStyleableInfo(
+        baseStyleableInfo.elementPackageName,
+        baseStyleableInfo.elementName,
+        baseStyleableInfo.elementType,
+        baseStyleableInfo.viewElementType,
+        baseStyleableInfo.styleableResourceName
+) {
 
     fun styleApplierClassName(): ClassName =
             ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
@@ -81,25 +72,12 @@ internal class StyleableInfo private constructor(
                                 attrs: List<AttrInfo>,
                                 styles: List<StyleInfo>): StyleableInfo {
 
-            val elementPackageName = element.packageName
-            val elementName = element.simpleName.toString()
-            val elementType = element.asType()
+            val lightStyleableInfo = BaseStyleableInfo.fromElement(elementUtils, typeUtils, element)
 
-            val viewElementType: TypeMirror
-            if (typeUtils.isSubtype(elementType, typeUtils.erasure(elementUtils.PROXY_TYPE.asType()))) {
-                // Get the parameterized type, which should be the view type
-                viewElementType = (element.superclass as DeclaredType).typeArguments[1]
-            } else {
-                viewElementType = elementType
-            }
-
-            val styleable = element.getAnnotation(Styleable::class.java)
-            val styleableResourceName = styleable.value
-
-            check(styleableResourceName.isNotEmpty() || (attrs.isEmpty() && styleableChildren.isEmpty())) {
+            check(lightStyleableInfo.styleableResourceName.isNotEmpty() || (attrs.isEmpty() && styleableChildren.isEmpty())) {
                 "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)"
             }
-            check(styleableResourceName.isEmpty() || !(styleableChildren.isEmpty() && attrs.isEmpty())) {
+            check(lightStyleableInfo.styleableResourceName.isEmpty() || !(styleableChildren.isEmpty() && attrs.isEmpty())) {
                 "No need to specify the @Styleable value parameter if no class members are annotated with @Attr"
             }
 
@@ -108,12 +86,9 @@ internal class StyleableInfo private constructor(
                     beforeStyles,
                     afterStyles,
                     attrs,
-                    elementPackageName,
-                    elementName,
-                    elementType,
-                    viewElementType,
-                    styleableResourceName,
-                    styles)
+                    styles,
+                    lightStyleableInfo
+            )
         }
     }
 }

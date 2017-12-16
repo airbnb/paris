@@ -24,7 +24,7 @@ import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
 @Styleable(value = "Paris_View")
-class ViewProxy extends BaseProxy<ViewProxy, View> {
+public class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     private static final int NOT_SET = -10;
 

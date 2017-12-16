@@ -18,12 +18,14 @@ internal object StyleAppliersWriter {
     lateinit var elementUtils: Elements
     lateinit var typeUtils: Types
     lateinit var styleablesInfo: List<StyleableInfo>
+    lateinit var allStyleablesInfo: List<BaseStyleableInfo>
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>) {
+    fun writeFrom(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>, externalStyleablesInfo: List<BaseStyleableInfo>) {
         this.elementUtils = elementUtils
         this.typeUtils = typeUtils
         this.styleablesInfo = styleablesInfo
+        allStyleablesInfo = styleablesInfo + externalStyleablesInfo
 
         for (styleableInfo in styleablesInfo) {
             writeStyleApplier(filer, elementUtils, typeUtils, styleableInfo)
@@ -44,7 +46,7 @@ internal object StyleAppliersWriter {
         if (!typeUtils.isSameType(elementUtils.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
             parentStyleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
-                    styleablesInfo,
+                    allStyleablesInfo,
                     styleableInfo.viewElementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
             styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
         }
@@ -79,7 +81,7 @@ internal object StyleAppliersWriter {
         for (styleableFieldInfo in styleableInfo.styleableChildren) {
             val subStyleApplierClassName = styleablesTree.findStyleApplier(
                     typeUtils,
-                    styleablesInfo,
+                    allStyleablesInfo,
                     styleableFieldInfo.elementType.asTypeElement(typeUtils))
             styleTypeBuilder.addMethod(buildSubMethod(styleableFieldInfo, subStyleApplierClassName))
         }
@@ -377,7 +379,7 @@ internal object StyleAppliersWriter {
     private fun buildStyleBuilderAddSubBuilderMethod(rClassName: ClassName, styleableResourceName: String, styleableChildInfo: StyleableChildInfo): MethodSpec {
         val styleApplierClassName = styleablesTree.findStyleApplier(
                 typeUtils,
-                styleablesInfo,
+                allStyleablesInfo,
                 styleableChildInfo.elementType.asTypeElement(typeUtils))
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableChildInfo.styleableResId.resourceName!!))
