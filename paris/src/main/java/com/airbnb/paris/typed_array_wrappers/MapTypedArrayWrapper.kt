@@ -1,5 +1,6 @@
 package com.airbnb.paris.typed_array_wrappers
 
+import android.content.*
 import android.content.res.*
 import android.graphics.drawable.*
 import android.os.*
@@ -15,9 +16,12 @@ import com.airbnb.paris.utils.*
  * Styleable attribute index: R.styleable.MyView_attribute
  */
 internal class MapTypedArrayWrapper constructor(
-        private val resources: Resources,
+        context: Context,
         private val styleableAttrs: IntArray,
         private val attrResToValueResMap: Map<Int, Any>) : TypedArrayWrapper() {
+
+    private val resources = context.resources
+    private val theme = context.theme
 
     private val styleableAttrIndexes by lazy {
         attrResToValueResMap.keys
@@ -39,7 +43,7 @@ internal class MapTypedArrayWrapper constructor(
     override fun getColor(index: Int): Int {
         return getValue(index, { resId ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                resources.getColor(resId, null)
+                resources.getColor(resId, theme)
             } else {
                 @Suppress("DEPRECATION")
                 resources.getColor(resId)
@@ -52,7 +56,7 @@ internal class MapTypedArrayWrapper constructor(
                 index,
                 { resId ->
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        resources.getColorStateList(resId, null)
+                        resources.getColorStateList(resId, theme)
                     } else {
                         @Suppress("DEPRECATION")
                         resources.getColorStateList(resId)
@@ -67,7 +71,7 @@ internal class MapTypedArrayWrapper constructor(
     override fun getDrawable(index: Int): Drawable {
         return getValue(index, { resId ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                resources.getDrawable(resId, null)
+                resources.getDrawable(resId, theme)
             } else {
                 @Suppress("DEPRECATION")
                 resources.getDrawable(resId)

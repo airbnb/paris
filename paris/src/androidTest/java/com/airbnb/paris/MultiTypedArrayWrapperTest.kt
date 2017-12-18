@@ -41,7 +41,7 @@ class MultiTypedArrayWrapperTest {
             attrResToValueResMaps.map { newFormatWrapper(it) }
 
     private fun newFormatWrapper(attrResToValueResMap: Map<Int, Any>) =
-            MapTypedArrayWrapper(res, R.styleable.Formats, attrResToValueResMap)
+            MapTypedArrayWrapper(context, R.styleable.Formats, attrResToValueResMap)
 
     @Before
     fun setup() {

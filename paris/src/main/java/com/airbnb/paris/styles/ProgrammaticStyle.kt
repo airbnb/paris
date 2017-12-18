@@ -54,5 +54,5 @@ data class ProgrammaticStyle internal constructor(
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-        MapTypedArrayWrapper(context.resources, attrs, attributeMap)
+        MapTypedArrayWrapper(context, attrs, attributeMap)
 }
