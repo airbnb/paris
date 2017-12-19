@@ -1,12 +1,12 @@
 package com.airbnb.paris.processor
 
+import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
 import java.util.*
 import javax.lang.model.element.*
-import javax.lang.model.util.*
 
-internal class StyleablesTree {
+internal class StyleablesTree(private val helper: ParisHelper) {
 
     // This is a map of the View class qualified name to the StyleApplier ClassName
     // eg. "android.view.View" -> "com.airbnb.paris.ViewStyleApplier".className()
@@ -16,7 +16,7 @@ internal class StyleablesTree {
      * Traverses the class hierarchy of the given View type to find and return the first
      * corresponding style applier
      */
-    internal fun findStyleApplier(typeUtils: Types, styleablesInfo: List<BaseStyleableInfo>, viewTypeElement: TypeElement): ClassName {
+    internal fun findStyleApplier(styleablesInfo: List<BaseStyleableInfo>, viewTypeElement: TypeElement): ClassName {
         var styleApplierClassName = viewQualifiedNameToStyleApplierClassName[viewTypeElement.qualifiedName.toString()]
         if (styleApplierClassName != null) {
             return styleApplierClassName
@@ -24,14 +24,13 @@ internal class StyleablesTree {
 
         val type = viewTypeElement.asType()
         // Check to see if the view type is handled by a styleable class
-        val styleableInfo = styleablesInfo.find { typeUtils.isSameType(type, it.viewElementType) }
+        val styleableInfo = styleablesInfo.find { helper.types.isSameType(type, it.viewElementType) }
         if (styleableInfo != null) {
-            styleApplierClassName = viewTypeElementToStyleApplierClassName(styleableInfo.elementType.asTypeElement(typeUtils))
+            styleApplierClassName = viewTypeElementToStyleApplierClassName(styleableInfo.elementType.asTypeElement(helper.types))
         } else {
             styleApplierClassName = findStyleApplier(
-                    typeUtils,
                     styleablesInfo,
-                    viewTypeElement.superclass.asTypeElement(typeUtils))
+                    viewTypeElement.superclass.asTypeElement(helper.types))
         }
 
         viewQualifiedNameToStyleApplierClassName.put(

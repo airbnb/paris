@@ -1,53 +1,47 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.writers
 
+import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.android_resource_scanner.*
-import com.airbnb.paris.processor.utils.ClassNames
+import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.utils.VIEW_TYPE
-import com.airbnb.paris.processor.utils.asTypeElement
 import com.squareup.javapoet.*
 import java.io.*
-import javax.annotation.processing.*
 import javax.lang.model.element.*
-import javax.lang.model.util.*
 import kotlin.check
 
-internal object StyleAppliersWriter {
+internal class StyleAppliersWriter(processor: ParisProcessor) : ParisHelper(processor) {
 
-    val styleablesTree = StyleablesTree()
+    val styleablesTree = StyleablesTree(this)
 
-    lateinit var elementUtils: Elements
-    lateinit var typeUtils: Types
     lateinit var styleablesInfo: List<StyleableInfo>
     lateinit var allStyleablesInfo: List<BaseStyleableInfo>
 
     @Throws(IOException::class)
-    fun writeFrom(filer: Filer, elementUtils: Elements, typeUtils: Types, styleablesInfo: List<StyleableInfo>, externalStyleablesInfo: List<BaseStyleableInfo>) {
-        this.elementUtils = elementUtils
-        this.typeUtils = typeUtils
+    fun writeFrom(styleablesInfo: List<StyleableInfo>, externalStyleablesInfo: List<BaseStyleableInfo>) {
         this.styleablesInfo = styleablesInfo
         allStyleablesInfo = styleablesInfo + externalStyleablesInfo
 
         for (styleableInfo in styleablesInfo) {
-            writeStyleApplier(filer, elementUtils, typeUtils, styleableInfo)
+            writeStyleApplier(styleableInfo)
         }
     }
 
-    private fun writeStyleApplier(filer: Filer, elementUtils: Elements, typeUtils: Types, styleableInfo: StyleableInfo) {
+    private fun writeStyleApplier(styleableInfo: StyleableInfo) {
         val styleApplierClassName = styleableInfo.styleApplierClassName()
 
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
-                .addAnnotation(ClassNames.ANDROID_UI_THREAD)
+                .addAnnotation(AndroidClassNames.UI_THREAD)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
 
         // If the view type is "View" then there is no parent
         var parentStyleApplierClassName: ClassName? = null
-        if (!typeUtils.isSameType(elementUtils.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
+        if (!isSameType(elements.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
             parentStyleApplierClassName = styleablesTree.findStyleApplier(
-                    typeUtils,
                     allStyleablesInfo,
-                    styleableInfo.viewElementType.asTypeElement(typeUtils).superclass.asTypeElement(typeUtils))
+                    styleableInfo.viewElementType.asTypeElement().superclass.asTypeElement())
             styleTypeBuilder.addMethod(buildApplyParentMethod(parentStyleApplierClassName))
         }
 
@@ -80,9 +74,8 @@ internal object StyleAppliersWriter {
 
         for (styleableFieldInfo in styleableInfo.styleableChildren) {
             val subStyleApplierClassName = styleablesTree.findStyleApplier(
-                    typeUtils,
                     allStyleablesInfo,
-                    styleableFieldInfo.elementType.asTypeElement(typeUtils))
+                    styleableFieldInfo.elementType.asTypeElement())
             styleTypeBuilder.addMethod(buildSubMethod(styleableFieldInfo, subStyleApplierClassName))
         }
 
@@ -155,7 +148,7 @@ internal object StyleAppliersWriter {
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
                 .addParameter(ParameterSpec.builder(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
-                .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
+                .addStatement("\$T res = getView().getContext().getResources()", AndroidClassNames.RESOURCES)
 
         for (styleableField in styleableChildren) {
             addControlFlow(methodBuilder, Format.STYLE, styleableField.elementName,
@@ -173,7 +166,7 @@ internal object StyleAppliersWriter {
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
                 .addParameter(ParameterSpec.builder(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
-                .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
+                .addStatement("\$T res = getView().getContext().getResources()", AndroidClassNames.RESOURCES)
 
         for (beforeStyle in beforeStyles) {
             methodBuilder.addStatement("getProxy().\$N(style)", beforeStyle.elementName)
@@ -293,7 +286,7 @@ internal object StyleAppliersWriter {
         // StyleBuilder inner class
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         val styleBuilderTypeBuilder = TypeSpec.classBuilder(styleBuilderClassName)
-                .addAnnotation(ClassNames.ANDROID_UI_THREAD)
+                .addAnnotation(AndroidClassNames.UI_THREAD)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .superclass(ParameterizedTypeName.get(baseClassName, styleBuilderClassName, styleApplierClassName))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(styleApplierClassName))
@@ -358,7 +351,7 @@ internal object StyleAppliersWriter {
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableChildInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
-                        .addAnnotation(ClassNames.ANDROID_STYLE_RES)
+                        .addAnnotation(AndroidClassNames.STYLE_RES)
                         .build())
                 .returns(TypeVariableName.get("B"))
                 .addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableResourceName, styleableChildInfo.styleableResId.code)
@@ -378,9 +371,8 @@ internal object StyleAppliersWriter {
 
     private fun buildStyleBuilderAddSubBuilderMethod(rClassName: ClassName, styleableResourceName: String, styleableChildInfo: StyleableChildInfo): MethodSpec {
         val styleApplierClassName = styleablesTree.findStyleApplier(
-                typeUtils,
                 allStyleablesInfo,
-                styleableChildInfo.elementType.asTypeElement(typeUtils))
+                styleableChildInfo.elementType.asTypeElement())
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableChildInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
@@ -445,8 +437,8 @@ internal object StyleAppliersWriter {
                 addJavadoc(attr.javadoc)
                 addModifiers(Modifier.PUBLIC)
                 addParameter(ParameterSpec.builder(Integer.TYPE, "value")
-                        .addAnnotation(AnnotationSpec.builder(ClassNames.ANDROID_DIMENSION)
-                                .addMember("unit", "\$T.DP", ClassNames.ANDROID_DIMENSION)
+                        .addAnnotation(AnnotationSpec.builder(AndroidClassNames.DIMENSION)
+                                .addMember("unit", "\$T.DP", AndroidClassNames.DIMENSION)
                                 .build())
                         .build())
                 returns(TypeVariableName.get("B"))
@@ -461,7 +453,7 @@ internal object StyleAppliersWriter {
                 addJavadoc(attr.javadoc)
                 addModifiers(Modifier.PUBLIC)
                 addParameter(ParameterSpec.builder(Integer.TYPE, "color")
-                        .addAnnotation(ClassNames.ANDROID_COLOR_INT)
+                        .addAnnotation(AndroidClassNames.COLOR_INT)
                         .build())
                 returns(TypeVariableName.get("B"))
                 addStatement("getBuilder().putColor(\$T.styleable.\$L[\$L], color)", rClassName, styleableResourceName, attr.styleableResId.code)

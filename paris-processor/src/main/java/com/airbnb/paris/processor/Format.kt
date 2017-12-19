@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
 import javax.lang.model.element.*
@@ -132,44 +133,44 @@ internal class Format private constructor(
 
     val valueAnnotation: ClassName?
         get() = when (type) {
-            Type.COLOR -> ClassNames.ANDROID_COLOR_INT
+            Type.COLOR -> AndroidClassNames.COLOR_INT
             Type.DIMENSION,
             Type.DIMENSION_PIXEL_OFFSET,
             Type.DIMENSION_PIXEL_SIZE -> {
-                ClassNames.ANDROID_PX
+                AndroidClassNames.PX
             }
-            Type.RESOURCE_ID -> ClassNames.ANDROID_ANY_RES
+            Type.RESOURCE_ID -> AndroidClassNames.ANY_RES
             else -> null
         }
 
     val resAnnotation: ClassName
         get() = when (type) {
-            Type.BOOLEAN -> ClassNames.ANDROID_BOOL_RES
+            Type.BOOLEAN -> AndroidClassNames.BOOL_RES
             Type.CHARSEQUENCE,
             Type.STRING -> {
-                ClassNames.ANDROID_STRING_RES
+                AndroidClassNames.STRING_RES
             }
-            Type.CHARSEQUENCE_ARRAY -> ClassNames.ANDROID_ARRAY_RES
+            Type.CHARSEQUENCE_ARRAY -> AndroidClassNames.ARRAY_RES
             Type.COLOR,
             Type.COLOR_STATE_LIST -> {
-                ClassNames.ANDROID_COLOR_RES
+                AndroidClassNames.COLOR_RES
             }
             Type.DIMENSION,
             Type.DIMENSION_PIXEL_OFFSET,
             Type.DIMENSION_PIXEL_SIZE,
             Type.LAYOUT_DIMENSION -> {
-                ClassNames.ANDROID_DIMEN_RES
+                AndroidClassNames.DIMEN_RES
             }
-            Type.DRAWABLE -> ClassNames.ANDROID_DRAWABLE_RES
-            Type.FRACTION -> ClassNames.ANDROID_FRACTION_RES
+            Type.DRAWABLE -> AndroidClassNames.DRAWABLE_RES
+            Type.FRACTION -> AndroidClassNames.FRACTION_RES
             Type.INT,
             Type.INTEGER -> {
-                ClassNames.ANDROID_INTEGER_RES
+                AndroidClassNames.INTEGER_RES
             }
-            Type.NON_RESOURCE_STRING -> ClassNames.ANDROID_ANY_RES // TODO Not sure about this one
-            Type.FLOAT -> ClassNames.ANDROID_ANY_RES // TODO There's no FloatRes so... what?
-            Type.STYLE -> ClassNames.ANDROID_STYLE_RES
-            Type.RESOURCE_ID -> ClassNames.ANDROID_ANY_RES
+            Type.NON_RESOURCE_STRING -> AndroidClassNames.ANY_RES // TODO Not sure about this one
+            Type.FLOAT -> AndroidClassNames.ANY_RES // TODO There's no FloatRes so... what?
+            Type.STYLE -> AndroidClassNames.STYLE_RES
+            Type.RESOURCE_ID -> AndroidClassNames.ANY_RES
         }
 
     fun resourcesMethodCode(resourcesVar: String, valueResIdCode: CodeBlock): CodeBlock {

@@ -1,16 +1,18 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.writers
 
-import com.airbnb.paris.processor.utils.*
+import com.airbnb.paris.processor.*
+import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.models.BaseStyleableInfo
+import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.*
 import java.io.*
 import java.util.*
-import javax.annotation.processing.*
 import javax.lang.model.element.*
 
-internal object ParisWriter {
+internal class ParisWriter(processor: ParisProcessor) : ParisHelper(processor) {
 
     @Throws(IOException::class)
-    internal fun writeFrom(filer: Filer, parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>) {
+    internal fun writeFrom(parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>) {
         val parisTypeBuilder = TypeSpec.classBuilder(PARIS_SIMPLE_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
 
@@ -74,7 +76,7 @@ internal object ParisWriter {
         val builder = MethodSpec.methodBuilder("assertStylesContainSameAttributes")
                 .addJavadoc("For debugging")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addParameter(ClassNames.ANDROID_CONTEXT, "context")
+                .addParameter(AndroidClassNames.CONTEXT, "context")
 
         for (styleableClassInfo in styleableClassesInfo) {
             if (styleableClassInfo.styles.size > 1) {

@@ -1,8 +1,7 @@
 package com.airbnb.paris.processor.android_resource_scanner
 
-import com.airbnb.paris.processor.utils.ClassNames
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.CodeBlock
+import com.airbnb.paris.processor.framework.*
+import com.squareup.javapoet.*
 
 internal class AndroidResourceId {
 
@@ -21,7 +20,7 @@ internal class AndroidResourceId {
     constructor(value: Int, className: ClassName, resourceName: String) {
         this.value = value
         this.resourceName = resourceName
-        this.code = if (className.topLevelClassName() == ClassNames.ANDROID_R)
+        this.code = if (className.topLevelClassName() == AndroidClassNames.R)
             CodeBlock.of("\$L.\$N", className, resourceName)
         else
             CodeBlock.of("\$T.\$N", className, resourceName)

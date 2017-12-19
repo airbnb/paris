@@ -1,11 +1,12 @@
-package com.airbnb.paris.processor
+package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.*
+import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.*
 import java.io.*
 import java.math.*
 import java.security.*
-import javax.annotation.processing.*
 import javax.lang.model.element.*
 
 /**
@@ -13,10 +14,10 @@ import javax.lang.model.element.*
  * same, predefined package, modules are able to retrieve and use styleable classes from their
  * dependencies through these classes
  */
-internal object ModuleWriter {
+internal class ModuleWriter(processor: ParisProcessor) : ParisHelper(processor) {
 
     @Throws(IOException::class)
-    internal fun writeFrom(filer: Filer, styleablesInfo: List<StyleableInfo>) {
+    internal fun writeFrom(styleablesInfo: List<StyleableInfo>) {
         // The information is stored in annotations which makes it easy to retrieve. This is, after
         // all, an annotation processor
         val classesCode = CodeBlock.builder().add("{")
