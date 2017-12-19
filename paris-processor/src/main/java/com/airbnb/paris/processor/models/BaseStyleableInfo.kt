@@ -8,9 +8,32 @@ import javax.lang.model.type.*
 
 internal class BaseStyleableInfoExtractor(processor: ParisProcessor) : ParisHelper(processor) {
 
+    fun fromEnvironment(): List<BaseStyleableInfo> {
+        val baseStyleablesInfo = mutableListOf<BaseStyleableInfo>()
+        elements.getPackageElement(PARIS_MODULES_PACKAGE_NAME)?.let { packageElement ->
+            packageElement.enclosedElements
+                    .map { it.getAnnotation(GeneratedStyleableModule::class.java) }
+                    .forEach { styleableModule ->
+                        baseStyleablesInfo.addAll(
+                                styleableModule.value
+                                        .mapNotNull<GeneratedStyleableClass, TypeElement> {
+                                            var typeElement: TypeElement? = null
+                                            try {
+                                                it.value
+                                            } catch (e: MirroredTypeException) {
+                                                typeElement = e.typeMirror.asTypeElement(types)
+                                            }
+                                            typeElement
+                                        }
+                                        .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
+                        )
+                    }
+        }
+        return baseStyleablesInfo
+    }
+
     @Throws(ProcessorException::class)
     fun fromElement(element: TypeElement): BaseStyleableInfo {
-
         val elementPackageName = element.packageName
         val elementName = element.simpleName.toString()
         val elementType = element.asType()

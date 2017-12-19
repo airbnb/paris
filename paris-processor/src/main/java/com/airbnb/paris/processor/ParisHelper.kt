@@ -7,6 +7,7 @@ import javax.lang.model.element.*
 abstract internal class ParisHelper(processor: ParisProcessor) : SkyHelper<ParisProcessor>(processor) {
 
     protected val RElement get() = processor.RFinder.element!!
+    protected val defaultStyleNameFormat get() = processor.defaultStyleNameFormat
 
     private val resourceScanner = processor.resourceScanner
 

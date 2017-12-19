@@ -2,7 +2,7 @@ package com.airbnb.paris.processor.framework
 
 import com.airbnb.paris.processor.utils.*
 
-internal object AndroidClassNames {
+object AndroidClassNames {
 
     val R = "android.R".className()
     val CONTEXT = "android.content.Context".className()

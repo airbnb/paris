@@ -75,14 +75,13 @@ internal class StyleInfoExtractor(processor: ParisProcessor) : ParisHelper(proce
 
     @Throws(ProcessorException::class)
     private fun fromDefaultNameFormat(styleableElement: Element): StyleInfo? {
-        if (processor.defaultStyleNameFormat.isBlank()) {
+        if (defaultStyleNameFormat.isBlank()) {
             return null
         }
 
         val elementName = styleableElement.simpleName.toString()
-        val defaultStyleName = String.format(Locale.US, processor.defaultStyleNameFormat, elementName)
+        val defaultStyleName = String.format(Locale.US, defaultStyleNameFormat, elementName)
 
-        // TODO This will crash...
         val rStyleTypeElement = elements.getTypeElement("${RElement.qualifiedName}.style")
         val defaultStyleExists = elements.getAllMembers(rStyleTypeElement).any {
             it.simpleName.toString() == defaultStyleName

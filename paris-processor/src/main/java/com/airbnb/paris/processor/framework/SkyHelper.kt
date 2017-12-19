@@ -23,4 +23,50 @@ abstract class SkyHelper<out T : SkyProcessor>(val processor: T) {
     protected fun TypeMirror.asTypeElement(): TypeElement = this.asTypeElement(types)
 
     protected fun Element.getPackageElement(): PackageElement = elements.getPackageOf(this)
+
+    protected fun codeBlock(block: CodeBlock.Builder.() -> Unit): CodeBlock {
+        val builder = CodeBlock.builder()
+        builder.block()
+        return builder.build()
+    }
+
+    protected fun annotation(type: Class<*>, block: AnnotationSpec.Builder.() -> Unit): AnnotationSpec {
+        val builder = AnnotationSpec.builder(type)
+        builder.block()
+        return builder.build()
+    }
+
+    protected fun classType(name: String, block: TypeSpec.Builder.() -> Unit): TypeSpec {
+        val builder = TypeSpec.classBuilder(name)
+        builder.block()
+        return builder.build()
+    }
+
+    protected fun classType(name: ClassName, block: TypeSpec.Builder.() -> Unit): TypeSpec {
+        val builder = TypeSpec.classBuilder(name)
+        builder.block()
+        return builder.build()
+    }
+
+    protected fun constructor(block: MethodSpec.Builder.() -> Unit): MethodSpec {
+        val builder = MethodSpec.constructorBuilder()
+        builder.block()
+        return builder.build()
+    }
+
+    protected fun method(name: String, block: MethodSpec.Builder.() -> Unit): MethodSpec {
+        val builder = MethodSpec.methodBuilder(name)
+        builder.block()
+        return builder.build()
+    }
+
+    protected fun parameter(type: TypeName, name: String, block: (ParameterSpec.Builder.() -> Unit)? = null): ParameterSpec {
+        val builder = ParameterSpec.builder(type, name)
+        block?.invoke(builder)
+        return builder.build()
+    }
+
+    protected fun writeJavaFile(packageName: String, typeSpec: TypeSpec) {
+        JavaFile.builder(packageName, typeSpec).build().writeTo(filer)
+    }
 }
