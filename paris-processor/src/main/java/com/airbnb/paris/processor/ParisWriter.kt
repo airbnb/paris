@@ -11,7 +11,7 @@ internal object ParisWriter {
 
     @Throws(IOException::class)
     internal fun writeFrom(filer: Filer, parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>) {
-        val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_SIMPLE_CLASS_NAME)
+        val parisTypeBuilder = TypeSpec.classBuilder(PARIS_SIMPLE_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
 
         val sortedStyleableClassesInfo = (styleableClassesInfo + externalStyleableClassesInfo).sortedBy {
@@ -32,7 +32,7 @@ internal object ParisWriter {
     private fun getStyleApplierClassName(styleableClassInfo: BaseStyleableInfo): ClassName {
         return ClassName.get(
                 styleableClassInfo.elementPackageName,
-                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName)
+                String.format(Locale.US, STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, styleableClassInfo.elementName)
         )
     }
 
@@ -90,7 +90,7 @@ internal object ParisWriter {
                 }
 
                 val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
-                        ParisProcessor.STYLE_APPLIER_UTILS_CLASS_NAME,
+                        STYLE_APPLIER_UTILS_CLASS_NAME,
                         styleableClassInfo.elementType,
                         styleVarargCodeBuilder.build())
                 builder.addCode(assertEqualAttributesCode)

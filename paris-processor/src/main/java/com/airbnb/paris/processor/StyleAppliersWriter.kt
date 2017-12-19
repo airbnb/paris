@@ -38,7 +38,7 @@ internal object StyleAppliersWriter {
         val styleTypeBuilder = TypeSpec.classBuilder(styleApplierClassName)
                 .addAnnotation(ClassNames.ANDROID_UI_THREAD)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
+                .superclass(ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, TypeName.get(styleableInfo.elementType), TypeName.get(styleableInfo.viewElementType)))
                 .addMethod(buildConstructorMethod(styleableInfo))
 
         // If the view type is "View" then there is no parent
@@ -112,7 +112,7 @@ internal object StyleAppliersWriter {
         return MethodSpec.methodBuilder("applyParent")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
                 .addStatement("\$T applier = new \$T(getView())", parentStyleApplierClassName, parentStyleApplierClassName)
                 .addStatement("applier.setDebugListener(getDebugListener())")
                 .addStatement("applier.apply(style)")
@@ -153,8 +153,8 @@ internal object StyleAppliersWriter {
         val methodBuilder = MethodSpec.methodBuilder("processStyleableFields")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
-                .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
+                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
                 .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
         for (styleableField in styleableChildren) {
@@ -171,8 +171,8 @@ internal object StyleAppliersWriter {
         val methodBuilder = MethodSpec.methodBuilder("processAttributes")
                 .addAnnotation(Override::class.java)
                 .addModifiers(Modifier.PROTECTED)
-                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
-                .addParameter(ParameterSpec.builder(ParisProcessor.TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
+                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a").build())
                 .addStatement("\$T res = getView().getContext().getResources()", ClassNames.ANDROID_RESOURCES)
 
         for (beforeStyle in beforeStyles) {
@@ -258,13 +258,13 @@ internal object StyleAppliersWriter {
         if (parentStyleApplierClassName != null) {
             baseStyleBuilderClassName = parentStyleApplierClassName.nestedClass("BaseStyleBuilder")
         } else {
-            baseStyleBuilderClassName = ParisProcessor.STYLE_BUILDER_CLASS_NAME
+            baseStyleBuilderClassName = STYLE_BUILDER_CLASS_NAME
         }
         val wildcardTypeName = WildcardTypeName.subtypeOf(Object::class.java)
         val baseClassName = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
         val baseStyleBuilderTypeBuilder = TypeSpec.classBuilder(baseClassName)
                 .addTypeVariable(TypeVariableName.get("B", ParameterizedTypeName.get(baseClassName, TypeVariableName.get("B"), TypeVariableName.get("A"))))
-                .addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(ParisProcessor.STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName)))
+                .addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName)))
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
                 .superclass(ParameterizedTypeName.get(baseStyleBuilderClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
                 .addMethod(buildStyleBuilderApplierConstructorMethod(TypeVariableName.get("A")))
@@ -369,7 +369,7 @@ internal object StyleAppliersWriter {
     private fun buildStyleBuilderAddSubMethod(rClassName: ClassName, styleableResourceName: String, styleableChildInfo: StyleableChildInfo): MethodSpec {
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableChildInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(ParisProcessor.STYLE_CLASS_NAME, "style").build())
+                .addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
                 .returns(TypeVariableName.get("B"))
                 .addStatement("getBuilder().put(\$T.styleable.\$L[\$L], style)", rClassName, styleableResourceName, styleableChildInfo.styleableResId.code)
                 .addStatement("return (B) this")
@@ -384,7 +384,7 @@ internal object StyleAppliersWriter {
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
         return MethodSpec.methodBuilder(styleableAttrResourceNameToCamelCase(styleableResourceName, styleableChildInfo.styleableResId.resourceName!!))
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(ParisProcessor.STYLE_BUILDER_FUNCTION_CLASS_NAME, styleBuilderClassName), "function").build())
+                .addParameter(ParameterSpec.builder(ParameterizedTypeName.get(STYLE_BUILDER_FUNCTION_CLASS_NAME, styleBuilderClassName), "function").build())
                 .returns(TypeVariableName.get("B"))
                 .addStatement("\$T subBuilder = new \$T()", styleBuilderClassName, styleBuilderClassName)
                 .addStatement("function.invoke(subBuilder)")

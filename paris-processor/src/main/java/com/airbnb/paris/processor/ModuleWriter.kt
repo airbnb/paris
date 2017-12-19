@@ -41,11 +41,11 @@ internal object ModuleWriter {
 
         // The class name has to be prefixed with something since the hash could start with a
         // number, which is not allowed in class names
-        val styleableModuleTypeBuilder = TypeSpec.classBuilder(String.format(ParisProcessor.MODULE_CLASS_NAME_FORMAT, hash))
+        val styleableModuleTypeBuilder = TypeSpec.classBuilder(String.format(MODULE_SIMPLE_CLASS_NAME_FORMAT, hash))
                 .addAnnotation(styleableModuleAnnotationBuilder.build())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
 
-        JavaFile.builder(ParisProcessor.PARIS_MODULES_PACKAGE_NAME, styleableModuleTypeBuilder.build())
+        JavaFile.builder(PARIS_MODULES_PACKAGE_NAME, styleableModuleTypeBuilder.build())
                 .build()
                 .writeTo(filer)
     }

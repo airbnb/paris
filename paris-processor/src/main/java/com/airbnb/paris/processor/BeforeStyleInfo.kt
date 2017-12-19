@@ -1,14 +1,9 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.BeforeStyle
-import com.airbnb.paris.processor.utils.Errors
-import com.airbnb.paris.processor.utils.ProcessorException
-import com.airbnb.paris.processor.utils.check
-import com.airbnb.paris.processor.utils.toTypeMirror
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
+import com.airbnb.paris.annotations.*
+import com.airbnb.paris.processor.utils.*
+import javax.annotation.processing.*
+import javax.lang.model.element.*
 
 internal class BeforeStyleInfo private constructor(
         val enclosingElement: Element,
@@ -34,7 +29,7 @@ internal class BeforeStyleInfo private constructor(
                 "Methods annotated with @BeforeStyle can't be private or protected"
             }
 
-            val styleType = ParisProcessor.STYLE_CLASS_NAME.toTypeMirror(p.elementUtils)
+            val styleType = STYLE_CLASS_NAME.toTypeMirror(p.elementUtils)
             val parameterType = element.parameters[0].asType()
             check(element.parameters.size == 1 && p.typeUtils.isSameType(styleType, parameterType)) {
                 "Methods annotated with @BeforeStyle must have a single Style parameter"

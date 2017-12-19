@@ -42,6 +42,6 @@ internal class StyleablesTree {
 
     private fun viewTypeElementToStyleApplierClassName(viewTypeElement: TypeElement): ClassName {
         val viewClassName = ClassName.get(viewTypeElement)
-        return ClassName.get(viewClassName.packageName(), String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, viewClassName.simpleName()))
+        return ClassName.get(viewClassName.packageName(), String.format(Locale.US, STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, viewClassName.simpleName()))
     }
 }

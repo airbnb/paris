@@ -5,7 +5,6 @@ import com.airbnb.paris.processor.android_resource_scanner.*
 import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
 import com.airbnb.paris.processor.utils.asTypeElement
-import com.airbnb.paris.processor.utils.className
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.*
@@ -18,20 +17,6 @@ import kotlin.check
 class ParisProcessor : AbstractProcessor() {
 
     companion object {
-        internal const val PARIS_PACKAGE_NAME = "com.airbnb.paris"
-        internal const val PARIS_MODULES_PACKAGE_NAME = "com.airbnb.paris.modules"
-        internal const val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
-        internal const val MODULE_CLASS_NAME_FORMAT = "GeneratedModule_%s"
-
-        internal val PARIS_SIMPLE_CLASS_NAME = "Paris"
-        internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.styles.Style".className()
-        internal val STYLE_APPLIER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplier".className()
-        internal val STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleBuilder".className()
-        internal val STYLE_APPLIER_UTILS_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplierUtils".className()
-        internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.typed_array_wrappers.TypedArrayWrapper".className()
-        internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
-        internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
-
         private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }
 

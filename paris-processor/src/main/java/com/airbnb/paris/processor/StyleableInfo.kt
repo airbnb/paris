@@ -27,7 +27,7 @@ internal class StyleableInfo private constructor(
 ) {
 
     fun styleApplierClassName(): ClassName =
-            ClassName.get(elementPackageName, String.format(ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, elementName))
+            ClassName.get(elementPackageName, String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, elementName))
 
     companion object {
 
