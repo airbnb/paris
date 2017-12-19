@@ -1,10 +1,10 @@
 package com.airbnb.paris.test
 
-import com.airbnb.paris.processor.ParisProcessor
-import com.google.common.truth.Truth.assert_
-import com.google.testing.compile.JavaFileObjects
-import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
-import org.junit.Test
+import com.airbnb.paris.processor.*
+import com.google.common.truth.Truth.*
+import com.google.testing.compile.*
+import com.google.testing.compile.JavaSourceSubjectFactory.*
+import org.junit.*
 
 
 

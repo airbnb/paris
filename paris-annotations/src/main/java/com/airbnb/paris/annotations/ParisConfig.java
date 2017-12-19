@@ -18,13 +18,4 @@ public @interface ParisConfig {
      * the Paris class can only be generated in a single module
      */
     boolean generateParisClass() default true;
-
-    /**
-     * A suffix to append to the name of the Paris class generated for this module. For example if
-     * the suffix is set to "Foo" then ParisFoo.java will be generated instead of Paris.java. This
-     * is especially useful for multi-module support.
-     *
-     * Has no effect if {@link #generateParisClass()} is false
-     */
-    String parisClassSuffix() default "";
 }

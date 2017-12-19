@@ -10,13 +10,8 @@ import javax.lang.model.element.*
 internal object ParisWriter {
 
     @Throws(IOException::class)
-    internal fun writeFrom(filer: Filer, parisClassSuffix: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>) {
-        val parisClassName = if (parisClassSuffix.isBlank()) {
-            ParisProcessor.PARIS_CLASS_NAME
-        } else {
-            (ParisProcessor.PARIS_CLASS_NAME.reflectionName() + parisClassSuffix).className()
-        }
-        val parisTypeBuilder = TypeSpec.classBuilder(parisClassName)
+    internal fun writeFrom(filer: Filer, parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>) {
+        val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_SIMPLE_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
 
         val sortedStyleableClassesInfo = (styleableClassesInfo + externalStyleableClassesInfo).sortedBy {
@@ -29,7 +24,7 @@ internal object ParisWriter {
 
         parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
 
-        JavaFile.builder(ParisProcessor.PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
+        JavaFile.builder(parisClassPackageName, parisTypeBuilder.build())
                 .build()
                 .writeTo(filer)
     }

@@ -1,4 +1,4 @@
-package com.airbnb.paris;
+package com.airbnb.paris.test;
 
 import android.content.Context;
 import android.view.View;
@@ -9,10 +9,6 @@ import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
-import com.airbnb.paris.test.MyOtherView;
-import com.airbnb.paris.test.MyOtherViewStyleApplier;
-import com.airbnb.paris.test.MyView;
-import com.airbnb.paris.test.MyViewStyleApplier;
 
 public final class Paris {
   public static ImageViewProxyStyleApplier style(ImageView view) {
