@@ -1,5 +1,6 @@
 package com.airbnb.paris.test;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.StyleRes;
 import android.support.annotation.UiThread;
@@ -73,6 +74,11 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   /**
    * Empty style */
   public void applyDefault() {
+  }
+
+  /**
+   * For debugging */
+  public static void assertStylesContainSameAttributes(Context context) {
   }
 
   public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {

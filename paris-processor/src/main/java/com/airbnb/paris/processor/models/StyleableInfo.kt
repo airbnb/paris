@@ -3,7 +3,6 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.utils.*
-import com.squareup.javapoet.*
 import javax.annotation.processing.*
 import javax.lang.model.element.*
 
@@ -89,8 +88,5 @@ internal class StyleableInfo(
         baseStyleableInfo.elementType,
         baseStyleableInfo.viewElementType,
         baseStyleableInfo.styleableResourceName
-) {
+)
 
-    fun styleApplierClassName(): ClassName =
-            ClassName.get(elementPackageName, String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, elementName))
-}

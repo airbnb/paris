@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.airbnb.paris.StyleApplierUtils;
 import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
@@ -63,7 +62,11 @@ public final class Paris {
   /**
    * For debugging */
   public static void assertStylesContainSameAttributes(Context context) {
-    MyView MyView = new MyView(context);
-    StyleApplierUtils.Companion.assertSameAttributes(style(MyView), new MyViewStyleApplier.StyleBuilder().addRed().build(), new MyViewStyleApplier.StyleBuilder().addGreen().build(), new MyViewStyleApplier.StyleBuilder().addBlue().build(), new MyViewStyleApplier.StyleBuilder().addDefault().build());
+    ImageViewProxyStyleApplier.assertStylesContainSameAttributes(context);
+    MyOtherViewStyleApplier.assertStylesContainSameAttributes(context);
+    MyViewStyleApplier.assertStylesContainSameAttributes(context);
+    TextViewProxyStyleApplier.assertStylesContainSameAttributes(context);
+    ViewGroupProxyStyleApplier.assertStylesContainSameAttributes(context);
+    ViewProxyStyleApplier.assertStylesContainSameAttributes(context);
   }
 }

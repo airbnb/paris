@@ -163,6 +163,35 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
             }
         }
     }
+
+    method("assertStylesContainSameAttributes") {
+        addJavadoc("For debugging")
+        public()
+        static()
+        addParameter(AndroidClassNames.CONTEXT, "context")
+
+        if (styleableInfo.styles.size > 1) {
+            addStatement("\$T \$T = new \$T(context)", styleableInfo.viewElementType, styleableInfo.viewElementType, styleableInfo.viewElementType)
+
+            val styleVarargCode = codeBlock {
+                for ((i, style) in styleableInfo.styles.withIndex()) {
+                    if (i > 0) {
+                        add(", ")
+                    }
+                    add("new \$T().add\$L().build()",
+                            getStyleBuilderClassName(styleableInfo), style.formattedName)
+                }
+            }
+
+            val assertEqualAttributesCode = CodeBlock.of(
+                    "\$T.Companion.assertSameAttributes(new \$T(\$T), \$L);\n",
+                    STYLE_APPLIER_UTILS_CLASS_NAME,
+                    styleApplierClassName,
+                    styleableInfo.viewElementType,
+                    styleVarargCode)
+            addCode(assertEqualAttributesCode)
+        }
+    }
 }) {
 
     init {

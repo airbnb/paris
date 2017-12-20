@@ -3,6 +3,7 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.utils.*
+import com.squareup.javapoet.*
 import javax.lang.model.element.*
 import javax.lang.model.type.*
 
@@ -73,4 +74,9 @@ open internal class BaseStyleableInfo(
          */
         val viewElementType: TypeMirror,
         val styleableResourceName: String
-)
+) {
+
+    fun styleApplierClassName(): ClassName =
+            ClassName.get(elementPackageName, String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, elementName))
+}
+

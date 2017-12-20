@@ -62,5 +62,11 @@ public final class Paris {
   /**
    * For debugging */
   public static void assertStylesContainSameAttributes(Context context) {
+    ImageViewProxyStyleApplier.assertStylesContainSameAttributes(context);
+    MyOtherViewStyleApplier.assertStylesContainSameAttributes(context);
+    MyViewStyleApplier.assertStylesContainSameAttributes(context);
+    TextViewProxyStyleApplier.assertStylesContainSameAttributes(context);
+    ViewGroupProxyStyleApplier.assertStylesContainSameAttributes(context);
+    ViewProxyStyleApplier.assertStylesContainSameAttributes(context);
   }
 }

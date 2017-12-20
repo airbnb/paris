@@ -1,7 +1,9 @@
 package com.airbnb.paris.test;
 
+import android.content.Context;
 import android.support.annotation.UiThread;
 import com.airbnb.paris.StyleApplier;
+import com.airbnb.paris.StyleApplierUtils;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
 import com.airbnb.paris.styles.Style;
 import java.lang.Override;
@@ -47,6 +49,13 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
    * @see MyView#RED_STYLE */
   public void applyDefault() {
     apply(MyView.RED_STYLE);
+  }
+
+  /**
+   * For debugging */
+  public static void assertStylesContainSameAttributes(Context context) {
+    MyView MyView = new MyView(context);
+    StyleApplierUtils.Companion.assertSameAttributes(new MyViewStyleApplier(MyView), new StyleBuilder().addRed().build(), new StyleBuilder().addGreen().build(), new StyleBuilder().addBlue().build(), new StyleBuilder().addDefault().build());
   }
 
   public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {

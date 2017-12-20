@@ -44,27 +44,8 @@ internal class ParisJavaClass(processor: ParisProcessor, parisClassPackageName: 
         static()
         addParameter(AndroidClassNames.CONTEXT, "context")
 
-        for (styleableClassInfo in styleableClassesInfo) {
-            if (styleableClassInfo.styles.size > 1) {
-                addStatement("\$T \$T = new \$T(context)", styleableClassInfo.elementType, styleableClassInfo.elementType, styleableClassInfo.elementType)
-
-                val styleVarargCode = codeBlock {
-                    for ((i, style) in styleableClassInfo.styles.withIndex()) {
-                        if (i > 0) {
-                            add(", ")
-                        }
-                        add("new \$T().add\$L().build()",
-                                getStyleBuilderClassName(styleableClassInfo), style.formattedName)
-                    }
-                }
-
-                val assertEqualAttributesCode = CodeBlock.of(
-                        "\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
-                        STYLE_APPLIER_UTILS_CLASS_NAME,
-                        styleableClassInfo.elementType,
-                        styleVarargCode)
-                addCode(assertEqualAttributesCode)
-            }
+        for (styleableClassInfo in sortedStyleableClassesInfo) {
+            addStatement("\$T.assertStylesContainSameAttributes(context)", styleableClassInfo.styleApplierClassName())
         }
     }
 })
