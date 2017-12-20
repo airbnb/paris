@@ -41,8 +41,6 @@ class ParisProcessor : SkyProcessor() {
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         INSTANCE = this
 
-        var generateParisClass = true
-
         RFinder = RFinder(this)
 
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
@@ -50,7 +48,6 @@ class ParisProcessor : SkyProcessor() {
                 ?.getAnnotation(ParisConfig::class.java)
                 ?.let {
                     defaultStyleNameFormat = it.defaultStyleNameFormat
-                    generateParisClass = it.generateParisClass
                     RFinder.processConfig(it)
                 }
 
@@ -91,7 +88,7 @@ class ParisProcessor : SkyProcessor() {
             try {
                 ModuleJavaClass(this, styleablesInfo).write()
 
-                if (generateParisClass) {
+                if (RFinder.element != null) {
                     val parisClassPackageName = RFinder.element!!.packageName
                     ParisJavaFile(this, parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
                 }
