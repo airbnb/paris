@@ -6,7 +6,7 @@ import com.airbnb.paris.processor.models.*
 import com.squareup.javapoet.*
 import java.util.*
 
-internal class ParisJavaFile(processor: ParisProcessor, parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>)
+internal class ParisJavaClass(processor: ParisProcessor, parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>)
     : SkyJavaClass<ParisProcessor>(processor, parisClassPackageName, PARIS_SIMPLE_CLASS_NAME, {
 
     public()

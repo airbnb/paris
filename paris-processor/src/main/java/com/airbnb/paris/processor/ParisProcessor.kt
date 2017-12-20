@@ -90,12 +90,12 @@ class ParisProcessor : SkyProcessor() {
 
                 if (RFinder.element != null) {
                     val parisClassPackageName = RFinder.element!!.packageName
-                    ParisJavaFile(this, parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
+                    ParisJavaClass(this, parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
                 }
 
                 val styleablesTree = StyleablesTree(this, styleablesInfo + externalStyleablesInfo)
                 for (styleableInfo in styleablesInfo) {
-                    StyleAppliersJavaFile(this, styleablesTree, styleableInfo).write()
+                    StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
                 }
             } catch (e: ProcessorException) {
                 Errors.log(e)

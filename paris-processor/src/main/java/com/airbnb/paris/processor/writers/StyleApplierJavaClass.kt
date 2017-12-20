@@ -6,7 +6,7 @@ import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
 
-internal class StyleAppliersJavaFile(processor: ParisProcessor, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
+internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
     : SkyJavaClass<ParisProcessor>(processor, block = {
 
     addAnnotation(AndroidClassNames.UI_THREAD)
