@@ -3,7 +3,8 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.utils.*
+import com.airbnb.paris.processor.framework.errors.*
+import com.airbnb.paris.processor.framework.models.*
 import javax.lang.model.element.*
 
 internal class BeforeStyleInfoExtractor

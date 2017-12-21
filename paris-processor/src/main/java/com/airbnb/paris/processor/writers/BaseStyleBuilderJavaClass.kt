@@ -2,6 +2,7 @@ package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.errors.*
 import com.airbnb.paris.processor.models.*
 import com.squareup.javapoet.*
 

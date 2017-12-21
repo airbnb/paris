@@ -1,4 +1,4 @@
-package com.airbnb.paris.processor.framework
+package com.airbnb.paris.processor.framework.models
 
 import javax.lang.model.element.*
 import javax.lang.model.type.*

@@ -1,7 +1,7 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.utils.*
+import com.airbnb.paris.processor.framework.errors.*
 import javax.annotation.processing.*
 import javax.lang.model.element.*
 

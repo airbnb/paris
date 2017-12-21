@@ -3,6 +3,7 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.errors.*
 import com.airbnb.paris.processor.models.StyleInfo.*
 import com.airbnb.paris.processor.models.StyleInfo.Kind.*
 import com.airbnb.paris.processor.utils.*

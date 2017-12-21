@@ -1,8 +1,8 @@
-package com.airbnb.paris.processor.utils
+package com.airbnb.paris.processor.framework.errors
 
 import java.util.*
-import javax.annotation.processing.Messager
-import javax.tools.Diagnostic
+import javax.annotation.processing.*
+import javax.tools.*
 
 internal object Errors {
 

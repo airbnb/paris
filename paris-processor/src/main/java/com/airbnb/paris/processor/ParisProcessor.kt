@@ -3,8 +3,9 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.android_resource_scanner.*
 import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.errors.Errors
+import com.airbnb.paris.processor.framework.errors.ProcessorException
 import com.airbnb.paris.processor.models.*
-import com.airbnb.paris.processor.utils.*
 import com.airbnb.paris.processor.writers.*
 import java.util.*
 import javax.annotation.processing.*
