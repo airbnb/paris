@@ -2,12 +2,13 @@ package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
+import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
 import javax.lang.model.element.*
 import javax.lang.model.type.*
 
-internal class BaseStyleableInfoExtractor(processor: ParisProcessor) : ParisHelper(processor) {
+internal class BaseStyleableInfoExtractor {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {
         val baseStyleablesInfo = mutableListOf<BaseStyleableInfo>()
@@ -22,11 +23,11 @@ internal class BaseStyleableInfoExtractor(processor: ParisProcessor) : ParisHelp
                                             try {
                                                 it.value
                                             } catch (e: MirroredTypeException) {
-                                                typeElement = e.typeMirror.asTypeElement(types)
+                                                typeElement = e.typeMirror.asTypeElement()
                                             }
                                             typeElement
                                         }
-                                        .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
+                                        .map { BaseStyleableInfoExtractor().fromElement(it) }
                         )
                     }
         }

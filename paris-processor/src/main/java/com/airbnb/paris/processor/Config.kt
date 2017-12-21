@@ -1,6 +1,6 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.utils.*
+import com.airbnb.paris.processor.framework.*
 
 internal const val PARIS_PACKAGE_NAME = "com.airbnb.paris"
 internal const val PARIS_MODULES_PACKAGE_NAME = "com.airbnb.paris.modules"

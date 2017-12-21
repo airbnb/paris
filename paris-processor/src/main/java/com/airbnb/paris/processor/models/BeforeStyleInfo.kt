@@ -2,27 +2,15 @@ package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
+import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.utils.*
-import javax.annotation.processing.*
 import javax.lang.model.element.*
 
-internal class BeforeStyleInfoExtractor(processor: ParisProcessor) : ParisHelper(processor) {
+internal class BeforeStyleInfoExtractor
+    : SkyMethodModelFactory<BeforeStyleInfo>(BeforeStyle::class.java) {
 
-    fun fromEnvironment(roundEnv: RoundEnvironment): List<BeforeStyleInfo> {
-        return roundEnv.getElementsAnnotatedWith(BeforeStyle::class.java)
-                .mapNotNull {
-                    try {
-                        fromElement(it as ExecutableElement)
-                    } catch (e: ProcessorException) {
-                        Errors.log(e)
-                        null
-                    }
-                }
-    }
-
-    @Throws(ProcessorException::class)
-    private fun fromElement(element: ExecutableElement): BeforeStyleInfo {
-        check(!element.modifiers.contains(Modifier.PRIVATE) && !element.modifiers.contains(Modifier.PROTECTED), element) {
+    override fun elementToModel(element: ExecutableElement): BeforeStyleInfo? {
+        check(element.isNotPrivate() && element.isNotProtected(), element) {
             "Methods annotated with @BeforeStyle can't be private or protected"
         }
 
@@ -32,14 +20,9 @@ internal class BeforeStyleInfoExtractor(processor: ParisProcessor) : ParisHelper
             "Methods annotated with @BeforeStyle must have a single Style parameter"
         }
 
-        val enclosingElement = element.enclosingElement
-        val elementName = element.simpleName.toString()
-
-        return BeforeStyleInfo(enclosingElement, elementName)
+        return BeforeStyleInfo(element)
     }
 }
 
-internal data class BeforeStyleInfo(
-        val enclosingElement: Element,
-        val elementName: String
-)
+internal class BeforeStyleInfo(element: ExecutableElement) : SkyMethodModel(element)
+

@@ -2,6 +2,7 @@ package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
+import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.StyleInfo.*
 import com.airbnb.paris.processor.models.StyleInfo.Kind.*
 import com.airbnb.paris.processor.utils.*
@@ -11,7 +12,7 @@ import javax.annotation.processing.*
 import javax.lang.model.element.*
 import javax.lang.model.type.*
 
-internal class StyleInfoExtractor(processor: ParisProcessor) : ParisHelper(processor) {
+internal class StyleInfoExtractor {
 
     fun fromEnvironment(roundEnv: RoundEnvironment): List<StyleInfo> {
         val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
@@ -136,7 +137,7 @@ internal class StyleInfoExtractor(processor: ParisProcessor) : ParisHelper(proce
 
             elementKind = FIELD
             // TODO Check that the target type is an int
-            targetType = element.asType()
+            //targetType = element.asType()
 
             javadoc = CodeBlock.of("@see \$T#\$N", enclosingElement, elementName)
 

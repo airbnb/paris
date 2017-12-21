@@ -1,18 +1,17 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.utils.*
 import javax.annotation.processing.*
 import javax.lang.model.element.*
 
-internal class StyleableInfoExtractor(processor: ParisProcessor) : ParisHelper(processor) {
+internal class StyleableInfoExtractor {
 
     fun fromEnvironment(
             roundEnv: RoundEnvironment,
             classesToStyleableChildInfo: Map<TypeElement, List<StyleableChildInfo>>,
-            classesToBeforeStyleInfo: Map<Element, List<BeforeStyleInfo>>,
-            classesToAfterStyleInfo: Map<Element, List<AfterStyleInfo>>,
+            classesToBeforeStyleInfo: Map<TypeElement, List<BeforeStyleInfo>>,
+            classesToAfterStyleInfo: Map<TypeElement, List<AfterStyleInfo>>,
             classesToAttrsInfo: Map<TypeElement, List<AttrInfo>>,
             classesToStylesInfo: Map<Element, List<StyleInfo>>
     ): List<StyleableInfo> {
@@ -51,7 +50,7 @@ internal class StyleableInfoExtractor(processor: ParisProcessor) : ParisHelper(p
             styles: List<StyleInfo>
     ): StyleableInfo {
 
-        val lightStyleableInfo = BaseStyleableInfoExtractor(processor).fromElement(element)
+        val lightStyleableInfo = BaseStyleableInfoExtractor().fromElement(element)
 
         check(lightStyleableInfo.styleableResourceName.isNotEmpty() || (attrs.isEmpty() && styleableChildren.isEmpty())) {
             "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)"

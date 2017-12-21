@@ -41,7 +41,7 @@ class ParisProcessor : SkyProcessor() {
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         INSTANCE = this
 
-        RFinder = RFinder(this)
+        RFinder = RFinder()
 
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
                 .firstOrNull()
@@ -51,26 +51,26 @@ class ParisProcessor : SkyProcessor() {
                     RFinder.processConfig(it)
                 }
 
-        val classesToBeforeStyleInfo = BeforeStyleInfoExtractor(this)
-                .fromEnvironment(roundEnv)
+        val classesToBeforeStyleInfo = BeforeStyleInfoExtractor()
+                .extract(roundEnv)
                 .groupBy { it.enclosingElement }
-        val classesToAfterStyleInfo = AfterStyleInfoExtractor(this)
-                .fromEnvironment(roundEnv)
+        val classesToAfterStyleInfo = AfterStyleInfoExtractor()
+                .extract(roundEnv)
                 .groupBy { it.enclosingElement }
 
-        val styleableChildrenInfo = StyleableChildInfoExtractor(this).fromEnvironment(roundEnv)
+        val styleableChildrenInfo = StyleableChildInfoExtractor().extract(roundEnv)
         val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
 
-        val attrsInfo = AttrInfoExtractor(this).fromEnvironment(roundEnv)
+        val attrsInfo = AttrInfoExtractor().extract(roundEnv)
         val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
 
         RFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
 
-        val classesToStylesInfo = StyleInfoExtractor(this)
+        val classesToStylesInfo = StyleInfoExtractor()
                 .fromEnvironment(roundEnv)
                 .groupBy { it.enclosingElement }
 
-        val styleablesInfo: List<StyleableInfo> = StyleableInfoExtractor(this)
+        val styleablesInfo: List<StyleableInfo> = StyleableInfoExtractor()
                 .fromEnvironment(
                         roundEnv,
                         classesToStyleableChildrenInfo,
@@ -82,20 +82,20 @@ class ParisProcessor : SkyProcessor() {
 
         RFinder.processStyleables(styleablesInfo)
 
-        val externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
+        val externalStyleablesInfo = BaseStyleableInfoExtractor().fromEnvironment()
 
         if (!styleablesInfo.isEmpty()) {
             try {
-                ModuleJavaClass(this, styleablesInfo).write()
+                ModuleJavaClass(styleablesInfo).write()
 
                 if (RFinder.element != null) {
                     val parisClassPackageName = RFinder.element!!.packageName
-                    ParisJavaClass(this, parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
+                    ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
                 }
 
-                val styleablesTree = StyleablesTree(this, styleablesInfo + externalStyleablesInfo)
+                val styleablesTree = StyleablesTree(styleablesInfo + externalStyleablesInfo)
                 for (styleableInfo in styleablesInfo) {
-                    StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
+                    StyleApplierJavaClass(styleablesTree, styleableInfo).write()
                 }
             } catch (e: ProcessorException) {
                 Errors.log(e)

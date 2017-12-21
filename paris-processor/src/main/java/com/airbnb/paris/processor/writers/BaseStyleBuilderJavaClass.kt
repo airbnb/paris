@@ -5,8 +5,8 @@ import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
 import com.squareup.javapoet.*
 
-internal class BaseStyleBuilderJavaClass(processor: ParisProcessor, parentStyleApplierClassName: ClassName?, rClassName: ClassName?, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
-    : SkyJavaClass<ParisProcessor>(processor, block = {
+internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?, rClassName: ClassName?, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
+    : SkyJavaClass(block = {
 
     val styleApplierClassName = styleableInfo.styleApplierClassName()
 
@@ -58,7 +58,7 @@ internal class BaseStyleBuilderJavaClass(processor: ParisProcessor, parentStyleA
         }
 
         val subStyleApplierClassName = styleablesTree.findStyleApplier(
-                styleableChildInfo.elementType.asTypeElement())
+                styleableChildInfo.type.asTypeElement())
         val subStyleBuilderClassName = subStyleApplierClassName.nestedClass("StyleBuilder")
         method(styleableAttrResourceNameToCamelCase(styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.resourceName)) {
             public()

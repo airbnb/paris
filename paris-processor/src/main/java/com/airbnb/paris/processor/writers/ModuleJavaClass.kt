@@ -4,6 +4,7 @@ import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
+import com.squareup.javapoet.*
 import java.math.*
 import java.security.*
 
@@ -12,16 +13,16 @@ import java.security.*
  * same, predefined package, modules are able to retrieve and use styleable classes from their
  * dependencies through these classes
  */
-internal class ModuleJavaClass(processor: ParisProcessor, private val styleablesInfo: List<StyleableInfo>)
-    : SkyJavaClass<ParisProcessor>(processor, PARIS_MODULES_PACKAGE_NAME, block = {
+internal class ModuleJavaClass(private val styleablesInfo: List<StyleableInfo>)
+    : SkyJavaClass(PARIS_MODULES_PACKAGE_NAME, block = {
 
     annotation(GeneratedStyleableModule::class.java) {
         value {
             add("{")
             for (styleableInfo in styleablesInfo) {
-                add("\$L,", annotation(GeneratedStyleableClass::class.java) {
+                add("\$L,", AnnotationSpec.builder(GeneratedStyleableClass::class.java).apply {
                     value("\$T.class", styleableInfo.elementType)
-                })
+                }.build())
             }
             add("}")
         }

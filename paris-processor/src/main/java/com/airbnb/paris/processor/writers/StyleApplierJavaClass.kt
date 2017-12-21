@@ -3,11 +3,10 @@ package com.airbnb.paris.processor.writers
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
-import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
 
-internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
-    : SkyJavaClass<ParisProcessor>(processor, block = {
+internal class StyleApplierJavaClass(styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
+    : SkyJavaClass(block = {
 
     addAnnotation(AndroidClassNames.UI_THREAD)
     public()
@@ -27,7 +26,7 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
 
     // If the view type is "View" then there is no parent
     var parentStyleApplierClassName: ClassName? = null
-    if (!isSameType(elements.VIEW_TYPE.asType(), styleableInfo.viewElementType)) {
+    if (!isSameType(AndroidClassNames.VIEW.toTypeMirror(), styleableInfo.viewElementType)) {
         parentStyleApplierClassName = styleablesTree.findStyleApplier(
                 styleableInfo.viewElementType.asTypeElement().superclass.asTypeElement())
         method("applyParent") {
@@ -45,7 +44,7 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
             override()
             protected()
             returns(ArrayTypeName.of(Integer.TYPE))
-            addStatement("return \$T.styleable.\$L", RFinder.element, styleableInfo.styleableResourceName)
+            addStatement("return \$T.styleable.\$L", RElement, styleableInfo.styleableResourceName)
         }
 
         val attrsWithDefaultValue = styleableInfo.attrs
@@ -74,12 +73,12 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
 
             for (styleableChild in styleableInfo.styleableChildren) {
                 controlFlow("if (a.hasValue(\$L))", styleableChild.styleableResId.code) {
-                    addStatement("\$N().apply(\$L)", styleableChild.elementName, Format.STYLE.typedArrayMethodCode("a", styleableChild.styleableResId.code))
+                    addStatement("\$N().apply(\$L)", styleableChild.name, Format.STYLE.typedArrayMethodCode("a", styleableChild.styleableResId.code))
                 }
 
                 if (styleableChild.defaultValueResId != null) {
                     controlFlow("else") {
-                        addStatement("\$N().apply(\$L)", styleableChild.elementName, Format.STYLE.resourcesMethodCode("res", styleableChild.defaultValueResId.code))
+                        addStatement("\$N().apply(\$L)", styleableChild.name, Format.STYLE.resourcesMethodCode("res", styleableChild.defaultValueResId.code))
                     }
                 }
             }
@@ -93,23 +92,23 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
             addStatement("\$T res = getView().getContext().getResources()", AndroidClassNames.RESOURCES)
 
             for (beforeStyle in styleableInfo.beforeStyles) {
-                addStatement("getProxy().\$N(style)", beforeStyle.elementName)
+                addStatement("getProxy().\$N(style)", beforeStyle.name)
             }
 
             for (attr in styleableInfo.attrs) {
                 controlFlow("if (a.hasValue(\$L))", attr.styleableResId.code) {
-                    addStatement("getProxy().\$N(\$L)", attr.elementName, attr.targetFormat.typedArrayMethodCode("a", attr.styleableResId.code))
+                    addStatement("getProxy().\$N(\$L)", attr.name, attr.targetFormat.typedArrayMethodCode("a", attr.styleableResId.code))
                 }
 
                 if (attr.defaultValueResId != null) {
                     controlFlow("else") {
-                        addStatement("getProxy().\$N(\$L)", attr.elementName, attr.targetFormat.resourcesMethodCode("res", attr.defaultValueResId.code))
+                        addStatement("getProxy().\$N(\$L)", attr.name, attr.targetFormat.resourcesMethodCode("res", attr.defaultValueResId.code))
                     }
                 }
             }
 
             for (afterStyle in styleableInfo.afterStyles) {
-                addStatement("getProxy().\$N(style)", afterStyle.elementName)
+                addStatement("getProxy().\$N(style)", afterStyle.name)
             }
         }
 
@@ -117,9 +116,9 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
 
     val styleApplierClassName = styleableInfo.styleApplierClassName()
 
-    addType(BaseStyleBuilderJavaClass(processor, parentStyleApplierClassName, RFinder.element!!.className, styleablesTree, styleableInfo).build())
+    addType(BaseStyleBuilderJavaClass(parentStyleApplierClassName, RElement.className, styleablesTree, styleableInfo).build())
     val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
-    addType(StyleBuilderJavaClass(processor, styleableInfo).build())
+    addType(StyleBuilderJavaClass(styleableInfo).build())
 
     // builder() method
     method("builder") {
@@ -130,13 +129,13 @@ internal class StyleApplierJavaClass(processor: ParisProcessor, styleablesTree: 
 
     for (styleableChildInfo in styleableInfo.styleableChildren) {
         val subStyleApplierClassName = styleablesTree.findStyleApplier(
-                styleableChildInfo.elementType.asTypeElement())
-        method(styleableChildInfo.elementName) {
+                styleableChildInfo.type.asTypeElement())
+        method(styleableChildInfo.name) {
             public()
             returns(subStyleApplierClassName)
-            addStatement("\$T subApplier = new \$T(getProxy().\$N)", subStyleApplierClassName, subStyleApplierClassName, styleableChildInfo.elementName)
+            addStatement("\$T subApplier = new \$T(getProxy().\$N)", subStyleApplierClassName, subStyleApplierClassName, styleableChildInfo.name)
             addStatement("subApplier.setDebugListener(getDebugListener())")
-            addStatement("return subApplier", subStyleApplierClassName, styleableChildInfo.elementName)
+            addStatement("return subApplier", subStyleApplierClassName, styleableChildInfo.name)
         }
     }
 

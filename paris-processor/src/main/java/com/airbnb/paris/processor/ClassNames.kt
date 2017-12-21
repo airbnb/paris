@@ -1,6 +1,6 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.utils.*
+import com.airbnb.paris.processor.framework.*
 
 internal object ClassNames {
 

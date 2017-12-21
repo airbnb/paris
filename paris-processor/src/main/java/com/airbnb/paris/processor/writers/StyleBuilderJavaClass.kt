@@ -1,6 +1,5 @@
 package com.airbnb.paris.processor.writers
 
-import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
 import com.squareup.javapoet.*
@@ -8,8 +7,8 @@ import com.squareup.javapoet.*
 internal fun getStyleBuilderClassName(styleApplierClassName: ClassName) =
     styleApplierClassName.nestedClass("StyleBuilder")
 
-internal class StyleBuilderJavaClass(processor: ParisProcessor, styleableInfo: StyleableInfo)
-    : SkyJavaClass<ParisProcessor>(processor, block = {
+internal class StyleBuilderJavaClass(styleableInfo: StyleableInfo)
+    : SkyJavaClass(block = {
 
     val styleApplierClassName = styleableInfo.styleApplierClassName()
 

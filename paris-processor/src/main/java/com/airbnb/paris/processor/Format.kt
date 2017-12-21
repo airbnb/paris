@@ -5,7 +5,6 @@ import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
 import javax.lang.model.element.*
-import javax.lang.model.util.*
 
 internal class Format private constructor(
         private val type: Type,
@@ -62,17 +61,17 @@ internal class Format private constructor(
                 "TransitionRes",
                 "XmlRes")
 
-        fun forElement(elementUtils: Elements, typeUtils: Types, element: Element): Format {
+        fun forElement(element: Element): Format {
             return if (element.kind == ElementKind.FIELD) {
-                forField(elementUtils, typeUtils, element)
+                forField(element)
             } else {
                 forMethod(element)
             }
         }
 
-        private fun forField(elementUtils: Elements, typeUtils: Types, element: Element): Format {
+        private fun forField(element: Element): Format {
             val type = element.asType()
-            if (typeUtils.isView(elementUtils, type)) {
+            if (isView(type)) {
                 // If the field is a View then the attribute must be a style or style resource id
                 return Format(Type.STYLE)
             }

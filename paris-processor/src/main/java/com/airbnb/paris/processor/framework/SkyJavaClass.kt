@@ -2,12 +2,11 @@ package com.airbnb.paris.processor.framework
 
 import com.squareup.javapoet.*
 
-abstract class SkyJavaClass<out T : SkyProcessor>(
-        processor: T,
+internal abstract class SkyJavaClass(
         protected var packageName: String = "",
         protected var name: String = "",
-        val block: TypeSpec.Builder.() -> Unit
-) : SkyHelper<T>(processor) {
+        private val block: TypeSpec.Builder.() -> Unit
+) {
 
     fun build(): TypeSpec {
         val builder = TypeSpec.classBuilder(name)
