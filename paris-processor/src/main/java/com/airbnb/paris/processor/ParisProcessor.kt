@@ -3,8 +3,7 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.annotations.*
 import com.airbnb.paris.processor.android_resource_scanner.*
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.Errors
-import com.airbnb.paris.processor.framework.errors.ProcessorException
+import com.airbnb.paris.processor.framework.errors.*
 import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.writers.*
 import java.util.*
@@ -21,7 +20,7 @@ class ParisProcessor : SkyProcessor() {
 
     internal val resourceScanner = AndroidResourceScanner()
 
-    internal lateinit var RFinder: RFinder
+    internal val rFinder = RFinder()
 
     internal var defaultStyleNameFormat: String = ""
 
@@ -42,14 +41,12 @@ class ParisProcessor : SkyProcessor() {
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         INSTANCE = this
 
-        RFinder = RFinder()
-
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
                 .firstOrNull()
                 ?.getAnnotation(ParisConfig::class.java)
                 ?.let {
                     defaultStyleNameFormat = it.defaultStyleNameFormat
-                    RFinder.processConfig(it)
+                    rFinder.processConfig(it)
                 }
 
         val classesToBeforeStyleInfo = BeforeStyleInfoExtractor()
@@ -65,7 +62,7 @@ class ParisProcessor : SkyProcessor() {
         val attrsInfo = AttrInfoExtractor().extract(roundEnv)
         val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
 
-        RFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
+        rFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
 
         val classesToStylesInfo = StyleInfoExtractor()
                 .fromEnvironment(roundEnv)
@@ -81,7 +78,7 @@ class ParisProcessor : SkyProcessor() {
                         classesToStylesInfo
                 )
 
-        RFinder.processStyleables(styleablesInfo)
+        rFinder.processStyleables(styleablesInfo)
 
         val externalStyleablesInfo = BaseStyleableInfoExtractor().fromEnvironment()
 
@@ -89,8 +86,8 @@ class ParisProcessor : SkyProcessor() {
             try {
                 ModuleJavaClass(styleablesInfo).write()
 
-                if (RFinder.element != null) {
-                    val parisClassPackageName = RFinder.element!!.packageName
+                if (rFinder.element != null) {
+                    val parisClassPackageName = rFinder.element!!.packageName
                     ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
                 }
 
