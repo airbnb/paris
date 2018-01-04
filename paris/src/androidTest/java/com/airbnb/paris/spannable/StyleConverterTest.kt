@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import com.airbnb.paris.ColorValue
 import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.test.R
 import org.hamcrest.MatcherAssert.assertThat
@@ -23,9 +25,9 @@ class StyleConverterTest {
                 .put(android.R.attr.textSize, 30)
                 .build()
 
-        val spanned = converter.createSpannable("Hello world", listOf(StyleConverter.MarkupItem(IntRange(0, 5), bigTextStyle)))
+        val spanned = converter.createSpannable("Hello world", listOf(StyleConverter.MarkupItem(IntRange(3, 5), bigTextStyle)))
 
-        val spans = spanned.getSpans(0, 5, AbsoluteSizeSpan::class.java)
+        val spans = spanned.getSpans(3, 5, AbsoluteSizeSpan::class.java)
         assertThat(spans.size, equalTo(1))
         assertThat(spans[0].size, equalTo(30))
 
@@ -34,6 +36,17 @@ class StyleConverterTest {
 
     @Test
     fun textColor(){
+        val cyanTextStyle = ProgrammaticStyle.builder()
+                .put(android.R.attr.textColor, ColorValue(Color.CYAN))
+                .build()
+
+        val spanned = converter.createSpannable("Hello world", listOf(StyleConverter.MarkupItem(IntRange(3, 5), cyanTextStyle)))
+
+        val spans = spanned.getSpans(3, 5, ForegroundColorSpan::class.java)
+        assertThat(spans.size, equalTo(1))
+        assertThat(spans[0].foregroundColor, equalTo(Color.CYAN))
+
+        assertThat(spanned.getSpans(6, 11, Object::class.java).size, equalTo(0))
 
     }
 }
