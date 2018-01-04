@@ -24,15 +24,15 @@ internal class StyleConverter(val context: Context) {
 
     fun createSpannable(text: String, markup: Set<MarkupItem>): Spanned {
 
-        val builder = SpannableString(text)
+        val string = SpannableString(text)
 
         markup.forEach { markupItem ->
             spansFromStyle(markupItem.style).forEach {
-                builder.setSpan(it, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                string.setSpan(it, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
 
-        return builder
+        return string
     }
 
     private fun spansFromStyle(style: Style): List<Any> {
