@@ -5,7 +5,9 @@ package com.airbnb.paris
 import android.support.annotation.*
 import android.util.*
 import android.view.*
+import com.airbnb.paris.proxies.*
 import com.airbnb.paris.styles.*
+import com.airbnb.paris.typed_array_wrappers.*
 
 @UiThread
 abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val view: V) {

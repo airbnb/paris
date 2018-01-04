@@ -2,7 +2,6 @@ package com.airbnb.paris.styles
 
 import android.annotation.*
 import android.content.*
-import com.airbnb.paris.*
 import com.airbnb.paris.typed_array_wrappers.*
 
 data class MultiStyle internal constructor(private val name: String, private val styles: List<Style>) : Style {

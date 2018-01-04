@@ -1,6 +1,6 @@
-package com.airbnb.paris
+package com.airbnb.paris.proxies
 
-import android.view.View
+import android.view.*
 
 interface Proxy<out P, out V : View> {
     val proxy: P

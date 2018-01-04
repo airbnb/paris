@@ -3,8 +3,8 @@ package com.airbnb.paris.spannable
 import android.content.Context
 import android.support.annotation.StyleRes
 import android.widget.TextView
-import com.airbnb.paris.Style
 import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.styles.Style
 
 /**
  * Class that allows you to create a CharSequence with markup objects inferred from styles.

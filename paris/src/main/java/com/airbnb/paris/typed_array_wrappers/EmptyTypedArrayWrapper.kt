@@ -2,8 +2,7 @@ package com.airbnb.paris.typed_array_wrappers
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayWrapper
+import com.airbnb.paris.styles.Style
 
 internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
 

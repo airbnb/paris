@@ -5,20 +5,19 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
-import com.airbnb.paris.annotations.StyleableField;
+import com.airbnb.paris.annotations.StyleableChild;
 
 @Styleable("MyView")
 public class MyView extends View {
 
-    @StyleableField(R2.styleable.MyView_titleStyle)
+    @StyleableChild(R2.styleable.MyView_titleStyle)
     TextView title;
 
-    @StyleableField(R2.styleable.MyView_subtitleStyle)
+    @StyleableChild(R2.styleable.MyView_subtitleStyle)
     TextView subtitle;
 
-    @StyleableField(R2.styleable.MyView_dividerStyle)
+    @StyleableChild(R2.styleable.MyView_dividerStyle)
     View divider;
 
     public MyView(Context context) {

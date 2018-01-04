@@ -19,31 +19,11 @@ import kotlin.check
 class ParisProcessor : AbstractProcessor() {
 
     companion object {
-        internal const val PARIS_PACKAGE_NAME = "com.airbnb.paris"
-        internal const val STYLE_APPLIER_CLASS_NAME_FORMAT = "%sStyleApplier"
-
-        internal val PARIS_CLASS_NAME = "$PARIS_PACKAGE_NAME.Paris".className()
-        internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.Style".className()
-        internal val STYLE_APPLIER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplier".className()
-        internal val STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleBuilder".className()
-        internal val STYLE_APPLIER_UTILS_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplierUtils".className()
-        internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.TypedArrayWrapper".className()
-        internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
-        internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
-        internal val SPANNABLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.spannable.SpannableBuilder".className()
-
-        internal val BUILT_IN_STYLE_APPLIERS = mapOf(
-                Pair("com.airbnb.paris.proxies.ViewProxyStyleApplier", "android.view.View"),
-                Pair("com.airbnb.paris.proxies.TextViewProxyStyleApplier", "android.widget.TextView"),
-                Pair("com.airbnb.paris.proxies.ImageViewProxyStyleApplier", "android.widget.ImageView"),
-                Pair("com.airbnb.paris.proxies.ViewGroupProxyStyleApplier", "android.view.ViewGroup")
-        )
-
         private val supportedAnnotations: Set<Class<out Annotation>> = setOf(Styleable::class.java, Attr::class.java)
     }
 
     var defaultStyleNameFormat: String = ""
-    var rType: TypeMirror? = null
+    var RElement: TypeElement? = null
 
     private val resourceScanner = AndroidResourceScanner()
 
@@ -73,18 +53,16 @@ class ParisProcessor : AbstractProcessor() {
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         var generateParisClass = true
 
-        val configElement = roundEnv.getElementsAnnotatedWith(ParisConfig::class.java).firstOrNull()
-        if (configElement != null) {
-            val config = configElement.getAnnotation(ParisConfig::class.java)
+        val config = roundEnv
+                .getElementsAnnotatedWith(ParisConfig::class.java)
+                .firstOrNull()
+                ?.getAnnotation(ParisConfig::class.java)
+        if (config != null) {
             defaultStyleNameFormat = config.defaultStyleNameFormat
-            rType = getRType(config)
             generateParisClass = config.generateParisClass
 
-            check(defaultStyleNameFormat.isBlank() || rType != null) {
+            check(defaultStyleNameFormat.isBlank() || RElement != null) {
                 "If defaultStyleNameFormat is specified, rClass must be as well"
-            }
-            check(rType == null || rType!!.asTypeElement(typeUtils).simpleName.toString() == "R") {
-                "@ParisConfig's rClass parameter is pointing to a non-R class"
             }
         }
 
@@ -92,26 +70,52 @@ class ParisProcessor : AbstractProcessor() {
                 .groupBy { it.enclosingElement }
         val classesToAfterStyleInfo = AfterStyleInfo.fromEnvironment(this, roundEnv)
                 .groupBy { it.enclosingElement }
-        val classesToAttrsInfo = AttrInfo.fromEnvironment(roundEnv, elementUtils, typeUtils, resourceScanner)
-                .groupBy { it.enclosingElement }
-        val classesToStyleableFieldInfo = StyleableFieldInfo.fromEnvironment(roundEnv, resourceScanner)
-                .groupBy { it.enclosingElement }
+        val styleableChildrenInfo = StyleableChildInfo.fromEnvironment(roundEnv, resourceScanner)
+        val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
+        val attrsInfo = AttrInfo.fromEnvironment(roundEnv, elementUtils, typeUtils, resourceScanner)
+        val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
         val classesToStylesInfo = StyleInfo.fromEnvironment(this, roundEnv)
                 .groupBy { it.enclosingElement }
         val styleablesInfo: List<StyleableInfo> = StyleableInfo.fromEnvironment(
                 roundEnv, elementUtils, typeUtils,
-                classesToStyleableFieldInfo,
+                classesToStyleableChildrenInfo,
                 classesToBeforeStyleInfo,
                 classesToAfterStyleInfo,
                 classesToAttrsInfo,
                 classesToStylesInfo)
 
+        RElement = findRElement(config, styleablesInfo, styleableChildrenInfo, attrsInfo)
+
+        val externalStyleablesInfo = mutableListOf<BaseStyleableInfo>()
+        elementUtils.getPackageElement(PARIS_MODULES_PACKAGE_NAME)?.let { packageElement ->
+            for (moduleElement in packageElement.enclosedElements) {
+                val styleableModule = moduleElement.getAnnotation(GeneratedStyleableModule::class.java)
+                externalStyleablesInfo.addAll(
+                        styleableModule.value
+                                .mapNotNull<GeneratedStyleableClass, TypeElement> {
+                                    var typeElement: TypeElement? = null
+                                    try {
+                                        it.value
+                                    } catch (e: MirroredTypeException) {
+                                        typeElement = e.typeMirror.asTypeElement(typeUtils)
+                                    }
+                                    typeElement
+                                }
+                                .map { BaseStyleableInfo.fromElement(elementUtils, typeUtils, it) }
+                )
+            }
+        }
+
         if (!styleablesInfo.isEmpty()) {
             try {
+                ModuleWriter.writeFrom(filer, styleablesInfo)
+
                 if (generateParisClass) {
-                    ParisWriter.writeFrom(filer, styleablesInfo)
+                    val parisClassPackageName = elementUtils.getPackageOf(RElement!!).qualifiedName.toString()
+                    ParisWriter.writeFrom(filer, parisClassPackageName, styleablesInfo, externalStyleablesInfo)
                 }
-                StyleAppliersWriter.writeFrom(filer, elementUtils, typeUtils, styleablesInfo)
+
+                StyleAppliersWriter.writeFrom(filer, elementUtils, typeUtils, styleablesInfo, externalStyleablesInfo)
             } catch (e: ProcessorException) {
                 Errors.log(e)
             }
@@ -124,7 +128,60 @@ class ParisProcessor : AbstractProcessor() {
         return true
     }
 
-    private fun getRType(config: ParisConfig): TypeMirror? {
+    private fun findRElement(
+            config: ParisConfig?,
+            styleablesInfo: List<StyleableInfo>,
+            styleableChildrenInfo: List<StyleableChildInfo>,
+            attrsInfo: List<AttrInfo>
+    ): TypeElement? {
+
+        // First try to get it from the config
+        var rType: TypeMirror?
+        config?.let {
+            rType = getRTypeFromConfig(config)
+
+            // TODO Move check to getRTypeFromConfig
+            check(rType == null || rType!!.asTypeElement(typeUtils).simpleName.toString() == "R") {
+                "@ParisConfig's rClass parameter is pointing to a non-R class"
+            }
+
+            rType?.let {
+                return it.asTypeElement(typeUtils)
+            }
+        }
+
+        // Second try to get it from @Attr values
+        val arbitraryResId = when {
+            styleableChildrenInfo.isNotEmpty() -> styleableChildrenInfo[0].styleableResId
+            attrsInfo.isNotEmpty() -> attrsInfo[0].styleableResId
+            else -> null
+        }
+        arbitraryResId?.let {
+            return elementUtils.getTypeElement(it.className!!.enclosingClassName().reflectionName())
+        }
+
+        // Third try to find R based on the package names of an arbitrary @Styleable class
+        if (styleablesInfo.isNotEmpty()) {
+            val arbitraryStyleableInfo = styleablesInfo[0]
+
+            var packageName = arbitraryStyleableInfo.elementPackageName
+            while (packageName.isNotBlank()) {
+                elementUtils.getTypeElement("$packageName.R")?.let {
+                    return it
+                }
+                val lastIndexOfDot = packageName.lastIndexOf('.')
+                packageName = if (lastIndexOfDot > 0) {
+                    packageName.substring(0, lastIndexOfDot)
+                } else {
+                    ""
+                }
+            }
+        }
+
+        return null
+    }
+
+    private fun getRTypeFromConfig(config: ParisConfig): TypeMirror? {
         var rType: TypeMirror? = null
         try {
             config.rClass

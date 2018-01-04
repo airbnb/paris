@@ -5,7 +5,6 @@ import android.support.test.*
 import android.support.test.runner.*
 import android.view.*
 import android.widget.*
-import com.airbnb.paris.*
 import org.junit.*
 import org.junit.runner.*
 

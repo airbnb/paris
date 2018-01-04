@@ -100,12 +100,12 @@ internal data class StyleInfo constructor(
                 return null
             }
 
-            check(processor.rType != null)
+            check(processor.RElement != null)
 
             val elementName = styleableElement.simpleName.toString()
             val defaultStyleName = String.format(Locale.US, processor.defaultStyleNameFormat, elementName)
 
-            val rStyleTypeElement = elementUtils.getTypeElement("${processor.rType!!.asTypeElement(typeUtils).qualifiedName}.style")
+            val rStyleTypeElement = elementUtils.getTypeElement("${processor.RElement!!.qualifiedName}.style")
             val defaultStyleExists = elementUtils.getAllMembers(rStyleTypeElement).any {
                 it.simpleName.toString() == defaultStyleName
             }

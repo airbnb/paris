@@ -10,10 +10,10 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import com.airbnb.paris.R
-import com.airbnb.paris.Style
-import com.airbnb.paris.TypedArrayWrapper
 import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.styles.Style
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 /**
  * Class responsible for creating a {@link Spanned} given an input text and a list of styles.

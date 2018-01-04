@@ -206,7 +206,7 @@ internal class Format private constructor(
                 CodeBlock.of("\$L.$statement", resourcesVar, valueResIdCode)
             }
             Type.FLOAT, Type.LAYOUT_DIMENSION, Type.STYLE -> {
-                CodeBlock.of(statement, ParisProcessor.RESOURCES_EXTENSIONS_CLASS_NAME, resourcesVar, valueResIdCode)
+                CodeBlock.of(statement, RESOURCES_EXTENSIONS_CLASS_NAME, resourcesVar, valueResIdCode)
             }
             Type.RESOURCE_ID -> {
                 CodeBlock.of(statement, valueResIdCode)

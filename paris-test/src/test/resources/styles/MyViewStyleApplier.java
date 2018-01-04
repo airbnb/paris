@@ -1,9 +1,9 @@
 package com.airbnb.paris.test;
 
 import android.support.annotation.UiThread;
-import com.airbnb.paris.Style;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
+import com.airbnb.paris.styles.Style;
 import java.lang.Override;
 
 @UiThread
@@ -25,13 +25,13 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   /**
    * @see MyView#RED_STYLE */
-  public void applyRedStyle() {
+  public void applyRed() {
     apply(MyView.RED_STYLE);
   }
 
   /**
    * @see MyView#greenStyle */
-  public void applyGreenStyle() {
+  public void applyGreen() {
     apply(MyView.greenStyle);
   }
 
@@ -74,14 +74,14 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#RED_STYLE */
-    public StyleBuilder addRedStyle() {
+    public StyleBuilder addRed() {
       add(MyView.RED_STYLE);
       return this;
     }
 
     /**
      * @see MyView#greenStyle */
-    public StyleBuilder addGreenStyle() {
+    public StyleBuilder addGreen() {
       add(MyView.greenStyle);
       return this;
     }

@@ -4,6 +4,7 @@ import android.content.*
 import android.content.res.*
 import android.support.test.*
 import android.support.test.runner.*
+import com.airbnb.paris.attribute_values.*
 import com.airbnb.paris.test.R
 import com.airbnb.paris.typed_array_wrappers.*
 import com.airbnb.paris.utils.*
@@ -40,7 +41,7 @@ class MultiTypedArrayWrapperTest {
             attrResToValueResMaps.map { newFormatWrapper(it) }
 
     private fun newFormatWrapper(attrResToValueResMap: Map<Int, Any>) =
-            MapTypedArrayWrapper(res, R.styleable.Formats, attrResToValueResMap)
+            MapTypedArrayWrapper(context, R.styleable.Formats, attrResToValueResMap)
 
     @Before
     fun setup() {

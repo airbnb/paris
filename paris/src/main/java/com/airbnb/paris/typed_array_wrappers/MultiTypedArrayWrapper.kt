@@ -2,7 +2,7 @@ package com.airbnb.paris.typed_array_wrappers
 
 import android.content.res.*
 import android.graphics.drawable.*
-import com.airbnb.paris.*
+import com.airbnb.paris.styles.*
 
 /**
  * @param wrappers These are assumed to have been created with the same styleable attribute list

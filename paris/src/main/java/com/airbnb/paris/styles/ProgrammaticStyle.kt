@@ -3,7 +3,7 @@ package com.airbnb.paris.styles
 import android.annotation.*
 import android.content.*
 import android.support.annotation.*
-import com.airbnb.paris.*
+import com.airbnb.paris.attribute_values.*
 import com.airbnb.paris.typed_array_wrappers.*
 import java.util.*
 
@@ -54,5 +54,5 @@ data class ProgrammaticStyle internal constructor(
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-        MapTypedArrayWrapper(context.resources, attrs, attributeMap)
+        MapTypedArrayWrapper(context, attrs, attributeMap)
 }

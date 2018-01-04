@@ -1,54 +1,46 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.utils.ClassNames
-import com.airbnb.paris.processor.utils.className
+import com.airbnb.paris.processor.utils.*
 import com.squareup.javapoet.*
-import java.io.IOException
+import java.io.*
 import java.util.*
-import javax.annotation.processing.Filer
-import javax.lang.model.element.Modifier
+import javax.annotation.processing.*
+import javax.lang.model.element.*
 
 internal object ParisWriter {
 
     @Throws(IOException::class)
-    internal fun writeFrom(filer: Filer, styleableClassesInfo: List<StyleableInfo>) {
-        val parisTypeBuilder = TypeSpec.classBuilder(ParisProcessor.PARIS_CLASS_NAME)
+    internal fun writeFrom(filer: Filer, parisClassPackageName: String, styleableClassesInfo: List<StyleableInfo>, externalStyleableClassesInfo: List<BaseStyleableInfo>) {
+        val parisTypeBuilder = TypeSpec.classBuilder(PARIS_SIMPLE_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
 
-        ParisProcessor.BUILT_IN_STYLE_APPLIERS.forEach { styleApplierQualifiedName, viewQualifiedName ->
-            val styleApplierClassName = styleApplierQualifiedName.className()
-            parisTypeBuilder.addMethod(buildStyleMethod(
-                    styleApplierClassName,
-                    viewQualifiedName.className()))
-            parisTypeBuilder.addMethod(buildStyleBuilderMethod(
-                    styleApplierClassName,
-                    viewQualifiedName.className()))
+        val sortedStyleableClassesInfo = (styleableClassesInfo + externalStyleableClassesInfo).sortedBy {
+            it.elementName
         }
-
-        for (styleableClassInfo in styleableClassesInfo) {
+        for (styleableClassInfo in sortedStyleableClassesInfo) {
             parisTypeBuilder.addMethod(buildStyleMethod(styleableClassInfo))
             parisTypeBuilder.addMethod(buildStyleBuilderMethod(styleableClassInfo))
         }
 
         parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
-        parisTypeBuilder.addMethod(buildSpannableBuilderMethod(ParisProcessor.SPANNABLE_BUILDER_CLASS_NAME))
+        parisTypeBuilder.addMethod(buildSpannableBuilderMethod(SPANNABLE_BUILDER_CLASS_NAME))
 
-        JavaFile.builder(ParisProcessor.PARIS_CLASS_NAME.packageName(), parisTypeBuilder.build())
+        JavaFile.builder(parisClassPackageName, parisTypeBuilder.build())
                 .build()
                 .writeTo(filer)
     }
 
-    private fun getStyleApplierClassName(styleableClassInfo: StyleableInfo): ClassName {
+    private fun getStyleApplierClassName(styleableClassInfo: BaseStyleableInfo): ClassName {
         return ClassName.get(
                 styleableClassInfo.elementPackageName,
-                String.format(Locale.US, ParisProcessor.STYLE_APPLIER_CLASS_NAME_FORMAT, styleableClassInfo.elementName)
+                String.format(Locale.US, STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, styleableClassInfo.elementName)
         )
     }
 
-    private fun getStyleBuilderClassName(styleableClassInfo: StyleableInfo): ClassName =
+    private fun getStyleBuilderClassName(styleableClassInfo: BaseStyleableInfo): ClassName =
             getStyleApplierClassName(styleableClassInfo).nestedClass("StyleBuilder")
 
-    private fun buildStyleMethod(styleableClassInfo: StyleableInfo): MethodSpec {
+    private fun buildStyleMethod(styleableClassInfo: BaseStyleableInfo): MethodSpec {
         return buildStyleMethod(
                 getStyleApplierClassName(styleableClassInfo),
                 TypeName.get(styleableClassInfo.viewElementType))
@@ -63,7 +55,7 @@ internal object ParisWriter {
                 .build()
     }
 
-    private fun buildStyleBuilderMethod(styleableClassInfo: StyleableInfo): MethodSpec {
+    private fun buildStyleBuilderMethod(styleableClassInfo: BaseStyleableInfo): MethodSpec {
         return buildStyleBuilderMethod(
                 getStyleApplierClassName(styleableClassInfo),
                 TypeName.get(styleableClassInfo.viewElementType))
@@ -99,7 +91,7 @@ internal object ParisWriter {
                 }
 
                 val assertEqualAttributesCode = CodeBlock.of("\$T.Companion.assertSameAttributes(style(\$T), \$L);\n",
-                        ParisProcessor.STYLE_APPLIER_UTILS_CLASS_NAME,
+                        STYLE_APPLIER_UTILS_CLASS_NAME,
                         styleableClassInfo.elementType,
                         styleVarargCodeBuilder.build())
                 builder.addCode(assertEqualAttributesCode)

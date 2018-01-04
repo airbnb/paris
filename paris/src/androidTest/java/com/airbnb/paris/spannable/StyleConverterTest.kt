@@ -5,9 +5,8 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
-import com.airbnb.paris.ColorValue
+import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.styles.ProgrammaticStyle
-import com.airbnb.paris.test.R
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.Test

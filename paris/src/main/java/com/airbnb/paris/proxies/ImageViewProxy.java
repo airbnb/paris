@@ -3,7 +3,6 @@ package com.airbnb.paris.proxies;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -12,7 +11,7 @@ import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable(value = "Paris_ImageView")
-class ImageViewProxy extends BaseProxy<ImageViewProxy, ImageView> {
+public class ImageViewProxy extends BaseProxy<ImageViewProxy, ImageView> {
 
     private static final ScaleType[] SCALE_TYPE_ARRAY = {
             ScaleType.MATRIX,

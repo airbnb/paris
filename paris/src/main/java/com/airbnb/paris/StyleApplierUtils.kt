@@ -3,6 +3,8 @@ package com.airbnb.paris
 import android.content.*
 import android.support.annotation.*
 import android.view.*
+import com.airbnb.paris.styles.*
+import com.airbnb.paris.typed_array_wrappers.*
 
 class StyleApplierUtils {
 

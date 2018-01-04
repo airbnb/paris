@@ -3,10 +3,7 @@ package com.airbnb.parislibrary;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.widget.TextView;
-
-import com.airbnb.paris.Paris;
 
 public class MainActivity extends AppCompatActivity {
 
