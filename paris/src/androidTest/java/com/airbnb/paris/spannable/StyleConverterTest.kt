@@ -25,7 +25,7 @@ class StyleConverterTest {
                 .put(android.R.attr.textSize, 30)
                 .build()
 
-        val spanned = converter.createSpannable("Hello world", listOf(StyleConverter.MarkupItem(IntRange(3, 5), bigTextStyle)))
+        val spanned = converter.createSpannable("Hello world", setOf(StyleConverter.MarkupItem(IntRange(3, 5), bigTextStyle)))
 
         val spans = spanned.getSpans(3, 5, AbsoluteSizeSpan::class.java)
         assertThat(spans.size, equalTo(1))
@@ -40,7 +40,7 @@ class StyleConverterTest {
                 .put(android.R.attr.textColor, ColorValue(Color.CYAN))
                 .build()
 
-        val spanned = converter.createSpannable("Hello world", listOf(StyleConverter.MarkupItem(IntRange(3, 5), cyanTextStyle)))
+        val spanned = converter.createSpannable("Hello world", setOf(StyleConverter.MarkupItem(IntRange(3, 5), cyanTextStyle)))
 
         val spans = spanned.getSpans(3, 5, ForegroundColorSpan::class.java)
         assertThat(spans.size, equalTo(1))

@@ -23,7 +23,7 @@ internal class StyleConverter(val context: Context) {
 
     data class MarkupItem(val range: IntRange, val style: Style)
 
-    fun createSpannable(text: String, markup: List<MarkupItem>): Spanned {
+    fun createSpannable(text: String, markup: Set<MarkupItem>): Spanned {
 
         val builder = SpannableStringBuilder(text)
 

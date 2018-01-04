@@ -11,8 +11,8 @@ import com.airbnb.paris.styles.ResourceStyle
  */
 class SpannableBuilder internal constructor() {
 
-    private val spans = ArrayList<StyleConverter.MarkupItem>()
-    private val stringBuilder = StringBuilder()
+    internal var markupItems: Set<StyleConverter.MarkupItem> = HashSet()
+    internal val stringBuilder = StringBuilder()
 
     @JvmOverloads
     fun append(text: String, @StyleRes styleRes: Int = 0): SpannableBuilder {
@@ -26,12 +26,12 @@ class SpannableBuilder internal constructor() {
 
     fun append(text: String, style: Style): SpannableBuilder {
         val currentStrLength = stringBuilder.length
-        spans.add(StyleConverter.MarkupItem(IntRange(currentStrLength, currentStrLength + text.length), style))
+        markupItems += StyleConverter.MarkupItem(IntRange(currentStrLength, currentStrLength + text.length), style)
         stringBuilder.append(text)
         return this
     }
 
-    fun build(context: Context): CharSequence = StyleConverter(context).createSpannable(stringBuilder.toString(), spans)
+    fun build(context: Context): CharSequence = StyleConverter(context).createSpannable(stringBuilder.toString(), markupItems)
 
     fun applyTo(textView : TextView) {
         textView.text = build(textView.context)
