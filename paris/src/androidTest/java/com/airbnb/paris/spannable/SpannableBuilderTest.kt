@@ -2,6 +2,7 @@ package com.airbnb.paris.spannable
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.styles.ResourceStyle
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
@@ -14,7 +15,7 @@ class SpannableBuilderTest {
     val context = InstrumentationRegistry.getTargetContext()!!
 
     @Test
-    fun testEmptyString() {
+    fun emptyString() {
 
         val builder = SpannableBuilder()
 
@@ -23,16 +24,29 @@ class SpannableBuilderTest {
     }
 
     @Test
-    fun testAppendingStyledString() {
+    fun appendingStyledStrings() {
+
+        val dummyStyle = ProgrammaticStyle.builder().build();
 
         val builder = SpannableBuilder()
                 .append("Good", 1)
-                .append(" Morning", 2)
+                .append(" Morning", dummyStyle)
 
         assertThat(builder.markupItems, equalTo(setOf(
                 StyleConverter.MarkupItem(IntRange(0, 4), ResourceStyle(1)),
-                StyleConverter.MarkupItem(IntRange(4, 12), ResourceStyle(2))
+                StyleConverter.MarkupItem(IntRange(4, 12), dummyStyle)
         )))
+        assertThat(builder.stringBuilder.toString(), equalTo("Good Morning"))
+    }
+
+    @Test
+    fun appendingUnstyledStrings() {
+
+        val builder = SpannableBuilder()
+                .append("Good")
+                .append(" Morning")
+
+        assertThat(builder.markupItems, equalTo(emptySet()))
         assertThat(builder.stringBuilder.toString(), equalTo("Good Morning"))
     }
 }
