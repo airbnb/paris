@@ -8,6 +8,7 @@ import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
+import com.airbnb.paris.R
 import com.airbnb.paris.Style
 import com.airbnb.paris.TypedArrayWrapper
 import com.airbnb.paris.styles.ProgrammaticStyle
@@ -18,7 +19,7 @@ import com.airbnb.paris.styles.ResourceStyle
  */
 internal class StyleConverter(val context: Context) {
 
-    private val attrs = intArrayOf(android.R.attr.textSize, android.R.attr.textColor)
+    private val attrs = R.styleable.Paris_TextView
 
     data class MarkupItem(val range: IntRange, val style: Style)
 
@@ -39,8 +40,8 @@ internal class StyleConverter(val context: Context) {
     private fun spansFromStyle(style: Style): List<Any> {
         val attributes = style.obtainStyledAttributes(context, attrs)
 
-        val textSize = attributes.spanAt(0) { AbsoluteSizeSpan(attributes.getDimensionPixelSize(it)) }
-        val foregroundColor = attributes.spanAt(1) { ForegroundColorSpan(attributes.getColorStateList(it).defaultColor) }
+        val textSize = attributes.spanAt(R.styleable.Paris_TextView_android_textSize) { AbsoluteSizeSpan(attributes.getDimensionPixelSize(it)) }
+        val foregroundColor = attributes.spanAt(R.styleable.Paris_TextView_android_textColor) { ForegroundColorSpan(attributes.getColorStateList(it).defaultColor) }
 
         return listOf(textSize, foregroundColor).filterNotNull()
     }
