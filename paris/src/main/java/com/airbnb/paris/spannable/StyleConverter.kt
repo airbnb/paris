@@ -3,6 +3,7 @@ package com.airbnb.paris.spannable
 import android.content.Context
 import android.support.annotation.StyleRes
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
@@ -19,18 +20,15 @@ import com.airbnb.paris.styles.ResourceStyle
  */
 internal class StyleConverter(val context: Context) {
 
-    private val attrs = R.styleable.Paris_TextView
-
     data class MarkupItem(val range: IntRange, val style: Style)
 
     fun createSpannable(text: String, markup: Set<MarkupItem>): Spanned {
 
-        val builder = SpannableStringBuilder(text)
+        val builder = SpannableString(text)
 
-        for (markupItem in markup) {
-            val style = markupItem.style
-            for (span in spansFromStyle(style)) {
-                builder.setSpan(span, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        markup.forEach { markupItem ->
+            spansFromStyle(markupItem.style).forEach {
+                builder.setSpan(it, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
 
@@ -38,7 +36,7 @@ internal class StyleConverter(val context: Context) {
     }
 
     private fun spansFromStyle(style: Style): List<Any> {
-        val attributes = style.obtainStyledAttributes(context, attrs)
+        val attributes = style.obtainStyledAttributes(context, R.styleable.Paris_TextView)
 
         val textSize = attributes.spanAt(R.styleable.Paris_TextView_android_textSize) { AbsoluteSizeSpan(attributes.getDimensionPixelSize(it)) }
         val foregroundColor = attributes.spanAt(R.styleable.Paris_TextView_android_textColor) { ForegroundColorSpan(attributes.getColorStateList(it).defaultColor) }
