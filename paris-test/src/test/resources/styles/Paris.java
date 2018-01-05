@@ -10,7 +10,7 @@ import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
 import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
 import com.airbnb.paris.proxies.ViewProxyStyleApplier;
-import com.airbnb.paris.spannable.SpannableBuilder;
+import com.airbnb.paris.spannables.SpannableBuilder;
 
 public final class Paris {
   public static ImageViewProxyStyleApplier style(ImageView view) {

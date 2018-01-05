@@ -1,4 +1,4 @@
-package com.airbnb.paris.spannable
+package com.airbnb.paris.spannables
 
 import android.graphics.Color
 import android.support.test.InstrumentationRegistry

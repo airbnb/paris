@@ -1,4 +1,4 @@
-package com.airbnb.paris.spannable
+package com.airbnb.paris.spannables
 
 import android.content.Context
 import android.support.annotation.StyleRes

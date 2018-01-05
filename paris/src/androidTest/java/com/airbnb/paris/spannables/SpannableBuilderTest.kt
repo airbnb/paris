@@ -1,7 +1,9 @@
-package com.airbnb.paris.spannable
+package com.airbnb.paris.spannables
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.airbnb.paris.spannables.SpannableBuilder
+import com.airbnb.paris.spannables.StyleConverter
 import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.styles.ResourceStyle
 import org.hamcrest.MatcherAssert.assertThat
@@ -40,7 +42,7 @@ class SpannableBuilderTest {
     }
 
     @Test
-    fun appendingUnstyledStrings() {
+    fun appendingNonStyledStrings() {
 
         val builder = SpannableBuilder()
                 .append("Good")

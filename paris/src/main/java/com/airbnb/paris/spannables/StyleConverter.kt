@@ -1,17 +1,12 @@
-package com.airbnb.paris.spannable
+package com.airbnb.paris.spannables
 
 import android.content.Context
-import android.support.annotation.StyleRes
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.TextAppearanceSpan
 import com.airbnb.paris.R
-import com.airbnb.paris.styles.ProgrammaticStyle
-import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
