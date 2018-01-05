@@ -45,12 +45,12 @@ class StyleConverterTest {
 
     private fun <T: Any> assertStyleAppliesCorrectlyOnSampleString(
             style: Style,
-            spanClass: KClass<T>,
+            expectedGeneratedSpanClass: KClass<T>,
             spanAssertions: ((T) -> Unit)) {
 
         val sampleString = "Hello World"
         val spanned = converter.createSpannable(sampleString, setOf(StyleConverter.MarkupItem(IntRange(3, 5), style)))
-        val spans = spanned.getSpans(0, sampleString.length, spanClass.java)
+        val spans = spanned.getSpans(0, sampleString.length, expectedGeneratedSpanClass.java)
         assertThat(spans.size, equalTo(1))
 
         val span = spans[0]
