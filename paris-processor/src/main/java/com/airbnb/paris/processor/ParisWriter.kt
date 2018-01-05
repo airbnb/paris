@@ -23,6 +23,7 @@ internal object ParisWriter {
         }
 
         parisTypeBuilder.addMethod(buildAssertStylesMethod(styleableClassesInfo))
+        parisTypeBuilder.addMethod(buildSpannableBuilderMethod(SPANNABLE_BUILDER_CLASS_NAME))
 
         JavaFile.builder(parisClassPackageName, parisTypeBuilder.build())
                 .build()
@@ -98,5 +99,13 @@ internal object ParisWriter {
         }
 
         return builder.build()
+    }
+
+    private fun buildSpannableBuilderMethod(spannableBuilderClassName: ClassName): MethodSpec {
+        return MethodSpec.methodBuilder("spannableBuilder")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(spannableBuilderClassName)
+                .addStatement("return new \$T()", spannableBuilderClassName)
+                .build()
     }
 }

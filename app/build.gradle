@@ -29,5 +29,6 @@ dependencies {
     annotationProcessor project(':paris-processor')
     implementation deps.androidAppcompatV7
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation project(path: ':paris')
     testImplementation 'junit:junit:4.12'
 }
