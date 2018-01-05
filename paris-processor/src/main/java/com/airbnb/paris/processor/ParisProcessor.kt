@@ -5,8 +5,6 @@ import com.airbnb.paris.processor.android_resource_scanner.*
 import com.airbnb.paris.processor.utils.Errors
 import com.airbnb.paris.processor.utils.ProcessorException
 import com.airbnb.paris.processor.utils.asTypeElement
-import com.airbnb.paris.processor.utils.className
-import com.squareup.javapoet.ClassName
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.*
