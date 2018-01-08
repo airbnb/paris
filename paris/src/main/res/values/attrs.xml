@@ -68,4 +68,14 @@
         <attr name="android:clipToPadding" />
     </declare-styleable>
 
+    <declare-styleable name="Paris_Spannable">
+        <attr name="android:textAllCaps" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+        <attr name="android:fontFamily" />
+        <attr name="android:textStyle" />
+        <attr name="android:typeface" />
+        <attr name="android:textAppearance" />
+    </declare-styleable>
+
 </resources>
