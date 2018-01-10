@@ -69,7 +69,6 @@
     </declare-styleable>
 
     <declare-styleable name="Paris_Spannable">
-        <attr name="android:textAllCaps" />
         <attr name="android:textColor" />
         <attr name="android:textSize" />
         <attr name="android:fontFamily" />
