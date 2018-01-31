@@ -3,9 +3,9 @@ package com.airbnb.paris.spannables
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
+import android.text.style.*
 import com.airbnb.paris.R
 import com.airbnb.paris.styles.Style
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
@@ -31,13 +31,17 @@ internal class StyleConverter(val context: Context) {
     }
 
     private fun spansFromStyle(style: Style): List<Any> {
-        val attributes = style.obtainStyledAttributes(context, R.styleable.Paris_TextView)
 
-        val textSize = attributes.spanAt(R.styleable.Paris_TextView_android_textSize) { AbsoluteSizeSpan(attributes.getDimensionPixelSize(it)) }
-        val foregroundColor = attributes.spanAt(R.styleable.Paris_TextView_android_textColor) { ForegroundColorSpan(attributes.getColorStateList(it).defaultColor) }
+        val attributes = style.obtainStyledAttributes(context, R.styleable.Paris_Spannable)
 
-        return listOf(textSize, foregroundColor).filterNotNull()
+        return mapOf<Int, (Int) -> Any>(
+            R.styleable.Paris_Spannable_android_textAppearance to { index -> TextAppearanceSpan(context, attributes.getResourceId(index)) },
+            R.styleable.Paris_Spannable_android_fontFamily to { index -> TypefaceSpan(attributes.getString(index)) },
+            R.styleable.Paris_Spannable_android_typeface to { index -> TypefaceSpan(attributes.getString(index)) },
+            R.styleable.Paris_Spannable_android_textStyle to { index -> StyleSpan(attributes.getInt(index)) },
+            R.styleable.Paris_Spannable_android_textSize to { index -> AbsoluteSizeSpan(attributes.getDimensionPixelSize(index)) },
+            R.styleable.Paris_Spannable_android_textColor to { index -> ForegroundColorSpan(attributes.getColorStateList(index).defaultColor) }
+        ).filter { (index, _) -> attributes.hasValue(index) }
+        .map { (index, converter) -> converter(index) }
     }
-
-    private fun TypedArrayWrapper.spanAt(index: Int, converter: (Int) -> Any): Any? = if (hasValue(index)) converter(index) else null
 }

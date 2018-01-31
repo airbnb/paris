@@ -8,6 +8,10 @@ import com.airbnb.paris.styles.Style
 
 /**
  * Class that allows you to create a CharSequence with markup objects inferred from styles.
+ * Currently supported attributes are defined in {@link R.styleable.Paris_Spannable}.
+ *
+ * Note : setting a `@font` resource value to android:fontFamily is yet supported. For now, only
+ * string values will be taken into account (ex: "monospace", "serif", etc.)
  */
 class SpannableBuilder internal constructor() {
 
