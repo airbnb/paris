@@ -172,4 +172,12 @@
     <style name="Green" />
     <style name="Blue" />
 
+    <style name="StyleConverterTest_MyTextAppearance">
+        <item name="android:textColor">#FF00FF00</item>
+
+        <!-- Setting to an pixel values instead of sp so that we don't have
+         to make the density conversion in the test -->
+        <item name="android:textSize">20px</item>
+    </style>
+
 </resources>

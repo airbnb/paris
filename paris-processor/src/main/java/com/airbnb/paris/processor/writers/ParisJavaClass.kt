@@ -37,6 +37,14 @@ internal class ParisJavaClass(parisClassPackageName: String, styleableClassesInf
         }
     }
 
+    method("spannableBuilder") {
+        public()
+        static()
+        returns(SPANNABLE_BUILDER_CLASS_NAME)
+
+        addStatement("return new \$T()", SPANNABLE_BUILDER_CLASS_NAME)
+    }
+
     // TODO Should the method take in an Activity since anything else seems to screw up view inflation?
     method("assertStylesContainSameAttributes") {
         addJavadoc("For debugging")

@@ -8,4 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Green">
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold|italic</item>
+
+    </style>
+
+    <style name="Blue">
+        <item name="android:textColor">#FF0000FF</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="Purple">
+        <item name="android:textColor">#FFFF00FF</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+    </style>
+
 </resources>

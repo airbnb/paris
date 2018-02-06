@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ImageViewStyleApplier;
 import android.widget.TextView;
 import android.widget.TextViewStyleApplier;
+import com.airbnb.paris.spannables.SpannableBuilder;
 
 public final class Paris {
   public static ImageViewStyleApplier style(ImageView view) {
@@ -57,6 +58,10 @@ public final class Paris {
 
   public static ViewStyleApplier.StyleBuilder styleBuilder(View view) {
     return new ViewStyleApplier.StyleBuilder(new ViewStyleApplier(view));
+  }
+
+  public static SpannableBuilder spannableBuilder() {
+    return new SpannableBuilder();
   }
 
   /**
