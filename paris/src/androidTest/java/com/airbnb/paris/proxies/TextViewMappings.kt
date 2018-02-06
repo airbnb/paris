@@ -9,7 +9,7 @@ import android.view.*
 import android.widget.*
 import com.airbnb.paris.proxies.TextViewMapping.Companion.withAssertEquals
 import com.airbnb.paris.proxies.TextViewMapping.Companion.withCustomAssert
-import com.airbnb.paris.proxies.TextViewProxyStyleApplier.*
+import android.widget.TextViewStyleApplier.*
 import junit.framework.Assert.*
 import org.junit.*
 

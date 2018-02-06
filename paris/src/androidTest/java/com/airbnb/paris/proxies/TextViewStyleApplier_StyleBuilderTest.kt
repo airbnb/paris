@@ -5,14 +5,14 @@ import android.graphics.drawable.*
 import android.support.test.*
 import android.support.test.runner.*
 import android.widget.*
-import com.airbnb.paris.proxies.TextViewProxyStyleApplier.*
+import android.widget.TextViewStyleApplier.*
 import com.airbnb.paris.styles.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
-class TextViewProxyStyleApplier_StyleBuilderTest {
+class TextViewStyleApplier_StyleBuilderTest {
 
     companion object {
         private const val ARBITRARY_RESOURCE_ID_1 = 2

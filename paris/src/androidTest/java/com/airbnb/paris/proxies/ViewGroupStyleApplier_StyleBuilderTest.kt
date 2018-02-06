@@ -9,18 +9,18 @@ import org.junit.*
 import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
-class ViewGroupProxyStyleApplier_StyleBuilderTest {
+class ViewGroupStyleApplier_StyleBuilderTest {
 
     private val context = InstrumentationRegistry.getTargetContext()!!
     private lateinit var view: ViewGroup
     private lateinit var programmaticStyleBuilder: ProgrammaticStyle.Builder
-    private lateinit var styleBuilder: ViewGroupProxyStyleApplier.StyleBuilder
+    private lateinit var styleBuilder: ViewGroupStyleApplier.StyleBuilder
 
     @Before
     fun setup() {
         view = FrameLayout(context)
         programmaticStyleBuilder = ProgrammaticStyle.builder().debugName("test")
-        styleBuilder = ViewGroupProxyStyleApplier.StyleBuilder().debugName("test")
+        styleBuilder = ViewGroupStyleApplier.StyleBuilder().debugName("test")
     }
 
     @Test

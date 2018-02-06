@@ -8,14 +8,14 @@ internal class ViewGroupMapping<I : Any> private constructor(
         testValues: List<I>,
         attrRes: Int,
         setProxyFunction: ViewGroupProxy.(I) -> Unit,
-        setStyleBuilderValueFunction: ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>.(I) -> Any,
-        setStyleBuilderResFunction: ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>.(Int) -> Any,
+        setStyleBuilderValueFunction: ViewGroupStyleApplier.BaseStyleBuilder<*, *>.(I) -> Any,
+        setStyleBuilderResFunction: ViewGroupStyleApplier.BaseStyleBuilder<*, *>.(Int) -> Any,
         /**
          * A function which, when called, will assert that the view has been successfully modified
          * by the associated proxy and/or style builder methods
          */
         assertViewSet: (ViewGroup, I) -> Unit) :
-        BaseViewMapping<ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>, ViewGroupProxy, ViewGroup, I>(
+        BaseViewMapping<ViewGroupStyleApplier.BaseStyleBuilder<*, *>, ViewGroupProxy, ViewGroup, I>(
                 testValues,
                 attrRes,
                 setProxyFunction,
@@ -29,8 +29,8 @@ internal class ViewGroupMapping<I : Any> private constructor(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ViewGroupProxy.(I) -> Unit,
-                setStyleBuilderValueFunction: ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>.(I) -> Any,
-                setStyleBuilderResFunction: ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>.(Int) -> Any,
+                setStyleBuilderValueFunction: ViewGroupStyleApplier.BaseStyleBuilder<*, *>.(I) -> Any,
+                setStyleBuilderResFunction: ViewGroupStyleApplier.BaseStyleBuilder<*, *>.(Int) -> Any,
                 assertViewSet: (ViewGroup, I) -> Unit): ViewGroupMapping<I> {
             return ViewGroupMapping(
                     testValues,
@@ -45,8 +45,8 @@ internal class ViewGroupMapping<I : Any> private constructor(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ViewGroupProxy.(I) -> Unit,
-                setStyleBuilderValueFunction: ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>.(I) -> Any,
-                setStyleBuilderResFunction: ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>.(Int) -> Any,
+                setStyleBuilderValueFunction: ViewGroupStyleApplier.BaseStyleBuilder<*, *>.(I) -> Any,
+                setStyleBuilderResFunction: ViewGroupStyleApplier.BaseStyleBuilder<*, *>.(Int) -> Any,
                 getViewFunction: (ViewGroup) -> I): ViewGroupMapping<I> {
             return withCustomAssert(
                     testValues,
@@ -66,8 +66,8 @@ internal val VIEW_GROUP_MAPPINGS = ArrayList<ViewGroupMapping<*>>().apply {
             BOOLS,
             R.attr.animateLayoutChanges,
             ViewGroupProxy::setAnimateLayoutChanges,
-            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::animateLayoutChanges,
-            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::animateLayoutChangesRes,
+            ViewGroupStyleApplier.BaseStyleBuilder<*, *>::animateLayoutChanges,
+            ViewGroupStyleApplier.BaseStyleBuilder<*, *>::animateLayoutChangesRes,
             { view, input ->
                 val layoutTransition = view.layoutTransition
                 Assert.assertTrue(if (input) layoutTransition != null else layoutTransition == null)
@@ -79,8 +79,8 @@ internal val VIEW_GROUP_MAPPINGS = ArrayList<ViewGroupMapping<*>>().apply {
             BOOLS,
             R.attr.clipChildren,
             ViewGroupProxy::setClipChildren,
-            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::clipChildren,
-            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::clipChildrenRes,
+            ViewGroupStyleApplier.BaseStyleBuilder<*, *>::clipChildren,
+            ViewGroupStyleApplier.BaseStyleBuilder<*, *>::clipChildrenRes,
             { it.clipChildren }
     ))
 
@@ -89,8 +89,8 @@ internal val VIEW_GROUP_MAPPINGS = ArrayList<ViewGroupMapping<*>>().apply {
             BOOLS,
             R.attr.clipToPadding,
             ViewGroupProxy::setClipToPadding,
-            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::clipToPadding,
-            ViewGroupProxyStyleApplier.BaseStyleBuilder<*, *>::clipToPaddingRes,
+            ViewGroupStyleApplier.BaseStyleBuilder<*, *>::clipToPadding,
+            ViewGroupStyleApplier.BaseStyleBuilder<*, *>::clipToPaddingRes,
             { it.clipToPadding }
     ))
 }

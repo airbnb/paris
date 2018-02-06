@@ -2,30 +2,30 @@ package com.airbnb.paris.proxies
 
 import android.support.test.*
 import android.support.test.runner.*
-import android.view.*
 import android.widget.*
+import android.widget.ImageViewStyleApplier.*
 import org.junit.*
 import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
-class ViewGroupProxyStyleApplierTest {
+class ImageViewStyleApplierTest {
 
     private val context = InstrumentationRegistry.getTargetContext()!!
-    private lateinit var view: ViewGroup
-    private lateinit var styleApplier: ViewGroupProxyStyleApplier
-    private lateinit var styleBuilder: ViewGroupProxyStyleApplier.StyleBuilder
+    private lateinit var view: ImageView
+    private lateinit var styleApplier: ImageViewStyleApplier
+    private lateinit var styleBuilder: StyleBuilder
 
     @Before
     fun setup() {
-        view = FrameLayout(context)
-        styleApplier = ViewGroupProxyStyleApplier(view)
-        styleBuilder = ViewGroupProxyStyleApplier.StyleBuilder()
+        view = ImageView(context)
+        styleApplier = ImageViewStyleApplier(view)
+        styleBuilder = StyleBuilder()
     }
 
     @Test
     fun auto() {
-        for (mapping in (VIEW_MAPPINGS + VIEW_GROUP_MAPPINGS)) {
-            mapping as BaseViewMapping<Any, *, ViewGroup, Any>
+        for (mapping in (VIEW_MAPPINGS + IMAGE_VIEW_MAPPINGS)) {
+            mapping as BaseViewMapping<Any, *, ImageView, Any>
 
             setup()
 

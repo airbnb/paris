@@ -7,7 +7,7 @@ import android.graphics.drawable.*
 import android.support.test.*
 import android.support.test.runner.*
 import android.widget.*
-import com.airbnb.paris.proxies.TextViewProxyStyleApplier.*
+import android.widget.TextViewStyleApplier.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.*
@@ -16,16 +16,16 @@ import org.mockito.Mockito.*
 
 
 @RunWith(AndroidJUnit4::class)
-class TextViewProxyStyleApplierTest {
+class TextViewStyleApplierTest {
 
     private lateinit var context: Context
     private lateinit var res: Resources
     private lateinit var view: TextView
-    private lateinit var styleApplier: TextViewProxyStyleApplier
+    private lateinit var styleApplier: TextViewStyleApplier
     private lateinit var styleBuilder: StyleBuilder
 
     private fun apply(builderFunctions: StyleBuilder.() -> StyleBuilder) =
-            TextViewProxyStyleApplier(view).apply(
+            TextViewStyleApplier(view).apply(
                     StyleBuilder()
                             .debugName("test")
                             .builderFunctions()
@@ -36,7 +36,7 @@ class TextViewProxyStyleApplierTest {
         context = InstrumentationRegistry.getTargetContext()
         res = context.resources
         view = TextView(context)
-        styleApplier = TextViewProxyStyleApplier(view)
+        styleApplier = TextViewStyleApplier(view)
         styleBuilder = StyleBuilder()
     }
 

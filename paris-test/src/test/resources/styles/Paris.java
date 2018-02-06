@@ -3,20 +3,20 @@ package com.airbnb.paris.test;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroupStyleApplier;
+import android.view.ViewStyleApplier;
 import android.widget.ImageView;
+import android.widget.ImageViewStyleApplier;
 import android.widget.TextView;
-import com.airbnb.paris.proxies.ImageViewProxyStyleApplier;
-import com.airbnb.paris.proxies.TextViewProxyStyleApplier;
-import com.airbnb.paris.proxies.ViewGroupProxyStyleApplier;
-import com.airbnb.paris.proxies.ViewProxyStyleApplier;
+import android.widget.TextViewStyleApplier;
 
 public final class Paris {
-  public static ImageViewProxyStyleApplier style(ImageView view) {
-    return new ImageViewProxyStyleApplier(view);
+  public static ImageViewStyleApplier style(ImageView view) {
+    return new ImageViewStyleApplier(view);
   }
 
-  public static ImageViewProxyStyleApplier.StyleBuilder styleBuilder(ImageView view) {
-    return new ImageViewProxyStyleApplier.StyleBuilder(new ImageViewProxyStyleApplier(view));
+  public static ImageViewStyleApplier.StyleBuilder styleBuilder(ImageView view) {
+    return new ImageViewStyleApplier.StyleBuilder(new ImageViewStyleApplier(view));
   }
 
   public static MyOtherViewStyleApplier style(MyOtherView view) {
@@ -35,38 +35,38 @@ public final class Paris {
     return new MyViewStyleApplier.StyleBuilder(new MyViewStyleApplier(view));
   }
 
-  public static TextViewProxyStyleApplier style(TextView view) {
-    return new TextViewProxyStyleApplier(view);
+  public static TextViewStyleApplier style(TextView view) {
+    return new TextViewStyleApplier(view);
   }
 
-  public static TextViewProxyStyleApplier.StyleBuilder styleBuilder(TextView view) {
-    return new TextViewProxyStyleApplier.StyleBuilder(new TextViewProxyStyleApplier(view));
+  public static TextViewStyleApplier.StyleBuilder styleBuilder(TextView view) {
+    return new TextViewStyleApplier.StyleBuilder(new TextViewStyleApplier(view));
   }
 
-  public static ViewGroupProxyStyleApplier style(ViewGroup view) {
-    return new ViewGroupProxyStyleApplier(view);
+  public static ViewGroupStyleApplier style(ViewGroup view) {
+    return new ViewGroupStyleApplier(view);
   }
 
-  public static ViewGroupProxyStyleApplier.StyleBuilder styleBuilder(ViewGroup view) {
-    return new ViewGroupProxyStyleApplier.StyleBuilder(new ViewGroupProxyStyleApplier(view));
+  public static ViewGroupStyleApplier.StyleBuilder styleBuilder(ViewGroup view) {
+    return new ViewGroupStyleApplier.StyleBuilder(new ViewGroupStyleApplier(view));
   }
 
-  public static ViewProxyStyleApplier style(View view) {
-    return new ViewProxyStyleApplier(view);
+  public static ViewStyleApplier style(View view) {
+    return new ViewStyleApplier(view);
   }
 
-  public static ViewProxyStyleApplier.StyleBuilder styleBuilder(View view) {
-    return new ViewProxyStyleApplier.StyleBuilder(new ViewProxyStyleApplier(view));
+  public static ViewStyleApplier.StyleBuilder styleBuilder(View view) {
+    return new ViewStyleApplier.StyleBuilder(new ViewStyleApplier(view));
   }
 
   /**
    * For debugging */
   public static void assertStylesContainSameAttributes(Context context) {
-    ImageViewProxyStyleApplier.assertStylesContainSameAttributes(context);
+    ImageViewStyleApplier.assertStylesContainSameAttributes(context);
     MyOtherViewStyleApplier.assertStylesContainSameAttributes(context);
     MyViewStyleApplier.assertStylesContainSameAttributes(context);
-    TextViewProxyStyleApplier.assertStylesContainSameAttributes(context);
-    ViewGroupProxyStyleApplier.assertStylesContainSameAttributes(context);
-    ViewProxyStyleApplier.assertStylesContainSameAttributes(context);
+    TextViewStyleApplier.assertStylesContainSameAttributes(context);
+    ViewGroupStyleApplier.assertStylesContainSameAttributes(context);
+    ViewStyleApplier.assertStylesContainSameAttributes(context);
   }
 }

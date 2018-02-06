@@ -2,7 +2,7 @@ package com.airbnb.paris.proxies
 
 import android.os.*
 import android.view.*
-import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
+import android.view.ViewStyleApplier.*
 import junit.framework.Assert.*
 
 internal class ViewMapping<I : Any> private constructor(

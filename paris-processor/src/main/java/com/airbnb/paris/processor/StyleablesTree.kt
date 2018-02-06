@@ -3,7 +3,6 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
 import com.squareup.javapoet.*
-import java.util.*
 import javax.lang.model.element.*
 
 internal class StyleablesTree(private val styleablesInfo: List<BaseStyleableInfo>) {
@@ -26,7 +25,7 @@ internal class StyleablesTree(private val styleablesInfo: List<BaseStyleableInfo
         // Check to see if the view type is handled by a styleable class
         val styleableInfo = styleablesInfo.find { isSameType(type, it.viewElementType) }
         if (styleableInfo != null) {
-            styleApplierClassName = viewTypeElementToStyleApplierClassName(styleableInfo.elementType.asTypeElement())
+            styleApplierClassName = styleableInfo.styleApplierClassName()
         } else {
             styleApplierClassName = findStyleApplier(viewTypeElement.superclass.asTypeElement())
         }
@@ -35,10 +34,5 @@ internal class StyleablesTree(private val styleablesInfo: List<BaseStyleableInfo
                 viewTypeElement.qualifiedName.toString(),
                 styleApplierClassName)
         return styleApplierClassName
-    }
-
-    private fun viewTypeElementToStyleApplierClassName(viewTypeElement: TypeElement): ClassName {
-        val viewClassName = ClassName.get(viewTypeElement)
-        return ClassName.get(viewClassName.packageName(), String.format(Locale.US, STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, viewClassName.simpleName()))
     }
 }

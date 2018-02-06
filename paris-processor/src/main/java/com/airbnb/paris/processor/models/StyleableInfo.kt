@@ -81,11 +81,5 @@ internal class StyleableInfo(
         val attrs: List<AttrInfo>,
         val styles: List<StyleInfo>,
         baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(
-        baseStyleableInfo.elementPackageName,
-        baseStyleableInfo.elementName,
-        baseStyleableInfo.elementType,
-        baseStyleableInfo.viewElementType,
-        baseStyleableInfo.styleableResourceName
-)
+) : BaseStyleableInfo(baseStyleableInfo)
 

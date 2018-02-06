@@ -2,9 +2,9 @@ package com.airbnb.paris.test;
 
 import android.content.Context;
 import android.support.annotation.UiThread;
+import android.view.ViewStyleApplier;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.StyleApplierUtils;
-import com.airbnb.paris.proxies.ViewProxyStyleApplier;
 import com.airbnb.paris.styles.Style;
 import java.lang.Override;
 
@@ -16,7 +16,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   @Override
   protected void applyParent(Style style) {
-    ViewProxyStyleApplier applier = new ViewProxyStyleApplier(getView());
+    ViewStyleApplier applier = new ViewStyleApplier(getView());
     applier.setDebugListener(getDebugListener());
     applier.apply(style);
   }
@@ -58,7 +58,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     StyleApplierUtils.Companion.assertSameAttributes(new MyViewStyleApplier(MyView), new StyleBuilder().addRed().build(), new StyleBuilder().addGreen().build(), new StyleBuilder().addBlue().build(), new StyleBuilder().addDefault().build());
   }
 
-  public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewProxyStyleApplier.BaseStyleBuilder<B, A> {
+  public abstract static class BaseStyleBuilder<B extends BaseStyleBuilder<B, A>, A extends StyleApplier<?, ?>> extends ViewStyleApplier.BaseStyleBuilder<B, A> {
     public BaseStyleBuilder(A applier) {
       super(applier);
     }

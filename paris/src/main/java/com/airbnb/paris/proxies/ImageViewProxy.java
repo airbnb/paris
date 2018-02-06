@@ -24,27 +24,27 @@ public class ImageViewProxy extends BaseProxy<ImageViewProxy, ImageView> {
             ScaleType.CENTER_INSIDE
     };
 
-    ImageViewProxy(ImageView view) {
+    public ImageViewProxy(ImageView view) {
         super(view);
     }
 
     // TODO Provide a builder-only method
     @Attr(R2.styleable.Paris_ImageView_android_scaleType)
-    void setScaleType(int index) {
+    public void setScaleType(int index) {
         if (index >= 0) {
             getView().setScaleType(SCALE_TYPE_ARRAY[index]);
         }
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_tint)
-    void setTint(ColorStateList color) {
+    public void setTint(ColorStateList color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getView().setImageTintList(color);
         }
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_src)
-    void setSrc(Drawable drawable) {
+    public void setSrc(Drawable drawable) {
         getView().setImageDrawable(drawable);
     }
 }

@@ -4,7 +4,7 @@ import android.support.test.*
 import android.support.test.runner.*
 import android.view.*
 import android.widget.*
-import com.airbnb.paris.proxies.ViewProxyStyleApplier.*
+import android.view.ViewStyleApplier.*
 import com.airbnb.paris.styles.*
 import com.airbnb.paris.test.R
 import org.junit.*
@@ -12,7 +12,7 @@ import org.junit.Assert.*
 import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
-class ViewProxyStyleApplier_StyleBuilderTest {
+class ViewStyleApplier_StyleBuilderTest {
 
     companion object {
         private const val ARBITRARY_RESOURCE_ID = 2

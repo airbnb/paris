@@ -5,7 +5,6 @@ import android.support.test.*
 import android.support.test.runner.*
 import android.util.*
 import android.widget.*
-import com.airbnb.paris.proxies.*
 import com.airbnb.paris.styles.*
 import com.airbnb.paris.test.R
 import org.junit.*
@@ -17,7 +16,7 @@ class StyleApplierUtilsTest {
 
     private val context = InstrumentationRegistry.getTargetContext()!!
     lateinit var textView: TextView
-    lateinit var textViewApplier: TextViewProxyStyleApplier
+    lateinit var textViewApplier: TextViewStyleApplier
 
     init {
         // Necessary to test AppCompat attributes like "?attr/selectableItemBackground"
@@ -28,7 +27,7 @@ class StyleApplierUtilsTest {
     @Before
     fun setup() {
         textView = TextView(context)
-        textViewApplier = TextViewProxyStyleApplier(textView)
+        textViewApplier = TextViewStyleApplier(textView)
     }
 
     @Test

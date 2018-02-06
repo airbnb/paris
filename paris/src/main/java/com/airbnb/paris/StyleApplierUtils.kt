@@ -39,8 +39,9 @@ class StyleApplierUtils {
                 attrIndexes.map { index -> context.resources.getResourceEntryName(attrs[index]) }.toSet()
 
         /**
-         * TODO Add comment
+         * TODO Add comment, including the fact that an Activity context must be used on the Paris method
          */
+        @JvmStatic
         @UiThread
         fun assertSameAttributes(applier: StyleApplier<*, *>, vararg parentStyles: Style) {
             if (parentStyles.size <= 1) {

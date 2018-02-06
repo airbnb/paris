@@ -1,21 +1,21 @@
 package com.airbnb.paris.proxies
 
-import android.widget.ImageView
-import android.widget.ImageView.ScaleType
+import android.widget.*
+import android.widget.ImageView.*
 import java.util.*
 
 internal class ImageViewMapping<I : Any> private constructor(
         testValues: List<I>,
         attrRes: Int,
         setProxyFunction: ImageViewProxy.(I) -> Unit,
-        setStyleBuilderValueFunction: ImageViewProxyStyleApplier.StyleBuilder.(I) -> Any,
-        setStyleBuilderResFunction: ImageViewProxyStyleApplier.StyleBuilder.(Int) -> Any,
+        setStyleBuilderValueFunction: ImageViewStyleApplier.StyleBuilder.(I) -> Any,
+        setStyleBuilderResFunction: ImageViewStyleApplier.StyleBuilder.(Int) -> Any,
         /**
          * A function which, when called, will assert that the view has been successfully modified
          * by the associated proxy and/or style builder methods
          */
         assertViewSet: (ImageView, I) -> Unit) :
-        BaseViewMapping<ImageViewProxyStyleApplier.StyleBuilder, ImageViewProxy, ImageView, I>(
+        BaseViewMapping<ImageViewStyleApplier.StyleBuilder, ImageViewProxy, ImageView, I>(
                 testValues,
                 attrRes,
                 setProxyFunction,
@@ -29,8 +29,8 @@ internal class ImageViewMapping<I : Any> private constructor(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ImageViewProxy.(I) -> Unit,
-                setStyleBuilderValueFunction: ImageViewProxyStyleApplier.StyleBuilder.(I) -> Any,
-                setStyleBuilderResFunction: ImageViewProxyStyleApplier.StyleBuilder.(Int) -> Any,
+                setStyleBuilderValueFunction: ImageViewStyleApplier.StyleBuilder.(I) -> Any,
+                setStyleBuilderResFunction: ImageViewStyleApplier.StyleBuilder.(Int) -> Any,
                 assertViewSet: (ImageView, I) -> Unit): ImageViewMapping<I> {
             return ImageViewMapping(
                     testValues,
@@ -45,8 +45,8 @@ internal class ImageViewMapping<I : Any> private constructor(
                 testValues: List<I>,
                 attrRes: Int,
                 setProxyFunction: ImageViewProxy.(I) -> Unit,
-                setStyleBuilderValueFunction: ImageViewProxyStyleApplier.StyleBuilder.(I) -> Any,
-                setStyleBuilderResFunction: ImageViewProxyStyleApplier.StyleBuilder.(Int) -> Any,
+                setStyleBuilderValueFunction: ImageViewStyleApplier.StyleBuilder.(I) -> Any,
+                setStyleBuilderResFunction: ImageViewStyleApplier.StyleBuilder.(Int) -> Any,
                 getViewFunction: (ImageView) -> I): ImageViewMapping<I> {
             return withCustomAssert(
                     testValues,
@@ -66,8 +66,8 @@ internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
             (0 until ScaleType.values().size).toList(),
             android.R.attr.scaleType,
             ImageViewProxy::setScaleType,
-            ImageViewProxyStyleApplier.StyleBuilder::scaleType,
-            ImageViewProxyStyleApplier.StyleBuilder::scaleTypeRes,
+            ImageViewStyleApplier.StyleBuilder::scaleType,
+            ImageViewStyleApplier.StyleBuilder::scaleTypeRes,
             {
                 listOf(
                         ScaleType.MATRIX,
@@ -87,8 +87,8 @@ internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
             ARBITRARY_COLOR_STATE_LISTS,
             android.R.attr.tint,
             ImageViewProxy::setTint,
-            ImageViewProxyStyleApplier.StyleBuilder::tint,
-            ImageViewProxyStyleApplier.StyleBuilder::tintRes,
+            ImageViewStyleApplier.StyleBuilder::tint,
+            ImageViewStyleApplier.StyleBuilder::tintRes,
             { it.imageTintList }
     ))
 
@@ -97,8 +97,8 @@ internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
             ARBITRARY_COLOR_DRAWABLES,
             android.R.attr.src,
             ImageViewProxy::setSrc,
-            ImageViewProxyStyleApplier.StyleBuilder::src,
-            ImageViewProxyStyleApplier.StyleBuilder::srcRes,
+            ImageViewStyleApplier.StyleBuilder::src,
+            ImageViewStyleApplier.StyleBuilder::srcRes,
             { it.drawable }
     ))
 }
