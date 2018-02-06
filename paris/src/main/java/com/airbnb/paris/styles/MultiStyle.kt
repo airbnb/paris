@@ -15,6 +15,8 @@ data class MultiStyle internal constructor(private val name: String, private val
      */
     override val shouldApplyParent = true
 
+    override val shouldApplyDefaults = true
+
     override fun name(context: Context): String = name
 
     @SuppressLint("Recycle")

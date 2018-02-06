@@ -9,6 +9,8 @@ object EmptyStyle : Style {
     // The parents might have default values that would get applied despite this style being empty
     override val shouldApplyParent = true
 
+    override val shouldApplyDefaults = true
+
     override fun name(context: Context): String = "EmptyStyle"
 
     @SuppressLint("Recycle")

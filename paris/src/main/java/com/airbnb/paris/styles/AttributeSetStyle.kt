@@ -14,6 +14,8 @@ data class AttributeSetStyle constructor(private val attributeSet: AttributeSet)
      */
     override val shouldApplyParent = false
 
+    override val shouldApplyDefaults = true
+
     override fun name(context: Context): String =
             throw UnsupportedOperationException("Style names are meant to be used in a debug context and never for AttributeSetStyle")
 

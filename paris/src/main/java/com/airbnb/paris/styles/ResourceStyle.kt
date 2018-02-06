@@ -12,6 +12,8 @@ data class ResourceStyle constructor(
 
     override val shouldApplyParent = true
 
+    override val shouldApplyDefaults = true
+
     override fun name(context: Context): String =
         context.resources.getResourceEntryName(styleRes)
 

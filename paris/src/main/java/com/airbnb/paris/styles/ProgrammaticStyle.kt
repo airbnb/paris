@@ -47,6 +47,8 @@ data class ProgrammaticStyle internal constructor(
 
     override val shouldApplyParent = true
 
+    override val shouldApplyDefaults = true
+
     override fun name(context: Context): String = when {
         name != null -> name!!
         else -> "a_ProgrammaticStyle"

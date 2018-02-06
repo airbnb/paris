@@ -8,6 +8,12 @@ interface Style {
     // TODO Better name
     val shouldApplyParent: Boolean
 
+    /**
+     * If true then default attribute values will be applied for missing attributes, if false they
+     * won't
+     */
+    val shouldApplyDefaults: Boolean
+
     fun name(context: Context): String
 
     fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper

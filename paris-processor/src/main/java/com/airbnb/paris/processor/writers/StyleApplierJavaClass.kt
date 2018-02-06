@@ -91,6 +91,7 @@ internal class StyleApplierJavaClass(styleablesTree: StyleablesTree, styleableIn
             addParameter(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a")
             addStatement("\$T res = getView().getContext().getResources()", AndroidClassNames.RESOURCES)
 
+            // TODO Move to different method
             for (beforeStyle in styleableInfo.beforeStyles) {
                 addStatement("getProxy().\$N(style)", beforeStyle.name)
             }
@@ -101,17 +102,17 @@ internal class StyleApplierJavaClass(styleablesTree: StyleablesTree, styleableIn
                 }
 
                 if (attr.defaultValueResId != null) {
-                    controlFlow("else") {
+                    controlFlow("else if (style.getShouldApplyDefaults())") {
                         addStatement("getProxy().\$N(\$L)", attr.name, attr.targetFormat.resourcesMethodCode("res", attr.defaultValueResId.code))
                     }
                 }
             }
 
+            // TODO Move to different method
             for (afterStyle in styleableInfo.afterStyles) {
                 addStatement("getProxy().\$N(style)", afterStyle.name)
             }
         }
-
     }
 
     val styleApplierClassName = styleableInfo.styleApplierClassName()

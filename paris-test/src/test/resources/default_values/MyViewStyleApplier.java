@@ -60,91 +60,91 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     if (a.hasValue(R.styleable.Formats_formatBoolean)) {
       getProxy().formatBoolean(a.getBoolean(R.styleable.Formats_formatBoolean));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatBoolean(res.getBoolean(R.bool.format_boolean));
     }
     if (a.hasValue(R.styleable.Formats_formatColor)) {
       getProxy().formatColor(a.getColor(R.styleable.Formats_formatColor));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatColor(res.getColor(R.color.format_color));
     }
     if (a.hasValue(R.styleable.Formats_formatDimension)) {
       getProxy().formatDimension_px(a.getDimensionPixelSize(R.styleable.Formats_formatDimension));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatDimension_px(res.getDimensionPixelSize(R.dimen.format_dimension));
     }
     if (a.hasValue(R.styleable.Formats_formatDimension)) {
       getProxy().formatDimension_LayoutDimension(a.getLayoutDimension(R.styleable.Formats_formatDimension));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatDimension_LayoutDimension(ResourcesExtensionsKt.getLayoutDimension(res, R.dimen.format_dimension));
     }
     if (a.hasValue(R.styleable.Formats_formatEnum)) {
       getProxy().formatEnum(a.getInt(R.styleable.Formats_formatEnum));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatEnum(res.getInteger(R.integer.format_enum));
     }
     if (a.hasValue(R.styleable.Formats_formatFlag)) {
       getProxy().formatFlag(a.getInt(R.styleable.Formats_formatFlag));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatFlag(res.getInteger(R.integer.format_flag));
     }
     if (a.hasValue(R.styleable.Formats_formatFloat)) {
       getProxy().formatFloat(a.getFloat(R.styleable.Formats_formatFloat));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatFloat(ResourcesExtensionsKt.getFloat(res, R.dimen.format_float));
     }
     if (a.hasValue(R.styleable.Formats_formatFraction)) {
       getProxy().formatFraction(a.getFraction(R.styleable.Formats_formatFraction, 2, 3));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatFraction(res.getFraction(R.fraction.format_fraction, 2, 3));
     }
     if (a.hasValue(R.styleable.Formats_formatInteger)) {
       getProxy().formatInteger(a.getInt(R.styleable.Formats_formatInteger));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatInteger(res.getInteger(R.integer.format_integer));
     }
     if (a.hasValue(R.styleable.Formats_formatReference)) {
       getProxy().formatReference_CharSequenceArray(a.getTextArray(R.styleable.Formats_formatReference));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatReference_CharSequenceArray(res.getTextArray(R.array.format_string_array));
     }
     if (a.hasValue(R.styleable.Formats_formatReference)) {
       getProxy().formatReference_res(a.getResourceId(R.styleable.Formats_formatReference));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatReference_res(R.bool.active);
     }
     if (a.hasValue(R.styleable.Formats_formatReference2)) {
       getProxy().formatReference_ColorStateList(a.getColorStateList(R.styleable.Formats_formatReference2));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatReference_ColorStateList(res.getColorStateList(R.color.format_color_state_list));
     }
     if (a.hasValue(R.styleable.Formats_formatReference3)) {
       getProxy().formatReference_Drawable(a.getDrawable(R.styleable.Formats_formatReference3));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatReference_Drawable(res.getDrawable(R.drawable.format_drawable));
     }
     if (a.hasValue(R.styleable.Formats_formatString)) {
       getProxy().formatString_CharSequence(a.getText(R.styleable.Formats_formatString));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatString_CharSequence(res.getText(R.string.format_char_sequence));
     }
     if (a.hasValue(R.styleable.Formats_formatString2)) {
       getProxy().formatString_String(a.getString(R.styleable.Formats_formatString2));
     }
-    else {
+    else if (style.getShouldApplyDefaults()) {
       getProxy().formatString_String(res.getString(R.string.format_string));
     }
   }
