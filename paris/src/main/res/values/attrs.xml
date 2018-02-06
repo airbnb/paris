@@ -2,6 +2,11 @@
 <resources>
 
     <declare-styleable name="Paris_View">
+        <attr name="android:alpha" />
+        <attr name="android:background" />
+        <attr name="android:contentDescription" />
+        <attr name="android:elevation" />
+        <attr name="android:foreground" />
         <attr name="android:layout_width" />
         <attr name="android:layout_height" />
         <attr name="android:layout_gravity" />
@@ -12,10 +17,6 @@
         <attr name="android:layout_marginRight" />
         <attr name="android:layout_marginStart" />
         <attr name="android:layout_marginTop" />
-        <attr name="android:alpha" />
-        <attr name="android:background" />
-        <attr name="android:elevation" />
-        <attr name="android:foreground" />
         <attr name="android:minHeight" />
         <attr name="android:minWidth" />
         <attr name="android:padding" />
@@ -29,14 +30,13 @@
         <attr name="android:paddingVertical" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />
-        <attr name="android:contentDescription" />
 
         <attr name="ignoreLayoutWidthAndHeight" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="Paris_ImageView">
-        <attr name="android:src" />
         <attr name="android:scaleType" />
+        <attr name="android:src" />
         <attr name="android:tint" />
     </declare-styleable>
 
@@ -48,18 +48,18 @@
         <attr name="android:ellipsize" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
+        <attr name="android:lines" />
         <attr name="android:lineSpacingExtra" />
         <attr name="android:lineSpacingMultiplier" />
-        <attr name="android:lines" />
         <attr name="android:maxLines" />
         <attr name="android:minLines" />
         <attr name="android:minWidth" />
         <attr name="android:singleLine" />
+        <attr name="android:text" />
         <attr name="android:textAllCaps" />
         <attr name="android:textColor" />
         <attr name="android:textColorHint" />
         <attr name="android:textSize" />
-        <attr name="android:text" />
     </declare-styleable>
 
     <declare-styleable name="Paris_ViewGroup">
