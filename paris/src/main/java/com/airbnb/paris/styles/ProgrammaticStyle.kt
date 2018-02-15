@@ -14,7 +14,7 @@ data class ProgrammaticStyle internal constructor(
     private constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
 
     data class Builder internal constructor(
-            internal val attrResToValueResMap: HashMap<Int, Any> = HashMap<Int, Any>(),
+            internal val attrResToValueResMap: MutableMap<Int, Any> = HashMap(),
             internal var name: String = "a_ProgrammaticStyleBuilder") {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
@@ -35,6 +35,21 @@ data class ProgrammaticStyle internal constructor(
 
         fun put(@AttrRes attrRes: Int, value: Any): Builder {
             attrResToValueResMap.put(attrRes, value)
+            return this
+        }
+
+        fun putStyle(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
+                putStyle(attrRes, ResourceStyle(valueRes))
+
+        fun putStyle(@AttrRes attrRes: Int, style: Style): Builder {
+            val styles: Styles
+            if (attrResToValueResMap.containsKey(attrRes)) {
+                styles = attrResToValueResMap[attrRes] as Styles
+            } else {
+                styles = Styles()
+                attrResToValueResMap[attrRes] = styles
+            }
+            styles.list.add(style)
             return this
         }
 

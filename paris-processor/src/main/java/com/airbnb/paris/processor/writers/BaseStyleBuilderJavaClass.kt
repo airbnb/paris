@@ -46,7 +46,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
                     .addAnnotation(AndroidClassNames.STYLE_RES)
                     .build())
             returns(TypeVariableName.get("B"))
-            addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement("getBuilder().putStyle(\$T.styleable.\$L[\$L], resId)", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
             addStatement("return (B) this")
         }
 
@@ -54,7 +54,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             public()
             addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
             returns(TypeVariableName.get("B"))
-            addStatement("getBuilder().put(\$T.styleable.\$L[\$L], style)", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement("getBuilder().putStyle(\$T.styleable.\$L[\$L], style)", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
             addStatement("return (B) this")
         }
 
@@ -67,7 +67,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             returns(TypeVariableName.get("B"))
             addStatement("\$T subBuilder = new \$T()", subStyleBuilderClassName, subStyleBuilderClassName)
             addStatement("function.invoke(subBuilder)")
-            addStatement("getBuilder().put(\$T.styleable.\$L[\$L], subBuilder.build())", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement("getBuilder().putStyle(\$T.styleable.\$L[\$L], subBuilder.build())", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
             addStatement("return (B) this")
         }
     }

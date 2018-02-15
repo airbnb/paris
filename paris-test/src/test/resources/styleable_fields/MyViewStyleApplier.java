@@ -90,53 +90,53 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     public B titleStyle(@StyleRes int resId) {
-      getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_titleStyle], resId);
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_titleStyle], resId);
       return (B) this;
     }
 
     public B titleStyle(Style style) {
-      getBuilder().put(R.styleable.MyView[R.styleable.MyView_titleStyle], style);
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_titleStyle], style);
       return (B) this;
     }
 
     public B titleStyle(StyleBuilderFunction<TextViewStyleApplier.StyleBuilder> function) {
       TextViewStyleApplier.StyleBuilder subBuilder = new TextViewStyleApplier.StyleBuilder();
       function.invoke(subBuilder);
-      getBuilder().put(R.styleable.MyView[R.styleable.MyView_titleStyle], subBuilder.build());
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_titleStyle], subBuilder.build());
       return (B) this;
     }
 
     public B subtitleStyle(@StyleRes int resId) {
-      getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_subtitleStyle], resId);
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_subtitleStyle], resId);
       return (B) this;
     }
 
     public B subtitleStyle(Style style) {
-      getBuilder().put(R.styleable.MyView[R.styleable.MyView_subtitleStyle], style);
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_subtitleStyle], style);
       return (B) this;
     }
 
     public B subtitleStyle(StyleBuilderFunction<TextViewStyleApplier.StyleBuilder> function) {
       TextViewStyleApplier.StyleBuilder subBuilder = new TextViewStyleApplier.StyleBuilder();
       function.invoke(subBuilder);
-      getBuilder().put(R.styleable.MyView[R.styleable.MyView_subtitleStyle], subBuilder.build());
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_subtitleStyle], subBuilder.build());
       return (B) this;
     }
 
     public B dividerStyle(@StyleRes int resId) {
-      getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_dividerStyle], resId);
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_dividerStyle], resId);
       return (B) this;
     }
 
     public B dividerStyle(Style style) {
-      getBuilder().put(R.styleable.MyView[R.styleable.MyView_dividerStyle], style);
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_dividerStyle], style);
       return (B) this;
     }
 
     public B dividerStyle(StyleBuilderFunction<ViewStyleApplier.StyleBuilder> function) {
       ViewStyleApplier.StyleBuilder subBuilder = new ViewStyleApplier.StyleBuilder();
       function.invoke(subBuilder);
-      getBuilder().put(R.styleable.MyView[R.styleable.MyView_dividerStyle], subBuilder.build());
+      getBuilder().putStyle(R.styleable.MyView[R.styleable.MyView_dividerStyle], subBuilder.build());
       return (B) this;
     }
 

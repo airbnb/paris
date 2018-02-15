@@ -104,7 +104,7 @@ internal class MapTypedArrayWrapper constructor(
             getValue(index, { resId -> resources.getTextArray(resId) })
 
     override fun getStyle(index: Int): Style =
-            getValue(index, { resId -> ResourceStyle(resId) })
+            getValue<Style>(index, { resId -> ResourceStyle(resId) })
 
     override fun recycle() {
         //
@@ -116,9 +116,10 @@ internal class MapTypedArrayWrapper constructor(
                              colorValueGetter: ((ColorValue) -> T) = { it.colorValue as T }): T {
         val value = styleableAttrIndexToValueRes(index)!!
         return when (value) {
-            is ResourceId -> resourceGetter(value.resId)
-            is DpValue -> resources.dpToPx(value.dpValue) as T
             is ColorValue -> colorValueGetter(value)
+            is DpValue -> resources.dpToPx(value.dpValue) as T
+            is ResourceId -> resourceGetter(value.resId)
+            is Styles -> MultiStyle.fromStyles("a_MapTypedArrayWrapper_MultiStyle", value.list) as T
             else -> {
                 return value as T
             }

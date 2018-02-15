@@ -4,7 +4,10 @@ import android.annotation.*
 import android.content.*
 import com.airbnb.paris.typed_array_wrappers.*
 
-data class MultiStyle internal constructor(private val name: String, private val styles: List<Style>) : Style {
+data class MultiStyle internal constructor(
+        private val name: String,
+        private val styles: List<Style>
+) : Style {
 
     constructor(name: String, vararg styles: Style) : this(name, styles.toList())
     constructor(name: String, vararg styleRes: Int) : this(name, styleRes.map { ResourceStyle(it) })
@@ -23,5 +26,16 @@ data class MultiStyle internal constructor(private val name: String, private val
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper {
         val wrappers = styles.map { it.obtainStyledAttributes(context, attrs) }
         return MultiTypedArrayWrapper(wrappers, attrs)
+    }
+
+    companion object {
+
+        fun fromStyles(name: String, styles: List<Style>): Style {
+            return when (styles.size) {
+                0 -> EmptyStyle
+                1 -> styles.first()
+                else -> MultiStyle(name, styles)
+            }
+        }
     }
 }

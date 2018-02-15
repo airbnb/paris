@@ -5,6 +5,7 @@ import android.content.res.*
 import android.support.test.*
 import android.support.test.runner.*
 import com.airbnb.paris.attribute_values.*
+import com.airbnb.paris.styles.*
 import com.airbnb.paris.test.R
 import com.airbnb.paris.typed_array_wrappers.*
 import com.airbnb.paris.utils.*
@@ -242,7 +243,18 @@ class MultiTypedArrayWrapperTest {
     }
 
     @Test
-    fun getStyle() {
+    fun getStyle_resourceStyle_singleStyle() {
+        multi = MultiTypedArrayWrapper(
+                listOf(mapOf(R.attr.formatReference to ResourceId(R.style.Green)))
+                        .map { newFormatWrapper(it) },
+                R.styleable.Formats
+        )
+        val actual = res.getStyle(R.style.Green)
+        assertEquals(actual, multi.getStyle(R.styleable.Formats_formatReference))
+    }
+
+    @Test
+    fun getStyle_resourceStyle_multiStyle() {
         multi = MultiTypedArrayWrapper(
                 listOf(
                         mapOf(R.attr.formatReference to ResourceId(R.style.Green)),
@@ -250,8 +262,47 @@ class MultiTypedArrayWrapperTest {
                 ).map { newFormatWrapper(it) },
                 R.styleable.Formats
         )
-        val actual = res.getStyle(R.style.Red)
+        val actual = MultiStyle("a_MultiTypedArrayWrapper_MultiStyle", listOf(res.getStyle(R.style.Green), res.getStyle(R.style.Red)))
         assertEquals(actual, multi.getStyle(R.styleable.Formats_formatReference))
+    }
+
+    @Test
+    fun getStyle_programmaticStyle() {
+        multi = MultiTypedArrayWrapper(
+                listOf(
+                        mapOf(R.attr.formatReference to ProgrammaticStyle.builder()
+                                .put(R.attr.formatBoolean, true)
+                                .build()),
+                        mapOf(R.attr.formatReference to ProgrammaticStyle.builder()
+                                .put(R.attr.formatString, "my string")
+                                .build())
+                ).map { newFormatWrapper(it) },
+                R.styleable.Formats
+        )
+        val subStyle = multi.getStyle(R.styleable.Formats_formatReference)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Formats)
+
+        assertEquals(true, subTypedArray.getBoolean(R.styleable.Formats_formatBoolean))
+        assertEquals("my string", subTypedArray.getString(R.styleable.Formats_formatString))
+    }
+
+    @Test
+    fun getStyle_programmaticStyle_precedence() {
+        multi = MultiTypedArrayWrapper(
+                listOf(
+                        mapOf(R.attr.formatReference to ProgrammaticStyle.builder()
+                                .put(R.attr.formatString, "string1")
+                                .build()),
+                        mapOf(R.attr.formatReference to ProgrammaticStyle.builder()
+                                .put(R.attr.formatString, "string2")
+                                .build())
+                ).map { newFormatWrapper(it) },
+                R.styleable.Formats
+        )
+        val subStyle = multi.getStyle(R.styleable.Formats_formatReference)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Formats)
+
+        assertEquals("string2", subTypedArray.getString(R.styleable.Formats_formatString))
     }
 
     @Test

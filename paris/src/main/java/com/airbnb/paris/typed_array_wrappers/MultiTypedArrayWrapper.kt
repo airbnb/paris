@@ -15,17 +15,19 @@ internal class MultiTypedArrayWrapper constructor(
     private val styleableAttrIndexes by lazy { styleableAttrIndexToWrapperMap.keys.toList() }
 
     private val styleableAttrIndexToWrapperMap by lazy {
-        val attrResToWrapperMap = HashMap<Int, TypedArrayWrapper>()
+        val attrResToWrapperMap = HashMap<Int, MutableList<TypedArrayWrapper>>()
 
-        // We reverse the list because the later wrappers have priority
-        for (wrapper in wrappers.reversed()) {
+        for (wrapper in wrappers) {
             (0 until wrapper.getIndexCount()).forEach { at ->
                 val index = wrapper.getIndex(at)
 
+                // The lists of wrappers are meant for substyles where all styles corresponding to
+                // a given attribute combined together across all the wrappers. For other attribute
+                // types only the last wrapper is used
                 if (!attrResToWrapperMap.containsKey(index)) {
-                    attrResToWrapperMap[index] = wrapper
+                    attrResToWrapperMap[index] = mutableListOf(wrapper)
                 } else {
-                    // An earlier wrapper claimed this index, it has priority
+                    attrResToWrapperMap[index]!!.add(wrapper)
                 }
             }
 
@@ -38,59 +40,65 @@ internal class MultiTypedArrayWrapper constructor(
         attrResToWrapperMap
     }
 
+    private fun getWrappers(index: Int): List<TypedArrayWrapper> =
+            styleableAttrIndexToWrapperMap[index]!!
+
+    private fun getWrapper(index: Int): TypedArrayWrapper = getWrappers(index).last()
+
     override fun isNull(index: Int): Boolean =
-            isNullRes(styleableAttrIndexToWrapperMap[index]!!.getResourceId(index))
+            isNullRes(getWrapper(index).getResourceId(index))
 
     override fun getIndexCount(): Int = styleableAttrIndexToWrapperMap.size
 
     override fun getIndex(at: Int): Int = styleableAttrIndexes[at]
 
     override fun hasValue(index: Int): Boolean {
-        val wrapper = styleableAttrIndexToWrapperMap[index]
-        return wrapper != null && wrapper.hasValue(index)
+        return styleableAttrIndexToWrapperMap[index] != null
     }
 
     override fun getBoolean(index: Int): Boolean =
-            styleableAttrIndexToWrapperMap[index]!!.getBoolean(index)
+            getWrapper(index).getBoolean(index)
 
     override fun getColor(index: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getColor(index)
+            getWrapper(index).getColor(index)
 
     override fun getColorStateList(index: Int): ColorStateList =
-            styleableAttrIndexToWrapperMap[index]!!.getColorStateList(index)
+            getWrapper(index).getColorStateList(index)
 
     override fun getDimensionPixelSize(index: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getDimensionPixelSize(index)
+            getWrapper(index).getDimensionPixelSize(index)
 
     override fun getDrawable(index: Int): Drawable =
-            styleableAttrIndexToWrapperMap[index]!!.getDrawable(index)
+            getWrapper(index).getDrawable(index)
 
     override fun getFloat(index: Int): Float =
-            styleableAttrIndexToWrapperMap[index]!!.getFloat(index)
+            getWrapper(index).getFloat(index)
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
-            styleableAttrIndexToWrapperMap[index]!!.getFraction(index, base, pbase)
+            getWrapper(index).getFraction(index, base, pbase)
 
     override fun getInt(index: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getInt(index)
+            getWrapper(index).getInt(index)
 
     override fun getLayoutDimension(index: Int): Int =
-            styleableAttrIndexToWrapperMap[index]!!.getLayoutDimension(index)
+            getWrapper(index).getLayoutDimension(index)
 
     override fun getResourceId(index: Int): Int =
-            if (isNull(index)) 0 else styleableAttrIndexToWrapperMap[index]!!.getResourceId(index)
+            if (isNull(index)) 0 else getWrapper(index).getResourceId(index)
 
     override fun getString(index: Int): String =
-            styleableAttrIndexToWrapperMap[index]!!.getString(index)
+            getWrapper(index).getString(index)
 
     override fun getText(index: Int): CharSequence =
-            styleableAttrIndexToWrapperMap[index]!!.getText(index)
+            getWrapper(index).getText(index)
 
     override fun getTextArray(index: Int): Array<CharSequence> =
-            styleableAttrIndexToWrapperMap[index]!!.getTextArray(index)
+            getWrapper(index).getTextArray(index)
 
-    override fun getStyle(index: Int): Style =
-            styleableAttrIndexToWrapperMap[index]!!.getStyle(index)
+    override fun getStyle(index: Int): Style {
+        val styles = getWrappers(index).map { it.getStyle(index) }
+        return MultiStyle.fromStyles("a_MultiTypedArrayWrapper_MultiStyle", styles)
+    }
 
     override fun recycle() {
         wrappers.forEach { it.recycle() }

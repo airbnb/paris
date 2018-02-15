@@ -15,6 +15,7 @@ import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.*
 
+@Suppress("FunctionName")
 @RunWith(AndroidJUnit4::class)
 class MapTypedArrayWrapperTest {
 
@@ -214,6 +215,17 @@ class MapTypedArrayWrapperTest {
         val map = mapOf(R.attr.formatReference to ResourceId(R.style.Green))
         wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
         val actual = ResourceStyle(R.style.Green)
+        assertEquals(actual, wrapper.getStyle(R.styleable.Formats_formatReference))
+    }
+
+    @Test
+    fun getStyle_styles() {
+        // Attribute values of type "Styles" should be converted to a MultiStyle
+
+        val styles = mutableListOf<Style>(ResourceStyle(R.style.Red), ResourceStyle(R.style.Green))
+        val map = mapOf(R.attr.formatReference to Styles(styles))
+        wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
+        val actual = MultiStyle("a_MapTypedArrayWrapper_MultiStyle", styles)
         assertEquals(actual, wrapper.getStyle(R.styleable.Formats_formatReference))
     }
 
