@@ -41,7 +41,7 @@ internal class BaseStyleableInfoExtractor {
         val elementType = element.asType()
 
         val viewElementType: TypeMirror
-        if (isSubtype(elementType, erasure(ClassNames.PROXY.toTypeMirror()))) {
+        if (isSubtype(elementType, erasure(PROXY_CLASS_NAME.toTypeMirror()))) {
             // Get the parameterized type, which should be the view type
             viewElementType = (element.superclass as DeclaredType).typeArguments[1]
         } else {

@@ -17,3 +17,4 @@ internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.typed_array_w
 internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()
 internal val RESOURCES_EXTENSIONS_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.ResourcesExtensionsKt".className()
 internal val SPANNABLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.spannables.SpannableBuilder".className()
+internal val PROXY_CLASS_NAME = "$PARIS_PACKAGE_NAME.proxies.Proxy".className()
