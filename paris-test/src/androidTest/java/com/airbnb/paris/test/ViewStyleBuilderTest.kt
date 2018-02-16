@@ -3,6 +3,7 @@ package com.airbnb.paris.test
 import android.graphics.*
 import android.support.test.*
 import android.support.test.runner.*
+import com.airbnb.paris.styles.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.*
@@ -42,5 +43,45 @@ class ViewStyleBuilderTest {
 
         assertEquals(Color.RED, subTypedArray.getColor(R.styleable.Paris_TextView_android_textColor))
         assertEquals(16, subTypedArray.getDimensionPixelSize(R.styleable.Paris_TextView_android_textSize))
+    }
+
+    @Test
+    fun subStyleCombinationPrecedence() {
+        val style = myViewBuilder
+                .titleStyle { builder ->
+                    builder.textColor(Color.RED)
+                }
+                .titleStyle { builder ->
+                    builder.textColor(Color.GREEN)
+                }
+                .build()
+        val typedArray = style.obtainStyledAttributes(context, R.styleable.MyView)
+        val subStyle = typedArray.getStyle(R.styleable.MyView_titleStyle)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
+
+        assertEquals(Color.GREEN, subTypedArray.getColor(R.styleable.Paris_TextView_android_textColor))
+    }
+
+    @Test
+    fun subStyleCombinationPrecedenceMultiWrappers() {
+        // This tests the substyle combination logic in the case where all the attributes are
+        // defined in different typed array wrappers. There used to be an optimization where if all
+        // attributes were declared by a wrapper the rest would be ignored but following new
+        // substyle combinatory rules it had to be removed
+
+        val style = myViewBuilder
+                .titleStyle { builder ->
+                    builder.textColor(Color.RED)
+                }
+                .add(EmptyStyle)
+                .titleStyle { builder ->
+                    builder.textColor(Color.GREEN)
+                }
+                .build()
+        val typedArray = style.obtainStyledAttributes(context, intArrayOf(R.attr.titleStyle))
+        val subStyle = typedArray.getStyle(0)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
+
+        assertEquals(Color.GREEN, subTypedArray.getColor(R.styleable.Paris_TextView_android_textColor))
     }
 }

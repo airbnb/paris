@@ -30,11 +30,6 @@ internal class MultiTypedArrayWrapper constructor(
                     attrResToWrapperMap[index]!!.add(wrapper)
                 }
             }
-
-            if (attrResToWrapperMap.size == styleableAttrs.size) {
-                // All attributes are accounted for, it doesn't matter what the remaining wrappers contain
-                break
-            }
         }
 
         attrResToWrapperMap
