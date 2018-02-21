@@ -53,6 +53,7 @@ internal class Format private constructor(
                 "IntegerRes",
                 "InterpolatorRes",
                 "LayoutRes",
+                "MenuRes",
                 "PluralsRes",
                 "RawRes",
                 "StringRes",
