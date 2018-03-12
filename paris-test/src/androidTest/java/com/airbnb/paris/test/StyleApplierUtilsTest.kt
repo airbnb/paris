@@ -3,6 +3,7 @@ package com.airbnb.paris.test
 import android.support.test.*
 import android.support.test.runner.*
 import android.util.*
+import android.view.*;
 import com.airbnb.paris.*
 import com.airbnb.paris.styles.*
 import org.junit.*
@@ -95,5 +96,85 @@ class StyleApplierUtilsTest {
                         .build()
         )
         Assert.assertEquals(10f, myOtherView.title.textSize)
+    }
+
+    @Test
+    fun testSetPaddingLTR() {
+        Assert.assertEquals(0, myOtherView.getPaddingLeft())
+        Assert.assertEquals(0, myOtherView.getPaddingRight())
+
+        myViewApplier.builder().paddingStart(100).apply()
+
+        Assert.assertEquals(0, myOtherView.getPaddingRight())
+        Assert.assertEquals(100, myOtherView.getPaddingLeft())
+
+        myViewApplier.builder().paddingEnd(200).apply()
+
+        Assert.assertEquals(200, myOtherView.getPaddingRight())
+        Assert.assertEquals(100, myOtherView.getPaddingLeft())
+    }
+
+    @Test
+    fun testSetPaddingRTL() {
+        Assert.assertEquals(0, myOtherView.getPaddingLeft())
+        Assert.assertEquals(0, myOtherView.getPaddingRight())
+
+        myOtherView.setLayoutDirection(LayoutDirection.RTL);
+
+        myViewApplier.builder().paddingStart(100).apply()
+
+        Assert.assertEquals(100, myOtherView.getPaddingRight())
+        Assert.assertEquals(0, myOtherView.getPaddingLeft())
+
+        myViewApplier.builder().paddingEnd(200).apply()
+
+        Assert.assertEquals(100, myOtherView.getPaddingRight())
+        Assert.assertEquals(200, myOtherView.getPaddingLeft())
+    }
+
+    @Test
+    fun testSetLayoutMarginLTR() {
+        myViewApplier
+            .builder()
+            .layoutMarginLeft(0)
+            .layoutMarginRight(0)
+            .apply()
+
+        Assert.assertEquals(0, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).leftMargin)
+        Assert.assertEquals(0, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).rightMargin)
+
+        myViewApplier.builder().layoutMarginStart(100).apply()
+
+        Assert.assertEquals(100, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).leftMargin)
+        Assert.assertEquals(0, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).rightMargin)
+
+        myViewApplier.builder().layoutMarginEnd(200).apply()
+
+        Assert.assertEquals(100, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).leftMargin)
+        Assert.assertEquals(200, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).rightMargin)
+    }
+
+    @Test
+    fun testSetLayoutMarginRTL() {
+        myViewApplier
+            .builder()
+            .layoutMarginLeft(0)
+            .layoutMarginRight(0)
+            .apply()
+
+        Assert.assertEquals(0, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).leftMargin)
+        Assert.assertEquals(0, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).rightMargin)
+
+        myOtherView.setLayoutDirection(LayoutDirection.RTL);
+
+        myViewApplier.builder().layoutMarginStart(100).apply()
+
+        Assert.assertEquals(0, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).leftMargin)
+        Assert.assertEquals(100, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).rightMargin)
+
+        myViewApplier.builder().layoutMarginEnd(200).apply()
+
+        Assert.assertEquals(200, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).leftMargin)
+        Assert.assertEquals(100, (myOtherView.getLayoutParams() as ViewGroup.MarginLayoutParams).rightMargin)
     }
 }

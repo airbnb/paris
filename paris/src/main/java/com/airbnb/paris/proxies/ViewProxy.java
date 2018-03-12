@@ -160,9 +160,11 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
             switch (getView().getLayoutDirection()) {
                 case View.LAYOUT_DIRECTION_RTL:
                     marginLeft = marginEnd;
+                    break;
                 case View.LAYOUT_DIRECTION_LTR:
                 default:
                     marginRight = marginEnd;
+                    break;
             }
         }
     }
@@ -183,9 +185,11 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
             switch (getView().getLayoutDirection()) {
                 case View.LAYOUT_DIRECTION_RTL:
                     marginRight = marginStart;
+                    break;
                 case View.LAYOUT_DIRECTION_LTR:
                 default:
                     marginLeft = marginStart;
+                    break;
             }
         }
     }
@@ -243,9 +247,11 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
             switch (getView().getLayoutDirection()) {
                 case View.LAYOUT_DIRECTION_RTL:
                     ViewExtensionsKt.setPaddingLeft(getView(), padding);
+                    break;
                 case View.LAYOUT_DIRECTION_LTR:
                 default:
                     ViewExtensionsKt.setPaddingRight(getView(), padding);
+                    break;
             }
         }
     }
@@ -271,9 +277,11 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
             switch (getView().getLayoutDirection()) {
                 case View.LAYOUT_DIRECTION_RTL:
                     ViewExtensionsKt.setPaddingRight(getView(), padding);
+                    break;
                 case View.LAYOUT_DIRECTION_LTR:
                 default:
                     ViewExtensionsKt.setPaddingLeft(getView(), padding);
+                    break;
             }
         }
     }
