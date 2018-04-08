@@ -2,53 +2,36 @@ import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply from: 'build.workaround-missing-resource.gradle'
+apply from: rootProject.file('gradle/workaround-missing-resource.gradle')
 
 android {
-    compileSdkVersion sdkVersion
-    buildToolsVersion buildToolsVersion
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion sdkVersion
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.MIN_SDK_VERSION
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
-
-        // One of the dependencies seems to be importing the AutoValue processor incorrectly
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.kotlin
     implementation project(':paris')
     implementation project(':paris-annotations')
-    implementation deps.androidAppcompatV7
-    testImplementation 'junit:junit:4.12'
-    testImplementation files(getRuntimeJar())
-    testImplementation files(Jvm.current().getToolsJar())
-    testImplementation deps.googleTestingCompile
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+
+    implementation deps.appcompatV7
+    implementation deps.kotlin
+
+    annotationProcessor project(':paris-processor')
 
     testImplementation project(':paris-processor')
-    annotationProcessor project(':paris-processor')
-    testAnnotationProcessor project(':paris-processor')
+
+    testImplementation files(getRuntimeJar())
+    testImplementation files(Jvm.current().getToolsJar())
+
+    testImplementation deps.junit
+    testImplementation deps.testingCompile
+
+    androidTestImplementation deps.espresso
 }
 
 static def getRuntimeJar() {

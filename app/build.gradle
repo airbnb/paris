@@ -1,34 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion sdkVersion
-    buildToolsVersion buildToolsVersion
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
+
     defaultConfig {
         applicationId "com.airbnb.parislibrary"
-        minSdkVersion 16
-        targetSdkVersion sdkVersion
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        minSdkVersion rootProject.MIN_SDK_VERSION
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    implementation project(':paris')
     implementation project(':paris-annotations')
+
+    implementation deps.appcompatV7
+    implementation deps.constraintLayout
+
     annotationProcessor project(':paris-processor')
-    implementation deps.androidAppcompatV7
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation project(path: ':paris')
-    testImplementation 'junit:junit:4.12'
 }

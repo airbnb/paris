@@ -2,47 +2,37 @@
 
 buildscript {
     ext {
-        butterknifeVersion = '9.0.0-SNAPSHOT'
-        kotlinVersion = '1.1.51'
+        ANDROID_PLUGIN_VERSION = '3.1.0'
+        BUTTERKNIFE_VERSION = '9.0.0-SNAPSHOT'
+        KOTLIN_VERSION = '1.2.30'
     }
+
     repositories {
         jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url 'https://maven.google.com' }
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta7'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.jakewharton:butterknife-gradle-plugin:$butterknifeVersion"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    dependencies {
+        classpath "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
+        classpath "com.jakewharton:butterknife-gradle-plugin:$BUTTERKNIFE_VERSION"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     }
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url 'https://maven.google.com' }
     }
+}
+
+subprojects { project ->
+    apply from: "$rootDir/blessedDeps.gradle"
+    // TODO Same for maven upload script?
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    sdkVersion = 26
-    buildToolsVersion = "26.0.2"
-
-    deps = [
-            androidAppcompatV7: "com.android.support:appcompat-v7:25.3.1",
-            googleGuava: "com.google.guava:guava:22.0-rc1-android",
-            googleTestingCompile: "com.google.testing.compile:compile-testing:0.10",
-            kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion",
-            squareJavaPoet: "com.squareup:javapoet:1.8.0",
-    ]
 }

@@ -1,12 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile deps.kotlin
-}
+sourceCompatibility = rootProject.JAVA_SOURCE_VERSION
+targetCompatibility = rootProject.JAVA_TARGET_VERSION
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+dependencies {
+    implementation deps.kotlin
+}
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')

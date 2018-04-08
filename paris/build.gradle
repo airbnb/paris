@@ -3,48 +3,36 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion sdkVersion
-    buildToolsVersion buildToolsVersion
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion sdkVersion
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        minSdkVersion rootProject.MIN_SDK_VERSION
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
         multiDexEnabled true
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':paris-annotations')
 
-    implementation deps.kotlin
+    implementation deps.appcompatV7
 
-    implementation deps.androidAppcompatV7
+    // We use "api" here instead of "implementation" to avoid app module warnings like:
+    // "Warning: unknown enum constant AnnotationTarget.FIELD"
+    api deps.kotlin
 
     compileOnly project(':paris-processor')
+
     annotationProcessor project(':paris-processor')
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'io.kotlintest:kotlintest:2.0.5'
+    testImplementation deps.junit
+    testImplementation deps.kotlinTest
 
-    testImplementation 'org.mockito:mockito-core:2.8.9'
-    androidTestImplementation 'org.mockito:mockito-android:2.8.9'
+    testImplementation deps.mockitoCore
 
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    androidTestImplementation deps.mockitoAndroid
+    androidTestImplementation deps.espresso
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')
