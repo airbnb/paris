@@ -1,7 +1,8 @@
 package com.airbnb.paris.processor.framework.models
 
-import javax.lang.model.element.*
-import javax.lang.model.type.*
+import javax.lang.model.element.Element
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.TypeMirror
 
 internal abstract class SkyFieldModel(
         val enclosingElement: TypeElement,
@@ -18,6 +19,6 @@ internal abstract class SkyFieldModel(
     )
 }
 
-internal abstract class SkyFieldModelFactory<out T : SkyFieldModel>(annotationClass: Class<out Annotation>)
+internal abstract class SkyFieldModelFactory<T : SkyFieldModel>(annotationClass: Class<out Annotation>)
     : SkyModelFactory<T, Element>(annotationClass)
 

@@ -1,21 +1,36 @@
 package com.airbnb.paris.processor.models
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.*
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.annotations.Style
+import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.processor.RElement
+import com.airbnb.paris.processor.defaultStyleNameFormat
+import com.airbnb.paris.processor.framework.elements
 import com.airbnb.paris.processor.framework.errors.*
-import com.airbnb.paris.processor.models.StyleInfo.*
+import com.airbnb.paris.processor.models.StyleInfo.Kind
 import com.airbnb.paris.processor.models.StyleInfo.Kind.*
-import com.airbnb.paris.processor.utils.*
-import com.squareup.javapoet.*
+import com.airbnb.paris.processor.utils.ParisProcessorUtils
+import com.squareup.javapoet.CodeBlock
 import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier
+import javax.lang.model.type.TypeMirror
+import kotlin.Boolean
+import kotlin.String
+import kotlin.let
+import kotlin.to
 
 internal class StyleInfoExtractor {
 
-    fun fromEnvironment(roundEnv: RoundEnvironment): List<StyleInfo> {
+    var models = emptyList<StyleInfo>()
+        private set
+
+    var latest = emptyList<StyleInfo>()
+        private set
+
+    fun process(roundEnv: RoundEnvironment) {
         val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
 
         // TODO Make sure there aren't conflicting names?
@@ -32,7 +47,7 @@ internal class StyleInfoExtractor {
 
         // TODO Check that no style was left behind?
 
-        return styleableElements
+        styleableElements
                 .map { it to (stylesFromStyleAnnotation[it] ?: emptyList()) }
                 .flatMap { (styleableElement, styles) ->
                     val styleWithNameDefault = styles.find { it.formattedName == "Default" }
@@ -60,6 +75,10 @@ internal class StyleInfoExtractor {
                             styles + emptyDefaultFromStyleableElement(styleableElement)
                         }
                     }
+                }
+                .let {
+                    models += it
+                    latest = it
                 }
     }
 

@@ -1,13 +1,19 @@
 package com.airbnb.paris.processor.models
 
-import com.airbnb.paris.annotations.*
+import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.framework.errors.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.Element
+import javax.lang.model.element.TypeElement
+import kotlin.also
 
 internal class StyleableInfoExtractor {
 
-    fun fromEnvironment(
+    private val mutableModels = mutableListOf<StyleableInfo>()
+
+    val models get() = mutableModels.toList()
+
+    fun process(
             roundEnv: RoundEnvironment,
             classesToStyleableChildInfo: Map<TypeElement, List<StyleableChildInfo>>,
             classesToBeforeStyleInfo: Map<TypeElement, List<BeforeStyleInfo>>,
@@ -37,6 +43,9 @@ internal class StyleableInfoExtractor {
                         Errors.log(e)
                         null
                     }
+                }
+                .also {
+                    mutableModels.addAll(it)
                 }
     }
 

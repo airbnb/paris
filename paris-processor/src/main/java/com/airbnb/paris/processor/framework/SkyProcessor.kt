@@ -1,7 +1,9 @@
 package com.airbnb.paris.processor.framework
 
 import javax.annotation.processing.*
-import javax.lang.model.util.*
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 abstract class SkyProcessor : AbstractProcessor() {
 
@@ -25,4 +27,20 @@ abstract class SkyProcessor : AbstractProcessor() {
 
         INSTANCE = this
     }
+
+    override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
+        processRound(roundEnv)
+
+        if (roundEnv.processingOver()) {
+            processingOver()
+        }
+
+        return claimAnnotations(annotations, roundEnv)
+    }
+
+    abstract fun processRound(roundEnv: RoundEnvironment)
+
+    abstract fun claimAnnotations(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean
+
+    abstract fun processingOver()
 }

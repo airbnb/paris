@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.framework.models
 
-import javax.lang.model.element.*
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.TypeElement
 
 internal abstract class SkyMethodModel private constructor(
         val enclosingElement: TypeElement,
@@ -15,6 +16,6 @@ internal abstract class SkyMethodModel private constructor(
     )
 }
 
-internal abstract class SkyMethodModelFactory<out T : SkyMethodModel>(annotationClass: Class<out Annotation>)
+internal abstract class SkyMethodModelFactory<T : SkyMethodModel>(annotationClass: Class<out Annotation>)
     : SkyModelFactory<T, ExecutableElement>(annotationClass)
 
