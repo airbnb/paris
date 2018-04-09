@@ -11,7 +11,7 @@ Paris lets you define and apply styles programmatically to Android views, includ
 ## Installation
 
 In your project's `build.gradle`:
-```
+```gradle
 dependencies {
     implementation 'com.airbnb.android:paris:1.0.0'
     // If you are using Paris annotations
