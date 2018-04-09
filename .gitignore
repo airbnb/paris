@@ -1,9 +1,24 @@
-*.iml
+# Gradle files
 .gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
 /build
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# IntelliJ
+*.iml
+.idea/*
+!.idea/codeStyleSettings.xml
+
+# Android Studio captures folder
 /captures
+
+# External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
+
+# macOS
+.DS_Store
+
+# Vim
+*~
+.swp
