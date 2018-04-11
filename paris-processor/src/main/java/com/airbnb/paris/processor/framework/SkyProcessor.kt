@@ -29,7 +29,7 @@ abstract class SkyProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        processRound(roundEnv)
+        processRound(annotations, roundEnv)
 
         if (roundEnv.processingOver()) {
             processingOver()
@@ -38,7 +38,7 @@ abstract class SkyProcessor : AbstractProcessor() {
         return claimAnnotations(annotations, roundEnv)
     }
 
-    abstract fun processRound(roundEnv: RoundEnvironment)
+    abstract fun processRound(annotations: Set<TypeElement>, roundEnv: RoundEnvironment)
 
     abstract fun claimAnnotations(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean
 

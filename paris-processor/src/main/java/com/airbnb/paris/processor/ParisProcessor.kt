@@ -60,7 +60,14 @@ class ParisProcessor : SkyProcessor() {
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
-    override fun processRound(roundEnv: RoundEnvironment) {
+    override fun processRound(annotations: Set<TypeElement>, roundEnv: RoundEnvironment) {
+        // The expectation is that all files will be generated during the first round where we get
+        // all the annotated elements. Then a second empty round will happen to give us a chance to
+        // do more but we ignore it
+        if (annotations.isEmpty()) {
+            return
+        }
+
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
                 .firstOrNull()
                 ?.getAnnotation(ParisConfig::class.java)
@@ -103,14 +110,6 @@ class ParisProcessor : SkyProcessor() {
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(styleablesTree, styleableInfo).write()
         }
-    }
-
-    override fun claimAnnotations(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        return false
-    }
-
-    override fun processingOver() {
-        val styleablesInfo = styleableInfoExtractor.models
 
         if (!styleablesInfo.isEmpty()) {
             try {
@@ -130,7 +129,14 @@ class ParisProcessor : SkyProcessor() {
                 Errors.log(e)
             }
         }
+    }
 
+    override fun claimAnnotations(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
+        // Let other annotation processors use them if they want
+        return false
+    }
+
+    override fun processingOver() {
         Errors.printLoggedErrorsIfAny(messager)
     }
 }
