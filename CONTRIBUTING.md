@@ -17,7 +17,7 @@ If you update the annotation processor tests you may find the `update_processor_
 
 ## How to Submit Changes
 
-First make sure all tests are passing, then create a Pull Request on Github. Explain why you are proposing the change, what issues it addresses, why you chose particular solutions, etc. The more context and details the easier it will be to review.
+First make sure all tests are passing, then create a pull request on Github. Explain why you are proposing the change, what issues it addresses, why you chose particular solutions, etc. The more context and details the easier it will be to review.
 
 When possible/appropriate changes should include tests and be well documented.
 
