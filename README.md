@@ -62,6 +62,138 @@ Paris.styleBuilder(textView)
 
 For more see [Defining Styles Programmatically](../../wiki/Building-and-Applying-Styles#defining-styles-programmatically).
 
+### Custom View Attributes
+
+Attributes are declared as followed:
+```xml
+<declare-styleable name="MyView">
+    <attr name="title" format="string" />
+    <attr name="image" format="reference" />
+    <attr name="imageSize" format="dimension" />
+</declare-styleable>
+```
+
+The custom view is annotated with `@Styleable` and `@Attr`:
+```java
+// The value here corresponds to the name chosen in declare-styleable
+@Styleable("MyView")
+public class MyView extends ViewGroup {
+
+    public MyView(Context context) {
+        super(context);
+    }
+
+    public MyView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public MyView(Context context, AttributeSet attrs, int defStyle) {
+        this(context, attrs, defStyle);
+        // Enables the custom attributes when used in XML layouts
+        Paris.style(this).apply(attrs);
+    }
+
+    @Attr(R.styleable.MyView_title)
+    public void setTitle(String title) {
+        ...
+    }
+
+    @Attr(R.styleable.MyView_image)
+    public void setImage(Drawable image) {
+        ...
+    }
+
+    @Attr(R.styleable.MyView_imageSize)
+    public void setImageSize(@Px int imageSize) {
+        ...
+    }
+}
+```
+
+The `@Attr`-annotated methods will be called by Paris when the view is inflated with an `AttributeSet` or when a style is applied.
+
+For more see [Custom View Attributes](../../wiki/Custom-View-Attributes).
+
+### Styling Subviews
+
+Attributes are declared as followed for the 2 subviews we'd like to be able to style:
+```xml
+<declare-styleable name="MyHeader">
+    <attr name="titleStyle" format="reference" />
+    <attr name="subtitleStyle" format="reference" />
+    ...
+</declare-styleable>
+```
+
+The subview fields are annotated with `@StyleableChild`:
+```java
+@Styleable("MyHeader")
+public class MyHeader extends ViewGroup {
+
+    @StyleableChild(R.styleable.MyHeader_titleStyle)
+    TextView title;
+    
+    @StyleableChild(R.styleable.MyHeader_subtitleStyle)
+    TextView subtitle;
+    
+    ...
+    // Make sure to call Paris.style(this).apply(attrs) during initialization
+}
+```
+
+The title and subtitle styles can now be part of `MyHeader` styles:
+```xml
+<MyHeader
+    ...
+    app:titleStyle="@style/Title2"
+    app:subtitleStyle="@style/Regular" />
+```
+
+```java
+Paris.styleBuilder(myHeader)
+        .titleStyle(R.style.Title2) // Defined in XML
+        .subtitleStyle((builder) -> builder // Defined programmatically
+                .textColorRes(R.color.text_color_regular)
+                .textSizeRes(R.dimen.text_size_regular))
+        .apply();
+```
+
+For more see [Styling Subviews](../../wiki/Custom-Views#styling-subviews).
+
+### Linking Styles to Views
+
+```java
+@Styleable
+public class MyView extends View {
+
+    // For styles defined in XML
+    @Style
+    static final int RED_STYLE = R.style.MyView_Red;
+
+    // For styles defined programmatically
+    @Style
+    static void greenStyle(MyViewStyleApplier.StyleBuilder builder) {
+        builder.background(R.color.green);
+    }
+
+    ...
+}
+```
+
+Helper methods are generated for each linked style:
+```java
+Paris.style(myView).applyRed(); // Equivalent to .apply(R.style.MyView_Red)
+Paris.style(myView).applyGreen(); // No equivalent
+
+Paris.styleBuilder(myView)
+        .addRed() // Equivalent to .add(R.style.MyView_Red)
+        .addGreen() // No equivalent
+        ...
+        .apply();
+```
+
+For more see [Linking Styles to Custom Views](../../wiki/Custom-Views#linking-styles-to-custom-views).
+
 ## Documentation
 
 See examples and browse complete documentation at the [Paris Wiki](../../wiki).
@@ -70,7 +202,7 @@ If you still have questions, feel free to create a new issue.
 
 ## Contributing
 
-Pull requests are welcome! We'd love help improving this library. Feel free to browse through open issues to look for things that need work. If you have a feature request or bug, please open a new issue so we can track it.
+We love contributions! Check out our [contributing guidelines](CONTRIBUTING.md) and be sure to follow our [code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
