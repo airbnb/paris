@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="TestTypedArrayTypedArrayWrapper_Styleable">
-        <attr name="testTypedArrayTypedArrayWrapper_style" format="reference" />
+    <declare-styleable name="Test_TypedArrayTypedArrayWrapper_Styleable">
+        <attr name="test_typedArrayTypedArrayWrapper_style" format="reference" />
     </declare-styleable>
 
-    <style name="TestTypedArrayTypedArrayWrapper_GetResourceId_NullBackground">
+    <style name="Test_TypedArrayTypedArrayWrapper_GetResourceId_NullBackground">
         <item name="android:background">@color/null_</item>
     </style>
 
-    <style name="TestTypedArrayTypedArrayWrapper_GetStyle_StyleWithNoSubStyle" />
+    <style name="Test_TypedArrayTypedArrayWrapper_GetStyle_StyleWithNoSubStyle" />
 
-    <style name="TestTypedArrayTypedArrayWrapper_GetStyle_StyleWithSubStyle">
-        <item name="testTypedArrayTypedArrayWrapper_style">@style/TestTypedArrayTypedArrayWrapper_GetStyle_SubStyle</item>
+    <style name="Test_TypedArrayTypedArrayWrapper_GetStyle_StyleWithSubStyle">
+        <item name="test_typedArrayTypedArrayWrapper_style">@style/Test_TypedArrayTypedArrayWrapper_GetStyle_SubStyle</item>
     </style>
 
-    <style name="TestTypedArrayTypedArrayWrapper_GetStyle_SubStyle">
+    <style name="Test_TypedArrayTypedArrayWrapper_GetStyle_SubStyle">
         <item name="android:background">@android:color/white</item>
     </style>
 

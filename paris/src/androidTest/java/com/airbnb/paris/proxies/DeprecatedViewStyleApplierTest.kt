@@ -13,7 +13,7 @@ import org.junit.Assert.*
 import org.junit.runner.*
 
 @RunWith(AndroidJUnit4::class)
-class ViewStyleApplierTest {
+class DeprecatedViewStyleApplierTest {
 
     private lateinit var context: Context
     private lateinit var res: Resources

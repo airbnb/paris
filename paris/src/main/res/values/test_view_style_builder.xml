@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="test_view_style_builder_visible">0</integer>
+    <integer name="test_view_style_builder_invisible">1</integer>
+    <integer name="test_view_style_builder_gone">2</integer>
+
+</resources>

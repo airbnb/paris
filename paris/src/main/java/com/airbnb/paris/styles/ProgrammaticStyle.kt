@@ -1,10 +1,16 @@
 package com.airbnb.paris.styles
 
-import android.annotation.*
-import android.content.*
-import android.support.annotation.*
-import com.airbnb.paris.attribute_values.*
-import com.airbnb.paris.typed_array_wrappers.*
+import android.annotation.SuppressLint
+import android.content.Context
+import android.support.annotation.AnyRes
+import android.support.annotation.AttrRes
+import android.support.annotation.ColorInt
+import com.airbnb.paris.attribute_values.ColorValue
+import com.airbnb.paris.attribute_values.DpValue
+import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.attribute_values.Styles
+import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 import java.util.*
 
 data class ProgrammaticStyle internal constructor(
@@ -15,7 +21,7 @@ data class ProgrammaticStyle internal constructor(
 
     data class Builder internal constructor(
             internal val attrResToValueResMap: MutableMap<Int, Any> = HashMap(),
-            internal var name: String = "a_ProgrammaticStyleBuilder") {
+            internal var name: String = "a programmatic style") {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
 
@@ -66,7 +72,7 @@ data class ProgrammaticStyle internal constructor(
 
     override fun name(context: Context): String = when {
         name != null -> name!!
-        else -> "a_ProgrammaticStyle"
+        else -> "a programmatic style"
     }
 
     @SuppressLint("Recycle")

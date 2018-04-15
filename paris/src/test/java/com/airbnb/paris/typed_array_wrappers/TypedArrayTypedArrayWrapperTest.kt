@@ -29,7 +29,7 @@ class TypedArrayTypedArrayWrapperTest {
         // We only test the getResourceId case that uses our alternate null resources, otherwise
         // the call is forwarded to the underlying TypedArray
         val typedArray = context.obtainStyledAttributes(
-                R.style.TestTypedArrayTypedArrayWrapper_GetResourceId_NullBackground,
+                R.style.Test_TypedArrayTypedArrayWrapper_GetResourceId_NullBackground,
                 R.styleable.Paris_View
         )
         TypedArrayTypedArrayWrapper(typedArray).run {
@@ -40,13 +40,13 @@ class TypedArrayTypedArrayWrapperTest {
     @Test
     fun getStyle_empty() {
         val typedArray = context.obtainStyledAttributes(
-                R.style.TestTypedArrayTypedArrayWrapper_GetStyle_StyleWithNoSubStyle,
-                R.styleable.TestTypedArrayTypedArrayWrapper_Styleable
+                R.style.Test_TypedArrayTypedArrayWrapper_GetStyle_StyleWithNoSubStyle,
+                R.styleable.Test_TypedArrayTypedArrayWrapper_Styleable
         )
         TypedArrayTypedArrayWrapper(typedArray).run {
             assertEquals(
                     ResourceStyle(0),
-                    getStyle(R.styleable.TestTypedArrayTypedArrayWrapper_Styleable_testTypedArrayTypedArrayWrapper_style)
+                    getStyle(R.styleable.Test_TypedArrayTypedArrayWrapper_Styleable_test_typedArrayTypedArrayWrapper_style)
             )
         }
     }
@@ -54,13 +54,13 @@ class TypedArrayTypedArrayWrapperTest {
     @Test
     fun getStyle_valid() {
         val typedArray = context.obtainStyledAttributes(
-                R.style.TestTypedArrayTypedArrayWrapper_GetStyle_StyleWithSubStyle,
-                R.styleable.TestTypedArrayTypedArrayWrapper_Styleable
+                R.style.Test_TypedArrayTypedArrayWrapper_GetStyle_StyleWithSubStyle,
+                R.styleable.Test_TypedArrayTypedArrayWrapper_Styleable
         )
         TypedArrayTypedArrayWrapper(typedArray).run {
             assertEquals(
-                    ResourceStyle(R.style.TestTypedArrayTypedArrayWrapper_GetStyle_SubStyle),
-                    getStyle(R.styleable.TestTypedArrayTypedArrayWrapper_Styleable_testTypedArrayTypedArrayWrapper_style)
+                    ResourceStyle(R.style.Test_TypedArrayTypedArrayWrapper_GetStyle_SubStyle),
+                    getStyle(R.styleable.Test_TypedArrayTypedArrayWrapper_Styleable_test_typedArrayTypedArrayWrapper_style)
             )
         }
     }

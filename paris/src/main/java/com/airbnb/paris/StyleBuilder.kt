@@ -1,13 +1,13 @@
 package com.airbnb.paris
 
-import android.support.annotation.*
-import android.util.*
+import android.support.annotation.StyleRes
+import android.util.AttributeSet
 import com.airbnb.paris.styles.*
 
 @Suppress("UNCHECKED_CAST")
 abstract class StyleBuilder<out B : StyleBuilder<B, A>, out A : StyleApplier<*, *>> @JvmOverloads constructor(
         private val applier: A? = null,
-        private var name: String = "a_programmatic_StyleBuilder") {
+        private var name: String = "a programmatic style") {
 
     protected var builder = ProgrammaticStyle.builder()
 

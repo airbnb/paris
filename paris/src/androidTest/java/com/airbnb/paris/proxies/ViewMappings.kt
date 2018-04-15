@@ -1,9 +1,10 @@
 package com.airbnb.paris.proxies
 
-import android.os.*
-import android.view.*
-import android.view.ViewStyleApplier.*
-import junit.framework.Assert.*
+import android.os.Build
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewStyleApplier.BaseStyleBuilder
+import junit.framework.Assert.assertEquals
 
 internal class ViewMapping<I : Any> private constructor(
         testValues: List<I>,
@@ -184,23 +185,6 @@ internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
             { view, input ->
                 assertEquals(input, view.paddingBottom)
                 assertEquals(input, view.paddingTop)
-            }
-    ))
-
-    // visibility
-    add(ViewMapping.withCustomAssert(
-            listOf(View.VISIBLE, View.INVISIBLE, View.GONE, 1, 2),
-            android.R.attr.visibility,
-            ViewProxy::setVisibility,
-            BaseStyleBuilder<*, *>::visibility,
-            BaseStyleBuilder<*, *>::visibilityRes,
-            { view, input ->
-                val possibleValuesMap = mapOf(
-                        View.VISIBLE to listOf(0),
-                        View.INVISIBLE to listOf(1, View.INVISIBLE),
-                        View.GONE to listOf(2, View.GONE)
-                )
-                assertTrue(possibleValuesMap[view.visibility]!!.contains(input))
             }
     ))
 
