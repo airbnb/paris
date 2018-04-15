@@ -8,19 +8,22 @@ import android.support.annotation.Px
 import android.support.annotation.StyleableRes
 import com.airbnb.paris.R
 import com.airbnb.paris.styles.Style
-import java.util.*
 
 abstract class TypedArrayWrapper {
 
     companion object {
         /**
-         * Unfortunately Android doesn't support reading @null resources from a style resource like it
-         * does from an AttributeSet so this trickery is required
+         * Unfortunately Android doesn't support reading @null resources from a style resource like
+         * it does from an AttributeSet so this trickery is required
          */
-        private val NULL_RESOURCE_IDS = HashSet(Arrays.asList(R.anim.null_, R.color.null_, R.drawable.null_))
+        private val ALTERNATE_NULL_RESOURCE_IDS = setOf(
+                R.anim.null_,
+                R.color.null_,
+                R.drawable.null_
+        )
     }
 
-    protected fun isNullRes(@AnyRes res: Int): Boolean = res in NULL_RESOURCE_IDS
+    protected fun isNullRes(@AnyRes res: Int): Boolean = res in ALTERNATE_NULL_RESOURCE_IDS
 
     abstract fun isNull(index: Int): Boolean
 
@@ -32,11 +35,13 @@ abstract class TypedArrayWrapper {
 
     abstract fun getBoolean(@StyleableRes index: Int): Boolean
 
-    @ColorInt abstract fun getColor(@StyleableRes index: Int): Int
+    @ColorInt
+    abstract fun getColor(@StyleableRes index: Int): Int
 
     abstract fun getColorStateList(@StyleableRes index: Int): ColorStateList
 
-    @Px abstract fun getDimensionPixelSize(@StyleableRes index: Int): Int
+    @Px
+    abstract fun getDimensionPixelSize(@StyleableRes index: Int): Int
 
     abstract fun getDrawable(@StyleableRes index: Int): Drawable
 

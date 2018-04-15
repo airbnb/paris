@@ -1,8 +1,10 @@
 package com.airbnb.paris.typed_array_wrappers
 
-import android.content.res.*
-import android.graphics.drawable.*
-import com.airbnb.paris.styles.*
+import android.content.res.ColorStateList
+import android.content.res.TypedArray
+import android.graphics.drawable.Drawable
+import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.styles.Style
 
 internal class TypedArrayTypedArrayWrapper constructor(
         private val typedArray: TypedArray) : TypedArrayWrapper() {
@@ -37,8 +39,15 @@ internal class TypedArrayTypedArrayWrapper constructor(
     override fun getLayoutDimension(index: Int): Int =
             typedArray.getLayoutDimension(index, -1)
 
-    override fun getResourceId(index: Int): Int =
-            if (isNull(index)) 0 else typedArray.getResourceId(index, 0)
+    override fun getResourceId(index: Int): Int {
+        return if (isNull(index)) {
+            // One of our alternate null resources was used here so we return 0 instead of an
+            // existing resource
+            0
+        } else {
+            typedArray.getResourceId(index, 0)
+        }
+    }
 
     override fun getString(index: Int): String = typedArray.getString(index)
 
