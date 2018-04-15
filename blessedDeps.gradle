@@ -12,6 +12,7 @@ rootProject.ext {
     JUNIT_VERSION = '4.12'
     KOTLIN_TEST_VERSION = '2.0.5'
     MOCKITO_VERSION = '2.8.9'
+    ROBOLECTRIC_VERSION = '3.8'
     TESTING_COMPILE_VERSION = '0.13'
     SUPPORT_LIBS_VERSION = '26.1.0'
 
@@ -25,6 +26,7 @@ rootProject.ext {
             kotlinTest      : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
             mockitoCore     : "org.mockito:mockito-core:$MOCKITO_VERSION",
             mockitoAndroid  : "org.mockito:mockito-android:$MOCKITO_VERSION",
+            robolectric     : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
             testingCompile  : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
     ]
 }

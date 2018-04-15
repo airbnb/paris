@@ -11,6 +11,12 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -28,8 +34,8 @@ dependencies {
 
     testImplementation deps.junit
     testImplementation deps.kotlinTest
-
     testImplementation deps.mockitoCore
+    testImplementation deps.robolectric
 
     androidTestImplementation deps.mockitoAndroid
     androidTestImplementation deps.espresso

@@ -1,13 +1,21 @@
 package com.airbnb.paris.typed_array_wrappers
 
-import android.content.*
-import android.content.res.*
-import android.graphics.drawable.*
-import android.os.*
-import android.support.annotation.*
-import com.airbnb.paris.attribute_values.*
-import com.airbnb.paris.styles.*
-import com.airbnb.paris.utils.*
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.support.annotation.AttrRes
+import com.airbnb.paris.attribute_values.ColorValue
+import com.airbnb.paris.attribute_values.DpValue
+import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.attribute_values.Styles
+import com.airbnb.paris.styles.MultiStyle
+import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.styles.Style
+import com.airbnb.paris.utils.dpToPx
+import com.airbnb.paris.utils.getFloat
+import com.airbnb.paris.utils.getLayoutDimension
+import com.airbnb.paris.utils.toColorStateList
 
 /*
  * Lexicon:
@@ -26,6 +34,7 @@ internal class MapTypedArrayWrapper constructor(
     private val styleableAttrIndexes by lazy {
         attrResToValueResMap.keys
                 .map { styleableAttrs.indexOf(it) }
+                // TODO Is this filtering necessary? If so document it
                 .filter { it != -1 }
     }
 
@@ -107,7 +116,7 @@ internal class MapTypedArrayWrapper constructor(
             getValue<Style>(index, { resId -> ResourceStyle(resId) })
 
     override fun recycle() {
-        //
+        // TODO Clear resources and throw if other methods are called after this
     }
 
     @Suppress("UNCHECKED_CAST")

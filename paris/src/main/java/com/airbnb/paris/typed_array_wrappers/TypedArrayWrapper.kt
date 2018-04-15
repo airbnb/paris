@@ -1,21 +1,26 @@
 package com.airbnb.paris.typed_array_wrappers
 
-import android.content.res.*
-import android.graphics.drawable.*
-import android.support.annotation.*
-import com.airbnb.paris.*
-import com.airbnb.paris.styles.*
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import android.support.annotation.AnyRes
+import android.support.annotation.ColorInt
+import android.support.annotation.Px
+import android.support.annotation.StyleableRes
+import com.airbnb.paris.R
+import com.airbnb.paris.styles.Style
 import java.util.*
 
 abstract class TypedArrayWrapper {
 
-    /**
-     * Unfortunately Android doesn't support reading @null resources from a style resource like it
-     * does from an AttributeSet so this trickery is required
-     */
-    private val NULL_RESOURCE_IDS = HashSet(Arrays.asList(R.anim.null_, R.color.null_, R.drawable.null_))
+    companion object {
+        /**
+         * Unfortunately Android doesn't support reading @null resources from a style resource like it
+         * does from an AttributeSet so this trickery is required
+         */
+        private val NULL_RESOURCE_IDS = HashSet(Arrays.asList(R.anim.null_, R.color.null_, R.drawable.null_))
+    }
 
-    protected fun isNullRes(@AnyRes res: Int): Boolean = NULL_RESOURCE_IDS.contains(res)
+    protected fun isNullRes(@AnyRes res: Int): Boolean = res in NULL_RESOURCE_IDS
 
     abstract fun isNull(index: Int): Boolean
 
