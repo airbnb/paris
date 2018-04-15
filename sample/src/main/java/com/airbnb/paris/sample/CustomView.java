@@ -1,13 +1,8 @@
-package com.airbnb.parislibrary;
+package com.airbnb.paris.sample;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.airbnb.paris.annotations.Style;
 import com.airbnb.paris.annotations.Styleable;
 
 @Styleable

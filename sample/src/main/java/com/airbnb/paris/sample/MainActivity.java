@@ -1,4 +1,4 @@
-package com.airbnb.parislibrary;
+package com.airbnb.paris.sample;
 
 import android.graphics.Color;
 import android.os.Bundle;

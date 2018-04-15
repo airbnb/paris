@@ -4,7 +4,7 @@ android {
     compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
     defaultConfig {
-        applicationId "com.airbnb.parislibrary"
+        applicationId "com.airbnb.paris.sample"
         minSdkVersion rootProject.MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
     }
