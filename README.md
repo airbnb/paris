@@ -88,7 +88,7 @@ public class MyView extends ViewGroup {
     }
 
     public MyView(Context context, AttributeSet attrs, int defStyle) {
-        this(context, attrs, defStyle);
+        super(context, attrs, defStyle);
         // Enables the custom attributes when used in XML layouts
         Paris.style(this).apply(attrs);
     }
