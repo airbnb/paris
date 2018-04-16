@@ -1,6 +1,7 @@
 package com.airbnb.paris.proxies;
 
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -10,10 +11,10 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.airbnb.paris.R2;
-import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.annotations.AfterStyle;
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.Styleable;
+import com.airbnb.paris.styles.Style;
 
 @Styleable(value = "Paris_TextView")
 public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
@@ -138,6 +139,11 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         getView().setSingleLine(singleLine);
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_text)
+    public void setText(CharSequence text) {
+        getView().setText(text);
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_textAllCaps)
     public void setTextAllCaps(boolean textAllCaps) {
         getView().setAllCaps(textAllCaps);
@@ -159,8 +165,12 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         getView().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
-    @Attr(R2.styleable.Paris_TextView_android_text)
-    public void setText(CharSequence text) {
-        getView().setText(text);
+    @Attr(R2.styleable.Paris_TextView_android_textStyle)
+    public void setTextStyle(int styleIndex) {
+        // Removes any style already applied to the typeface and applies the appropriate one instead
+        Typeface typeface = Typeface.create(getView().getTypeface(), styleIndex);
+        // Purposefully pass in the styleIndex again here because the view will apply "fake" bold
+        // and/or italic if the typeface doesn't support it
+        getView().setTypeface(typeface, styleIndex);
     }
 }

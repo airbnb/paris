@@ -25,6 +25,7 @@ class ViewProxyTest {
 
     @Test
     fun setVisibility_visibleProgrammatic() {
+        // Since visible is the default first set the visibility to something else
         view.visibility = View.GONE
         proxy.setVisibility(View.VISIBLE)
         assertEquals(View.VISIBLE, view.visibility)
@@ -32,6 +33,7 @@ class ViewProxyTest {
 
     @Test
     fun setVisibility_visibleXml() {
+        // Since visible is the default first set the visibility to something else
         view.visibility = View.GONE
         // When set in XML the index corresponding to visible is 0
         proxy.setVisibility(0)

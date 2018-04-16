@@ -60,6 +60,7 @@
         <attr name="android:textColor" />
         <attr name="android:textColorHint" />
         <attr name="android:textSize" />
+        <attr name="android:textStyle" />
     </declare-styleable>
 
     <declare-styleable name="Paris_ViewGroup">

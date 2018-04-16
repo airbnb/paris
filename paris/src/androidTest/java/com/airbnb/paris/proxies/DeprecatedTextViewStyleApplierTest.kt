@@ -16,7 +16,7 @@ import org.mockito.Mockito.*
 
 
 @RunWith(AndroidJUnit4::class)
-class TextViewStyleApplierTest {
+class DeprecatedTextViewStyleApplierTest {
 
     private lateinit var context: Context
     private lateinit var res: Resources

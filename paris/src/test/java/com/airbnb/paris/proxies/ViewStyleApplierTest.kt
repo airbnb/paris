@@ -28,6 +28,7 @@ class ViewStyleApplierTest {
 
     @Test
     fun visibility_visible() {
+        // Since visible is the default first set the visibility to something else
         view.visibility = View.GONE
         applier.apply(builder.visibility(View.VISIBLE).build())
         assertEquals(View.VISIBLE, view.visibility)
