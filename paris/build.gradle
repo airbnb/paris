@@ -20,9 +20,9 @@ android {
 }
 
 dependencies {
-    implementation project(':paris-annotations')
-
     implementation deps.appcompatV7
+
+    api project(':paris-annotations')
 
     // We use "api" here instead of "implementation" to avoid app module warnings like:
     // "Warning: unknown enum constant AnnotationTarget.FIELD"
