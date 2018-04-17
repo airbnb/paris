@@ -15,6 +15,7 @@ In your project's `build.gradle`:
 dependencies {
     implementation 'com.airbnb.android:paris:1.0.0'
     // If you are using Paris annotations
+    implementation 'com.airbnb.android:paris-annotations:1.0.0'
     annotationProcessor 'com.airbnb.android:paris-processor:1.0.0'
 }
 ```
