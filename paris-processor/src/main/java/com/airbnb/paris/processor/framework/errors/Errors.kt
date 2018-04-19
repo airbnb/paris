@@ -1,12 +1,16 @@
 package com.airbnb.paris.processor.framework.errors
 
 import java.util.*
-import javax.annotation.processing.*
-import javax.tools.*
+import javax.annotation.processing.Messager
+import javax.tools.Diagnostic
 
 internal object Errors {
 
     private val loggedExceptions: MutableList<Exception> = ArrayList()
+
+    fun log(message: String) {
+        log(ProcessorException(message))
+    }
 
     fun log(e: Exception) {
         loggedExceptions.add(e)

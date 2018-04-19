@@ -2,8 +2,8 @@ package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.*
-import com.airbnb.paris.processor.models.*
+import com.airbnb.paris.processor.framework.errors.check
+import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.*
 
 internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?, rClassName: ClassName?, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
@@ -74,6 +74,8 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
 
     val groupedAttrInfos = styleableInfo.attrs.groupBy { it.styleableResId.resourceName }
     for (groupedAttrs in groupedAttrInfos.values) {
+        rClassName!!
+
         val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
         check(nonResTargetAttrs.isEmpty() || nonResTargetAttrs.distinctBy { it.targetType }.size == 1) {

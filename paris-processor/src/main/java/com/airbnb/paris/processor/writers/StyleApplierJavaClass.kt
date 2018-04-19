@@ -2,7 +2,8 @@ package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.models.*
+import com.airbnb.paris.processor.models.StyleInfo
+import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.*
 
 internal class StyleApplierJavaClass(styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
@@ -117,7 +118,7 @@ internal class StyleApplierJavaClass(styleablesTree: StyleablesTree, styleableIn
 
     val styleApplierClassName = styleableInfo.styleApplierClassName()
 
-    addType(BaseStyleBuilderJavaClass(parentStyleApplierClassName, RElement.className, styleablesTree, styleableInfo).build())
+    addType(BaseStyleBuilderJavaClass(parentStyleApplierClassName, RElement?.className, styleablesTree, styleableInfo).build())
     val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
     addType(StyleBuilderJavaClass(styleableInfo).build())
 

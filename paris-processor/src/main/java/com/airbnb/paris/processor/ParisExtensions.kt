@@ -1,9 +1,9 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.android_resource_scanner.*
-import javax.lang.model.element.*
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import javax.lang.model.element.Element
 
-internal val RElement get() = ParisProcessor.INSTANCE.rFinder.element!!
+internal val RElement get() = ParisProcessor.INSTANCE.rFinder.element
 
 internal val defaultStyleNameFormat get() = ParisProcessor.INSTANCE.defaultStyleNameFormat
 

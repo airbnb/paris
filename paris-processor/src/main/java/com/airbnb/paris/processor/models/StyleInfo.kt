@@ -5,7 +5,9 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.RElement
 import com.airbnb.paris.processor.defaultStyleNameFormat
 import com.airbnb.paris.processor.framework.elements
-import com.airbnb.paris.processor.framework.errors.*
+import com.airbnb.paris.processor.framework.errors.Errors
+import com.airbnb.paris.processor.framework.errors.ProcessorException
+import com.airbnb.paris.processor.framework.errors.check
 import com.airbnb.paris.processor.models.StyleInfo.Kind
 import com.airbnb.paris.processor.models.StyleInfo.Kind.*
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
@@ -17,10 +19,6 @@ import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 import javax.lang.model.type.TypeMirror
-import kotlin.Boolean
-import kotlin.String
-import kotlin.let
-import kotlin.to
 
 internal class StyleInfoExtractor {
 
@@ -103,7 +101,7 @@ internal class StyleInfoExtractor {
         val elementName = styleableElement.simpleName.toString()
         val defaultStyleName = String.format(Locale.US, defaultStyleNameFormat, elementName)
 
-        val rStyleTypeElement = elements.getTypeElement("${RElement.qualifiedName}.style")
+        val rStyleTypeElement = elements.getTypeElement("${RElement!!.qualifiedName}.style")
         val defaultStyleExists = elements.getAllMembers(rStyleTypeElement).any {
             it.simpleName.toString() == defaultStyleName
         }

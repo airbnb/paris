@@ -1,23 +1,13 @@
 package com.airbnb.paris.processor.framework.errors
 
-import javax.lang.model.element.*
+import javax.lang.model.element.Element
 
 @Throws(ProcessorException::class)
-internal fun Any.check(value: Boolean, element: Element, lazyMessage: () -> String) {
-    if (!value) fail(element, lazyMessage)
+internal fun check(value: Boolean, element: Element, lazyMessage: () -> String) {
+    if (!value) error(element, lazyMessage)
 }
 
 @Throws(ProcessorException::class)
-internal fun Any.check(value: Boolean, lazyMessage: () -> String) {
-    if (!value) fail(lazyMessage)
-}
-
-@Throws(ProcessorException::class)
-internal fun Any.fail(element: Element, lazyMessage: () -> String): Nothing {
-    fail { "${element.simpleName}: ${lazyMessage()}" }
-}
-
-@Throws(ProcessorException::class)
-internal fun Any.fail(lazyMessage: () -> String): Nothing {
-    throw ProcessorException(lazyMessage())
+internal fun error(element: Element, lazyMessage: () -> String): Nothing {
+    error { "${element.simpleName}: ${lazyMessage()}" }
 }

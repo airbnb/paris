@@ -121,11 +121,14 @@ class ParisProcessor : SkyProcessor() {
 
         if (!styleablesInfo.isEmpty() || !externalStyleablesInfo.isEmpty()) {
             try {
-                if (rFinder.element != null) {
-                    val parisClassPackageName = rFinder.element!!.packageName
-                    ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
+                check(rFinder.element != null) {
+                    "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
                 }
-            } catch (e: ProcessorException) {
+
+                val parisClassPackageName = rFinder.element!!.packageName
+                ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
+
+            } catch (e: Exception) {
                 Errors.log(e)
             }
         }
