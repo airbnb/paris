@@ -43,6 +43,7 @@ class ParisProcessor : SkyProcessor() {
 
     private var styleableInfoExtractor = StyleableInfoExtractor()
 
+    // TODO Don't do this lazily to make sure it happens before we create new generated module classes
     private val externalStyleablesInfo by lazy { BaseStyleableInfoExtractor().fromEnvironment() }
 
     @Synchronized

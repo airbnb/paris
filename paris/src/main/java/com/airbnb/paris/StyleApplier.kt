@@ -70,6 +70,7 @@ abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val v
 
     protected open fun applyParent(style: Style) {}
 
+    // TODO Rename to processStyleableChilds
     protected open fun processStyleableFields(style: Style, a: TypedArrayWrapper) {}
 
     protected open fun processAttributes(style: Style, a: TypedArrayWrapper) {}

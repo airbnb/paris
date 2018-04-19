@@ -19,6 +19,7 @@ class ParisProcessorUtils {
          */
         @JvmStatic
         fun reformatStyleFieldOrMethodName(name: String): String {
+            // TODO What if the whole name is "Style"?
             // Converts any name to CamelCase
             val isNameAllCaps = name.all { it.isUpperCase() || !it.isLetter() }
             return name
