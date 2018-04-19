@@ -25,6 +25,20 @@ class TextViewProxyTest {
     }
 
     @Test
+    fun setHint_normal() {
+        proxy.setHint("This is a hint")
+        assertEquals("This is a hint", view.hint)
+    }
+
+    @Test
+    fun setHint_null() {
+        // Since null is the default first set the hint to something else
+        view.hint = "This is a hint"
+        proxy.setHint(null)
+        assertEquals(null, view.hint)
+    }
+
+    @Test
     fun setTextStyle_normal() {
         // Since normal is the default first set the style to something else
         view.setTypeface(view.typeface, Typeface.BOLD)

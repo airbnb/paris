@@ -88,6 +88,11 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         getView().setEllipsize(where);
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_hint)
+    public void setHint(@Nullable CharSequence hint) {
+        getView().setHint(hint);
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_gravity)
     public void setGravity(int gravity) {
         getView().setGravity(gravity);
@@ -140,7 +145,7 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     }
 
     @Attr(R2.styleable.Paris_TextView_android_text)
-    public void setText(CharSequence text) {
+    public void setText(@Nullable CharSequence text) {
         getView().setText(text);
     }
 

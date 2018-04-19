@@ -40,7 +40,7 @@ data class ProgrammaticStyle internal constructor(
                 put(attrRes, ColorValue(color))
 
         fun put(@AttrRes attrRes: Int, value: Any): Builder {
-            attrResToValueResMap.put(attrRes, value)
+            attrResToValueResMap[attrRes] = value
             return this
         }
 

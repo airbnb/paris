@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Typeface
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
+import com.airbnb.paris.R
+import com.airbnb.paris.attribute_values.ResourceId
 import com.airbnb.paris.styles.ProgrammaticStyle
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -24,6 +26,28 @@ class TextViewStyleBuilderTest {
         context = RuntimeEnvironment.application
         view = TextView(context)
         builder = TextViewStyleApplier.StyleBuilder()
+    }
+
+    @Test
+    fun hint_programmatic() {
+        val style = builder.hint("This is a hint").build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(android.R.attr.hint, "This is a hint")
+                        .build(),
+                style
+        )
+    }
+
+    @Test
+    fun hint_xml() {
+        val style = builder.hintRes(R.string.test_arbitrary).build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(android.R.attr.hint, ResourceId(R.string.test_arbitrary))
+                        .build(),
+                style
+        )
     }
 
     @Test

@@ -28,6 +28,21 @@ class TextViewStyleApplierTest {
     }
 
     @Test
+    fun hint_normal() {
+        applier.apply(builder.hint("This is a hint").build())
+        assertEquals("This is a hint", view.hint)
+    }
+
+    // TODO Re-enable once null values are supported
+    //@Test
+    fun setHint_null() {
+        // Since null is the default first set the hint to something else
+        view.hint = "This is a hint"
+        applier.apply(builder.hint(null).build())
+        assertEquals(null, view.hint)
+    }
+
+    @Test
     fun textStyle_normal() {
         // Since normal is the default first set the style to something else
         view.setTypeface(view.typeface, Typeface.BOLD)

@@ -46,6 +46,7 @@
         <attr name="android:drawableRight" />
         <attr name="android:drawableTop" />
         <attr name="android:ellipsize" />
+        <attr name="android:hint" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
         <attr name="android:lines" />
