@@ -7,8 +7,6 @@ import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanne
 import com.airbnb.paris.processor.framework.SkyProcessor
 import com.airbnb.paris.processor.framework.errors.Errors
 import com.airbnb.paris.processor.framework.errors.ProcessorException
-import com.airbnb.paris.processor.framework.kaptOutputPath
-import com.airbnb.paris.processor.framework.messager
 import com.airbnb.paris.processor.framework.packageName
 import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.writers.KotlinStyleExtensionsFile
@@ -126,11 +124,9 @@ class ParisProcessor : SkyProcessor() {
 
         if (allStyleables.isNotEmpty()) {
             try {
-                processingEnv.kaptOutputPath?.let { kaptPath ->
-                    allStyleables
-                        .map { KotlinStyleExtensionsFile(it) }
-                        .forEach { it.write(kaptPath) }
-                }
+                styleablesInfo
+                    .map { KotlinStyleExtensionsFile(it) }
+                    .forEach { it.write() }
 
                 check(rFinder.element != null) {
                     "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."

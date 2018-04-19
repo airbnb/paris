@@ -7,34 +7,31 @@ import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.*
 import javax.lang.model.element.Modifier
 
-typealias JavaClassName = com.squareup.javapoet.ClassName
-typealias JavaTypeName = com.squareup.javapoet.TypeName
-typealias JavaWildcardTypeName = com.squareup.javapoet.WildcardTypeName
-typealias JavaArrayTypeName = com.squareup.javapoet.ArrayTypeName
-typealias JavaTypeVariableName = com.squareup.javapoet.TypeVariableName
-typealias JavaParametrizedTypeName = com.squareup.javapoet.ParameterizedTypeName
-
-typealias JavaParameterSpec = com.squareup.javapoet.ParameterSpec
-typealias JavaFieldSpec = com.squareup.javapoet.FieldSpec
-typealias JavaAnnotationSpec = com.squareup.javapoet.AnnotationSpec
-typealias JavaTypeSpec = com.squareup.javapoet.TypeSpec
-
-typealias KotlinClassName = com.squareup.kotlinpoet.ClassName
-typealias KotlinParameterizedTypeName = com.squareup.kotlinpoet.ParameterizedTypeName
-typealias KotlinTypeName = com.squareup.kotlinpoet.TypeName
-typealias KotlinWildcardTypeName = com.squareup.kotlinpoet.WildcardTypeName
-typealias KotlinTypeVariableName = com.squareup.kotlinpoet.TypeVariableName
-
-typealias KotlinParameterSpec = com.squareup.kotlinpoet.ParameterSpec
-typealias KotlinAnnotationSpec = com.squareup.kotlinpoet.AnnotationSpec
-typealias KotlinTypeSpec = com.squareup.kotlinpoet.TypeSpec
+internal typealias JavaClassName = com.squareup.javapoet.ClassName
+internal typealias JavaTypeName = com.squareup.javapoet.TypeName
+internal typealias JavaWildcardTypeName = com.squareup.javapoet.WildcardTypeName
+internal typealias JavaArrayTypeName = com.squareup.javapoet.ArrayTypeName
+internal typealias JavaTypeVariableName = com.squareup.javapoet.TypeVariableName
+internal typealias JavaParametrizedTypeName = com.squareup.javapoet.ParameterizedTypeName
+internal typealias JavaParameterSpec = com.squareup.javapoet.ParameterSpec
+internal typealias JavaFieldSpec = com.squareup.javapoet.FieldSpec
+internal typealias JavaAnnotationSpec = com.squareup.javapoet.AnnotationSpec
+internal typealias JavaTypeSpec = com.squareup.javapoet.TypeSpec
+internal typealias KotlinClassName = com.squareup.kotlinpoet.ClassName
+internal typealias KotlinParameterizedTypeName = com.squareup.kotlinpoet.ParameterizedTypeName
+internal typealias KotlinTypeName = com.squareup.kotlinpoet.TypeName
+internal typealias KotlinWildcardTypeName = com.squareup.kotlinpoet.WildcardTypeName
+internal typealias KotlinTypeVariableName = com.squareup.kotlinpoet.TypeVariableName
+internal typealias KotlinParameterSpec = com.squareup.kotlinpoet.ParameterSpec
+internal typealias KotlinAnnotationSpec = com.squareup.kotlinpoet.AnnotationSpec
+internal typealias KotlinTypeSpec = com.squareup.kotlinpoet.TypeSpec
 
 private val javaUtilPkg = "java.util"
 private val javaLangPkg = "java.lang"
 private val kotlinCollectionsPkg = "kotlin.collections"
 private val kotlinPkg = "kotlin"
 
-fun JavaClassName.toKPoet(): KotlinClassName {
+internal fun JavaClassName.toKPoet(): KotlinClassName {
 
     val simpleNames = getSimpleNamesInKotlin()
     val packageName = getPackageNameInKotlin()
@@ -92,7 +89,7 @@ private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
 }
 
 // Does not support transferring annotations
-fun JavaWildcardTypeName.toKPoet() =
+internal fun JavaWildcardTypeName.toKPoet() =
     if (!lowerBounds.isEmpty()) {
         KotlinWildcardTypeName.supertypeOf(lowerBounds.first().toKPoet())
     } else {
@@ -100,13 +97,13 @@ fun JavaWildcardTypeName.toKPoet() =
     }
 
 // Does not support transferring annotations
-fun JavaParametrizedTypeName.toKPoet() = KotlinParameterizedTypeName.get(
+internal fun JavaParametrizedTypeName.toKPoet() = KotlinParameterizedTypeName.get(
     this.rawType.toKPoet(),
     *typeArguments.toKPoet().toTypedArray()
 )
 
 // Does not support transferring annotations
-fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
+internal fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
 
     // Kotlin has special classes for primitive arrays
     if (componentType.isPrimitive) {
@@ -134,12 +131,12 @@ fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
 }
 
 // Does not support transferring annotations
-fun JavaTypeVariableName.toKPoet() = KotlinTypeVariableName.invoke(
+internal fun JavaTypeVariableName.toKPoet() = KotlinTypeVariableName.invoke(
     name,
     *bounds.toKPoet().toTypedArray()
 )
 
-fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
+internal fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
     JavaTypeName.BOOLEAN -> BOOLEAN
     JavaTypeName.BYTE -> BYTE
     JavaTypeName.SHORT -> SHORT
@@ -158,9 +155,9 @@ fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
     else -> throw IllegalArgumentException("Unsupported type: ${this::class.simpleName}")
 }
 
-fun <T : JavaTypeName> Iterable<T>.toKPoet() = map { it.toKPoet() }
+internal fun <T : JavaTypeName> Iterable<T>.toKPoet() = map { it.toKPoet() }
 
-fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
+internal fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     // A param name in java might be reserved in kotlin
     val paramName = if (name in KOTLIN_KEYWORDS) name + "Param" else name
@@ -173,12 +170,12 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
 }
 
-fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
+internal fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
 
-fun Iterable<Modifier>.toKModifier(): List<KModifier> =
+internal fun Iterable<Modifier>.toKModifier(): List<KModifier> =
     map { it.toKModifier() }.filter { it != null }.map { it!! }
 
-fun Modifier.toKModifier() = when (this) {
+internal fun Modifier.toKModifier() = when (this) {
     Modifier.PUBLIC -> KModifier.PUBLIC
     Modifier.PRIVATE -> KModifier.PRIVATE
     Modifier.PROTECTED -> KModifier.PROTECTED

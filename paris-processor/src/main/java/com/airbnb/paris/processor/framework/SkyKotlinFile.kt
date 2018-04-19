@@ -1,8 +1,8 @@
 package com.airbnb.paris.processor.framework
 
+import com.airbnb.paris.processor.ParisProcessor
 import com.squareup.kotlinpoet.FileSpec
 import java.io.File
-import javax.annotation.processing.ProcessingEnvironment
 
 
 internal abstract class SkyKotlinFile(
@@ -19,27 +19,11 @@ internal abstract class SkyKotlinFile(
     }
 
     /**
-     * See [kaptOutputPath]
+     * If this module is being processed with kapt then the file is written, otherwise this is a no-op.
      */
-    fun write(outputPath: String) {
-        build().writeTo(File(outputPath))
+    fun write() {
+        kaptOutputPath?.let {
+            build().writeTo(File(it))
+        }
     }
 }
-
-// This option will be present when processed by kapt, and it tells us where to put our
-// generated kotlin files
-// https://github.com/JetBrains/kotlin-examples/blob/master/gradle/kotlin-code-generation
-// /annotation-processor/src/main/java/TestAnnotationProcessor.kt
-private const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-
-/**
- * Get the directory name where kapt output files should be placed.
- *
- * If null, this is not being processed by kapt, so we can't generate kotlin code.
- */
-val ProcessingEnvironment.kaptOutputPath: String?
-    get() {
-        // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
-        return options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
-            ?.replace("kaptKotlin", "kapt")
-    }

@@ -11,20 +11,24 @@ abstract class SkyProcessor : AbstractProcessor() {
         lateinit var INSTANCE: SkyProcessor
     }
 
-    lateinit var filer: Filer
-    lateinit var messager: Messager
-    lateinit var elements: Elements
-    lateinit var types: Types
+    val filer: Filer by lazy { processingEnv.filer }
+    val messager: Messager by lazy { processingEnv.messager }
+    val elements: Elements by lazy { processingEnv.elementUtils }
+    val types: Types by lazy { processingEnv.typeUtils }
+    /**
+     * The directory name where kapt output files should be placed.
+     *
+     * If null, this is not being processed by kapt, so we can't generate kotlin code.
+     */
+    val kaptOutputPath: String? by lazy {
+        processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
+            // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
+            ?.replace("kaptKotlin", "kapt")
+    }
 
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
-
-        filer = processingEnv.filer
-        messager = processingEnv.messager
-        elements = processingEnv.elementUtils
-        types = processingEnv.typeUtils
-
         INSTANCE = this
     }
 
@@ -40,7 +44,17 @@ abstract class SkyProcessor : AbstractProcessor() {
 
     abstract fun processRound(annotations: Set<TypeElement>, roundEnv: RoundEnvironment)
 
-    abstract fun claimAnnotations(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean
+    abstract fun claimAnnotations(
+        annotations: Set<TypeElement>,
+        roundEnv: RoundEnvironment
+    ): Boolean
 
     abstract fun processingOver()
 }
+
+/**
+ * This option will be present when processed by kapt, and it tells us where to put our
+ * generated kotlin files
+ * https://github.com/JetBrains/kotlin-examples/blob/master/gradle/kotlin-code-generation/annotation-processor/src/main/java/TestAnnotationProcessor.kt
+ */
+private const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"

@@ -26,7 +26,7 @@ internal class ParisJavaClass(parisClassPackageName: String, styleableClassesInf
             addStatement("return new \$T(view)", styleApplierClassName)
         }
 
-        val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
+        val styleBuilderClassName = styleableClassInfo.styleBuilderClassName
 
         method("styleBuilder") {
             public()

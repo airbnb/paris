@@ -29,8 +29,8 @@ dependencies {
     api deps.kotlin
 
     compileOnly project(':paris-processor')
-
     annotationProcessor project(':paris-processor')
+
 
     testImplementation deps.junit
     testImplementation deps.kotlinTest
