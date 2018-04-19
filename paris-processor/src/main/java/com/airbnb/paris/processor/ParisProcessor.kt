@@ -7,8 +7,11 @@ import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanne
 import com.airbnb.paris.processor.framework.SkyProcessor
 import com.airbnb.paris.processor.framework.errors.Errors
 import com.airbnb.paris.processor.framework.errors.ProcessorException
+import com.airbnb.paris.processor.framework.kaptOutputPath
+import com.airbnb.paris.processor.framework.messager
 import com.airbnb.paris.processor.framework.packageName
 import com.airbnb.paris.processor.models.*
+import com.airbnb.paris.processor.writers.KotlinStyleExtensionsFile
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
@@ -107,12 +110,13 @@ class ParisProcessor : SkyProcessor() {
 
         rFinder.processStyleables(styleablesInfo)
 
-        val styleablesTree = StyleablesTree(styleablesInfo + externalStyleablesInfo)
+        val allStyleables = styleablesInfo + externalStyleablesInfo
+        val styleablesTree = StyleablesTree(allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(styleablesTree, styleableInfo).write()
         }
 
-        if (!styleablesInfo.isEmpty()) {
+        if (styleablesInfo.isNotEmpty()) {
             try {
                 ModuleJavaClass(styleablesInfo).write()
             } catch (e: ProcessorException) {
@@ -120,11 +124,18 @@ class ParisProcessor : SkyProcessor() {
             }
         }
 
-        if (!styleablesInfo.isEmpty() || !externalStyleablesInfo.isEmpty()) {
+        if (allStyleables.isNotEmpty()) {
             try {
+                processingEnv.kaptOutputPath?.let { kaptPath ->
+                    allStyleables
+                        .map { KotlinStyleExtensionsFile(it) }
+                        .forEach { it.write(kaptPath) }
+                }
+
                 check(rFinder.element != null) {
                     "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
                 }
+
 
                 val parisClassPackageName = rFinder.element!!.packageName
                 ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
