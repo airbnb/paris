@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.utils
 
-internal object ParisProcessorUtils {
+// This is purposefully left public for use at runtime in our app
+object ParisProcessorUtils {
 
 
     /**
@@ -42,12 +43,4 @@ internal object ParisProcessorUtils {
             .removeSuffix("Style")
     }
 
-}
-
-internal fun String.lowerCaseFirstLetter(): String {
-    if (isEmpty()) {
-        return this
-    }
-
-    return Character.toLowerCase(get(0)) + substring(1)
 }

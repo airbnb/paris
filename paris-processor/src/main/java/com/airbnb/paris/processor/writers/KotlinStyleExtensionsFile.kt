@@ -6,7 +6,6 @@ import com.airbnb.paris.processor.framework.AndroidClassNames.ATTRIBUTE_SET
 import com.airbnb.paris.processor.framework.AndroidClassNames.STYLE_RES
 import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.StyleableInfo
-import com.airbnb.paris.processor.utils.lowerCaseFirstLetter
 import com.squareup.kotlinpoet.*
 
 /**
@@ -24,13 +23,14 @@ internal class KotlinStyleExtensionsFile(
 
     styleables.forEach { styleable ->
 
-        fun FunSpec.Builder.addStyleBuilderAsParam() {
-            val builderType = styleable.styleBuilderClassName.toKPoet()
-            addParameter(
-                BUILDER_PARAM_NAME,
-                LambdaTypeName.get(receiver = builderType, returnType = UNIT)
+        val builderParam = ParameterSpec.builder(
+            "builder",
+            LambdaTypeName.get(
+                receiver = styleable.styleBuilderClassName.toKPoet(),
+                returnType = UNIT
             )
-        }
+        ).build()
+
 
         /**
          * An extension for setting a Style object on the view.
@@ -95,14 +95,15 @@ internal class KotlinStyleExtensionsFile(
         function("style${styleable.viewElementName}") {
             addModifiers(KModifier.INLINE)
 
-            val paramName = styleable.viewElementName.lowerCaseFirstLetter()
+            val paramName = styleable.viewElementName.decapitalize()
             addParameter(paramName, styleable.viewElementType.asTypeName())
 
-            addStyleBuilderAsParam()
+            addParameter(builderParam)
 
             addStatement(
-                "%T().apply($BUILDER_PARAM_NAME).applyTo(%L)",
+                "%T().apply(%N).applyTo(%L)",
                 styleable.styleBuilderClassName.toKPoet(),
+                builderParam,
                 paramName
             )
         }
@@ -116,14 +117,13 @@ internal class KotlinStyleExtensionsFile(
             addModifiers(KModifier.INLINE)
             returns(STYLE_CLASS_NAME.toKPoet())
 
-            addStyleBuilderAsParam()
+            addParameter(builderParam)
 
             addStatement(
-                "return %T().apply($BUILDER_PARAM_NAME).build()",
-                styleable.styleBuilderClassName.toKPoet()
+                "return %T().apply(%N).build()",
+                styleable.styleBuilderClassName.toKPoet(),
+                builderParam
             )
         }
     }
 })
-
-private const val BUILDER_PARAM_NAME = "builder"
