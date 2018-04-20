@@ -124,16 +124,13 @@ class ParisProcessor : SkyProcessor() {
 
         if (allStyleables.isNotEmpty()) {
             try {
-                styleablesInfo
-                    .map { KotlinStyleExtensionsFile(it) }
-                    .forEach { it.write() }
 
-                check(rFinder.element != null) {
+                checkNotNull(rFinder.element) {
                     "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
                 }
 
-
                 val parisClassPackageName = rFinder.element!!.packageName
+                KotlinStyleExtensionsFile("$parisClassPackageName.paris.extensions", allStyleables).write()
                 ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
 
             } catch (e: Exception) {
