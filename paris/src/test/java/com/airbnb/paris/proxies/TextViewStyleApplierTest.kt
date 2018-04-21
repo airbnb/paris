@@ -2,8 +2,11 @@ package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.graphics.Typeface
+import android.text.InputType
+import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
+import com.airbnb.paris.R
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -35,11 +38,59 @@ class TextViewStyleApplierTest {
 
     // TODO Re-enable once null values are supported
     //@Test
-    fun setHint_null() {
+    fun hint_null() {
         // Since null is the default first set the hint to something else
         view.hint = "This is a hint"
         applier.apply(builder.hint(null).build())
         assertEquals(null, view.hint)
+    }
+
+    @Test
+    fun inputType_classDatetimeProgrammatic() {
+        applier.apply(builder.inputType(InputType.TYPE_CLASS_DATETIME).build())
+        assertEquals(InputType.TYPE_CLASS_DATETIME, view.inputType)
+    }
+
+    @Test
+    fun inputType_classDatetimeXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassDatetime)
+        assertEquals(InputType.TYPE_CLASS_DATETIME, view.inputType)
+    }
+
+    @Test
+    fun inputType_classNumberXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassNumber)
+        assertEquals(InputType.TYPE_CLASS_NUMBER, view.inputType)
+    }
+
+    @Test
+    fun inputType_classPhoneXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassPhone)
+        assertEquals(InputType.TYPE_CLASS_PHONE, view.inputType)
+    }
+
+    @Test
+    fun inputType_classTextXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassText)
+        assertEquals(InputType.TYPE_CLASS_TEXT, view.inputType)
+    }
+
+    @Test
+    fun inputType_classTextVariationPasswordXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextVariationPassword)
+        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD, view.inputType)
+    }
+
+    @Test
+    fun inputType_classTextVariationUriXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextVariationUri)
+        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI, view.inputType)
+    }
+
+    @Test
+    fun inputType_classTextFlagAutoCompleteXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextFlagAutoComplete)
+        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE, view.inputType)
     }
 
     @Test
@@ -67,4 +118,12 @@ class TextViewStyleApplierTest {
         applier.apply(builder.textStyle(Typeface.BOLD_ITALIC).build())
         assertEquals(Typeface.BOLD_ITALIC, view.typeface.style)
     }
+
+    @Test
+    fun visibility_invisible() {
+        // View attributes are also available
+        applier.apply(builder.visibility(View.INVISIBLE).build())
+        assertEquals(View.INVISIBLE, view.visibility)
+    }
+
 }

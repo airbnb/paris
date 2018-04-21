@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassDatetime">
+        <item name="android:inputType">datetime</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassNumber">
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassPhone">
+        <item name="android:inputType">phone</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassText">
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassTextVariationPassword">
+        <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassTextVariationUri">
+        <item name="android:inputType">textUri</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_ClassTextFlagAutoComplete">
+        <item name="android:inputType">textAutoComplete</item>
+    </style>
+
+</resources>

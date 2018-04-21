@@ -2,6 +2,7 @@ package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.graphics.Typeface
+import android.text.InputType
 import android.widget.TextView
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -36,6 +37,48 @@ class TextViewProxyTest {
         view.hint = "This is a hint"
         proxy.setHint(null)
         assertEquals(null, view.hint)
+    }
+
+    @Test
+    fun setInputType_classDatetime() {
+        proxy.setInputType(InputType.TYPE_CLASS_DATETIME)
+        assertEquals(InputType.TYPE_CLASS_DATETIME, view.inputType)
+    }
+
+    @Test
+    fun setInputType_classNumber() {
+        proxy.setInputType(InputType.TYPE_CLASS_NUMBER)
+        assertEquals(InputType.TYPE_CLASS_NUMBER, view.inputType)
+    }
+
+    @Test
+    fun setInputType_classPhone() {
+        proxy.setInputType(InputType.TYPE_CLASS_PHONE)
+        assertEquals(InputType.TYPE_CLASS_PHONE, view.inputType)
+    }
+
+    @Test
+    fun setInputType_classText() {
+        proxy.setInputType(InputType.TYPE_CLASS_TEXT)
+        assertEquals(InputType.TYPE_CLASS_TEXT, view.inputType)
+    }
+
+    @Test
+    fun setInputType_classTextVariationPassword() {
+        proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
+        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD, view.inputType)
+    }
+
+    @Test
+    fun setInputType_classTextVariationUri() {
+        proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI, view.inputType)
+    }
+
+    @Test
+    fun setInputType_classTextVariationAutocomplete() {
+        proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE)
+        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE, view.inputType)
     }
 
     @Test

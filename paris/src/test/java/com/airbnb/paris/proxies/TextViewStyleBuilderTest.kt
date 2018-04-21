@@ -2,6 +2,8 @@ package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.graphics.Typeface
+import android.text.InputType
+import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
 import com.airbnb.paris.R
@@ -29,7 +31,7 @@ class TextViewStyleBuilderTest {
     }
 
     @Test
-    fun hint_programmatic() {
+    fun hint() {
         val style = builder.hint("This is a hint").build()
         assertEquals(
                 ProgrammaticStyle.builder()
@@ -40,7 +42,7 @@ class TextViewStyleBuilderTest {
     }
 
     @Test
-    fun hint_xml() {
+    fun hintRes() {
         val style = builder.hintRes(R.string.test_arbitrary).build()
         assertEquals(
                 ProgrammaticStyle.builder()
@@ -51,7 +53,29 @@ class TextViewStyleBuilderTest {
     }
 
     @Test
-    fun textStyle_normal() {
+    fun inputType() {
+        val style = builder.inputType(InputType.TYPE_CLASS_DATETIME).build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(android.R.attr.inputType, InputType.TYPE_CLASS_DATETIME)
+                        .build(),
+                style
+        )
+    }
+
+    @Test
+    fun inputTypeRes() {
+        val style = builder.inputTypeRes(R.integer.test_arbitrary).build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(android.R.attr.inputType, ResourceId(R.integer.test_arbitrary))
+                        .build(),
+                style
+        )
+    }
+
+    @Test
+    fun textStyle() {
         val style = builder.textStyle(Typeface.NORMAL).build()
         assertEquals(
                 ProgrammaticStyle.builder()
@@ -62,33 +86,23 @@ class TextViewStyleBuilderTest {
     }
 
     @Test
-    fun textStyle_bold() {
-        val style = builder.textStyle(Typeface.BOLD).build()
+    fun textStyleRes() {
+        val style = builder.textStyleRes(R.integer.test_arbitrary).build()
         assertEquals(
                 ProgrammaticStyle.builder()
-                        .put(android.R.attr.textStyle, Typeface.BOLD)
+                        .put(android.R.attr.textStyle, ResourceId(R.integer.test_arbitrary))
                         .build(),
                 style
         )
     }
 
     @Test
-    fun textStyle_italic() {
-        val style = builder.textStyle(Typeface.ITALIC).build()
+    fun visibility_invisible() {
+        // View attributes are also available
+        val style = builder.visibility(View.INVISIBLE).build()
         assertEquals(
                 ProgrammaticStyle.builder()
-                        .put(android.R.attr.textStyle, Typeface.ITALIC)
-                        .build(),
-                style
-        )
-    }
-
-    @Test
-    fun textStyle_boldItalic() {
-        val style = builder.textStyle(Typeface.BOLD_ITALIC).build()
-        assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.textStyle, Typeface.BOLD_ITALIC)
+                        .put(android.R.attr.visibility, View.INVISIBLE)
                         .build(),
                 style
         )

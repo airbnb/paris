@@ -93,6 +93,11 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         getView().setHint(hint);
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_inputType)
+    public void setInputType(int inputType) {
+        getView().setInputType(inputType);
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_gravity)
     public void setGravity(int gravity) {
         getView().setGravity(gravity);
