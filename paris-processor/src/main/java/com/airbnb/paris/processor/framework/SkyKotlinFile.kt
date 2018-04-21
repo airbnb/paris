@@ -1,6 +1,5 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.ParisProcessor
 import com.squareup.kotlinpoet.FileSpec
 import java.io.File
 

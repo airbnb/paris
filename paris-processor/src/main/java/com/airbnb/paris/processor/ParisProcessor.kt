@@ -9,10 +9,10 @@ import com.airbnb.paris.processor.framework.errors.Errors
 import com.airbnb.paris.processor.framework.errors.ProcessorException
 import com.airbnb.paris.processor.framework.packageName
 import com.airbnb.paris.processor.models.*
-import com.airbnb.paris.processor.writers.KotlinStyleExtensionsFile
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
+import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
 import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -112,6 +112,7 @@ class ParisProcessor : SkyProcessor() {
         val styleablesTree = StyleablesTree(allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(styleablesTree, styleableInfo).write()
+            StyleExtensionsKotlinFile(styleableInfo).write()
         }
 
         if (styleablesInfo.isNotEmpty()) {
@@ -130,7 +131,6 @@ class ParisProcessor : SkyProcessor() {
                 }
 
                 val parisClassPackageName = rFinder.element!!.packageName
-                KotlinStyleExtensionsFile("$parisClassPackageName.paris.extensions", allStyleables).write()
                 ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
 
             } catch (e: Exception) {
