@@ -58,6 +58,7 @@ private fun JavaClassName.getPackageNameInKotlin(): String {
                 "Map",
                 "Set",
                 "Iterable" -> kotlinCollectionsPkg
+                "CharSequence",
                 "String" -> kotlinPkg
                 else -> null
             }

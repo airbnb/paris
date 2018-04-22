@@ -113,6 +113,52 @@ internal class StyleExtensionsKotlinFile(
         )
     }
 
+    val distinctStyleableChildren = styleable.styleableChildren.distinctBy { it.styleableResId.resourceName }
+    for (styleableChildInfo in distinctStyleableChildren) {
+        rClassName!!
+
+        val functionName = styleableAttrResourceNameToCamelCase(styleable.styleableResourceName, styleableChildInfo.styleableResId.resourceName!!)
+
+        val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
+        )
+
+        function(functionName) {
+            receiver(extendableStyleBuilderTypeName)
+            parameter("resId", Integer.TYPE) {
+                addAnnotation(STYLE_RES)
+            }
+            addStatement("builder.putStyle(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.code)
+        }
+
+        function(functionName) {
+            receiver(extendableStyleBuilderTypeName)
+            parameter("style", STYLE_CLASS_NAME.toKPoet())
+            addStatement("builder.putStyle(%T.styleable.%L[%L], style)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.code)
+        }
+
+        function(functionName) {
+            receiver(extendableStyleBuilderTypeName)
+
+            val subExtendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                    EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                    styleableChildInfo.type.asTypeName()
+            )
+            val builderParameter = parameter("init", LambdaTypeName.get(
+                    receiver = subExtendableStyleBuilderTypeName,
+                    returnType = UNIT
+            ))
+            addStatement("builder.putStyle(%T.styleable.%L[%L], %T().apply(%N).build())",
+                    rClassName,
+                    styleable.styleableResourceName,
+                    styleableChildInfo.styleableResId.code,
+                    subExtendableStyleBuilderTypeName,
+                    builderParameter
+            )
+        }
+    }
+
     val attrGroups = styleable.attrs.groupBy { it.styleableResId.resourceName }
     for (groupedAttrs in attrGroups.values) {
         rClassName!!
@@ -136,7 +182,8 @@ internal class StyleExtensionsKotlinFile(
                 )
                 receiver(extendableStyleBuilderTypeName)
 
-                parameter("value", attr.targetType.asTypeName()) {
+                // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
+                parameter("value", JavaTypeName.get(attr.targetType).toKPoet()) {
                     attr.targetFormat.valueAnnotation?.let {
                         addAnnotation(it)
                     }

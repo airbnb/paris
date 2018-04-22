@@ -60,7 +60,7 @@ class ImageViewStyleExtensionsTest {
     }
 
     @Test
-    fun styleBuilder() {
+    fun style_builder() {
         // Tests that the extension to build and set a style exists and works with an arbitrary
         // attribute
         imageView.style {

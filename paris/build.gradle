@@ -36,6 +36,8 @@ dependencies {
     testImplementation deps.mockitoCore
     testImplementation deps.robolectric
 
+    kaptTest project(':paris-processor')
+
     androidTestImplementation deps.mockitoAndroid
     androidTestImplementation deps.espresso
 }
