@@ -27,7 +27,7 @@ internal class StyleExtensionsKotlinFile(
         styleable: StyleableInfo
 ) : SkyKotlinFile(PARIS_KOTLIN_EXTENSIONS_PACKAGE_NAME, EXTENSIONS_FILE_NAME_FORMAT.format(styleable.elementName), {
 
-    /**
+    /*
      * An extension for setting a Style object on the view.
      *
      * Usage is like: "view.style(styleObject)"
@@ -38,7 +38,7 @@ internal class StyleExtensionsKotlinFile(
         addStatement("%T(this).apply(style)", styleable.styleApplierClassName().toKPoet())
     }
 
-    /**
+    /*
      * An extension for setting a style res on the view.
      *
      * Usage is like: "view.style(R.style.mystyle)"
@@ -51,7 +51,7 @@ internal class StyleExtensionsKotlinFile(
         addStatement("%T(this).apply(styleRes)", styleable.styleApplierClassName().toKPoet())
     }
 
-    /**
+    /*
      * An extension for setting an AttributeSet on the view.
      *
      * Usage is like: "view.style(attrs)"
@@ -62,7 +62,7 @@ internal class StyleExtensionsKotlinFile(
         addStatement("%T(this).apply(attrs)", styleable.styleApplierClassName().toKPoet())
     }
 
-    /**
+    /*
      * An extension for styling a view via a style builder.
      *
      * Usage is like: "view.style {  // builder as a receiver here  }"
@@ -96,7 +96,7 @@ internal class StyleExtensionsKotlinFile(
         )
     }
 
-    /**
+    /*
      * Style builder extensions to add linked styles.
      *
      * These are purposefully not available to style builders of subclasses.
@@ -120,17 +120,25 @@ internal class StyleExtensionsKotlinFile(
         }
     }
 
+    val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+            EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+            WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
+    )
+
+    /*
+     * Style builder extensions to set sub-styles.
+     *
+     * These are available to style builders of subclasses as well.
+     *
+     * Usage is like: "myStyle.style { titleStyle(style) }"
+     */
     val distinctStyleableChildren = styleable.styleableChildren.distinctBy { it.styleableResId.resourceName }
     for (styleableChildInfo in distinctStyleableChildren) {
         rClassName!!
 
         val functionName = styleableAttrResourceNameToCamelCase(styleable.styleableResourceName, styleableChildInfo.styleableResId.resourceName!!)
 
-        val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-                WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
-        )
-
+        // Sub-styles can be resources: "view.style { titleStyle(R.style...) }"
         function(functionName) {
             receiver(extendableStyleBuilderTypeName)
             parameter("resId", Integer.TYPE) {
@@ -139,12 +147,21 @@ internal class StyleExtensionsKotlinFile(
             addStatement("builder.putStyle(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.code)
         }
 
+        // Sub-styles can be style objects: "view.style { titleStyle(styleObject) }"
         function(functionName) {
             receiver(extendableStyleBuilderTypeName)
             parameter("style", STYLE_CLASS_NAME.toKPoet())
             addStatement("builder.putStyle(%T.styleable.%L[%L], style)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.code)
         }
 
+        /*
+         * Sub-styles can be built on the spot:
+         * view.style {
+         *     titleStyle {
+         *         textSize(10)
+         *     }
+         * }
+         */
         function(functionName) {
             receiver(extendableStyleBuilderTypeName)
 
@@ -166,6 +183,13 @@ internal class StyleExtensionsKotlinFile(
         }
     }
 
+    /*
+     * Style builder extensions to set attributes.
+     *
+     * These are available to style builders of subclasses as well.
+     *
+     * Usage is like: "view.style { padding(10) }"
+     */
     val attrGroups = styleable.attrs.groupBy { it.styleableResId.resourceName }
     for (groupedAttrs in attrGroups.values) {
         rClassName!!
@@ -179,14 +203,10 @@ internal class StyleExtensionsKotlinFile(
         val attrResourceName = attr.styleableResId.resourceName!!
         val baseMethodName = styleableAttrResourceNameToCamelCase(styleable.styleableResourceName, attrResourceName)
 
+        // If the target type isn't a resource: "view.style { padding(10) }"
         if (nonResTargetAttrs.isNotEmpty()) {
             function(baseMethodName) {
                 addKdoc(attr.javadoc.toKPoet())
-
-                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                        EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-                        WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
-                )
                 receiver(extendableStyleBuilderTypeName)
 
                 // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
@@ -200,13 +220,9 @@ internal class StyleExtensionsKotlinFile(
             }
         }
 
+        // Each attribute can be set with a resource: "view.style { paddingRes(R.dimen...) }"
         function("${baseMethodName}Res") {
             addKdoc(attr.javadoc.toKPoet())
-
-            val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                    EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-                    WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
-            )
             receiver(extendableStyleBuilderTypeName)
 
             parameter("resId", Integer.TYPE) {
@@ -220,11 +236,6 @@ internal class StyleExtensionsKotlinFile(
         if (isTargetDimensionType) {
             function("${baseMethodName}Dp") {
                 addKdoc(attr.javadoc.toKPoet())
-
-                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                        EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-                        WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
-                )
                 receiver(extendableStyleBuilderTypeName)
 
                 parameter("value", Integer.TYPE) {
@@ -241,11 +252,6 @@ internal class StyleExtensionsKotlinFile(
         if (isTargetColorStateListType) {
             function(baseMethodName) {
                 addKdoc(attr.javadoc.toKPoet())
-
-                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                        EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-                        WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
-                )
                 receiver(extendableStyleBuilderTypeName)
 
                 parameter("color", Integer.TYPE) {
@@ -257,7 +263,7 @@ internal class StyleExtensionsKotlinFile(
         }
     }
 
-    /**
+    /*
      * A helper (not an extension) for creating a Style object for the given view.
      *
      * Usage is like: "val style = imageViewStyle {  // builder as a receiver here  }"
@@ -266,15 +272,13 @@ internal class StyleExtensionsKotlinFile(
         addModifiers(KModifier.INLINE)
         returns(STYLE_CLASS_NAME.toKPoet())
 
-        val builderParam = ParameterSpec.builder(
+        val builderParam = parameter(
                 "builder",
                 LambdaTypeName.get(
                         receiver = styleable.styleBuilderClassName.toKPoet(),
                         returnType = UNIT
                 )
-        ).build()
-
-        addParameter(builderParam)
+        )
 
         addStatement(
                 "return %T().apply(%N).build()",
