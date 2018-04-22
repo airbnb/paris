@@ -25,7 +25,9 @@ import com.squareup.kotlinpoet.*
 internal class StyleExtensionsKotlinFile(
         rClassName: KotlinClassName?,
         styleable: StyleableInfo
-) : SkyKotlinFile(PARIS_KOTLIN_EXTENSIONS_PACKAGE_NAME, EXTENSIONS_FILE_NAME_FORMAT.format(styleable.elementName), {
+) : SkyKotlinFile(
+        PARIS_KOTLIN_EXTENSIONS_PACKAGE_NAME,
+        EXTENSIONS_FILE_NAME_FORMAT.format(styleable.viewElementName), {
 
     /*
      * An extension for setting a Style object on the view.
