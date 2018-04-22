@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.View
 import android.view.ViewStyleApplier
 import com.airbnb.paris.R
+import com.airbnb.paris.extensions.addDefault
 import com.airbnb.paris.extensions.style
-import com.airbnb.paris.extensions.styleDefault
 import com.airbnb.paris.extensions.viewStyle
 import com.airbnb.paris.extensions.visibility
 import com.airbnb.paris.styles.ProgrammaticStyle
@@ -53,12 +53,6 @@ class ViewStyleExtensionsTest {
     }
 
     @Test
-    fun styleDefault() {
-        // Tests that the extension to set a default style exists
-        view.styleDefault()
-    }
-
-    @Test
     fun style_builder() {
         // Tests that the extension to build and set a style exists and works with an arbitrary
         // attribute
@@ -66,6 +60,12 @@ class ViewStyleExtensionsTest {
             visibility(View.INVISIBLE)
         }
         assertEquals(view.visibility, View.INVISIBLE)
+    }
+
+    @Test
+    fun style_builderDefault() {
+        // Tests that the extension to set a default style exists
+        view.style { addDefault() }
     }
 
     @Test

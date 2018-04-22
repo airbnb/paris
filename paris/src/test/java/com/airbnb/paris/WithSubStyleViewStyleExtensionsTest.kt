@@ -1,13 +1,8 @@
-package com.airbnb.paris.proxies
+package com.airbnb.paris
 
 import android.content.Context
 import android.view.View
-import com.airbnb.paris.R
-import com.airbnb.paris.WithSubStyleView
-import com.airbnb.paris.extensions.style
-import com.airbnb.paris.extensions.testArbitraryStyle
-import com.airbnb.paris.extensions.viewStyle
-import com.airbnb.paris.extensions.visibility
+import com.airbnb.paris.extensions.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +20,12 @@ class WithSubStyleViewStyleExtensionsTest {
     fun setup() {
         context = RuntimeEnvironment.application
         withSubStyleView = WithSubStyleView(context)
+    }
+
+    @Test
+    fun style_builderDefault() {
+        // Tests that the extension to set a default style exists
+        withSubStyleView.style { addDefault() }
     }
 
     @Test

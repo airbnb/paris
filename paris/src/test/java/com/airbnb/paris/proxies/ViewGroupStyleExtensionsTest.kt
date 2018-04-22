@@ -6,7 +6,6 @@ import android.view.ViewGroupStyleApplier
 import android.widget.LinearLayout
 import com.airbnb.paris.R
 import com.airbnb.paris.extensions.style
-import com.airbnb.paris.extensions.styleDefault
 import com.airbnb.paris.extensions.viewStyle
 import com.airbnb.paris.extensions.visibility
 import com.airbnb.paris.styles.ProgrammaticStyle
@@ -51,12 +50,6 @@ class ViewGroupStyleExtensionsTest {
     fun style_styleNullAttributeSet() {
         // Tests that setting a null AttributeSet is possible
         viewGroup.style(null)
-    }
-
-    @Test
-    fun styleDefault() {
-        // Tests that the extension to set a default style exists
-        viewGroup.styleDefault()
     }
 
     @Test

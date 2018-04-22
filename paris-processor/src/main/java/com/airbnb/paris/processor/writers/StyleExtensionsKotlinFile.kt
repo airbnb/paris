@@ -63,23 +63,6 @@ internal class StyleExtensionsKotlinFile(
     }
 
     /**
-     * An extension that applies a linked style.
-     *
-     * Eg: "view.styleGreen()"
-     */
-    styleable.styles.forEach {
-        val styleName = it.formattedName
-
-        function("style$styleName") {
-            receiver(styleable.viewElementType)
-            addStatement(
-                    "%T(this).apply$styleName()",
-                    styleable.styleApplierClassName().toKPoet()
-            )
-        }
-    }
-
-    /**
      * An extension for styling a view via a style builder.
      *
      * Usage is like: "view.style {  // builder as a receiver here  }"
@@ -111,6 +94,30 @@ internal class StyleExtensionsKotlinFile(
                 extendableStyleBuilderTypeName,
                 builderParameter
         )
+    }
+
+    /**
+     * Style builder extensions to add linked styles.
+     *
+     * These are purposefully not available to style builders of subclasses.
+     *
+     * Usage is like: "view.style { addDefault() }"
+     */
+    styleable.styles.forEach {
+        function("add${it.formattedName}") {
+            addKdoc(it.javadoc.toKPoet())
+
+            val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                    EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                    styleable.viewElementType.asTypeName()
+            )
+            receiver(extendableStyleBuilderTypeName)
+
+            addStatement(
+                    "add(%T().add${it.formattedName}().build())",
+                    styleable.styleBuilderClassName.toKPoet()
+            )
+        }
     }
 
     val distinctStyleableChildren = styleable.styleableChildren.distinctBy { it.styleableResId.resourceName }
