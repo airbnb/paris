@@ -10,6 +10,7 @@ dependencies {
     implementation project(':paris-annotations')
 
     implementation deps.javaPoet
+    implementation deps.kotlinPoet
     implementation deps.kotlin
 
     compileOnly files(Jvm.current().getToolsJar())

@@ -1,13 +1,15 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.className
 
 internal const val PARIS_PACKAGE_NAME = "com.airbnb.paris"
 internal const val PARIS_MODULES_PACKAGE_NAME = "com.airbnb.paris.modules"
+internal const val PARIS_KOTLIN_EXTENSIONS_PACKAGE_NAME = "com.airbnb.paris.extensions"
 
 internal const val PARIS_SIMPLE_CLASS_NAME = "Paris"
 internal const val STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT = "%sStyleApplier"
 internal const val MODULE_SIMPLE_CLASS_NAME_FORMAT = "GeneratedModule_%s"
+internal const val EXTENSIONS_FILE_NAME_FORMAT = "%sStyleExtensions"
 
 internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.styles.Style".className()
 internal val STYLE_APPLIER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplier".className()

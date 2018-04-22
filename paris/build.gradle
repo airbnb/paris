@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
@@ -28,9 +29,7 @@ dependencies {
     // "Warning: unknown enum constant AnnotationTarget.FIELD"
     api deps.kotlin
 
-    compileOnly project(':paris-processor')
-
-    annotationProcessor project(':paris-processor')
+    kapt project(':paris-processor')
 
     testImplementation deps.junit
     testImplementation deps.kotlinTest

@@ -12,6 +12,7 @@ import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
+import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
 import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -107,12 +108,14 @@ class ParisProcessor : SkyProcessor() {
 
         rFinder.processStyleables(styleablesInfo)
 
-        val styleablesTree = StyleablesTree(styleablesInfo + externalStyleablesInfo)
+        val allStyleables = styleablesInfo + externalStyleablesInfo
+        val styleablesTree = StyleablesTree(allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(styleablesTree, styleableInfo).write()
+            StyleExtensionsKotlinFile(styleableInfo).write()
         }
 
-        if (!styleablesInfo.isEmpty()) {
+        if (styleablesInfo.isNotEmpty()) {
             try {
                 ModuleJavaClass(styleablesInfo).write()
             } catch (e: ProcessorException) {
@@ -120,9 +123,10 @@ class ParisProcessor : SkyProcessor() {
             }
         }
 
-        if (!styleablesInfo.isEmpty() || !externalStyleablesInfo.isEmpty()) {
+        if (allStyleables.isNotEmpty()) {
             try {
-                check(rFinder.element != null) {
+
+                checkNotNull(rFinder.element) {
                     "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
                 }
 

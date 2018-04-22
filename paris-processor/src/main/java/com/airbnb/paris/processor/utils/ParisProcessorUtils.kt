@@ -1,9 +1,10 @@
 package com.airbnb.paris.processor.utils
 
+// This is purposefully left public to facilitate integrations with Paris
+// TODO BREAKING Refactor this to be an object with @JvmStatic functions
 class ParisProcessorUtils {
 
     companion object {
-
         /**
          * Format the name of a @Style annotated field or method to match what the style applier and
          * builder will use.

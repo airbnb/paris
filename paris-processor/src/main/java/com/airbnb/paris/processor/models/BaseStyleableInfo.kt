@@ -67,7 +67,7 @@ internal class BaseStyleableInfoExtractor {
     }
 }
 
-open internal class BaseStyleableInfo(
+internal open class BaseStyleableInfo(
         val elementPackageName: String,
         val elementName: String,
         /**
@@ -76,7 +76,8 @@ open internal class BaseStyleableInfo(
          */
         val elementType: TypeMirror,
         private val viewElementPackageName: String,
-        private val viewElementName: String,
+        /** The simple name of the view eg. "AirImageView" */
+        val viewElementName: String,
         /**
          * If the styleable class is not a proxy, will be equal to [elementType]. Refers to the view
          * class
@@ -97,5 +98,7 @@ open internal class BaseStyleableInfo(
 
     fun styleApplierClassName(): ClassName =
             ClassName.get(viewElementPackageName, String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, viewElementName))
+
+    val styleBuilderClassName: ClassName = styleApplierClassName().nestedClass("StyleBuilder")
 }
 

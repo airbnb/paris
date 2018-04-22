@@ -8,6 +8,7 @@ internal val filer get() = SkyProcessor.INSTANCE.filer
 internal val messager get() = SkyProcessor.INSTANCE.messager
 internal val elements get() = SkyProcessor.INSTANCE.elements
 internal val types get() = SkyProcessor.INSTANCE.types
+internal val kaptOutputPath get() = SkyProcessor.INSTANCE.kaptOutputPath
 
 internal fun erasure(type: TypeMirror): TypeMirror = types.erasure(type)
 
