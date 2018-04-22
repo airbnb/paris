@@ -5,9 +5,11 @@ import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.framework.SkyProcessor
+import com.airbnb.paris.processor.framework.className
 import com.airbnb.paris.processor.framework.errors.Errors
 import com.airbnb.paris.processor.framework.errors.ProcessorException
 import com.airbnb.paris.processor.framework.packageName
+import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
@@ -112,7 +114,7 @@ class ParisProcessor : SkyProcessor() {
         val styleablesTree = StyleablesTree(allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(styleablesTree, styleableInfo).write()
-            StyleExtensionsKotlinFile(styleableInfo).write()
+            StyleExtensionsKotlinFile(RElement?.className?.toKPoet(), styleableInfo).write()
         }
 
         if (styleablesInfo.isNotEmpty()) {

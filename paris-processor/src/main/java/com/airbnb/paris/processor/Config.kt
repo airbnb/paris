@@ -14,6 +14,7 @@ internal const val EXTENSIONS_FILE_NAME_FORMAT = "%sStyleExtensions"
 internal val STYLE_CLASS_NAME = "$PARIS_PACKAGE_NAME.styles.Style".className()
 internal val STYLE_APPLIER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplier".className()
 internal val STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleBuilder".className()
+internal val EXTENDABLE_STYLE_BUILDER_CLASS_NAME = "$PARIS_PACKAGE_NAME.ExtendableStyleBuilder".className()
 internal val STYLE_APPLIER_UTILS_CLASS_NAME = "$PARIS_PACKAGE_NAME.StyleApplierUtils".className()
 internal val TYPED_ARRAY_WRAPPER_CLASS_NAME = "$PARIS_PACKAGE_NAME.typed_array_wrappers.TypedArrayWrapper".className()
 internal val STYLE_BUILDER_FUNCTION_CLASS_NAME = "$PARIS_PACKAGE_NAME.utils.StyleBuilderFunction".className()

@@ -117,7 +117,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             addStatement("return (B) this")
         }
 
-        // Adds a special <attribute>Dp method that automatically convert a dp value to pixels for dimensions
+        // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions
         if (isTargetDimensionType) {
             method("${baseMethodName}Dp") {
                 addJavadoc(attr.javadoc)
@@ -133,7 +133,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             }
         }
 
-        // Adds a special <attribute> method that automatically convert a @ColorInt to a ColorStateList
+        // Adds a special <attribute> method that automatically converts a @ColorInt to a ColorStateList
         if (isTargetColorStateListType) {
             method(baseMethodName) {
                 addJavadoc(attr.javadoc)
@@ -168,7 +168,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
 /**
  * Applies lower camel case formatting
  */
-private fun styleableAttrResourceNameToCamelCase(styleableResourceName: String, name: String): String {
+internal fun styleableAttrResourceNameToCamelCase(styleableResourceName: String, name: String): String {
     var formattedName = name.removePrefix("${styleableResourceName}_")
     formattedName = formattedName.removePrefix("android_")
     formattedName = formattedName.foldRightIndexed("") { index, c, acc ->

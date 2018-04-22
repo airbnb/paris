@@ -1,10 +1,9 @@
 package com.airbnb.paris.processor.writers
 
-import com.airbnb.paris.processor.EXTENSIONS_FILE_NAME_FORMAT
-import com.airbnb.paris.processor.PARIS_KOTLIN_EXTENSIONS_PACKAGE_NAME
-import com.airbnb.paris.processor.STYLE_CLASS_NAME
+import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.AndroidClassNames.ATTRIBUTE_SET
+import com.airbnb.paris.processor.framework.AndroidClassNames.COLOR_INT
 import com.airbnb.paris.processor.framework.AndroidClassNames.STYLE_RES
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.kotlinpoet.*
@@ -24,6 +23,7 @@ import com.squareup.kotlinpoet.*
  *      different packages)
  */
 internal class StyleExtensionsKotlinFile(
+        rClassName: KotlinClassName?,
         styleable: StyleableInfo
 ) : SkyKotlinFile(PARIS_KOTLIN_EXTENSIONS_PACKAGE_NAME, EXTENSIONS_FILE_NAME_FORMAT.format(styleable.elementName), {
 
@@ -79,13 +79,129 @@ internal class StyleExtensionsKotlinFile(
         }
     }
 
-    val builderParam = ParameterSpec.builder(
-            "builder",
-            LambdaTypeName.get(
-                    receiver = styleable.styleBuilderClassName.toKPoet(),
-                    returnType = UNIT
+    /**
+     * An extension for styling a view via a style builder.
+     *
+     * Usage is like: "view.style {  // builder as a receiver here  }"
+     */
+    function("style") {
+        addModifiers(KModifier.INLINE)
+
+        val viewTypeVariableName = KotlinTypeVariableName("V", styleable.viewElementType.asTypeName())
+        addTypeVariable(viewTypeVariableName)
+        receiver(viewTypeVariableName)
+
+        val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                viewTypeVariableName
+        )
+        val builderParameter = ParameterSpec.builder(
+                "builder",
+                LambdaTypeName.get(
+                        receiver = extendableStyleBuilderTypeName,
+                        returnType = UNIT
+                )
+        ).build()
+
+        addParameter(builderParameter)
+
+        addStatement(
+                "%T(this).apply(%T().apply(%N).build())",
+                styleable.styleApplierClassName().toKPoet(),
+                extendableStyleBuilderTypeName,
+                builderParameter
+        )
+    }
+
+    val attrGroups = styleable.attrs.groupBy { it.styleableResId.resourceName }
+    for (groupedAttrs in attrGroups.values) {
+        rClassName!!
+
+        val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
+
+        val isTargetDimensionType = nonResTargetAttrs.any { it.targetFormat.isDimensionType }
+        val isTargetColorStateListType = nonResTargetAttrs.any { it.targetFormat.isColorStateListType }
+
+        val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
+        val attrResourceName = attr.styleableResId.resourceName!!
+        val baseMethodName = styleableAttrResourceNameToCamelCase(styleable.styleableResourceName, attrResourceName)
+
+        if (nonResTargetAttrs.isNotEmpty()) {
+            function(baseMethodName) {
+                addKdoc(attr.javadoc.toKPoet())
+
+                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                        EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                        WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
+                )
+                receiver(extendableStyleBuilderTypeName)
+
+                parameter("value", attr.targetType.asTypeName()) {
+                    attr.targetFormat.valueAnnotation?.let {
+                        addAnnotation(it)
+                    }
+                }
+
+                addStatement("builder.put(%T.styleable.%L[%L], value)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+            }
+        }
+
+        function("${baseMethodName}Res") {
+            addKdoc(attr.javadoc.toKPoet())
+
+            val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                    EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                    WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
             )
-    ).build()
+            receiver(extendableStyleBuilderTypeName)
+
+            parameter("resId", Integer.TYPE) {
+                addAnnotation(attr.targetFormat.resAnnotation)
+            }
+
+            addStatement("builder.putRes(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+        }
+
+        // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions
+        if (isTargetDimensionType) {
+            function("${baseMethodName}Dp") {
+                addKdoc(attr.javadoc.toKPoet())
+
+                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                        EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                        WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
+                )
+                receiver(extendableStyleBuilderTypeName)
+
+                parameter("value", Integer.TYPE) {
+                    addAnnotation(AnnotationSpec.builder(AndroidClassNames.DIMENSION.toKPoet())
+                            .addMember("unit = %T.DP", AndroidClassNames.DIMENSION.toKPoet())
+                            .build())
+                }
+
+                addStatement("builder.putDp(%T.styleable.%L[%L], value)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+            }
+        }
+
+        // Adds a special <attribute> method that automatically converts a @ColorInt to a ColorStateList
+        if (isTargetColorStateListType) {
+            function(baseMethodName) {
+                addKdoc(attr.javadoc.toKPoet())
+
+                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                        EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                        WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
+                )
+                receiver(extendableStyleBuilderTypeName)
+
+                parameter("color", Integer.TYPE) {
+                    addAnnotation(COLOR_INT)
+                }
+
+                addStatement("builder.putColor(%T.styleable.%L[%L], color)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+            }
+        }
+    }
 
     /**
      * A helper (not an extension) for creating a Style object for the given view.
@@ -95,6 +211,14 @@ internal class StyleExtensionsKotlinFile(
     function("${styleable.viewElementName.decapitalize()}Style") {
         addModifiers(KModifier.INLINE)
         returns(STYLE_CLASS_NAME.toKPoet())
+
+        val builderParam = ParameterSpec.builder(
+                "builder",
+                LambdaTypeName.get(
+                        receiver = styleable.styleBuilderClassName.toKPoet(),
+                        returnType = UNIT
+                )
+        ).build()
 
         addParameter(builderParam)
 

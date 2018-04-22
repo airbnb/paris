@@ -49,6 +49,26 @@ internal inline fun FunSpec.Builder.addParameter(
     addParameter(ParameterSpec.builder(name, type).apply(block).build())
 }
 
+internal fun FunSpec.Builder.parameter(
+        name: String,
+        type: Type,
+        block: ParameterSpec.Builder.() -> Unit = {}
+): ParameterSpec {
+    return ParameterSpec.builder(name, type).apply(block).build().also {
+        addParameter(it)
+    }
+}
+
+internal fun FunSpec.Builder.parameter(
+        name: String,
+        type: KotlinTypeName,
+        block: ParameterSpec.Builder.() -> Unit = {}
+): ParameterSpec {
+    return ParameterSpec.builder(name, type).apply(block).build().also {
+        addParameter(it)
+    }
+}
+
 internal fun ParameterSpec.Builder.addAnnotation(type: JavaClassName) {
     addAnnotation(type.toKPoet())
 }

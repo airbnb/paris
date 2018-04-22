@@ -8,6 +8,7 @@ import com.airbnb.paris.R
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.extensions.styleDefault
 import com.airbnb.paris.extensions.viewStyle
+import com.airbnb.paris.extensions.visibility
 import com.airbnb.paris.styles.ProgrammaticStyle
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -56,6 +57,16 @@ class ViewGroupStyleExtensionsTest {
     fun styleDefault() {
         // Tests that the extension to set a default style exists
         viewGroup.styleDefault()
+    }
+
+    @Test
+    fun styleBuilder() {
+        // Tests that the extension to build and set a style exists and works with an arbitrary
+        // attribute
+        viewGroup.style {
+            visibility(View.INVISIBLE)
+        }
+        assertEquals(viewGroup.visibility, View.INVISIBLE)
     }
 
     @Test

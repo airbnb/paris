@@ -17,6 +17,7 @@ internal typealias JavaParameterSpec = com.squareup.javapoet.ParameterSpec
 internal typealias JavaFieldSpec = com.squareup.javapoet.FieldSpec
 internal typealias JavaAnnotationSpec = com.squareup.javapoet.AnnotationSpec
 internal typealias JavaTypeSpec = com.squareup.javapoet.TypeSpec
+internal typealias JavaCodeBlock = com.squareup.javapoet.CodeBlock
 internal typealias KotlinClassName = com.squareup.kotlinpoet.ClassName
 internal typealias KotlinParameterizedTypeName = com.squareup.kotlinpoet.ParameterizedTypeName
 internal typealias KotlinTypeName = com.squareup.kotlinpoet.TypeName
@@ -25,6 +26,7 @@ internal typealias KotlinTypeVariableName = com.squareup.kotlinpoet.TypeVariable
 internal typealias KotlinParameterSpec = com.squareup.kotlinpoet.ParameterSpec
 internal typealias KotlinAnnotationSpec = com.squareup.kotlinpoet.AnnotationSpec
 internal typealias KotlinTypeSpec = com.squareup.kotlinpoet.TypeSpec
+internal typealias KotlinCodeBlock = com.squareup.kotlinpoet.CodeBlock
 
 private val javaUtilPkg = "java.util"
 private val javaLangPkg = "java.lang"
@@ -183,6 +185,8 @@ internal fun Modifier.toKModifier() = when (this) {
     Modifier.ABSTRACT -> KModifier.ABSTRACT
     else -> null
 }
+
+internal fun JavaCodeBlock.toKPoet(): KotlinCodeBlock = KotlinCodeBlock.of(toString())
 
 // https://github.com/JetBrains/kotlin/blob/master/core/descriptors/src/org/jetbrains/kotlin/renderer/KeywordStringsGenerated.java
 private val KOTLIN_KEYWORDS = setOf(
