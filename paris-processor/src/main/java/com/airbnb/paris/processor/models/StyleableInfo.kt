@@ -90,5 +90,27 @@ internal class StyleableInfo(
         val attrs: List<AttrInfo>,
         val styles: List<StyleInfo>,
         baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(baseStyleableInfo)
+) : BaseStyleableInfo(baseStyleableInfo) {
+
+    /**
+     * Applies lower camel case formatting
+     */
+    fun attrResourceNameToCamelCase(name: String): String {
+        var formattedName = name.removePrefix("${styleableResourceName}_")
+        formattedName = formattedName.removePrefix("android_")
+        formattedName = formattedName.foldRightIndexed("") { index, c, acc ->
+            if (c == '_') {
+                acc
+            } else {
+                if (index == 0 || formattedName[index - 1] != '_') {
+                    c + acc
+                } else {
+                    c.toUpperCase() + acc
+                }
+            }
+        }
+        formattedName = formattedName.first().toLowerCase() + formattedName.drop(1)
+        return formattedName
+    }
+}
 

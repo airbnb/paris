@@ -138,7 +138,7 @@ internal class StyleExtensionsKotlinFile(
     for (styleableChildInfo in distinctStyleableChildren) {
         rClassName!!
 
-        val functionName = styleableAttrResourceNameToCamelCase(styleable.styleableResourceName, styleableChildInfo.styleableResId.resourceName!!)
+        val functionName = styleable.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName!!)
 
         // Sub-styles can be resources: "view.style { titleStyle(R.style...) }"
         function(functionName) {
@@ -203,7 +203,7 @@ internal class StyleExtensionsKotlinFile(
 
         val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
         val attrResourceName = attr.styleableResId.resourceName!!
-        val baseMethodName = styleableAttrResourceNameToCamelCase(styleable.styleableResourceName, attrResourceName)
+        val baseMethodName = styleable.attrResourceNameToCamelCase(attrResourceName)
 
         // If the target type isn't a resource: "view.style { padding(10) }"
         if (nonResTargetAttrs.isNotEmpty()) {
