@@ -40,7 +40,9 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
     for (styleableChildInfo in distinctStyleableChildren) {
         rClassName!!
 
-        method(styleableAttrResourceNameToCamelCase(styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.resourceName!!)) {
+        val methodName = styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName!!)
+
+        method(methodName) {
             public()
             addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
                     .addAnnotation(AndroidClassNames.STYLE_RES)
@@ -50,7 +52,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             addStatement("return (B) this")
         }
 
-        method(styleableAttrResourceNameToCamelCase(styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.resourceName)) {
+        method(methodName) {
             public()
             addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
             returns(TypeVariableName.get("B"))
@@ -61,7 +63,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
         val subStyleApplierClassName = styleablesTree.findStyleApplier(
                 styleableChildInfo.type.asTypeElement())
         val subStyleBuilderClassName = subStyleApplierClassName.nestedClass("StyleBuilder")
-        method(styleableAttrResourceNameToCamelCase(styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.resourceName)) {
+        method(methodName) {
             public()
             addParameter(ParameterSpec.builder(ParameterizedTypeName.get(STYLE_BUILDER_FUNCTION_CLASS_NAME, subStyleBuilderClassName), "function").build())
             returns(TypeVariableName.get("B"))
@@ -87,7 +89,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
 
         val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
         val attrResourceName = attr.styleableResId.resourceName!!
-        val baseMethodName = styleableAttrResourceNameToCamelCase(styleableInfo.styleableResourceName, attrResourceName)
+        val baseMethodName = styleableInfo.attrResourceNameToCamelCase(attrResourceName)
 
         if (nonResTargetAttrs.isNotEmpty()) {
             method(baseMethodName) {
@@ -117,7 +119,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             addStatement("return (B) this")
         }
 
-        // Adds a special <attribute>Dp method that automatically convert a dp value to pixels for dimensions
+        // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions
         if (isTargetDimensionType) {
             method("${baseMethodName}Dp") {
                 addJavadoc(attr.javadoc)
@@ -133,7 +135,7 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             }
         }
 
-        // Adds a special <attribute> method that automatically convert a @ColorInt to a ColorStateList
+        // Adds a special <attribute> method that automatically converts a @ColorInt to a ColorStateList
         if (isTargetColorStateListType) {
             method(baseMethodName) {
                 addJavadoc(attr.javadoc)
@@ -165,23 +167,4 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
     }
 }
 
-/**
- * Applies lower camel case formatting
- */
-private fun styleableAttrResourceNameToCamelCase(styleableResourceName: String, name: String): String {
-    var formattedName = name.removePrefix("${styleableResourceName}_")
-    formattedName = formattedName.removePrefix("android_")
-    formattedName = formattedName.foldRightIndexed("") { index, c, acc ->
-        if (c == '_') {
-            acc
-        } else {
-            if (index == 0 || formattedName[index - 1] != '_') {
-                c + acc
-            } else {
-                c.toUpperCase() + acc
-            }
-        }
-    }
-    formattedName = formattedName.first().toLowerCase() + formattedName.drop(1)
-    return formattedName
-}
+

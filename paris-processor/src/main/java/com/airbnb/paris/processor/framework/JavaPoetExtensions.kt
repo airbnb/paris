@@ -1,89 +1,92 @@
 package com.airbnb.paris.processor.framework
 
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.TypeSpec
+import javax.lang.model.element.Modifier
 
-fun AnnotationSpec.Builder.value(block: CodeBlock.Builder.() -> Unit) {
+internal fun AnnotationSpec.Builder.value(block: CodeBlock.Builder.() -> Unit) {
     val codeBuilder = CodeBlock.builder()
     codeBuilder.block()
     addMember("value", codeBuilder.build())
 }
 
-fun AnnotationSpec.Builder.value(format: String, vararg args: Any) {
+internal fun AnnotationSpec.Builder.value(format: String, vararg args: Any) {
     addMember("value", format, *args)
 }
 
-fun MethodSpec.Builder.override() {
+internal fun MethodSpec.Builder.override() {
     addAnnotation(Override::class.java)
 }
 
-fun MethodSpec.Builder.final() {
+internal fun MethodSpec.Builder.final() {
     addModifiers(Modifier.FINAL)
 }
 
-fun MethodSpec.Builder.protected() {
+internal fun MethodSpec.Builder.protected() {
     addModifiers(Modifier.PROTECTED)
 }
 
-fun MethodSpec.Builder.public() {
+internal fun MethodSpec.Builder.public() {
     addModifiers(Modifier.PUBLIC)
 }
 
-fun MethodSpec.Builder.static() {
+internal fun MethodSpec.Builder.static() {
     addModifiers(Modifier.STATIC)
 }
 
-fun MethodSpec.Builder.controlFlow(controlFlow: String, arg: Any, block: MethodSpec.Builder.() -> Unit) {
+internal fun MethodSpec.Builder.controlFlow(controlFlow: String, arg: Any, block: MethodSpec.Builder.() -> Unit) {
     controlFlow(controlFlow, arrayOf(arg), block)
 }
 
-fun MethodSpec.Builder.controlFlow(controlFlow: String, args: Array<Any> = emptyArray(), block: MethodSpec.Builder.() -> Unit) {
+internal fun MethodSpec.Builder.controlFlow(controlFlow: String, args: Array<Any> = emptyArray(), block: MethodSpec.Builder.() -> Unit) {
     beginControlFlow(controlFlow, *args)
     block()
     endControlFlow()
 }
 
-fun TypeSpec.Builder.codeBlock(block: CodeBlock.Builder.() -> Unit): CodeBlock {
+internal fun TypeSpec.Builder.codeBlock(block: CodeBlock.Builder.() -> Unit): CodeBlock {
     val builder = CodeBlock.builder()
     builder.block()
     return builder.build()
 }
 
-fun TypeSpec.Builder.annotation(type: Class<*>, block: AnnotationSpec.Builder.() -> Unit) {
+internal fun TypeSpec.Builder.annotation(type: Class<*>, block: AnnotationSpec.Builder.() -> Unit) {
     val annotationBuilder = AnnotationSpec.builder(type)
     annotationBuilder.block()
     addAnnotation(annotationBuilder.build())
 }
 
-fun TypeSpec.Builder.constructor(block: MethodSpec.Builder.() -> Unit) {
+internal fun TypeSpec.Builder.constructor(block: MethodSpec.Builder.() -> Unit) {
     val methodBuilder = MethodSpec.constructorBuilder()
     methodBuilder.block()
     addMethod(methodBuilder.build())
 }
 
-fun TypeSpec.Builder.method(name: String, block: MethodSpec.Builder.() -> Unit) {
+internal fun TypeSpec.Builder.method(name: String, block: MethodSpec.Builder.() -> Unit) {
     val methodBuilder = MethodSpec.methodBuilder(name)
     methodBuilder.block()
     addMethod(methodBuilder.build())
 }
 
-fun TypeSpec.Builder.abstract() {
+internal fun TypeSpec.Builder.abstract() {
     addModifiers(Modifier.ABSTRACT)
 }
 
-fun TypeSpec.Builder.final() {
+internal fun TypeSpec.Builder.final() {
     addModifiers(Modifier.FINAL)
 }
 
-fun TypeSpec.Builder.protected() {
+internal fun TypeSpec.Builder.protected() {
     addModifiers(Modifier.PROTECTED)
 }
 
-fun TypeSpec.Builder.public() {
+internal fun TypeSpec.Builder.public() {
     addModifiers(Modifier.PUBLIC)
 }
 
-fun TypeSpec.Builder.static() {
+internal fun TypeSpec.Builder.static() {
     addModifiers(Modifier.STATIC)
 }
 

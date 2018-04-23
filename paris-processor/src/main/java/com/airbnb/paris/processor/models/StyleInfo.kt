@@ -4,6 +4,8 @@ import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.RElement
 import com.airbnb.paris.processor.defaultStyleNameFormat
+import com.airbnb.paris.processor.framework.JavaCodeBlock
+import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import com.airbnb.paris.processor.framework.elements
 import com.airbnb.paris.processor.framework.errors.Errors
 import com.airbnb.paris.processor.framework.errors.ProcessorException
@@ -11,7 +13,6 @@ import com.airbnb.paris.processor.framework.errors.check
 import com.airbnb.paris.processor.models.StyleInfo.Kind
 import com.airbnb.paris.processor.models.StyleInfo.Kind.*
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
-import com.squareup.javapoet.CodeBlock
 import java.util.*
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
@@ -82,13 +83,16 @@ internal class StyleInfoExtractor {
 
     @Throws(ProcessorException::class)
     private fun emptyDefaultFromStyleableElement(styleableElement: Element): StyleInfo {
+        val javadoc = JavaCodeBlock.of("Empty style")
+        val kdoc = KotlinCodeBlock.of(javadoc.toString())
         return StyleInfo(
                 EMPTY,
                 styleableElement,
                 "empty_default",
                 "Default",
                 null,
-                CodeBlock.of("Empty style")
+                javadoc,
+                kdoc
         )
     }
 
@@ -107,7 +111,10 @@ internal class StyleInfoExtractor {
         }
 
         if (defaultStyleExists) {
-            val styleResourceCode = CodeBlock.of("\$T.\$L", rStyleTypeElement, defaultStyleName)
+            val styleResourceCode = JavaCodeBlock.of("\$T.\$L", rStyleTypeElement, defaultStyleName)
+
+            val javadoc = JavaCodeBlock.of("See $defaultStyleName style (defined as an XML resource)")
+            val kdoc = KotlinCodeBlock.of(javadoc.toString())
 
             return StyleInfo(
                     STYLE_RES,
@@ -115,7 +122,8 @@ internal class StyleInfoExtractor {
                     defaultStyleName,
                     "Default",
                     styleResourceCode,
-                    CodeBlock.of("See $defaultStyleName style (defined as an XML resource)")
+                    javadoc,
+                    kdoc
             )
         } else {
             return null
@@ -147,7 +155,8 @@ internal class StyleInfoExtractor {
 
         val elementKind: Kind
         val targetType: TypeMirror
-        val javadoc: CodeBlock
+        val javadoc: JavaCodeBlock
+        val kdoc: KotlinCodeBlock
         if (element.kind == ElementKind.FIELD) {
             check(element.modifiers.contains(Modifier.FINAL), element) {
                 "Fields annotated with @Style must be final"
@@ -157,14 +166,16 @@ internal class StyleInfoExtractor {
             // TODO Check that the target type is an int
             //targetType = element.asType()
 
-            javadoc = CodeBlock.of("@see \$T#\$N", enclosingElement, elementName)
+            javadoc = JavaCodeBlock.of("@see \$T#\$N", enclosingElement, elementName)
+            kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, elementName)
 
         } else { // Method
             elementKind = METHOD
             // TODO Check that the target type is a builder
             targetType = (element as ExecutableElement).parameters[0].asType()
 
-            javadoc = CodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, elementName, targetType)
+            javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, elementName, targetType)
+            kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, elementName)
         }
 
         return StyleInfo(
@@ -174,6 +185,7 @@ internal class StyleInfoExtractor {
                 formattedName,
                 null, // No style resource
                 javadoc,
+                kdoc,
                 isDefault
         )
     }
@@ -184,8 +196,9 @@ internal data class StyleInfo(
         val enclosingElement: Element,
         val elementName: String,
         val formattedName: String,
-        val styleResourceCode: CodeBlock?,
-        val javadoc: CodeBlock,
+        val styleResourceCode: JavaCodeBlock?,
+        val javadoc: JavaCodeBlock,
+        val kdoc: KotlinCodeBlock,
         val isDefault: Boolean = false) {
 
     enum class Kind {
