@@ -187,8 +187,6 @@ internal fun Modifier.toKModifier() = when (this) {
     else -> null
 }
 
-internal fun JavaCodeBlock.toKPoet(): KotlinCodeBlock = KotlinCodeBlock.of(toString())
-
 // https://github.com/JetBrains/kotlin/blob/master/core/descriptors/src/org/jetbrains/kotlin/renderer/KeywordStringsGenerated.java
 private val KOTLIN_KEYWORDS = setOf(
     "package",

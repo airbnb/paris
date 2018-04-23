@@ -107,7 +107,7 @@ internal class StyleExtensionsKotlinFile(
      */
     styleable.styles.forEach {
         function("add${it.formattedName}") {
-            addKdoc(it.javadoc.toKPoet())
+            addKdoc(it.kdoc)
 
             val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
                     EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
@@ -146,14 +146,14 @@ internal class StyleExtensionsKotlinFile(
             parameter("resId", Integer.TYPE) {
                 addAnnotation(STYLE_RES)
             }
-            addStatement("builder.putStyle(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement("builder.putStyle(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.kotlinCode)
         }
 
         // Sub-styles can be style objects: "view.style { titleStyle(styleObject) }"
         function(functionName) {
             receiver(extendableStyleBuilderTypeName)
             parameter("style", STYLE_CLASS_NAME.toKPoet())
-            addStatement("builder.putStyle(%T.styleable.%L[%L], style)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement("builder.putStyle(%T.styleable.%L[%L], style)", rClassName, styleable.styleableResourceName, styleableChildInfo.styleableResId.kotlinCode)
         }
 
         /*
@@ -178,7 +178,7 @@ internal class StyleExtensionsKotlinFile(
             addStatement("builder.putStyle(%T.styleable.%L[%L], %T().apply(%N).build())",
                     rClassName,
                     styleable.styleableResourceName,
-                    styleableChildInfo.styleableResId.code,
+                    styleableChildInfo.styleableResId.kotlinCode,
                     subExtendableStyleBuilderTypeName,
                     builderParameter
             )
@@ -208,7 +208,7 @@ internal class StyleExtensionsKotlinFile(
         // If the target type isn't a resource: "view.style { padding(10) }"
         if (nonResTargetAttrs.isNotEmpty()) {
             function(baseMethodName) {
-                addKdoc(attr.javadoc.toKPoet())
+                addKdoc(attr.kdoc)
                 receiver(extendableStyleBuilderTypeName)
 
                 // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
@@ -218,26 +218,26 @@ internal class StyleExtensionsKotlinFile(
                     }
                 }
 
-                addStatement("builder.put(%T.styleable.%L[%L], value)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+                addStatement("builder.put(%T.styleable.%L[%L], value)", rClassName, styleable.styleableResourceName, attr.styleableResId.kotlinCode)
             }
         }
 
         // Each attribute can be set with a resource: "view.style { paddingRes(R.dimen...) }"
         function("${baseMethodName}Res") {
-            addKdoc(attr.javadoc.toKPoet())
+            addKdoc(attr.kdoc)
             receiver(extendableStyleBuilderTypeName)
 
             parameter("resId", Integer.TYPE) {
                 addAnnotation(attr.targetFormat.resAnnotation)
             }
 
-            addStatement("builder.putRes(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+            addStatement("builder.putRes(%T.styleable.%L[%L], resId)", rClassName, styleable.styleableResourceName, attr.styleableResId.kotlinCode)
         }
 
         // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions
         if (isTargetDimensionType) {
             function("${baseMethodName}Dp") {
-                addKdoc(attr.javadoc.toKPoet())
+                addKdoc(attr.kdoc)
                 receiver(extendableStyleBuilderTypeName)
 
                 parameter("value", Integer.TYPE) {
@@ -246,21 +246,21 @@ internal class StyleExtensionsKotlinFile(
                             .build())
                 }
 
-                addStatement("builder.putDp(%T.styleable.%L[%L], value)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+                addStatement("builder.putDp(%T.styleable.%L[%L], value)", rClassName, styleable.styleableResourceName, attr.styleableResId.kotlinCode)
             }
         }
 
         // Adds a special <attribute> method that automatically converts a @ColorInt to a ColorStateList
         if (isTargetColorStateListType) {
             function(baseMethodName) {
-                addKdoc(attr.javadoc.toKPoet())
+                addKdoc(attr.kdoc)
                 receiver(extendableStyleBuilderTypeName)
 
                 parameter("color", Integer.TYPE) {
                     addAnnotation(COLOR_INT)
                 }
 
-                addStatement("builder.putColor(%T.styleable.%L[%L], color)", rClassName, styleable.styleableResourceName, attr.styleableResId.code)
+                addStatement("builder.putColor(%T.styleable.%L[%L], color)", rClassName, styleable.styleableResourceName, attr.styleableResId.kotlinCode)
             }
         }
     }

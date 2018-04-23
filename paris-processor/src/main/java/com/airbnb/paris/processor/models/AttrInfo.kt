@@ -1,14 +1,19 @@
 package com.airbnb.paris.processor.models
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.*
-import com.airbnb.paris.processor.android_resource_scanner.*
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.*
-import com.airbnb.paris.processor.framework.models.*
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
+import com.airbnb.paris.annotations.Attr
+import com.airbnb.paris.processor.Format
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.framework.JavaCodeBlock
+import com.airbnb.paris.processor.framework.KotlinCodeBlock
+import com.airbnb.paris.processor.framework.errors.check
+import com.airbnb.paris.processor.framework.isNotPrivate
+import com.airbnb.paris.processor.framework.isNotProtected
+import com.airbnb.paris.processor.framework.models.SkyMethodModel
+import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
+import com.airbnb.paris.processor.getResourceId
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.TypeMirror
 
 internal class AttrInfoExtractor
     : SkyMethodModelFactory<AttrInfo>(Attr::class.java) {
@@ -32,7 +37,8 @@ internal class AttrInfoExtractor
 
         val enclosingElement = element.enclosingElement as TypeElement
         val name = element.simpleName.toString()
-        val javadoc = CodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, name, targetType)
+        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, name, targetType)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, name)
 
         return AttrInfo(
                 element,
@@ -40,7 +46,9 @@ internal class AttrInfoExtractor
                 targetFormat,
                 styleableResId,
                 defaultValueResId,
-                javadoc)
+                javadoc,
+                kdoc
+        )
     }
 }
 
@@ -54,5 +62,6 @@ internal class AttrInfo(
         val targetFormat: Format,
         val styleableResId: AndroidResourceId,
         val defaultValueResId: AndroidResourceId?,
-        val javadoc: CodeBlock
+        val javadoc: JavaCodeBlock,
+        val kdoc: KotlinCodeBlock
 ) : SkyMethodModel(element)

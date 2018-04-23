@@ -1,11 +1,11 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.framework.errors.*
+import com.airbnb.paris.processor.framework.errors.Errors
+import com.airbnb.paris.processor.framework.errors.ProcessorException
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
-import kotlin.also
 
 internal class StyleableInfoExtractor {
 
@@ -96,21 +96,20 @@ internal class StyleableInfo(
      * Applies lower camel case formatting
      */
     fun attrResourceNameToCamelCase(name: String): String {
-        var formattedName = name.removePrefix("${styleableResourceName}_")
-        formattedName = formattedName.removePrefix("android_")
-        formattedName = formattedName.foldRightIndexed("") { index, c, acc ->
-            if (c == '_') {
-                acc
-            } else {
-                if (index == 0 || formattedName[index - 1] != '_') {
-                    c + acc
-                } else {
-                    c.toUpperCase() + acc
-                }
-            }
-        }
-        formattedName = formattedName.first().toLowerCase() + formattedName.drop(1)
+        val formattedName = name.removePrefix("${styleableResourceName}_")
+                .removePrefix("android_")
         return formattedName
+                .foldRightIndexed("") { index, c, acc ->
+                    if (c == '_') {
+                        acc
+                    } else {
+                        if (index == 0 || formattedName[index - 1] != '_') {
+                            c + acc
+                        } else {
+                            c.toUpperCase() + acc
+                        }
+                    }
+                }.decapitalize()
     }
 }
 
