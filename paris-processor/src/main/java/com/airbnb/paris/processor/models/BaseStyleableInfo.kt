@@ -1,12 +1,18 @@
 package com.airbnb.paris.processor.models
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.*
+import com.airbnb.paris.annotations.GeneratedStyleableClass
+import com.airbnb.paris.annotations.GeneratedStyleableModule
+import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
+import com.airbnb.paris.processor.PROXY_CLASS_NAME
+import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.*
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
+import com.airbnb.paris.processor.framework.errors.ProcessorException
+import com.squareup.javapoet.ClassName
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
+import javax.lang.model.type.MirroredTypeException
+import javax.lang.model.type.TypeMirror
 
 internal class BaseStyleableInfoExtractor {
 
@@ -96,6 +102,7 @@ internal open class BaseStyleableInfo(
             baseStyleableInfo.styleableResourceName
     )
 
+    // TODO Make this a property
     fun styleApplierClassName(): ClassName =
             ClassName.get(viewElementPackageName, String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, viewElementName))
 

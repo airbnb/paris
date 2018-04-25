@@ -1,12 +1,17 @@
 package com.airbnb.paris.processor.models
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.*
-import com.airbnb.paris.processor.android_resource_scanner.*
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.*
-import com.airbnb.paris.processor.framework.models.*
-import javax.lang.model.element.*
+import com.airbnb.paris.annotations.Attr
+import com.airbnb.paris.annotations.StyleableChild
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.framework.errors.check
+import com.airbnb.paris.processor.framework.isNotPrivate
+import com.airbnb.paris.processor.framework.isNotProtected
+import com.airbnb.paris.processor.framework.models.SkyFieldModel
+import com.airbnb.paris.processor.framework.models.SkyFieldModelFactory
+import com.airbnb.paris.processor.getResourceId
+import javax.lang.model.element.Element
+
+// TODO Forward Javadoc to the generated functions/methods
 
 internal class StyleableChildInfoExtractor
     : SkyFieldModelFactory<StyleableChildInfo>(StyleableChild::class.java) {
