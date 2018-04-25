@@ -3,12 +3,10 @@ package com.airbnb.paris.spannables
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.*
 import com.airbnb.paris.R
 import com.airbnb.paris.styles.Style
-import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 /**
  * Class responsible for creating a {@link Spanned} given an input text and a list of styles.
@@ -40,7 +38,7 @@ internal class StyleConverter(val context: Context) {
             R.styleable.Paris_Spannable_android_typeface to { index -> TypefaceSpan(attributes.getString(index)) },
             R.styleable.Paris_Spannable_android_textStyle to { index -> StyleSpan(attributes.getInt(index)) },
             R.styleable.Paris_Spannable_android_textSize to { index -> AbsoluteSizeSpan(attributes.getDimensionPixelSize(index)) },
-            R.styleable.Paris_Spannable_android_textColor to { index -> ForegroundColorSpan(attributes.getColorStateList(index).defaultColor) }
+            R.styleable.Paris_Spannable_android_textColor to { index -> ForegroundColorSpan(attributes.getColorStateList(index)!!.defaultColor) }
         ).filter { (index, _) -> attributes.hasValue(index) }
         .map { (index, converter) -> converter(index) }
     }

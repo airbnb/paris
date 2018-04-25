@@ -1,17 +1,22 @@
 package com.airbnb.paris
 
-import android.content.*
-import android.content.res.*
-import android.support.test.*
-import android.support.test.runner.*
-import com.airbnb.paris.attribute_values.*
-import com.airbnb.paris.styles.*
+import android.content.Context
+import android.content.res.Resources
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.styles.MultiStyle
+import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.test.R
-import com.airbnb.paris.typed_array_wrappers.*
-import com.airbnb.paris.utils.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
+import com.airbnb.paris.utils.getFloat
+import com.airbnb.paris.utils.getStyle
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MultiTypedArrayWrapperTest {
@@ -48,19 +53,6 @@ class MultiTypedArrayWrapperTest {
     fun setup() {
         context = InstrumentationRegistry.getTargetContext()
         res = context.resources
-    }
-
-    @Test
-    fun isNull() {
-        multi = MultiTypedArrayWrapper(
-                listOf(
-                        mapOf(R.attr.formatColor to ResourceId(R.color.null_)),
-                        mapOf(R.attr.formatReference to ResourceId(R.drawable.null_))
-                ).map { newFormatWrapper(it) },
-                R.styleable.Formats
-        )
-        assertTrue(multi.isNull(R.styleable.Formats_formatColor))
-        assertTrue(multi.isNull(R.styleable.Formats_formatReference))
     }
 
     @Test
@@ -159,7 +151,7 @@ class MultiTypedArrayWrapperTest {
                 R.styleable.Formats
         )
         val actual = res.getDrawable(R.drawable.format_drawable_2)
-        assertEquals(actual.constantState, multi.getDrawable(R.styleable.Formats_formatReference).constantState)
+        assertEquals(actual.constantState, multi.getDrawable(R.styleable.Formats_formatReference)?.constantState)
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -21,6 +23,30 @@ class ViewProxyTest {
         context = RuntimeEnvironment.application
         view = View(context)
         proxy = ViewProxy(view)
+    }
+
+    @Test
+    fun background_null() {
+        // Since null is the default first set the background to something else
+        view.background = ColorDrawable(Color.WHITE)
+        proxy.setBackground(null)
+        assertEquals(null, view.background)
+    }
+
+    @Test
+    fun contentDescription_null() {
+        // Since null is the default first set the content description to something else
+        view.contentDescription = "Hello"
+        proxy.setContentDescription(null)
+        assertEquals(null, view.contentDescription)
+    }
+
+    @Test
+    fun foreground_null() {
+        // Since null is the default first set the foreground to something else
+        view.foreground = ColorDrawable(Color.WHITE)
+        proxy.setForeground(null)
+        assertEquals(null, view.foreground)
     }
 
     @Test

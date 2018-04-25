@@ -5,8 +5,24 @@
         <attr name="test_typedArrayTypedArrayWrapper_style" format="reference" />
     </declare-styleable>
 
+    <style name="Test_TypedArrayTypedArrayWrapper_GetText_NullText">
+        <item name="android:text">@string/null_</item>
+    </style>
+
+    <style name="Test_TypedArrayTypedArrayWrapper_GetColorStateList_NullTextColor">
+        <item name="android:textColor">@color/null_</item>
+    </style>
+
+    <style name="Test_TypedArrayTypedArrayWrapper_GetDrawable_NullBackground">
+        <item name="android:background">@drawable/null_</item>
+    </style>
+
     <style name="Test_TypedArrayTypedArrayWrapper_GetResourceId_NullBackground">
-        <item name="android:background">@color/null_</item>
+        <item name="android:background">@drawable/null_</item>
+    </style>
+
+    <style name="Test_TypedArrayTypedArrayWrapper_GetString_NullText">
+        <item name="android:text">@string/null_</item>
     </style>
 
     <style name="Test_TypedArrayTypedArrayWrapper_GetStyle_StyleWithNoSubStyle" />

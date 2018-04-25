@@ -3,6 +3,7 @@ package com.airbnb.paris.proxies;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -37,14 +38,14 @@ public class ImageViewProxy extends BaseProxy<ImageViewProxy, ImageView> {
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_tint)
-    public void setTint(ColorStateList color) {
+    public void setTint(@Nullable ColorStateList color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getView().setImageTintList(color);
         }
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_src)
-    public void setSrc(Drawable drawable) {
+    public void setSrc(@Nullable Drawable drawable) {
         getView().setImageDrawable(drawable);
     }
 }

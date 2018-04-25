@@ -11,13 +11,6 @@ class EmptyTypedArrayWrapperSpec : StringSpec({
     val wrapper = EmptyTypedArrayWrapper
 
     "invalid methods" {
-        forAll { index: Int ->
-            shouldThrow<IllegalStateException> {
-                wrapper.isNull(index)
-            }
-            true
-        }
-
         forAll { at: Int ->
             shouldThrow<IllegalStateException> {
                 wrapper.getIndex(at)

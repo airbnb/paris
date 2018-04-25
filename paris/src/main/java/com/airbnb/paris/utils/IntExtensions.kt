@@ -1,6 +1,5 @@
 package com.airbnb.paris.utils
 
-import android.content.res.*
+import android.content.res.ColorStateList
 
-fun Int.toColorStateList(): ColorStateList =
-        ColorStateList(arrayOf(intArrayOf()), intArrayOf(this))
+fun Int.toColorStateList(): ColorStateList = ColorStateList.valueOf(this)

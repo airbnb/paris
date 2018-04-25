@@ -28,13 +28,35 @@ class ViewStyleBuilderTest {
     }
 
     @Test
+    fun foreground_null() {
+        val style = builder.foreground(null).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.foreground, null)
+                .build(),
+            style
+        )
+    }
+
+    @Test
+    fun background_null() {
+        val style = builder.background(null).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.background, null)
+                .build(),
+            style
+        )
+    }
+
+    @Test
     fun visibility_visible() {
         val style = builder.visibility(View.VISIBLE).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, View.VISIBLE)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.visibility, View.VISIBLE)
+                .build(),
+            style
         )
     }
 
@@ -42,10 +64,13 @@ class ViewStyleBuilderTest {
     fun visibility_visibleRes() {
         val style = builder.visibilityRes(R.integer.test_view_style_builder_visible).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, ResourceId(R.integer.test_view_style_builder_visible))
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(
+                    android.R.attr.visibility,
+                    ResourceId(R.integer.test_view_style_builder_visible)
+                )
+                .build(),
+            style
         )
     }
 
@@ -53,10 +78,10 @@ class ViewStyleBuilderTest {
     fun visibility_invisible() {
         val style = builder.visibility(View.INVISIBLE).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, View.INVISIBLE)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.visibility, View.INVISIBLE)
+                .build(),
+            style
         )
     }
 
@@ -64,10 +89,13 @@ class ViewStyleBuilderTest {
     fun visibility_invisibleRes() {
         val style = builder.visibilityRes(R.integer.test_view_style_builder_invisible).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, ResourceId(R.integer.test_view_style_builder_invisible))
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(
+                    android.R.attr.visibility,
+                    ResourceId(R.integer.test_view_style_builder_invisible)
+                )
+                .build(),
+            style
         )
     }
 
@@ -75,10 +103,10 @@ class ViewStyleBuilderTest {
     fun visibility_gone() {
         val style = builder.visibility(View.GONE).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, View.GONE)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.visibility, View.GONE)
+                .build(),
+            style
         )
     }
 
@@ -86,10 +114,10 @@ class ViewStyleBuilderTest {
     fun visibility_goneRes() {
         val style = builder.visibilityRes(R.integer.test_view_style_builder_gone).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, ResourceId(R.integer.test_view_style_builder_gone))
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.visibility, ResourceId(R.integer.test_view_style_builder_gone))
+                .build(),
+            style
         )
     }
 }

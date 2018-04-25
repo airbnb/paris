@@ -1,19 +1,27 @@
 package com.airbnb.paris
 
-import android.content.*
-import android.content.res.*
-import android.graphics.*
-import android.support.test.*
-import android.support.test.runner.*
-import android.view.*
-import com.airbnb.paris.attribute_values.*
-import com.airbnb.paris.styles.*
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import android.view.ViewGroup
+import com.airbnb.paris.attribute_values.ColorValue
+import com.airbnb.paris.attribute_values.DpValue
+import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.attribute_values.Styles
+import com.airbnb.paris.styles.MultiStyle
+import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.styles.Style
 import com.airbnb.paris.test.R
-import com.airbnb.paris.typed_array_wrappers.*
-import com.airbnb.paris.utils.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
+import com.airbnb.paris.utils.dpToPx
+import com.airbnb.paris.utils.getFloat
+import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @Suppress("FunctionName")
 @RunWith(AndroidJUnit4::class)
@@ -40,13 +48,6 @@ class MapTypedArrayWrapperTest {
     fun setup() {
         context = InstrumentationRegistry.getTargetContext()
         res = context.resources
-    }
-
-    @Test
-    fun isNull() {
-        val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.null_))
-        wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
-        assertTrue(wrapper.isNull(R.styleable.Formats_formatReference))
     }
 
     @Test
@@ -118,7 +119,7 @@ class MapTypedArrayWrapperTest {
     fun getColorStateList_colorValueToColorStateList() {
         val map = mapOf(R.attr.formatColor to ColorValue(Color.BLUE))
         wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
-        assertEquals(Color.BLUE, wrapper.getColorStateList(R.styleable.Formats_formatColor).defaultColor)
+        assertEquals(Color.BLUE, wrapper.getColorStateList(R.styleable.Formats_formatColor)?.defaultColor)
     }
 
     @Test
@@ -142,7 +143,7 @@ class MapTypedArrayWrapperTest {
         val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.format_drawable))
         wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
         val actual = res.getDrawable(R.drawable.format_drawable)
-        assertEquals(actual.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference).constantState)
+        assertEquals(actual.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference)?.constantState)
     }
 
     @Test

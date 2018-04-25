@@ -159,13 +159,16 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         getView().setAllCaps(textAllCaps);
     }
 
+    /**
+     * @param colors If null will set the color to the default (black), same as TextView
+     */
     @Attr(R2.styleable.Paris_TextView_android_textColor)
-    public void setTextColor(ColorStateList colors) {
-        getView().setTextColor(colors);
+    public void setTextColor(@Nullable ColorStateList colors) {
+        getView().setTextColor(colors != null ? colors : ColorStateList.valueOf(0xFF000000));
     }
 
     @Attr(R2.styleable.Paris_TextView_android_textColorHint)
-    public void setTextColorHint(ColorStateList colors) {
+    public void setTextColorHint(@Nullable ColorStateList colors) {
         getView().setHintTextColor(colors);
     }
 

@@ -14,14 +14,16 @@ import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 import java.util.*
 
 data class ProgrammaticStyle internal constructor(
-        private val attributeMap: Map<Int, Any>,
-        private var name: String? = null) : Style {
+    private val attributeMap: Map<Int, Any?>,
+    private var name: String? = null
+) : Style {
 
     private constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
 
     data class Builder internal constructor(
-            internal val attrResToValueResMap: MutableMap<Int, Any> = HashMap(),
-            internal var name: String = "a programmatic style") {
+        internal val attrResToValueResMap: MutableMap<Int, Any?> = HashMap(),
+        internal var name: String = "a programmatic style"
+    ) {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
 
@@ -31,21 +33,21 @@ data class ProgrammaticStyle internal constructor(
         }
 
         fun putRes(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
-                put(attrRes, ResourceId(valueRes))
+            put(attrRes, ResourceId(valueRes))
 
         fun putDp(@AttrRes attrRes: Int, dps: Int): Builder =
-                put(attrRes, DpValue(dps))
+            put(attrRes, DpValue(dps))
 
         fun putColor(@AttrRes attrRes: Int, @ColorInt color: Int): Builder =
-                put(attrRes, ColorValue(color))
+            put(attrRes, ColorValue(color))
 
-        fun put(@AttrRes attrRes: Int, value: Any): Builder {
+        fun put(@AttrRes attrRes: Int, value: Any?): Builder {
             attrResToValueResMap[attrRes] = value
             return this
         }
 
         fun putStyle(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
-                putStyle(attrRes, ResourceStyle(valueRes))
+            putStyle(attrRes, ResourceStyle(valueRes))
 
         fun putStyle(@AttrRes attrRes: Int, style: Style): Builder {
             val styles: Styles

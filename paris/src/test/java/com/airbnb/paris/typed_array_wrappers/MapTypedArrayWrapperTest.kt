@@ -22,42 +22,6 @@ class MapTypedArrayWrapperTest {
     }
 
     @Test
-    fun isNull_anim() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
-                android.R.attr.background to ResourceId(R.anim.null_)
-        )).let {
-            assertTrue(it.isNull(R.styleable.Paris_View_android_background))
-        }
-    }
-
-    @Test
-    fun isNull_color() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
-                android.R.attr.background to ResourceId(R.color.null_)
-        )).let {
-            assertTrue(it.isNull(R.styleable.Paris_View_android_background))
-        }
-    }
-
-    @Test
-    fun isNull_drawable() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
-                android.R.attr.background to ResourceId(R.drawable.null_)
-        )).let {
-            assertTrue(it.isNull(R.styleable.Paris_View_android_background))
-        }
-    }
-
-    @Test
-    fun isNull_false() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
-                android.R.attr.background to ResourceId(android.R.color.white)
-        )).let {
-            assertFalse(it.isNull(R.styleable.Paris_View_android_background))
-        }
-    }
-
-    @Test
     fun getIndexCount_empty() {
         MapTypedArrayWrapper(context, R.styleable.Paris_View, emptyMap()).let {
             assertEquals(0, it.getIndexCount())
@@ -66,40 +30,48 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getIndexCount_single() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.alpha to .5f
-        )).let {
+            )
+        ).let {
             assertEquals(1, it.getIndexCount())
         }
     }
 
     @Test
     fun getIndexCount_multiple() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.alpha to .5f,
                 android.R.attr.background to Color.WHITE,
                 android.R.attr.padding to 10
-        )).let {
+            )
+        ).let {
             assertEquals(3, it.getIndexCount())
         }
     }
 
     @Test
     fun getIndexCount_superset() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.alpha to .5f,
                 // textColor is not a view attribute so it should be ignored
                 android.R.attr.textColor to Color.WHITE
-        )).let {
+            )
+        ).let {
             assertEquals(1, it.getIndexCount())
         }
     }
 
     @Test
     fun getIndex_valid() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.padding to 10
-        )).let {
+            )
+        ).let {
             assertEquals(R.styleable.Paris_View_android_padding, it.getIndex(0))
         }
     }
@@ -118,18 +90,22 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun hasValue_true() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.alpha to .5f
-        )).let {
+            )
+        ).let {
             assertTrue(it.hasValue(R.styleable.Paris_View_android_alpha))
         }
     }
 
     @Test
     fun hasValue_false() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.alpha to .5f
-        )).let {
+            )
+        ).let {
             assertFalse(it.hasValue(R.styleable.Paris_View_android_background))
         }
     }
@@ -141,9 +117,11 @@ class MapTypedArrayWrapperTest {
 
     @Test
     fun getBoolean_valid() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 R.attr.ignoreLayoutWidthAndHeight to true
-        )).let {
+            )
+        ).let {
             assertTrue(it.getBoolean(R.styleable.Paris_View_ignoreLayoutWidthAndHeight))
         }
     }
@@ -152,15 +130,74 @@ class MapTypedArrayWrapperTest {
     fun getBoolean_wrongAttributeType() {
         // Surprisingly this works because, while attribute formats are enforced in XML, there is no
         // way of doing so programmatically
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 android.R.attr.alpha to true
-        )).getBoolean(R.styleable.Paris_View_android_alpha)
+            )
+        ).getBoolean(R.styleable.Paris_View_android_alpha)
     }
 
     @Test(expected = Exception::class)
     fun getBoolean_wrongValueType() {
-        MapTypedArrayWrapper(context, R.styleable.Paris_View, mapOf(
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
                 R.attr.ignoreLayoutWidthAndHeight to Color.WHITE
-        )).getBoolean(R.styleable.Paris_View_ignoreLayoutWidthAndHeight)
+            )
+        ).getBoolean(R.styleable.Paris_View_ignoreLayoutWidthAndHeight)
+    }
+
+    @Test
+    fun getColorStateList_null() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_TextView, mapOf(
+                android.R.attr.textColor to null
+            )
+        ).let {
+            assertEquals(null, it.getColorStateList(R.styleable.Paris_TextView_android_textColor))
+        }
+    }
+
+    @Test
+    fun getColorStateList_nullRes() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_TextView, mapOf(
+                android.R.attr.textColor to ResourceId(R.color.null_)
+            )
+        ).let {
+            assertEquals(null, it.getColorStateList(R.styleable.Paris_TextView_android_textColor))
+        }
+    }
+
+    @Test
+    fun getDrawable_null() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
+                android.R.attr.background to null
+            )
+        ).let {
+            assertEquals(null, it.getDrawable(R.styleable.Paris_View_android_background))
+        }
+    }
+
+    @Test
+    fun getDrawable_nullRes() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
+                android.R.attr.background to ResourceId(R.drawable.null_)
+            )
+        ).let {
+            assertEquals(null, it.getDrawable(R.styleable.Paris_View_android_background))
+        }
+    }
+
+    @Test
+    fun getResourceId_null() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_View, mapOf(
+                android.R.attr.background to ResourceId(R.drawable.null_)
+            )
+        ).let {
+            assertEquals(0, it.getResourceId(R.styleable.Paris_View_android_background))
+        }
     }
 }

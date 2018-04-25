@@ -18,6 +18,7 @@ internal object AndroidClassNames {
     val DRAWABLE_RES = "android.support.annotation.DrawableRes".className()
     val FRACTION_RES = "android.support.annotation.FractionRes".className()
     val INTEGER_RES = "android.support.annotation.IntegerRes".className()
+    val NULLABLE = "android.support.annotation.Nullable".className()
     val PX = "android.support.annotation.Px".className()
     val STRING_RES = "android.support.annotation.StringRes".className()
     val STYLE_RES = "android.support.annotation.StyleRes".className()

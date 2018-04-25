@@ -1,15 +1,21 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.utils.*
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
+import com.airbnb.paris.annotations.Fraction
+import com.airbnb.paris.processor.framework.AndroidClassNames
+import com.airbnb.paris.processor.framework.hasAnnotation
+import com.airbnb.paris.processor.framework.hasAnyAnnotation
+import com.airbnb.paris.processor.framework.isView
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
 
 internal class Format private constructor(
-        private val type: Type,
-        private val base: Int = 1,
-        private val pbase: Int = 1) {
+    private val type: Type,
+    private val base: Int = 1,
+    private val pbase: Int = 1
+) {
 
     companion object {
 
@@ -38,29 +44,30 @@ internal class Format private constructor(
         }
 
         private val RES_ANNOTATIONS = hashSetOf(
-                "AnimatorRes",
-                "AnimRes",
-                "AnyRes",
-                "ArrayRes",
-                "AttrRes",
-                "BoolRes",
-                "ColorRes",
-                "DimenRes",
-                "DrawableRes",
-                "FontRes",
-                "FractionRes",
-                "IdRes",
-                "IntegerRes",
-                "InterpolatorRes",
-                "LayoutRes",
-                "MenuRes",
-                "PluralsRes",
-                "RawRes",
-                "StringRes",
-                "StyleableRes",
-                "StyleRes",
-                "TransitionRes",
-                "XmlRes")
+            "AnimatorRes",
+            "AnimRes",
+            "AnyRes",
+            "ArrayRes",
+            "AttrRes",
+            "BoolRes",
+            "ColorRes",
+            "DimenRes",
+            "DrawableRes",
+            "FontRes",
+            "FractionRes",
+            "IdRes",
+            "IntegerRes",
+            "InterpolatorRes",
+            "LayoutRes",
+            "MenuRes",
+            "PluralsRes",
+            "RawRes",
+            "StringRes",
+            "StyleableRes",
+            "StyleRes",
+            "TransitionRes",
+            "XmlRes"
+        )
 
         fun forElement(element: Element): Format {
             return if (element.kind == ElementKind.FIELD) {
@@ -123,10 +130,10 @@ internal class Format private constructor(
     }
 
     val isDimensionType = type in listOf(
-            Type.LAYOUT_DIMENSION,
-            Type.DIMENSION,
-            Type.DIMENSION_PIXEL_OFFSET,
-            Type.DIMENSION_PIXEL_SIZE
+        Type.LAYOUT_DIMENSION,
+        Type.DIMENSION,
+        Type.DIMENSION_PIXEL_OFFSET,
+        Type.DIMENSION_PIXEL_SIZE
     )
 
     val isColorStateListType = type == Type.COLOR_STATE_LIST
@@ -134,6 +141,11 @@ internal class Format private constructor(
     val valueAnnotation: ClassName?
         get() = when (type) {
             Type.COLOR -> AndroidClassNames.COLOR_INT
+            Type.CHARSEQUENCE,
+            Type.CHARSEQUENCE_ARRAY,
+            Type.COLOR_STATE_LIST,
+            Type.DRAWABLE,
+            Type.STRING -> AndroidClassNames.NULLABLE
             Type.DIMENSION,
             Type.DIMENSION_PIXEL_OFFSET,
             Type.DIMENSION_PIXEL_SIZE -> {
@@ -190,12 +202,12 @@ internal class Format private constructor(
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
             Type.STRING -> "getString(\$L)"
 
-            // Using extension functions because unsupported by Resources
+        // Using extension functions because unsupported by Resources
             Type.LAYOUT_DIMENSION -> "\$T.getLayoutDimension(\$L, \$L)"
             Type.FLOAT -> "\$T.getFloat(\$L, \$L)"
             Type.STYLE -> "\$T.getStyle(\$L, \$L)"
 
-            // Special case, the resource id is the value
+        // Special case, the resource id is the value
             Type.RESOURCE_ID -> "\$L"
         }
 
@@ -207,7 +219,12 @@ internal class Format private constructor(
                 CodeBlock.of("\$L.$statement", resourcesVar, valueResIdCode)
             }
             Type.FLOAT, Type.LAYOUT_DIMENSION, Type.STYLE -> {
-                CodeBlock.of(statement, RESOURCES_EXTENSIONS_CLASS_NAME, resourcesVar, valueResIdCode)
+                CodeBlock.of(
+                    statement,
+                    RESOURCES_EXTENSIONS_CLASS_NAME,
+                    resourcesVar,
+                    valueResIdCode
+                )
             }
             Type.RESOURCE_ID -> {
                 CodeBlock.of(statement, valueResIdCode)
@@ -216,26 +233,28 @@ internal class Format private constructor(
     }
 
     fun typedArrayMethodCode(typedArrayVariable: String, attrResIdCode: CodeBlock): CodeBlock {
-        return CodeBlock.of("\$L." + when (type) {
-            Type.BOOLEAN -> "getBoolean(\$L)"
-            Type.CHARSEQUENCE -> "getText(\$L)"
-            Type.CHARSEQUENCE_ARRAY -> "getTextArray(\$L)"
-            Type.COLOR -> "getColor(\$L)"
-            Type.COLOR_STATE_LIST -> "getColorStateList(\$L)"
-            Type.DIMENSION -> "getDimension(\$L)"
-            Type.DIMENSION_PIXEL_OFFSET -> "getDimensionPixelOffset(\$L)"
-            Type.DIMENSION_PIXEL_SIZE -> "getDimensionPixelSize(\$L)"
-            Type.DRAWABLE -> "getDrawable(\$L)"
-            Type.FLOAT -> "getFloat(\$L)"
-            Type.FRACTION -> "getFraction(\$L, %d, %d)".format(base, pbase)
-            Type.INT -> "getInt(\$L)"
-            Type.INTEGER -> "getInteger(\$L)"
-            Type.LAYOUT_DIMENSION -> "getLayoutDimension(\$L)"
-            Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
-            Type.RESOURCE_ID -> "getResourceId(\$L)"
-            Type.STRING -> "getString(\$L)"
-            Type.STYLE -> "getStyle(\$L)"
-        }, typedArrayVariable, attrResIdCode)
+        return CodeBlock.of(
+            "\$L." + when (type) {
+                Type.BOOLEAN -> "getBoolean(\$L)"
+                Type.CHARSEQUENCE -> "getText(\$L)"
+                Type.CHARSEQUENCE_ARRAY -> "getTextArray(\$L)"
+                Type.COLOR -> "getColor(\$L)"
+                Type.COLOR_STATE_LIST -> "getColorStateList(\$L)"
+                Type.DIMENSION -> "getDimension(\$L)"
+                Type.DIMENSION_PIXEL_OFFSET -> "getDimensionPixelOffset(\$L)"
+                Type.DIMENSION_PIXEL_SIZE -> "getDimensionPixelSize(\$L)"
+                Type.DRAWABLE -> "getDrawable(\$L)"
+                Type.FLOAT -> "getFloat(\$L)"
+                Type.FRACTION -> "getFraction(\$L, %d, %d)".format(base, pbase)
+                Type.INT -> "getInt(\$L)"
+                Type.INTEGER -> "getInteger(\$L)"
+                Type.LAYOUT_DIMENSION -> "getLayoutDimension(\$L)"
+                Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
+                Type.RESOURCE_ID -> "getResourceId(\$L)"
+                Type.STRING -> "getString(\$L)"
+                Type.STYLE -> "getStyle(\$L)"
+            }, typedArrayVariable, attrResIdCode
+        )
     }
 
     override fun equals(other: Any?): Boolean {

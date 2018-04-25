@@ -34,10 +34,10 @@ class TextViewStyleBuilderTest {
     fun hint() {
         val style = builder.hint("This is a hint").build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.hint, "This is a hint")
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.hint, "This is a hint")
+                .build(),
+            style
         )
     }
 
@@ -45,10 +45,10 @@ class TextViewStyleBuilderTest {
     fun hintRes() {
         val style = builder.hintRes(R.string.test_arbitrary).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.hint, ResourceId(R.string.test_arbitrary))
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.hint, ResourceId(R.string.test_arbitrary))
+                .build(),
+            style
         )
     }
 
@@ -56,10 +56,10 @@ class TextViewStyleBuilderTest {
     fun inputType() {
         val style = builder.inputType(InputType.TYPE_CLASS_DATETIME).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.inputType, InputType.TYPE_CLASS_DATETIME)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.inputType, InputType.TYPE_CLASS_DATETIME)
+                .build(),
+            style
         )
     }
 
@@ -67,10 +67,21 @@ class TextViewStyleBuilderTest {
     fun inputTypeRes() {
         val style = builder.inputTypeRes(R.integer.test_arbitrary).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.inputType, ResourceId(R.integer.test_arbitrary))
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.inputType, ResourceId(R.integer.test_arbitrary))
+                .build(),
+            style
+        )
+    }
+
+    @Test
+    fun textColor_null() {
+        val style = builder.textColor(null).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.textColor, null)
+                .build(),
+            style
         )
     }
 
@@ -78,10 +89,10 @@ class TextViewStyleBuilderTest {
     fun textStyle() {
         val style = builder.textStyle(Typeface.NORMAL).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.textStyle, Typeface.NORMAL)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.textStyle, Typeface.NORMAL)
+                .build(),
+            style
         )
     }
 
@@ -89,10 +100,10 @@ class TextViewStyleBuilderTest {
     fun textStyleRes() {
         val style = builder.textStyleRes(R.integer.test_arbitrary).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.textStyle, ResourceId(R.integer.test_arbitrary))
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.textStyle, ResourceId(R.integer.test_arbitrary))
+                .build(),
+            style
         )
     }
 
@@ -101,10 +112,10 @@ class TextViewStyleBuilderTest {
         // View attributes are also available
         val style = builder.visibility(View.INVISIBLE).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, View.INVISIBLE)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.visibility, View.INVISIBLE)
+                .build(),
+            style
         )
     }
 }

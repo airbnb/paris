@@ -5,6 +5,7 @@ import android.animation.StateListAnimator;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.AnyRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.v4.view.ViewCompat;
 import android.util.SparseIntArray;
@@ -15,12 +16,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.airbnb.paris.R2;
-import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.annotations.AfterStyle;
 import com.airbnb.paris.annotations.Attr;
 import com.airbnb.paris.annotations.BeforeStyle;
 import com.airbnb.paris.annotations.LayoutDimension;
 import com.airbnb.paris.annotations.Styleable;
+import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
 @Styleable(value = "Paris_View")
@@ -205,8 +206,13 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     @Attr(R2.styleable.Paris_View_android_background)
-    public void setBackground(Drawable drawable) {
+    public void setBackground(@Nullable Drawable drawable) {
         getView().setBackground(drawable);
+    }
+
+    @Attr(R2.styleable.Paris_View_android_contentDescription)
+    public void setContentDescription(@Nullable CharSequence contentDescription) {
+        getView().setContentDescription(contentDescription);
     }
 
     @Attr(R2.styleable.Paris_View_android_elevation)
@@ -215,7 +221,7 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     @Attr(R2.styleable.Paris_View_android_foreground)
-    public void setForeground(Drawable drawable) {
+    public void setForeground(@Nullable Drawable drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getView().setForeground(drawable);
         }
@@ -312,11 +318,6 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     @Attr(R2.styleable.Paris_View_android_visibility)
     public void setVisibility(int visibility) {
         getView().setVisibility(VISIBILITY_MAP.get(visibility));
-    }
-
-    @Attr(R2.styleable.Paris_View_android_contentDescription)
-    public void setContentDescription(CharSequence contentDescription) {
-        getView().setContentDescription(contentDescription);
     }
 
     @Attr(R2.styleable.Paris_View_ignoreLayoutWidthAndHeight)

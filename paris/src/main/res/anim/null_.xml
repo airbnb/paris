@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This dummy resource replaces the use of @null where applicable since Android will ignore
-     @null attributes when reading from a style resource. -->
+<!-- This dummy resource replaces the use of @null where applicable -->
 <set />

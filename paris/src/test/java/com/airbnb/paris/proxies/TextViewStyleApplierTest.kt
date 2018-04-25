@@ -1,6 +1,7 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.text.InputType
 import android.view.View
@@ -91,6 +92,18 @@ class TextViewStyleApplierTest {
     fun inputType_classTextFlagAutoCompleteXml() {
         applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextFlagAutoComplete)
         assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE, view.inputType)
+    }
+
+    @Test
+    fun textColor_null() {
+        applier.apply(builder.textColor(null).build())
+        assertEquals(ColorStateList.valueOf(0xFF000000.toInt()), view.textColors)
+    }
+
+    @Test
+    fun textColor_nullRes() {
+        applier.apply(builder.textColorRes(R.color.null_).build())
+        assertEquals(ColorStateList.valueOf(0xFF000000.toInt()), view.textColors)
     }
 
     @Test

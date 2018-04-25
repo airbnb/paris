@@ -1,8 +1,11 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.ViewStyleApplier
+import com.airbnb.paris.R
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -24,6 +27,38 @@ class ViewStyleApplierTest {
         view = View(context)
         applier = ViewStyleApplier(view)
         builder = ViewStyleApplier.StyleBuilder()
+    }
+
+    @Test
+    fun background_null() {
+        // Since null is the default first set the background to something else
+        view.background = ColorDrawable(Color.WHITE)
+        applier.apply(builder.background(null).build())
+        assertEquals(null, view.background)
+    }
+
+    @Test
+    fun background_nullRes() {
+        // Since null is the default first set the background to something else
+        view.background = ColorDrawable(Color.WHITE)
+        applier.apply(builder.backgroundRes(R.drawable.null_).build())
+        assertEquals(null, view.background)
+    }
+
+    @Test
+    fun foreground_null() {
+        // Since null is the default first set the foreground to something else
+        view.foreground = ColorDrawable(Color.WHITE)
+        applier.apply(builder.foreground(null).build())
+        assertEquals(null, view.foreground)
+    }
+
+    @Test
+    fun foreground_nullRes() {
+        // Since null is the default first set the foreground to something else
+        view.foreground = ColorDrawable(Color.WHITE)
+        applier.apply(builder.foregroundRes(R.drawable.null_).build())
+        assertEquals(null, view.foreground)
     }
 
     @Test

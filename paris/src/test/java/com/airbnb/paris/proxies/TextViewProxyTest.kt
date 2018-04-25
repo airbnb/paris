@@ -1,6 +1,8 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
 import android.widget.TextView
@@ -79,6 +81,20 @@ class TextViewProxyTest {
     fun setInputType_classTextVariationAutocomplete() {
         proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE)
         assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE, view.inputType)
+    }
+
+    @Test
+    fun setTextColor_null() {
+        proxy.setTextColor(null)
+        assertEquals(ColorStateList.valueOf(0xFF000000.toInt()), view.textColors)
+    }
+
+    @Test
+    fun setTextColorHint_null() {
+        // Since normal is the default first set the color to something else
+        view.setHintTextColor(Color.WHITE)
+        proxy.setTextColorHint(null)
+        assertEquals(null, view.hintTextColors)
     }
 
     @Test

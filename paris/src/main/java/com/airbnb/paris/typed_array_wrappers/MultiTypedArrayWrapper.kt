@@ -1,16 +1,18 @@
 package com.airbnb.paris.typed_array_wrappers
 
-import android.content.res.*
-import android.graphics.drawable.*
-import com.airbnb.paris.styles.*
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import com.airbnb.paris.styles.MultiStyle
+import com.airbnb.paris.styles.Style
 
 /**
  * @param wrappers These are assumed to have been created with the same styleable attribute list
  * @param styleableAttrs The styleable attribute list from which the [wrappers] were created
  */
 internal class MultiTypedArrayWrapper constructor(
-        private val wrappers: List<TypedArrayWrapper>,
-        private val styleableAttrs: IntArray) : TypedArrayWrapper() {
+    private val wrappers: List<TypedArrayWrapper>,
+    private val styleableAttrs: IntArray
+) : TypedArrayWrapper() {
 
     private val styleableAttrIndexes by lazy { styleableAttrIndexToWrapperMap.keys.toList() }
 
@@ -36,12 +38,9 @@ internal class MultiTypedArrayWrapper constructor(
     }
 
     private fun getWrappers(index: Int): List<TypedArrayWrapper> =
-            styleableAttrIndexToWrapperMap[index]!!
+        styleableAttrIndexToWrapperMap[index]!!
 
     private fun getWrapper(index: Int): TypedArrayWrapper = getWrappers(index).last()
-
-    override fun isNull(index: Int): Boolean =
-            isNullRes(getWrapper(index).getResourceId(index))
 
     override fun getIndexCount(): Int = styleableAttrIndexToWrapperMap.size
 
@@ -52,43 +51,43 @@ internal class MultiTypedArrayWrapper constructor(
     }
 
     override fun getBoolean(index: Int): Boolean =
-            getWrapper(index).getBoolean(index)
+        getWrapper(index).getBoolean(index)
 
     override fun getColor(index: Int): Int =
-            getWrapper(index).getColor(index)
+        getWrapper(index).getColor(index)
 
-    override fun getColorStateList(index: Int): ColorStateList =
-            getWrapper(index).getColorStateList(index)
+    override fun getColorStateList(index: Int): ColorStateList? =
+        getWrapper(index).getColorStateList(index)
 
     override fun getDimensionPixelSize(index: Int): Int =
-            getWrapper(index).getDimensionPixelSize(index)
+        getWrapper(index).getDimensionPixelSize(index)
 
-    override fun getDrawable(index: Int): Drawable =
-            getWrapper(index).getDrawable(index)
+    override fun getDrawable(index: Int): Drawable? =
+        getWrapper(index).getDrawable(index)
 
     override fun getFloat(index: Int): Float =
-            getWrapper(index).getFloat(index)
+        getWrapper(index).getFloat(index)
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
-            getWrapper(index).getFraction(index, base, pbase)
+        getWrapper(index).getFraction(index, base, pbase)
 
     override fun getInt(index: Int): Int =
-            getWrapper(index).getInt(index)
+        getWrapper(index).getInt(index)
 
     override fun getLayoutDimension(index: Int): Int =
-            getWrapper(index).getLayoutDimension(index)
+        getWrapper(index).getLayoutDimension(index)
 
     override fun getResourceId(index: Int): Int =
-            if (isNull(index)) 0 else getWrapper(index).getResourceId(index)
+        getWrapper(index).getResourceId(index)
 
-    override fun getString(index: Int): String =
-            getWrapper(index).getString(index)
+    override fun getString(index: Int): String? =
+        getWrapper(index).getString(index)
 
-    override fun getText(index: Int): CharSequence =
-            getWrapper(index).getText(index)
+    override fun getText(index: Int): CharSequence? =
+        getWrapper(index).getText(index)
 
-    override fun getTextArray(index: Int): Array<CharSequence> =
-            getWrapper(index).getTextArray(index)
+    override fun getTextArray(index: Int): Array<CharSequence>? =
+        getWrapper(index).getTextArray(index)
 
     override fun getStyle(index: Int): Style {
         val styles = getWrappers(index).map { it.getStyle(index) }
