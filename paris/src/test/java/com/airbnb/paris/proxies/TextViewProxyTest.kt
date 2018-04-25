@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.text.InputType
 import android.widget.TextView
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,45 +43,94 @@ class TextViewProxyTest {
     }
 
     @Test
+    fun setInputType_null() {
+        proxy.setInputType(InputType.TYPE_NULL)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(InputType.TYPE_NULL, view.inputType)
+    }
+
+    @Test
     fun setInputType_classDatetime() {
         proxy.setInputType(InputType.TYPE_CLASS_DATETIME)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(InputType.TYPE_CLASS_DATETIME, view.inputType)
     }
 
     @Test
     fun setInputType_classNumber() {
         proxy.setInputType(InputType.TYPE_CLASS_NUMBER)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(InputType.TYPE_CLASS_NUMBER, view.inputType)
     }
 
     @Test
     fun setInputType_classPhone() {
         proxy.setInputType(InputType.TYPE_CLASS_PHONE)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(InputType.TYPE_CLASS_PHONE, view.inputType)
     }
 
     @Test
     fun setInputType_classText() {
         proxy.setInputType(InputType.TYPE_CLASS_TEXT)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(InputType.TYPE_CLASS_TEXT, view.inputType)
     }
 
     @Test
     fun setInputType_classTextVariationPassword() {
         proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
-        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD, view.inputType)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            view.inputType
+        )
     }
 
     @Test
     fun setInputType_classTextVariationUri() {
         proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI, view.inputType)
     }
 
     @Test
     fun setInputType_classTextVariationAutocomplete() {
         proxy.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE)
-        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE, view.inputType)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE,
+            view.inputType
+        )
+    }
+
+    @Test
+    fun setSingleLine_true() {
+        view.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        proxy.setSingleLine(true)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertTrue(view.inputType and InputType.TYPE_TEXT_FLAG_MULTI_LINE == 0)
+    }
+
+    @Test
+    fun setSingleLine_false() {
+        view.inputType = InputType.TYPE_CLASS_TEXT
+        proxy.setSingleLine(false)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(
+            InputType.TYPE_TEXT_FLAG_MULTI_LINE,
+            view.inputType and InputType.TYPE_MASK_FLAGS
+        )
     }
 
     @Test

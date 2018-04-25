@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.text.InputType
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
@@ -37,8 +38,7 @@ class TextViewStyleApplierTest {
         assertEquals("This is a hint", view.hint)
     }
 
-    // TODO Re-enable once null values are supported
-    //@Test
+    @Test
     fun hint_null() {
         // Since null is the default first set the hint to something else
         view.hint = "This is a hint"
@@ -79,7 +79,20 @@ class TextViewStyleApplierTest {
     @Test
     fun inputType_classTextVariationPasswordXml() {
         applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextVariationPassword)
-        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD, view.inputType)
+        assertEquals(
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            view.inputType
+        )
+    }
+
+    @Test
+    fun inputType_classTextVariationPasswordSingleLineXml() {
+        // The style specifies both inputType=textPassword and singleLine=true. Applying singleLine
+        // changes the transformation method which breaks the password input type if its done first.
+        // This ensures that this special case is handled correctly by resetting the transformation
+        // method when appropriate.
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextVariationPasswordSingleLine)
+        assertEquals(PasswordTransformationMethod.getInstance(), view.transformationMethod)
     }
 
     @Test
@@ -91,7 +104,36 @@ class TextViewStyleApplierTest {
     @Test
     fun inputType_classTextFlagAutoCompleteXml() {
         applier.apply(R.style.Test_TextViewStyleApplier_InputType_ClassTextFlagAutoComplete)
-        assertEquals(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE, view.inputType)
+        assertEquals(
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE,
+            view.inputType
+        )
+    }
+
+    @Test
+    fun inputType_multiLineSingleLineProgrammatic() {
+        // InputType should take precedence over the (deprecated) singleLine.
+        applier.apply(
+            builder
+                .inputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                .singleLine(true)
+                .build()
+        )
+        assertEquals(
+            InputType.TYPE_TEXT_FLAG_MULTI_LINE,
+            view.inputType and InputType.TYPE_MASK_FLAGS
+        )
+    }
+
+    @Test
+    fun inputType_multiLineSingleLineXml() {
+        // The style specifies both inputType=textMultiLine and singleLine=true. However inputType
+        // should take precedence over the (deprecated) singleLine.
+        applier.apply(R.style.Test_TextViewStyleApplier_InputType_MultiLineSingleLine)
+        assertEquals(
+            InputType.TYPE_TEXT_FLAG_MULTI_LINE,
+            view.inputType and InputType.TYPE_MASK_FLAGS
+        )
     }
 
     @Test

@@ -1,15 +1,17 @@
 package com.airbnb.paris.proxies
 
-import android.content.*
-import android.content.res.*
-import android.graphics.*
-import android.graphics.drawable.*
-import android.support.test.*
-import android.support.test.runner.*
-import android.widget.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import android.widget.TextView
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class DeprecatedTextViewProxyTest {
@@ -55,13 +57,6 @@ class DeprecatedTextViewProxyTest {
     @Test(expected = IllegalStateException::class)
     fun setEllipsize_invalidValue() {
         proxy.setEllipsize(5)
-    }
-
-    @Test
-    fun setSingleLine_false() {
-        view.maxLines = 1
-        proxy.setSingleLine(false)
-        assertEquals(Integer.MAX_VALUE, view.maxLines)
     }
 
     @Test

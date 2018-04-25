@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.TypedValue;
 import android.widget.TextView;
 
@@ -28,22 +30,20 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     @Nullable
     private Drawable drawableBottom;
 
+    /**
+     * {@code null} if not set
+     */
+    @Nullable
+    private Boolean singleLine;
+
+    /**
+     * Value must be a constant from {@link InputType} or {@code null} if not set
+     */
+    @Nullable
+    private Integer inputType;
+
     public TextViewProxy(TextView view) {
         super(view);
-    }
-
-    @AfterStyle
-    public void afterStyle(Style style) {
-        Drawable[] drawables = getView().getCompoundDrawables();
-        getView().setCompoundDrawables(
-                drawableLeft != null ? drawableLeft : drawables[0],
-                drawableTop != null ? drawableTop : drawables[1],
-                drawableRight != null ? drawableRight : drawables[2],
-                drawableBottom != null ? drawableBottom : drawables[3]);
-        drawableLeft = null;
-        drawableTop = null;
-        drawableRight = null;
-        drawableBottom = null;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_drawableBottom)
@@ -61,6 +61,7 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         drawableRight = drawable;
 
     }
+
     @Attr(R2.styleable.Paris_TextView_android_drawableTop)
     public void setDrawableTop(@Nullable Drawable drawable) {
         drawableTop = drawable;
@@ -95,6 +96,7 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
 
     @Attr(R2.styleable.Paris_TextView_android_inputType)
     public void setInputType(int inputType) {
+        this.inputType = inputType;
         getView().setInputType(inputType);
     }
 
@@ -146,7 +148,7 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
 
     @Attr(R2.styleable.Paris_TextView_android_singleLine)
     public void setSingleLine(boolean singleLine) {
-        getView().setSingleLine(singleLine);
+        this.singleLine = singleLine;
     }
 
     @Attr(R2.styleable.Paris_TextView_android_text)
@@ -185,5 +187,48 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
         // Purposefully pass in the styleIndex again here because the view will apply "fake" bold
         // and/or italic if the typeface doesn't support it
         getView().setTypeface(typeface, styleIndex);
+    }
+
+    @AfterStyle
+    public void afterStyle(@SuppressWarnings("unused") Style style) {
+        Drawable[] drawables = getView().getCompoundDrawables();
+        getView().setCompoundDrawables(
+                drawableLeft != null ? drawableLeft : drawables[0],
+                drawableTop != null ? drawableTop : drawables[1],
+                drawableRight != null ? drawableRight : drawables[2],
+                drawableBottom != null ? drawableBottom : drawables[3]);
+        drawableLeft = null;
+        drawableTop = null;
+        drawableRight = null;
+        drawableBottom = null;
+
+        if (singleLine != null) {
+            if (inputType != null) {
+                // If set, the input type overrides what was set using the deprecated singleLine
+                // attribute
+                singleLine = !isMultilineInputType(inputType);
+            }
+            getView().setSingleLine(singleLine);
+        }
+
+        if (inputType != null) {
+            // This copies what TextView is doing although it only seems necessary when singleLine
+            // is set to true since that changes the transformation method
+            if (isPasswordInputType(inputType)) {
+                getView().setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        }
+    }
+
+    private static boolean isMultilineInputType(int inputType) {
+        return (inputType & (InputType.TYPE_MASK_CLASS | InputType.TYPE_TEXT_FLAG_MULTI_LINE))
+                == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+    }
+
+    private static boolean isPasswordInputType(int inputType) {
+        final int variation = inputType & (InputType.TYPE_MASK_CLASS | InputType.TYPE_MASK_VARIATION);
+        return variation == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                || variation == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD)
+                || variation == (InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
     }
 }

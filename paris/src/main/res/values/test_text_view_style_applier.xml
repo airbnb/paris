@@ -21,12 +21,22 @@
         <item name="android:inputType">textPassword</item>
     </style>
 
+    <style name="Test_TextViewStyleApplier_InputType_ClassTextVariationPasswordSingleLine">
+        <item name="android:inputType">textPassword</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
     <style name="Test_TextViewStyleApplier_InputType_ClassTextVariationUri">
         <item name="android:inputType">textUri</item>
     </style>
 
     <style name="Test_TextViewStyleApplier_InputType_ClassTextFlagAutoComplete">
         <item name="android:inputType">textAutoComplete</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_InputType_MultiLineSingleLine">
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 </resources>
