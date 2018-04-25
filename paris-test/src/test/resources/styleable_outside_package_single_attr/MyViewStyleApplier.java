@@ -2,6 +2,7 @@ package com.airbnb.other;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.view.ViewStyleApplier;
@@ -67,7 +68,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#setTitle(String) */
-    public B title(String value) {
+    public B title(@Nullable String value) {
       getBuilder().put(R.styleable.MyView[R.styleable.MyView_title], value);
       return (B) this;
     }

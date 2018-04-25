@@ -62,9 +62,21 @@ internal class TypedArrayTypedArrayWrapper constructor(
         }
     }
 
-    override fun getString(index: Int): String? = typedArray.getString(index)
+    override fun getString(index: Int): String? {
+        return if (isNull(index)) {
+            null
+        } else {
+            typedArray.getString(index)
+        }
+    }
 
-    override fun getText(index: Int): CharSequence? = typedArray.getText(index)
+    override fun getText(index: Int): CharSequence? {
+        return if (isNull(index)) {
+            null
+        } else {
+            typedArray.getText(index)
+        }
+    }
 
     override fun getTextArray(index: Int): Array<CharSequence>? = typedArray.getTextArray(index)
 

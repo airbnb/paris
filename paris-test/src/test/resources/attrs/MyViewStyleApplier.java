@@ -14,6 +14,7 @@ import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.FractionRes;
 import android.support.annotation.IntegerRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
@@ -257,7 +258,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatReference_CharSequenceArray(CharSequence[]) */
-    public B formatReference(CharSequence[] value) {
+    public B formatReference(@Nullable CharSequence[] value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference], value);
       return (B) this;
     }
@@ -271,7 +272,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatReference2_ColorStateList(ColorStateList) */
-    public B formatReference2(ColorStateList value) {
+    public B formatReference2(@Nullable ColorStateList value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference2], value);
       return (B) this;
     }
@@ -292,7 +293,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatReference3_Drawable(Drawable) */
-    public B formatReference3(Drawable value) {
+    public B formatReference3(@Nullable Drawable value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference3], value);
       return (B) this;
     }
@@ -306,7 +307,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatString_CharSequence(CharSequence) */
-    public B formatString(CharSequence value) {
+    public B formatString(@Nullable CharSequence value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString], value);
       return (B) this;
     }
@@ -320,7 +321,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatString2_String(String) */
-    public B formatString2(String value) {
+    public B formatString2(@Nullable String value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatString2], value);
       return (B) this;
     }
