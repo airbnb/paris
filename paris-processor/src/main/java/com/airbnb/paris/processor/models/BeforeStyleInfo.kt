@@ -1,24 +1,34 @@
 package com.airbnb.paris.processor.models
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.*
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.*
-import com.airbnb.paris.processor.framework.models.*
-import javax.lang.model.element.*
+import com.airbnb.paris.annotations.BeforeStyle
+import com.airbnb.paris.processor.STYLE_CLASS_NAME
+import com.airbnb.paris.processor.framework.logError
+import com.airbnb.paris.processor.framework.isPrivate
+import com.airbnb.paris.processor.framework.isProtected
+import com.airbnb.paris.processor.framework.isSameType
+import com.airbnb.paris.processor.framework.models.SkyMethodModel
+import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
+import com.airbnb.paris.processor.framework.toTypeMirror
+import javax.lang.model.element.ExecutableElement
 
 internal class BeforeStyleInfoExtractor
     : SkyMethodModelFactory<BeforeStyleInfo>(BeforeStyle::class.java) {
 
     override fun elementToModel(element: ExecutableElement): BeforeStyleInfo? {
-        check(element.isNotPrivate() && element.isNotProtected(), element) {
-            "Methods annotated with @BeforeStyle can't be private or protected"
+        if (element.isPrivate() || element.isProtected()) {
+            logError(element) {
+                "Methods annotated with @BeforeStyle can't be private or protected."
+            }
+            return null
         }
 
         val styleType = STYLE_CLASS_NAME.toTypeMirror()
         val parameterType = element.parameters[0].asType()
-        check(element.parameters.size == 1 && isSameType(styleType, parameterType)) {
-            "Methods annotated with @BeforeStyle must have a single Style parameter"
+        if (element.parameters.size != 1 || !isSameType(styleType, parameterType)) {
+            logError(element) {
+                "Methods annotated with @BeforeStyle must have a single Style parameter."
+            }
+            return null
         }
 
         return BeforeStyleInfo(element)

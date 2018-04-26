@@ -3,9 +3,9 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.StyleableChild
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
-import com.airbnb.paris.processor.framework.errors.check
-import com.airbnb.paris.processor.framework.isNotPrivate
-import com.airbnb.paris.processor.framework.isNotProtected
+import com.airbnb.paris.processor.framework.logError
+import com.airbnb.paris.processor.framework.isPrivate
+import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyFieldModel
 import com.airbnb.paris.processor.framework.models.SkyFieldModelFactory
 import com.airbnb.paris.processor.getResourceId
@@ -17,8 +17,11 @@ internal class StyleableChildInfoExtractor
     : SkyFieldModelFactory<StyleableChildInfo>(StyleableChild::class.java) {
 
     override fun elementToModel(element: Element): StyleableChildInfo? {
-        check(element.isNotPrivate() && element.isNotProtected(), element) {
-            "Fields annotated with @StyleableChild can't be private or protected"
+        if (element.isPrivate() || element.isProtected()) {
+            logError(element) {
+                "Fields annotated with @StyleableChild can't be private or protected."
+            }
+            return null
         }
 
         val attr = element.getAnnotation(StyleableChild::class.java)
@@ -29,14 +32,15 @@ internal class StyleableChildInfoExtractor
         }
 
         return StyleableChildInfo(
-                element,
-                styleableResId,
-                defaultValueResId)
+            element,
+            styleableResId,
+            defaultValueResId
+        )
     }
 }
 
 internal class StyleableChildInfo(
-        element: Element,
-        val styleableResId: AndroidResourceId,
-        val defaultValueResId: AndroidResourceId?
+    element: Element,
+    val styleableResId: AndroidResourceId,
+    val defaultValueResId: AndroidResourceId?
 ) : SkyFieldModel(element)

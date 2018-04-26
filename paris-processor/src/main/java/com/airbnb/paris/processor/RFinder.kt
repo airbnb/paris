@@ -1,10 +1,16 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.annotations.*
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.models.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
+import com.airbnb.paris.annotations.ParisConfig
+import com.airbnb.paris.processor.framework.asTypeElement
+import com.airbnb.paris.processor.framework.elements
+import com.airbnb.paris.processor.framework.logError
+import com.airbnb.paris.processor.framework.types
+import com.airbnb.paris.processor.models.AttrInfo
+import com.airbnb.paris.processor.models.StyleableChildInfo
+import com.airbnb.paris.processor.models.StyleableInfo
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.MirroredTypeException
+import javax.lang.model.type.TypeMirror
 
 internal class RFinder {
 
@@ -20,8 +26,10 @@ internal class RFinder {
             rType = getRTypeFromConfig(config)
 
             // TODO Move check to getRTypeFromConfig
-            check(rType == null || rType!!.asTypeElement().simpleName.toString() == "R") {
-                "@ParisConfig's rClass parameter is pointing to a non-R class"
+            if (rType != null && rType!!.asTypeElement().simpleName.toString() != "R") {
+                logError {
+                    "@ParisConfig's rClass parameter is pointing to a non-R class"
+                }
             }
 
             rType?.let {
@@ -31,8 +39,8 @@ internal class RFinder {
     }
 
     fun processResourceAnnotations(
-            styleableChildrenInfo: List<StyleableChildInfo>,
-            attrsInfo: List<AttrInfo>
+        styleableChildrenInfo: List<StyleableChildInfo>,
+        attrsInfo: List<AttrInfo>
     ) {
         if (element != null) {
             return

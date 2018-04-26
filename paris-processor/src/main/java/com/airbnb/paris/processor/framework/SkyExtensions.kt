@@ -1,8 +1,8 @@
 package com.airbnb.paris.processor.framework
 
-import com.squareup.javapoet.*
+import com.squareup.javapoet.ClassName
 import javax.lang.model.element.*
-import javax.lang.model.type.*
+import javax.lang.model.type.TypeMirror
 
 internal val filer get() = SkyProcessor.INSTANCE.filer
 internal val messager get() = SkyProcessor.INSTANCE.messager
@@ -32,22 +32,34 @@ internal fun Element.isNotPrivate(): Boolean = !isPrivate()
 internal fun Element.isProtected(): Boolean = this.modifiers.contains(Modifier.PROTECTED)
 internal fun Element.isNotProtected(): Boolean = !isProtected()
 
+internal fun Element.isStatic(): Boolean = Modifier.STATIC in modifiers
+internal fun Element.isNotStatic(): Boolean = !isStatic()
+
+internal fun Element.isFinal(): Boolean = Modifier.FINAL in modifiers
+internal fun Element.isNotFinal(): Boolean = !isFinal()
+
+internal fun Element.isField(): Boolean = kind == ElementKind.FIELD
+internal fun Element.isNotField(): Boolean = !isField()
+
+internal fun Element.isMethod(): Boolean = kind == ElementKind.METHOD
+internal fun Element.isNotMethod(): Boolean = !isMethod()
+
 internal fun Element.hasAnnotation(simpleName: String): Boolean {
     return this.annotationMirrors
-            .map { it.annotationType.asElement().simpleName.toString() }
-            .contains(simpleName)
+        .map { it.annotationType.asElement().simpleName.toString() }
+        .contains(simpleName)
 }
 
 internal fun Element.hasAnyAnnotation(simpleNames: Set<String>): Boolean {
     return this.annotationMirrors
-            .map { it.annotationType.asElement().simpleName.toString() }
-            .any { simpleNames.contains(it) }
+        .map { it.annotationType.asElement().simpleName.toString() }
+        .any { simpleNames.contains(it) }
 }
 
 // String
 
 internal fun String.className(): ClassName =
-        ClassName.get(this.substringBeforeLast("."), this.substringAfterLast("."))
+    ClassName.get(this.substringBeforeLast("."), this.substringAfterLast("."))
 
 // TypeElement
 
@@ -61,5 +73,6 @@ internal fun TypeMirror.asTypeElement(): TypeElement = types.asElement(this) as 
 
 // Android specific
 
-internal fun isView(type: TypeMirror): Boolean = isSubtype(type, AndroidClassNames.VIEW.toTypeMirror())
+internal fun isView(type: TypeMirror): Boolean =
+    isSubtype(type, AndroidClassNames.VIEW.toTypeMirror())
 

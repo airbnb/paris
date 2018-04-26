@@ -5,9 +5,9 @@ import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.errors.check
-import com.airbnb.paris.processor.framework.isNotPrivate
-import com.airbnb.paris.processor.framework.isNotProtected
+import com.airbnb.paris.processor.framework.logError
+import com.airbnb.paris.processor.framework.isPrivate
+import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.getResourceId
@@ -19,8 +19,11 @@ internal class AttrInfoExtractor
     : SkyMethodModelFactory<AttrInfo>(Attr::class.java) {
 
     override fun elementToModel(element: ExecutableElement): AttrInfo? {
-        check(element.isNotPrivate() && element.isNotProtected(), element) {
-            "Methods annotated with @Attr can't be private or protected"
+        if (element.isPrivate() || element.isProtected()) {
+            logError(element) {
+                "Methods annotated with @Attr can't be private or protected"
+            }
+            return null
         }
 
         val attr = element.getAnnotation(Attr::class.java)
@@ -41,13 +44,13 @@ internal class AttrInfoExtractor
         val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, name)
 
         return AttrInfo(
-                element,
-                targetType,
-                targetFormat,
-                styleableResId,
-                defaultValueResId,
-                javadoc,
-                kdoc
+            element,
+            targetType,
+            targetFormat,
+            styleableResId,
+            defaultValueResId,
+            javadoc,
+            kdoc
         )
     }
 }
@@ -57,11 +60,11 @@ internal class AttrInfoExtractor
  * Target   The method parameter
  */
 internal class AttrInfo(
-        element: ExecutableElement,
-        val targetType: TypeMirror,
-        val targetFormat: Format,
-        val styleableResId: AndroidResourceId,
-        val defaultValueResId: AndroidResourceId?,
-        val javadoc: JavaCodeBlock,
-        val kdoc: KotlinCodeBlock
+    element: ExecutableElement,
+    val targetType: TypeMirror,
+    val targetFormat: Format,
+    val styleableResId: AndroidResourceId,
+    val defaultValueResId: AndroidResourceId?,
+    val javadoc: JavaCodeBlock,
+    val kdoc: KotlinCodeBlock
 ) : SkyMethodModel(element)

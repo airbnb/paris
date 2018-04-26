@@ -4,12 +4,7 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.framework.SkyProcessor
-import com.airbnb.paris.processor.framework.className
-import com.airbnb.paris.processor.framework.errors.Errors
-import com.airbnb.paris.processor.framework.errors.ProcessorException
-import com.airbnb.paris.processor.framework.packageName
-import com.airbnb.paris.processor.framework.toKPoet
+import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
@@ -59,7 +54,7 @@ class ParisProcessor : SkyProcessor() {
     override fun getSupportedAnnotationTypes(): Set<String> {
         val types: MutableSet<String> = LinkedHashSet()
         return setOf(Styleable::class.java, Attr::class.java)
-                .mapTo(types) { it.canonicalName }
+            .mapTo(types) { it.canonicalName }
     }
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
@@ -73,15 +68,16 @@ class ParisProcessor : SkyProcessor() {
         }
 
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
-                .firstOrNull()
-                ?.getAnnotation(ParisConfig::class.java)
-                ?.let {
-                    defaultStyleNameFormat = it.defaultStyleNameFormat
-                    rFinder.processConfig(it)
-                }
+            .firstOrNull()
+            ?.getAnnotation(ParisConfig::class.java)
+            ?.let {
+                defaultStyleNameFormat = it.defaultStyleNameFormat
+                rFinder.processConfig(it)
+            }
 
         beforeStyleInfoExtractor.process(roundEnv)
-        val classesToBeforeStyleInfo = beforeStyleInfoExtractor.latest.groupBy { it.enclosingElement }
+        val classesToBeforeStyleInfo =
+            beforeStyleInfoExtractor.latest.groupBy { it.enclosingElement }
 
         afterStyleInfoExtractor.process(roundEnv)
         val classesToAfterStyleInfo = afterStyleInfoExtractor.latest.groupBy { it.enclosingElement }
@@ -100,12 +96,12 @@ class ParisProcessor : SkyProcessor() {
         val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
 
         val styleablesInfo: List<StyleableInfo> = styleableInfoExtractor.process(
-                roundEnv,
-                classesToStyleableChildrenInfo,
-                classesToBeforeStyleInfo,
-                classesToAfterStyleInfo,
-                classesToAttrsInfo,
-                classesToStylesInfo
+            roundEnv,
+            classesToStyleableChildrenInfo,
+            classesToBeforeStyleInfo,
+            classesToAfterStyleInfo,
+            classesToAttrsInfo,
+            classesToStylesInfo
         )
 
         rFinder.processStyleables(styleablesInfo)
@@ -118,35 +114,36 @@ class ParisProcessor : SkyProcessor() {
         }
 
         if (styleablesInfo.isNotEmpty()) {
-            try {
-                ModuleJavaClass(styleablesInfo).write()
-            } catch (e: ProcessorException) {
-                Errors.log(e)
-            }
+            ModuleJavaClass(styleablesInfo).write()
         }
 
         if (allStyleables.isNotEmpty()) {
-            try {
-
-                checkNotNull(rFinder.element) {
+            if (rFinder.element == null) {
+                logError {
                     "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
                 }
-
+            } else {
                 val parisClassPackageName = rFinder.element!!.packageName
-                ParisJavaClass(parisClassPackageName, styleablesInfo, externalStyleablesInfo).write()
-
-            } catch (e: Exception) {
-                Errors.log(e)
+                ParisJavaClass(
+                    parisClassPackageName,
+                    styleablesInfo,
+                    externalStyleablesInfo
+                ).write()
             }
         }
     }
 
-    override fun claimAnnotations(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
+    override fun claimAnnotations(
+        annotations: Set<TypeElement>,
+        roundEnv: RoundEnvironment
+    ): Boolean {
         // Let other annotation processors use them if they want
         return false
     }
 
     override fun processingOver() {
-        Errors.printLoggedErrorsIfAny(messager)
+        // Errors and warnings are only printed at the end to generate as many classes as possible
+        // and avoid "could not find" errors which make debugging harder
+        printLogsIfAny(messager)
     }
 }

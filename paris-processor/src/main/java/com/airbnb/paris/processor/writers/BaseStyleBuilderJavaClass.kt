@@ -2,12 +2,15 @@ package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.framework.errors.check
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.*
 
-internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?, rClassName: ClassName?, styleablesTree: StyleablesTree, styleableInfo: StyleableInfo)
-    : SkyJavaClass(block = {
+internal class BaseStyleBuilderJavaClass(
+    parentStyleApplierClassName: ClassName?,
+    rClassName: ClassName?,
+    styleablesTree: StyleablesTree,
+    styleableInfo: StyleableInfo
+) : SkyJavaClass(block = {
 
     val styleApplierClassName = styleableInfo.styleApplierClassName()
 
@@ -17,14 +20,38 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
         STYLE_BUILDER_CLASS_NAME
     }
     val wildcardTypeName = WildcardTypeName.subtypeOf(Object::class.java)
-    val baseClassName = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
+    val baseClassName = ClassName.get(
+        styleApplierClassName.packageName(),
+        styleApplierClassName.simpleName(),
+        "BaseStyleBuilder"
+    )
 
-    addTypeVariable(TypeVariableName.get("B", ParameterizedTypeName.get(baseClassName, TypeVariableName.get("B"), TypeVariableName.get("A"))))
-    addTypeVariable(TypeVariableName.get("A", ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName)))
+    addTypeVariable(
+        TypeVariableName.get(
+            "B",
+            ParameterizedTypeName.get(
+                baseClassName,
+                TypeVariableName.get("B"),
+                TypeVariableName.get("A")
+            )
+        )
+    )
+    addTypeVariable(
+        TypeVariableName.get(
+            "A",
+            ParameterizedTypeName.get(STYLE_APPLIER_CLASS_NAME, wildcardTypeName, wildcardTypeName)
+        )
+    )
     public()
     static()
     abstract()
-    superclass(ParameterizedTypeName.get(superStyleBuilderClassName, TypeVariableName.get("B"), TypeVariableName.get("A")))
+    superclass(
+        ParameterizedTypeName.get(
+            superStyleBuilderClassName,
+            TypeVariableName.get("B"),
+            TypeVariableName.get("A")
+        )
+    )
 
     constructor {
         public()
@@ -36,19 +63,28 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
         public()
     }
 
-    val distinctStyleableChildren = styleableInfo.styleableChildren.distinctBy { it.styleableResId.resourceName }
+    val distinctStyleableChildren =
+        styleableInfo.styleableChildren.distinctBy { it.styleableResId.resourceName }
     for (styleableChildInfo in distinctStyleableChildren) {
         rClassName!!
 
-        val methodName = styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName!!)
+        val methodName =
+            styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName!!)
 
         method(methodName) {
             public()
-            addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
+            addParameter(
+                ParameterSpec.builder(Integer.TYPE, "resId")
                     .addAnnotation(AndroidClassNames.STYLE_RES)
-                    .build())
+                    .build()
+            )
             returns(TypeVariableName.get("B"))
-            addStatement("getBuilder().putStyle(\$T.styleable.\$L[\$L], resId)", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement(
+                "getBuilder().putStyle(\$T.styleable.\$L[\$L], resId)",
+                rClassName,
+                styleableInfo.styleableResourceName,
+                styleableChildInfo.styleableResId.code
+            )
             addStatement("return (B) this")
         }
 
@@ -56,20 +92,42 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             public()
             addParameter(ParameterSpec.builder(STYLE_CLASS_NAME, "style").build())
             returns(TypeVariableName.get("B"))
-            addStatement("getBuilder().putStyle(\$T.styleable.\$L[\$L], style)", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement(
+                "getBuilder().putStyle(\$T.styleable.\$L[\$L], style)",
+                rClassName,
+                styleableInfo.styleableResourceName,
+                styleableChildInfo.styleableResId.code
+            )
             addStatement("return (B) this")
         }
 
         val subStyleApplierClassName = styleablesTree.findStyleApplier(
-                styleableChildInfo.type.asTypeElement())
+            styleableChildInfo.type.asTypeElement()
+        )
         val subStyleBuilderClassName = subStyleApplierClassName.nestedClass("StyleBuilder")
         method(methodName) {
             public()
-            addParameter(ParameterSpec.builder(ParameterizedTypeName.get(STYLE_BUILDER_FUNCTION_CLASS_NAME, subStyleBuilderClassName), "function").build())
+            addParameter(
+                ParameterSpec.builder(
+                    ParameterizedTypeName.get(
+                        STYLE_BUILDER_FUNCTION_CLASS_NAME,
+                        subStyleBuilderClassName
+                    ), "function"
+                ).build()
+            )
             returns(TypeVariableName.get("B"))
-            addStatement("\$T subBuilder = new \$T()", subStyleBuilderClassName, subStyleBuilderClassName)
+            addStatement(
+                "\$T subBuilder = new \$T()",
+                subStyleBuilderClassName,
+                subStyleBuilderClassName
+            )
             addStatement("function.invoke(subBuilder)")
-            addStatement("getBuilder().putStyle(\$T.styleable.\$L[\$L], subBuilder.build())", rClassName, styleableInfo.styleableResourceName, styleableChildInfo.styleableResId.code)
+            addStatement(
+                "getBuilder().putStyle(\$T.styleable.\$L[\$L], subBuilder.build())",
+                rClassName,
+                styleableInfo.styleableResourceName,
+                styleableChildInfo.styleableResId.code
+            )
             addStatement("return (B) this")
         }
     }
@@ -80,14 +138,18 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
 
         val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
-        check(nonResTargetAttrs.isEmpty() || nonResTargetAttrs.distinctBy { it.targetType }.size == 1) {
-            "The same @Attr value can't be used on methods with different parameter types (excluding resource id types)"
+        if (nonResTargetAttrs.isNotEmpty() && nonResTargetAttrs.distinctBy { it.targetType }.size > 1) {
+            logError {
+                "The same @Attr value can't be used on methods with different parameter types (excluding resource id types)"
+            }
         }
 
         val isTargetDimensionType = nonResTargetAttrs.any { it.targetFormat.isDimensionType }
-        val isTargetColorStateListType = nonResTargetAttrs.any { it.targetFormat.isColorStateListType }
+        val isTargetColorStateListType =
+            nonResTargetAttrs.any { it.targetFormat.isColorStateListType }
 
-        val attr = if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
+        val attr =
+            if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
         val attrResourceName = attr.styleableResId.resourceName!!
         val baseMethodName = styleableInfo.attrResourceNameToCamelCase(attrResourceName)
 
@@ -95,7 +157,8 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             method(baseMethodName) {
                 addJavadoc(attr.javadoc)
 
-                val valueParameterBuilder = ParameterSpec.builder(TypeName.get(attr.targetType), "value")
+                val valueParameterBuilder =
+                    ParameterSpec.builder(TypeName.get(attr.targetType), "value")
                 attr.targetFormat.valueAnnotation?.let {
                     valueParameterBuilder.addAnnotation(it)
                 }
@@ -103,7 +166,12 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
                 public()
                 addParameter(valueParameterBuilder.build())
                 returns(TypeVariableName.get("B"))
-                addStatement("getBuilder().put(\$T.styleable.\$L[\$L], value)", rClassName, styleableInfo.styleableResourceName, attr.styleableResId.code)
+                addStatement(
+                    "getBuilder().put(\$T.styleable.\$L[\$L], value)",
+                    rClassName,
+                    styleableInfo.styleableResourceName,
+                    attr.styleableResId.code
+                )
                 addStatement("return (B) this")
             }
         }
@@ -111,11 +179,18 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
         method("${baseMethodName}Res") {
             addJavadoc(attr.javadoc)
             public()
-            addParameter(ParameterSpec.builder(Integer.TYPE, "resId")
+            addParameter(
+                ParameterSpec.builder(Integer.TYPE, "resId")
                     .addAnnotation(attr.targetFormat.resAnnotation)
-                    .build())
+                    .build()
+            )
             returns(TypeVariableName.get("B"))
-            addStatement("getBuilder().putRes(\$T.styleable.\$L[\$L], resId)", rClassName, styleableInfo.styleableResourceName, attr.styleableResId.code)
+            addStatement(
+                "getBuilder().putRes(\$T.styleable.\$L[\$L], resId)",
+                rClassName,
+                styleableInfo.styleableResourceName,
+                attr.styleableResId.code
+            )
             addStatement("return (B) this")
         }
 
@@ -124,13 +199,22 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             method("${baseMethodName}Dp") {
                 addJavadoc(attr.javadoc)
                 public()
-                addParameter(ParameterSpec.builder(Integer.TYPE, "value")
-                        .addAnnotation(AnnotationSpec.builder(AndroidClassNames.DIMENSION)
+                addParameter(
+                    ParameterSpec.builder(Integer.TYPE, "value")
+                        .addAnnotation(
+                            AnnotationSpec.builder(AndroidClassNames.DIMENSION)
                                 .addMember("unit", "\$T.DP", AndroidClassNames.DIMENSION)
-                                .build())
-                        .build())
+                                .build()
+                        )
+                        .build()
+                )
                 returns(TypeVariableName.get("B"))
-                addStatement("getBuilder().putDp(\$T.styleable.\$L[\$L], value)", rClassName, styleableInfo.styleableResourceName, attr.styleableResId.code)
+                addStatement(
+                    "getBuilder().putDp(\$T.styleable.\$L[\$L], value)",
+                    rClassName,
+                    styleableInfo.styleableResourceName,
+                    attr.styleableResId.code
+                )
                 addStatement("return (B) this")
             }
         }
@@ -140,11 +224,18 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
             method(baseMethodName) {
                 addJavadoc(attr.javadoc)
                 public()
-                addParameter(ParameterSpec.builder(Integer.TYPE, "color")
+                addParameter(
+                    ParameterSpec.builder(Integer.TYPE, "color")
                         .addAnnotation(AndroidClassNames.COLOR_INT)
-                        .build())
+                        .build()
+                )
                 returns(TypeVariableName.get("B"))
-                addStatement("getBuilder().putColor(\$T.styleable.\$L[\$L], color)", rClassName, styleableInfo.styleableResourceName, attr.styleableResId.code)
+                addStatement(
+                    "getBuilder().putColor(\$T.styleable.\$L[\$L], color)",
+                    rClassName,
+                    styleableInfo.styleableResourceName,
+                    attr.styleableResId.code
+                )
                 addStatement("return (B) this")
             }
         }
@@ -152,7 +243,12 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
 
     method("applyTo") {
         public()
-        addParameter(ParameterSpec.builder(TypeName.get(styleableInfo.viewElementType), "view").build())
+        addParameter(
+            ParameterSpec.builder(
+                TypeName.get(styleableInfo.viewElementType),
+                "view"
+            ).build()
+        )
         returns(TypeVariableName.get("B"))
         addStatement("new \$T(view).apply(build())", styleApplierClassName)
         addStatement("return (B) this")
@@ -161,7 +257,11 @@ internal class BaseStyleBuilderJavaClass(parentStyleApplierClassName: ClassName?
 }) {
     init {
         val styleApplierClassName = styleableInfo.styleApplierClassName()
-        val className = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
+        val className = ClassName.get(
+            styleApplierClassName.packageName(),
+            styleApplierClassName.simpleName(),
+            "BaseStyleBuilder"
+        )
         packageName = className.packageName()
         name = className.simpleName()
     }
