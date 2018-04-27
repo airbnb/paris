@@ -1,12 +1,15 @@
 package com.airbnb.paris.proxies
 
-import android.content.*
-import android.support.test.*
-import android.support.test.runner.*
-import android.view.*
-import android.widget.*
-import org.junit.*
-import org.junit.runner.*
+import android.content.Context
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class GenericViewProxyTests {
@@ -16,11 +19,6 @@ class GenericViewProxyTests {
     @Test
     fun assertViewProxySet() {
         assertProxySet(VIEW_MAPPINGS as List<BaseViewMapping<Any, ViewProxy, View, Any>>, VIEW_SETUPS)
-    }
-
-    @Test
-    fun assertViewGroupProxySet() {
-        assertProxySet(VIEW_GROUP_MAPPINGS as List<BaseViewMapping<Any, ViewGroupProxy, ViewGroup, Any>>)
     }
 
     @Test
