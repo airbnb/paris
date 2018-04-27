@@ -40,7 +40,7 @@ internal class StyleInfoExtractor {
 
                 if (styleWithNameDefault != styleMarkedAsDefault && styleWithNameDefault != null && styleMarkedAsDefault != null) {
                     logError(styleableElement) {
-                        "Naming a linked style \"default\" and annotating another with @Style(isDefault = true) is invalid"
+                        "Naming a linked style \"default\" and annotating another with @Style(isDefault = true) is invalid."
                     }
                 }
 
@@ -120,7 +120,7 @@ internal class StyleInfoExtractor {
 
         if (element.isNotStatic() || element.isPrivate() || element.isProtected()) {
             logError(element) {
-                "Fields and methods annotated with @Style must be static and can't be private or protected"
+                "Fields and methods annotated with @Style must be static and can't be private or protected."
             }
             return null
         }
@@ -136,7 +136,7 @@ internal class StyleInfoExtractor {
 
         if (element.isNotField() && element.isNotMethod()) {
             logError(element) {
-                "@Style can only be used on fields and methods"
+                "@Style can only be used on fields and methods."
             }
             return null
         }
@@ -148,7 +148,7 @@ internal class StyleInfoExtractor {
         if (element.isField()) {
             if (element.isNotFinal()) {
                 logError(element) {
-                    "Fields annotated with @Style must be final"
+                    "Fields annotated with @Style must be final."
                 }
                 return null
             }

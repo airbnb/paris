@@ -62,14 +62,14 @@ internal class StyleableInfoExtractor {
 
         if (baseStyleableInfo.styleableResourceName.isEmpty() && (attrs.isNotEmpty() || styleableChildren.isNotEmpty())) {
             logError(element) {
-                "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)"
+                "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)."
             }
             return null
         }
 
         if (baseStyleableInfo.styleableResourceName.isNotEmpty() && styleableChildren.isEmpty() && attrs.isEmpty()) {
             logWarning {
-                "No need to specify the @Styleable value parameter if no class members are annotated with @Attr"
+                "No need to specify the @Styleable value parameter if no class members are annotated with @Attr."
             }
         }
 

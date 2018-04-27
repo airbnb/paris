@@ -3,14 +3,11 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
-import com.airbnb.paris.processor.framework.JavaCodeBlock
-import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.logError
-import com.airbnb.paris.processor.framework.isPrivate
-import com.airbnb.paris.processor.framework.isProtected
+import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.getResourceId
+import java.lang.annotation.AnnotationTypeMismatchException
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
@@ -21,7 +18,7 @@ internal class AttrInfoExtractor
     override fun elementToModel(element: ExecutableElement): AttrInfo? {
         if (element.isPrivate() || element.isProtected()) {
             logError(element) {
-                "Methods annotated with @Attr can't be private or protected"
+                "Methods annotated with @Attr can't be private or protected."
             }
             return null
         }
@@ -32,10 +29,26 @@ internal class AttrInfoExtractor
 
         val targetFormat = Format.forElement(element)
 
-        val styleableResId = getResourceId(Attr::class.java, element, attr.value)
+        val styleableResId: AndroidResourceId
+        try {
+            styleableResId = getResourceId(Attr::class.java, element, attr.value)
+        } catch (e: AnnotationTypeMismatchException) {
+            logError(element) {
+                "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.)"
+            }
+            return null
+        }
+
         var defaultValueResId: AndroidResourceId? = null
         if (attr.defaultValue != -1) {
-            defaultValueResId = getResourceId(Attr::class.java, element, attr.defaultValue)
+            try {
+                defaultValueResId = getResourceId(Attr::class.java, element, attr.defaultValue)
+            } catch (e: AnnotationTypeMismatchException) {
+                logError(element) {
+                    "Incorrectly typed @Attr defaultValue parameter. (This usually happens when an R value doesn't exist.)"
+                }
+                return null
+            }
         }
 
         val enclosingElement = element.enclosingElement as TypeElement

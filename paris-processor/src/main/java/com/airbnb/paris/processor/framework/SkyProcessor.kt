@@ -11,20 +11,23 @@ abstract class SkyProcessor : AbstractProcessor() {
         lateinit var INSTANCE: SkyProcessor
     }
 
-    val filer: Filer by lazy { processingEnv.filer }
-    val messager: Messager by lazy { processingEnv.messager }
-    val elements: Elements by lazy { processingEnv.elementUtils }
-    val types: Types by lazy { processingEnv.typeUtils }
+    internal val filer: Filer by lazy { processingEnv.filer }
+    internal val messager: Messager by lazy { processingEnv.messager }
+    internal val elements: Elements by lazy { processingEnv.elementUtils }
+    internal val types: Types by lazy { processingEnv.typeUtils }
+
     /**
      * The directory name where kapt output files should be placed.
      *
      * If null, this is not being processed by kapt, so we can't generate kotlin code.
      */
-    val kaptOutputPath: String? by lazy {
+    internal val kaptOutputPath: String? by lazy {
         processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
             // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
             ?.replace("kaptKotlin", "kapt")
     }
+
+    internal val loggedMessages = mutableListOf<Message>()
 
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {

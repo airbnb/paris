@@ -56,6 +56,7 @@ public class AndroidResourceScanner {
 
     private Map<Integer, AndroidResourceId> getResults(Class<? extends Annotation> annotation, Element element) {
         AnnotationScanner scanner = new AnnotationScanner();
+        // TODO I suspect the annotation mirror isn't needed here because StyleableChildInfo was using the wrong annotation class for a long time
         JCTree tree = (JCTree) trees.getTree(element, getMirror(element, annotation));
         if (tree != null) { // tree can be null if the references are compiled types and not source
             tree.accept(scanner);

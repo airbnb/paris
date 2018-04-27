@@ -2,16 +2,17 @@ package com.airbnb.paris.processor.framework
 
 import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.TypeElement
+import javax.lang.model.element.VariableElement
 import javax.tools.Diagnostic
 import javax.tools.Diagnostic.Kind.ERROR
 import javax.tools.Diagnostic.Kind.WARNING
 
-private val loggedMessages = mutableListOf<Message>()
-
-private class Message(val kind: Diagnostic.Kind, val message: CharSequence)
+internal class Message(val kind: Diagnostic.Kind, val message: CharSequence)
 
 internal fun logError(element: Element, lazyMessage: () -> String) {
-    logError({ "${element.simpleName}: ${lazyMessage()}" })
+    logError({ "${element.toStringId()}: ${lazyMessage()}" })
 }
 
 internal fun logError(lazyMessage: () -> String) {
@@ -19,16 +20,24 @@ internal fun logError(lazyMessage: () -> String) {
 }
 
 internal fun logWarning(element: Element, lazyMessage: () -> String) {
-    logError({ "${element.simpleName}: ${lazyMessage()}" })
+    logError({ "${element.toStringId()}: ${lazyMessage()}" })
 }
 
 internal fun logWarning(lazyMessage: () -> String) {
     loggedMessages.add(Message(WARNING, lazyMessage()))
 }
 
+private fun Element.toStringId(): String {
+    return when (this) {
+        is TypeElement -> qualifiedName.toString()
+        is ExecutableElement,
+        is VariableElement -> "${enclosingElement.toStringId()}.$simpleName"
+        else -> simpleName.toString()
+    }
+}
+
 internal fun printLogsIfAny(messager: Messager) {
     loggedMessages.forEach {
         messager.printMessage(it.kind, it.message)
     }
-    loggedMessages.clear()
 }

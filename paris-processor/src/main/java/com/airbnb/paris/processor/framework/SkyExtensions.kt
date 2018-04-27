@@ -9,6 +9,7 @@ internal val messager get() = SkyProcessor.INSTANCE.messager
 internal val elements get() = SkyProcessor.INSTANCE.elements
 internal val types get() = SkyProcessor.INSTANCE.types
 internal val kaptOutputPath get() = SkyProcessor.INSTANCE.kaptOutputPath
+internal val loggedMessages get() = SkyProcessor.INSTANCE.loggedMessages
 
 internal fun erasure(type: TypeMirror): TypeMirror = types.erasure(type)
 
@@ -37,6 +38,9 @@ internal fun Element.isNotStatic(): Boolean = !isStatic()
 
 internal fun Element.isFinal(): Boolean = Modifier.FINAL in modifiers
 internal fun Element.isNotFinal(): Boolean = !isFinal()
+
+internal fun Element.isClass(): Boolean = kind == ElementKind.CLASS
+internal fun Element.isNotClass(): Boolean = !isClass()
 
 internal fun Element.isField(): Boolean = kind == ElementKind.FIELD
 internal fun Element.isNotField(): Boolean = !isField()

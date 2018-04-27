@@ -7,39 +7,53 @@ import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import org.junit.Test
 
 
-
 class ParisProcessorTest {
 
     private fun assertCase(folder: String) {
         val view = JavaFileObjects.forResource("$folder/MyView.java")
         val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java")
-        val generatedStyleApplierClass = JavaFileObjects.forResource("$folder/MyViewStyleApplier.java")
+        val generatedStyleApplierClass =
+            JavaFileObjects.forResource("$folder/MyViewStyleApplier.java")
 
         assert_().about(javaSource())
-                .that(view)
-                .processedWith(ParisProcessor())
-                .compilesWithoutError()
-                .and()
-                .generatesSources(generatedParisClass)
-                .and()
-                .generatesSources(generatedStyleApplierClass)
+            .that(view)
+            .processedWith(ParisProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(generatedParisClass)
+            .and()
+            .generatesSources(generatedStyleApplierClass)
     }
 
-    private fun assertError(folder: String, errorCount: Int? = null, errorFragment: String? = null) {
+    private fun assertError(
+        folder: String,
+        errorCount: Int? = null,
+        errorFragment: String? = null
+    ) {
         val view = JavaFileObjects.forResource("$folder/MyView.java")
 
         assert_().about(javaSource())
-                .that(view)
-                .processedWith(ParisProcessor())
-                .failsToCompile()
-                .apply {
-                    errorCount?.let {
-                        withErrorCount(it)
-                    }
-                    errorFragment?.let {
-                        withErrorContaining(it)
-                    }
+            .that(view)
+            .processedWith(ParisProcessor())
+            .failsToCompile()
+            .apply {
+                errorCount?.let {
+                    withErrorCount(it)
                 }
+                errorFragment?.let {
+                    withErrorContaining(it)
+                }
+            }
+    }
+
+    @Test
+    fun attrWrongValueType() {
+        // An @Attr with an non-existent R.styleable field
+        assertError(
+            "attr_wrong_value_type",
+            2,
+            "Incorrectly typed @Attr value parameter"
+        )
     }
 
     @Test
@@ -51,6 +65,16 @@ class ParisProcessorTest {
     @Test
     fun defaultValues() {
         assertCase("default_values")
+    }
+
+    @Test
+    fun styleableChildWrongValueType() {
+        // A @StyleableChild with an non-existent R.styleable field
+        assertError(
+            "styleable_child_wrong_value_type",
+            2,
+            "Incorrectly typed @StyleableChild value parameter"
+        )
     }
 
     @Test
