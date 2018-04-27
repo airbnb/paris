@@ -5,7 +5,7 @@ import javax.lang.model.element.Element
 
 interface SkyModel
 
-internal abstract class SkyModelFactory<T : SkyModel, in E : Element>(
+abstract class SkyModelFactory<T : SkyModel, in E : Element>(
     private val annotationClass: Class<out Annotation>
 ) {
 

@@ -60,6 +60,28 @@ internal fun Element.hasAnyAnnotation(simpleNames: Set<String>): Boolean {
         .any { simpleNames.contains(it) }
 }
 
+internal val KOTLIN_METADATA_ANNOTATION =
+    Class.forName("kotlin.Metadata").asSubclass(Annotation::class.java)
+
+/**
+ * True is [isJava] is false and vice-versa
+ */
+internal fun Element.isKotlin(): Boolean = when (this) {
+    is TypeElement -> getAnnotation(KOTLIN_METADATA_ANNOTATION) != null
+    is ExecutableElement, is VariableElement -> enclosingElement.isKotlin()
+    else -> throw IllegalArgumentException()
+}
+
+/**
+ * True is [isKotlin] is false and vice-versa
+ */
+internal fun Element.isJava(): Boolean = !isKotlin()
+
+internal fun Element.siblings(): List<Element> = when (this) {
+    is VariableElement -> enclosingElement.enclosedElements.filterNot { it === this }
+    else -> TODO()
+}
+
 // String
 
 internal fun String.className(): ClassName =

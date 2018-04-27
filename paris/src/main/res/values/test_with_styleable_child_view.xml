@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="Test_WithSubStyleView">
+    <declare-styleable name="Test_WithStyleableChildView">
         <attr name="test_arbitraryStyle" />
     </declare-styleable>
 

@@ -1,29 +1,30 @@
-package com.airbnb.paris;
+package com.airbnb.paris.views.java;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.airbnb.paris.R2;
 import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.annotations.StyleableChild;
 
-@Styleable("Test_WithSubStyleView")
-public class WithSubStyleView extends View {
+@Styleable("Test_WithStyleableChildView")
+public class WithStyleableChildView extends View {
 
-    @StyleableChild(R2.styleable.Test_WithSubStyleView_test_arbitraryStyle)
+    @StyleableChild(R2.styleable.Test_WithStyleableChildView_test_arbitraryStyle)
     public View arbitrarySubView;
 
-    public WithSubStyleView(Context context) {
+    public WithStyleableChildView(Context context) {
         super(context);
         init();
     }
 
-    public WithSubStyleView(Context context, AttributeSet attrs) {
+    public WithStyleableChildView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public WithSubStyleView(Context context, AttributeSet attrs, int defStyle) {
+    public WithStyleableChildView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

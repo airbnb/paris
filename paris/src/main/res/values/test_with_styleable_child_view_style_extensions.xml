@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Test_WithSubStyleViewStyleExtensions_Style_BuilderSubStyleStyle_Invisible">
+    <style name="Test_WithStyleableChildViewStyleExtensions_Style_BuilderSubStyleStyle_Invisible">
         <item name="android:visibility">invisible</item>
     </style>
 

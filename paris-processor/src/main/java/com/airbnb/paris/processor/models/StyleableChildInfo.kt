@@ -10,20 +10,17 @@ import com.airbnb.paris.processor.framework.models.SkyFieldModelFactory
 import com.airbnb.paris.processor.getResourceId
 import java.lang.annotation.AnnotationTypeMismatchException
 import javax.lang.model.element.Element
+import javax.lang.model.element.VariableElement
 
 // TODO Forward Javadoc to the generated functions/methods
 
 internal class StyleableChildInfoExtractor
     : SkyFieldModelFactory<StyleableChildInfo>(StyleableChild::class.java) {
 
-    override fun elementToModel(element: Element): StyleableChildInfo? {
-        if (element.isPrivate() || element.isProtected()) {
-            logError(element) {
-                "Fields annotated with @StyleableChild can't be private or protected."
-            }
-            return null
-        }
-
+    /**
+     * @param element Represents a field annotated with @StyleableChild
+     */
+    override fun elementToModel(element: VariableElement): StyleableChildInfo? {
         val attr = element.getAnnotation(StyleableChild::class.java)
         val styleableResId: AndroidResourceId
         try {
@@ -48,11 +45,33 @@ internal class StyleableChildInfoExtractor
             }
         }
 
-        return StyleableChildInfo(
+        val model = StyleableChildInfo(
             element,
             styleableResId,
             defaultValueResId
         )
+
+        if (model.isKotlin() && model.kotlinGetterElement == null) {
+            logError(element) {
+                "Could not find getter for field annotated with @StyleableChild. This probably means the field is private."
+            }
+            return null
+        }
+
+        val fieldOrGetterElement: Element = if (model.isJava()) {
+            model.element
+        } else {
+            model.kotlinGetterElement!!
+        }
+
+        if (fieldOrGetterElement.isPrivate() || fieldOrGetterElement.isProtected()) {
+            logError(element) {
+                "Fields annotated with @StyleableChild can't be private or protected."
+            }
+            return null
+        }
+
+        return model
     }
 }
 
