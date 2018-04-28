@@ -9,7 +9,7 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.annotations.StyleableChild
 
 /**
- * The name is appended with Kt because there's already a [WithStyleableChildView] which would
+ * The name is appended with Kotlin because there's already a [WithStyleableChildView] which would
  * create a conflict with the generated style extensions
  */
 @Styleable("Test_WithStyleableChildKotlinView")

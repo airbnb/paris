@@ -101,6 +101,7 @@ internal class StyleableInfo(
      * Applies lower camel case formatting
      */
     fun attrResourceNameToCamelCase(name: String): String {
+        // TODO Throw if the styleableResourceName is not part of the name
         val formattedName = name.removePrefix("${styleableResourceName}_")
             .removePrefix("android_")
         return formattedName

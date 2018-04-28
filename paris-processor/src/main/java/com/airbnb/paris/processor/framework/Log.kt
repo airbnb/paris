@@ -27,7 +27,7 @@ internal fun logWarning(lazyMessage: () -> String) {
     loggedMessages.add(Message(WARNING, lazyMessage()))
 }
 
-private fun Element.toStringId(): String {
+internal fun Element.toStringId(): String {
     return when (this) {
         is TypeElement -> qualifiedName.toString()
         is ExecutableElement,

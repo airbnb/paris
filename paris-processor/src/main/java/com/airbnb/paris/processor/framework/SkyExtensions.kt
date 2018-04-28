@@ -69,7 +69,7 @@ internal val KOTLIN_METADATA_ANNOTATION =
 internal fun Element.isKotlin(): Boolean = when (this) {
     is TypeElement -> getAnnotation(KOTLIN_METADATA_ANNOTATION) != null
     is ExecutableElement, is VariableElement -> enclosingElement.isKotlin()
-    else -> throw IllegalArgumentException()
+    else -> TODO()
 }
 
 /**
@@ -78,6 +78,7 @@ internal fun Element.isKotlin(): Boolean = when (this) {
 internal fun Element.isJava(): Boolean = !isKotlin()
 
 internal fun Element.siblings(): List<Element> = when (this) {
+    is ExecutableElement,
     is VariableElement -> enclosingElement.enclosedElements.filterNot { it === this }
     else -> TODO()
 }

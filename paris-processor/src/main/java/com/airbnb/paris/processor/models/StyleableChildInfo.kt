@@ -5,12 +5,11 @@ import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.isPrivate
 import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.logError
-import com.airbnb.paris.processor.framework.models.SkyFieldModel
 import com.airbnb.paris.processor.framework.models.SkyFieldModelFactory
+import com.airbnb.paris.processor.framework.models.SkyPropertyModel
 import com.airbnb.paris.processor.getResourceId
 import java.lang.annotation.AnnotationTypeMismatchException
 import javax.lang.model.element.Element
-import javax.lang.model.element.VariableElement
 
 // TODO Forward Javadoc to the generated functions/methods
 
@@ -20,7 +19,7 @@ internal class StyleableChildInfoExtractor
     /**
      * @param element Represents a field annotated with @StyleableChild
      */
-    override fun elementToModel(element: VariableElement): StyleableChildInfo? {
+    override fun elementToModel(element: Element): StyleableChildInfo? {
         val attr = element.getAnnotation(StyleableChild::class.java)
         val styleableResId: AndroidResourceId
         try {
@@ -51,13 +50,6 @@ internal class StyleableChildInfoExtractor
             defaultValueResId
         )
 
-        if (model.isKotlin() && model.kotlinGetterElement == null) {
-            logError(element) {
-                "Could not find getter for field annotated with @StyleableChild. This probably means the field is private."
-            }
-            return null
-        }
-
         val fieldOrGetterElement: Element = if (model.isJava()) {
             model.element
         } else {
@@ -66,7 +58,7 @@ internal class StyleableChildInfoExtractor
 
         if (fieldOrGetterElement.isPrivate() || fieldOrGetterElement.isProtected()) {
             logError(element) {
-                "Fields annotated with @StyleableChild can't be private or protected."
+                "Fields and properties annotated with @StyleableChild can't be private or protected."
             }
             return null
         }
@@ -79,4 +71,4 @@ internal class StyleableChildInfo(
     element: Element,
     val styleableResId: AndroidResourceId,
     val defaultValueResId: AndroidResourceId?
-) : SkyFieldModel(element)
+) : SkyPropertyModel(element)

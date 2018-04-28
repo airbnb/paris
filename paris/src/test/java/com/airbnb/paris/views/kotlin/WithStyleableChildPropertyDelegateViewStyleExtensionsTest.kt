@@ -12,54 +12,54 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class WithStyleableChildKotlinViewStyleExtensionsTest {
+class WithStyleableChildPropertyDelegateViewStyleExtensionsTest {
 
     private lateinit var context: Context
-    private lateinit var withStyleableChildKotlinView: WithStyleableChildKotlinView
+    private lateinit var withStyleableChildPropertyDelegateView: WithStyleableChildPropertyDelegateView
 
     @Before
     fun setup() {
         context = RuntimeEnvironment.application
-        withStyleableChildKotlinView = WithStyleableChildKotlinView(context)
+        withStyleableChildPropertyDelegateView = WithStyleableChildPropertyDelegateView(context)
     }
 
     @Test
     fun style_builderDefault() {
         // Tests that the extension to set a default style exists
-        withStyleableChildKotlinView.style { addDefault() }
+        withStyleableChildPropertyDelegateView.style { addDefault() }
     }
 
     @Test
     fun style_builderSubStyleStyle() {
         // Tests that the extension to build and set a sub-style exist and work with an arbitrary
         // attribute
-        withStyleableChildKotlinView.style {
+        withStyleableChildPropertyDelegateView.style {
             testArbitraryStyle(viewStyle {
                 visibility(View.INVISIBLE)
             })
         }
-        assertEquals(withStyleableChildKotlinView.arbitrarySubView.visibility, View.INVISIBLE)
+        assertEquals(withStyleableChildPropertyDelegateView.arbitrarySubView.visibility, View.INVISIBLE)
     }
 
     @Test
     fun style_builderSubStyleStyleRes() {
         // Tests that the extension to build and set a sub-style exist and work with an arbitrary
         // attribute
-        withStyleableChildKotlinView.style {
-            testArbitraryStyle(R.style.Test_WithStyleableChildKotlinViewStyleExtensions_Style_BuilderSubStyleStyle_Invisible)
+        withStyleableChildPropertyDelegateView.style {
+            testArbitraryStyle(R.style.Test_WithStyleableChildPropertyDelegateViewStyleExtensions_Style_BuilderSubStyleStyle_Invisible)
         }
-        assertEquals(withStyleableChildKotlinView.arbitrarySubView.visibility, View.INVISIBLE)
+        assertEquals(withStyleableChildPropertyDelegateView.arbitrarySubView.visibility, View.INVISIBLE)
     }
 
     @Test
     fun style_builderSubStyleStyleBuilder() {
         // Tests that the extension to build and set a sub-style exist and work with an arbitrary
         // attribute
-        withStyleableChildKotlinView.style {
+        withStyleableChildPropertyDelegateView.style {
             testArbitraryStyle {
                 visibility(View.INVISIBLE)
             }
         }
-        assertEquals(withStyleableChildKotlinView.arbitrarySubView.visibility, View.INVISIBLE)
+        assertEquals(withStyleableChildPropertyDelegateView.arbitrarySubView.visibility, View.INVISIBLE)
     }
 }
