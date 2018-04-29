@@ -8,7 +8,7 @@ local.properties
 # IntelliJ
 *.iml
 .idea/*
-!.idea/codeStyleSettings.xml
+!.idea/codeStyles
 
 # Android Studio captures folder
 /captures
