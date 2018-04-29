@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="test_arbitraryBoolean" format="boolean" />
     <attr name="test_arbitraryStyle" format="reference" />
+    <bool name="test_true">true</bool>
     <integer name="test_arbitrary">2</integer>
     <string name="test_arbitrary">This is a string</string>
 
