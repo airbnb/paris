@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewStyleApplier
 import com.airbnb.paris.R
+import com.airbnb.paris.extensions.viewStyle
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -59,6 +61,113 @@ class ViewStyleApplierTest {
         view.foreground = ColorDrawable(Color.WHITE)
         applier.apply(builder.foregroundRes(R.drawable.null_).build())
         assertEquals(null, view.foreground)
+    }
+
+    @Test
+    fun layout_margin_precedence() {
+        applier.apply(viewStyle {
+            layoutMargin(20)
+            layoutMarginBottom(10)
+            layoutMarginEnd(10)
+            layoutMarginLeft(10)
+            layoutMarginRight(10)
+            layoutMarginStart(10)
+            layoutMarginTop(10)
+        })
+        val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertEquals(20, layoutParams.bottomMargin)
+        assertEquals(20, layoutParams.leftMargin)
+        assertEquals(20, layoutParams.marginEnd)
+        assertEquals(20, layoutParams.marginStart)
+        assertEquals(20, layoutParams.rightMargin)
+        assertEquals(20, layoutParams.topMargin)
+    }
+
+    @Test
+    fun layout_marginEnd_precedence() {
+        applier.apply(viewStyle {
+            layoutMarginEnd(20)
+            layoutMarginRight(10)
+        })
+        val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertEquals(20, layoutParams.marginEnd)
+    }
+
+    @Test
+    fun layout_marginStart_precedence() {
+        applier.apply(viewStyle {
+            layoutMarginStart(20)
+            layoutMarginLeft(10)
+        })
+        val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertEquals(20, layoutParams.marginStart)
+    }
+
+    @Test
+    fun padding_precedence() {
+        // android:padding takes precedence over android:paddingBottom, android:paddingHorizontal, android:paddingLeft, android:paddingRight,
+        // android:paddingTop and android:paddingVertical
+        applier.apply(viewStyle {
+            padding(20)
+            paddingBottom(10)
+            paddingHorizontal(10)
+            paddingLeft(10)
+            paddingRight(10)
+            paddingTop(10)
+            paddingVertical(10)
+        })
+        assertEquals(20, view.paddingBottom)
+        assertEquals(20, view.paddingLeft)
+        assertEquals(20, view.paddingRight)
+        assertEquals(20, view.paddingTop)
+    }
+
+    @Test
+    fun paddingHorizontal_precedence() {
+        // android:paddingHorizontal supersedes android:paddingLeft and android:paddingRight
+        applier.apply(viewStyle {
+            paddingHorizontal(20)
+            paddingLeft(10)
+            paddingRight(10)
+        })
+        assertEquals(20, view.paddingLeft)
+        assertEquals(20, view.paddingRight)
+    }
+
+    @Test
+    fun paddingVertical_precedence() {
+        // android:paddingHorizontal supersedes android:paddingLeft and android:paddingRight
+        applier.apply(viewStyle {
+            paddingVertical(20)
+            paddingBottom(10)
+            paddingTop(10)
+        })
+        assertEquals(20, view.paddingBottom)
+        assertEquals(20, view.paddingTop)
+    }
+
+    @Test
+    fun paddingEnd_precedence() {
+        // android:paddingEnd supersedes everything else (android:padding, android:paddingRight, android:paddingVertical)
+        applier.apply(viewStyle {
+            paddingEnd(20)
+            padding(10)
+            paddingRight(10)
+            paddingVertical(10)
+        })
+        assertEquals(20, view.paddingEnd)
+    }
+
+    @Test
+    fun paddingStart_precedence() {
+        // android:paddingStart supersedes everything else (android:padding, android:paddingHorizontal, android:paddingLeft)
+        applier.apply(viewStyle {
+            paddingStart(20)
+            padding(10)
+            paddingHorizontal(10)
+            paddingLeft(10)
+        })
+        assertEquals(20, view.paddingStart)
     }
 
     @Test

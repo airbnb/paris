@@ -2,7 +2,6 @@ package com.airbnb.paris.proxies
 
 import android.os.Build
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewStyleApplier.BaseStyleBuilder
 import junit.framework.Assert.assertEquals
 
@@ -67,26 +66,6 @@ internal val VIEW_SETUPS = listOf(
 )
 
 internal val VIEW_MAPPINGS = ArrayList<ViewMapping<*>>().apply {
-
-    // layout_marginEnd
-    add(ViewMapping.withAssertEquals(
-            ARBITRARY_DIMENSIONS,
-            android.R.attr.layout_marginEnd,
-            ViewProxy::setLayoutMarginEnd,
-            BaseStyleBuilder<*, *>::layoutMarginEnd,
-            BaseStyleBuilder<*, *>::layoutMarginEndRes,
-            { (it.layoutParams as ViewGroup.MarginLayoutParams).marginEnd }
-    ))
-
-    // layout_marginStart
-    add(ViewMapping.withAssertEquals(
-            ARBITRARY_DIMENSIONS,
-            android.R.attr.layout_marginStart,
-            ViewProxy::setLayoutMarginStart,
-            BaseStyleBuilder<*, *>::layoutMarginStart,
-            BaseStyleBuilder<*, *>::layoutMarginStartRes,
-            { (it.layoutParams as ViewGroup.MarginLayoutParams).marginStart }
-    ))
 
     // alpha
     add(ViewMapping.withAssertEquals(

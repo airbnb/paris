@@ -26,7 +26,7 @@ class ViewProxyTest {
     }
 
     @Test
-    fun background_null() {
+    fun setBackground_null() {
         // Since null is the default first set the background to something else
         view.background = ColorDrawable(Color.WHITE)
         proxy.setBackground(null)
@@ -34,7 +34,7 @@ class ViewProxyTest {
     }
 
     @Test
-    fun contentDescription_null() {
+    fun setContentDescription_null() {
         // Since null is the default first set the content description to something else
         view.contentDescription = "Hello"
         proxy.setContentDescription(null)
@@ -42,7 +42,7 @@ class ViewProxyTest {
     }
 
     @Test
-    fun foreground_null() {
+    fun setForeground_null() {
         // Since null is the default first set the foreground to something else
         view.foreground = ColorDrawable(Color.WHITE)
         proxy.setForeground(null)

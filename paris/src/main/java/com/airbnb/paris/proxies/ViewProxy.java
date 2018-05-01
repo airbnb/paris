@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.AnyRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewCompat;
 import android.util.SparseIntArray;
 import android.view.View;
@@ -24,13 +25,18 @@ import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
+/**
+ * The order of the methods in a styleable class dictates the order in which attributes are applied. This class relies on this fact to enforces the
+ * precedence of paddings. It's unorthodox but it simplifies the logic quite a bit. DO NOT RELY ON THIS UNDOCUMENTED FEATURE IF YOUR PROJECT IMPORTS
+ * THIS LIBRARY.
+ */
 @Styleable(value = "Paris_View")
 public class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     private static final int NOT_SET = -10;
 
     private static int ifSetElse(int value, int ifNotSet) {
-            return value != NOT_SET ? value : ifNotSet;
+        return value != NOT_SET ? value : ifNotSet;
     }
 
     private static boolean isAnySet(int... values) {
@@ -43,6 +49,7 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     private static final SparseIntArray VISIBILITY_MAP = new SparseIntArray();
+
     static {
         // Visibility values passed to setVisibility are assumed to be one of View.VISIBLE (0),
         // INVISIBLE (4) and GONE (8) if passed to a style builder as a "direct" value, or an int
@@ -60,8 +67,10 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     private int height;
     private int margin;
     private int marginBottom;
+    private int marginEnd;
     private int marginLeft;
     private int marginRight;
+    private int marginStart;
     private int marginTop;
 
     public ViewProxy(View view) {
@@ -75,14 +84,16 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
         height = NOT_SET;
         margin = NOT_SET;
         marginBottom = NOT_SET;
+        marginEnd = NOT_SET;
         marginLeft = NOT_SET;
         marginRight = NOT_SET;
+        marginStart = NOT_SET;
         marginTop = NOT_SET;
     }
 
     @AfterStyle
     public void afterStyle(Style style) {
-        boolean isMarginSet = isAnySet(margin, marginBottom, marginLeft, marginRight, marginTop);
+        boolean isMarginSet = isAnySet(margin, marginBottom, marginEnd, marginLeft, marginRight, marginStart, marginTop);
 
         if (!ignoreLayoutWidthAndHeight) {
             if ((width != NOT_SET) ^ (height != NOT_SET)) {
@@ -110,14 +121,25 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
             } else {
                 //noinspection ResourceType
                 marginParams = new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    marginParams.setLayoutDirection(getView().getLayoutDirection());
+                }
             }
             if (margin != NOT_SET) {
                 marginParams.setMargins(margin, margin, margin, margin);
+            } else {
+                marginParams.bottomMargin = ifSetElse(marginBottom, marginParams.bottomMargin);
+                marginParams.leftMargin = ifSetElse(marginLeft, marginParams.leftMargin);
+                marginParams.rightMargin = ifSetElse(marginRight, marginParams.rightMargin);
+                marginParams.topMargin = ifSetElse(marginTop, marginParams.topMargin);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    // Note: setting negatives marginEnd or marginStart doesn't work (the view resets them to 0)
+                    if (marginEnd != NOT_SET) marginParams.setMarginEnd(marginEnd);
+                    if (marginStart != NOT_SET) marginParams.setMarginStart(marginStart);
+                }
             }
-            marginParams.bottomMargin = ifSetElse(marginBottom, marginParams.bottomMargin);
-            marginParams.leftMargin = ifSetElse(marginLeft, marginParams.leftMargin);
-            marginParams.rightMargin = ifSetElse(marginRight, marginParams.rightMargin);
-            marginParams.topMargin = ifSetElse(marginTop, marginParams.topMargin);
             getView().setLayoutParams(marginParams);
         }
     }
@@ -145,29 +167,9 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
         }
     }
 
-    @Attr(R2.styleable.Paris_View_android_layout_margin)
-    public void setLayoutMargin(@Px int margin) {
-        this.margin = margin;
-    }
-
     @Attr(R2.styleable.Paris_View_android_layout_marginBottom)
     public void setLayoutMarginBottom(@Px int marginBottom) {
         this.marginBottom = marginBottom;
-    }
-
-    @Attr(R2.styleable.Paris_View_android_layout_marginEnd)
-    public void setLayoutMarginEnd(@Px int marginEnd) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            switch (getView().getLayoutDirection()) {
-                case View.LAYOUT_DIRECTION_RTL:
-                    marginLeft = marginEnd;
-                    break;
-                case View.LAYOUT_DIRECTION_LTR:
-                default:
-                    marginRight = marginEnd;
-                    break;
-            }
-        }
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginLeft)
@@ -180,24 +182,26 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
         this.marginRight = marginRight;
     }
 
-    @Attr(R2.styleable.Paris_View_android_layout_marginStart)
-    public void setLayoutMarginStart(@Px int marginStart) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            switch (getView().getLayoutDirection()) {
-                case View.LAYOUT_DIRECTION_RTL:
-                    marginRight = marginStart;
-                    break;
-                case View.LAYOUT_DIRECTION_LTR:
-                default:
-                    marginLeft = marginStart;
-                    break;
-            }
-        }
-    }
-
     @Attr(R2.styleable.Paris_View_android_layout_marginTop)
     public void setLayoutMarginTop(@Px int marginTop) {
         this.marginTop = marginTop;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginEnd)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void setLayoutMarginEnd(@Px int marginEnd) {
+        this.marginEnd = marginEnd;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginStart)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void setLayoutMarginStart(@Px int marginStart) {
+        this.marginStart = marginStart;
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_margin)
+    public void setLayoutMargin(@Px int margin) {
+        this.margin = margin;
     }
 
     @Attr(R2.styleable.Paris_View_android_alpha)
@@ -237,34 +241,9 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
         getView().setMinimumWidth(minWidth);
     }
 
-    @Attr(R2.styleable.Paris_View_android_padding)
-    public void setPadding(@Px int padding) {
-        getView().setPadding(padding, padding, padding, padding);
-    }
-
     @Attr(R2.styleable.Paris_View_android_paddingBottom)
     public void setPaddingBottom(@Px int padding) {
         ViewExtensionsKt.setPaddingBottom(getView(), padding);
-    }
-
-    @Attr(R2.styleable.Paris_View_android_paddingEnd)
-    public void setPaddingEnd(@Px int padding) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            switch (getView().getLayoutDirection()) {
-                case View.LAYOUT_DIRECTION_RTL:
-                    ViewExtensionsKt.setPaddingLeft(getView(), padding);
-                    break;
-                case View.LAYOUT_DIRECTION_LTR:
-                default:
-                    ViewExtensionsKt.setPaddingRight(getView(), padding);
-                    break;
-            }
-        }
-    }
-
-    @Attr(R2.styleable.Paris_View_android_paddingHorizontal)
-    public void setPaddingHorizontal(@Px int padding) {
-        ViewExtensionsKt.setPaddingHorizontal(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingLeft)
@@ -277,29 +256,36 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
         ViewExtensionsKt.setPaddingRight(getView(), padding);
     }
 
-    @Attr(R2.styleable.Paris_View_android_paddingStart)
-    public void setPaddingStart(@Px int padding) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            switch (getView().getLayoutDirection()) {
-                case View.LAYOUT_DIRECTION_RTL:
-                    ViewExtensionsKt.setPaddingRight(getView(), padding);
-                    break;
-                case View.LAYOUT_DIRECTION_LTR:
-                default:
-                    ViewExtensionsKt.setPaddingLeft(getView(), padding);
-                    break;
-            }
-        }
-    }
-
     @Attr(R2.styleable.Paris_View_android_paddingTop)
     public void setPaddingTop(@Px int padding) {
         ViewExtensionsKt.setPaddingTop(getView(), padding);
     }
 
+    @Attr(R2.styleable.Paris_View_android_paddingHorizontal)
+    public void setPaddingHorizontal(@Px int padding) {
+        ViewExtensionsKt.setPaddingHorizontal(getView(), padding);
+    }
+
     @Attr(R2.styleable.Paris_View_android_paddingVertical)
     public void setPaddingVertical(@Px int padding) {
         ViewExtensionsKt.setPaddingVertical(getView(), padding);
+    }
+
+    @Attr(R2.styleable.Paris_View_android_padding)
+    public void setPadding(@Px int padding) {
+        getView().setPadding(padding, padding, padding, padding);
+    }
+
+    @Attr(R2.styleable.Paris_View_android_paddingEnd)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void setPaddingEnd(@Px int padding) {
+        ViewExtensionsKt.setPaddingEnd(getView(), padding);
+    }
+
+    @Attr(R2.styleable.Paris_View_android_paddingStart)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void setPaddingStart(@Px int padding) {
+        ViewExtensionsKt.setPaddingStart(getView(), padding);
     }
 
     @Attr(R2.styleable.Paris_View_android_stateListAnimator)
