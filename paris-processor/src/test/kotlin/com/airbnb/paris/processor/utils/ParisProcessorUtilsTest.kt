@@ -23,4 +23,10 @@ class ParisProcessorUtilsTest : StringSpec({
         reformatStyleFieldOrMethodName("myRedStyle") shouldBe "MyRed"
         reformatStyleFieldOrMethodName("MyRedStyle") shouldBe "MyRed"
     }
+
+    "style whose whole name is style/Style/STYLE doesn't change" {
+        reformatStyleFieldOrMethodName("style") shouldBe "Style"
+        reformatStyleFieldOrMethodName("Style") shouldBe "Style"
+        reformatStyleFieldOrMethodName("STYLE") shouldBe "Style"
+    }
 })
