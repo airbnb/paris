@@ -12,6 +12,10 @@ import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 
+/**
+ * It's important that base styleables be extracted before new ones are written for the current module, otherwise the latter will be included in the
+ * results
+ */
 internal class BaseStyleableInfoExtractor {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {

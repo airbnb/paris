@@ -41,8 +41,7 @@ class ParisProcessor : SkyProcessor() {
 
     private var styleableInfoExtractor = StyleableInfoExtractor()
 
-    // TODO Don't do this lazily to make sure it happens before we create new generated module classes
-    private val externalStyleablesInfo by lazy { BaseStyleableInfoExtractor().fromEnvironment() }
+    private lateinit var externalStyleablesInfo: List<BaseStyleableInfo>
 
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
@@ -105,6 +104,9 @@ class ParisProcessor : SkyProcessor() {
         )
 
         rFinder.processStyleables(styleablesInfo)
+
+        /** Make sure to get these before writing the [ModuleJavaClass] for this module */
+        externalStyleablesInfo = BaseStyleableInfoExtractor().fromEnvironment()
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
         val styleablesTree = StyleablesTree(allStyleables)
