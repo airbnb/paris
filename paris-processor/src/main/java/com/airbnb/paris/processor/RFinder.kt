@@ -21,20 +21,8 @@ internal class RFinder {
             return
         }
 
-        var rType: TypeMirror?
-        config.let {
-            rType = getRTypeFromConfig(config)
-
-            // TODO Move check to getRTypeFromConfig
-            if (rType != null && rType!!.asTypeElement().simpleName.toString() != "R") {
-                logError {
-                    "@ParisConfig's rClass parameter is pointing to a non-R class"
-                }
-            }
-
-            rType?.let {
-                element = it.asTypeElement()
-            }
+        getRTypeFromConfig(config)?.let {
+            element = it.asTypeElement()
         }
     }
 
@@ -84,11 +72,19 @@ internal class RFinder {
             rType = mte.typeMirror
         }
 
+        // Void is the default so check against that
         val voidType = elements.getTypeElement(Void::class.java.canonicalName).asType()
         return if (types.isSameType(voidType, rType)) {
             null
         } else {
-            rType
+            if (rType != null && rType.asTypeElement().simpleName.toString() != "R") {
+                logError {
+                    "@ParisConfig's rClass parameter is pointing to a non-R class"
+                }
+                null
+            } else {
+                rType
+            }
         }
     }
 }
