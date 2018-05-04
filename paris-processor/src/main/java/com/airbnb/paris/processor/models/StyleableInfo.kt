@@ -74,6 +74,7 @@ internal class StyleableInfoExtractor {
         }
 
         return StyleableInfo(
+            element,
             styleableChildren,
             beforeStyles,
             afterStyles,
@@ -89,6 +90,7 @@ internal class StyleableInfoExtractor {
  * empty either
  */
 internal class StyleableInfo(
+    val element: Element,
     val styleableChildren: List<StyleableChildInfo>,
     val beforeStyles: List<BeforeStyleInfo>,
     val afterStyles: List<AfterStyleInfo>,
@@ -101,7 +103,13 @@ internal class StyleableInfo(
      * Applies lower camel case formatting
      */
     fun attrResourceNameToCamelCase(name: String): String {
-        // TODO Throw if the styleableResourceName is not part of the name
+        val prefix = "${styleableResourceName}_"
+        if (!name.startsWith(prefix)) {
+            logError(element) {
+                "Attribute \"$name\" does not belong to styleable declaration \"$styleableResourceName\"."
+            }
+        }
+
         val formattedName = name.removePrefix("${styleableResourceName}_")
             .removePrefix("android_")
         return formattedName
