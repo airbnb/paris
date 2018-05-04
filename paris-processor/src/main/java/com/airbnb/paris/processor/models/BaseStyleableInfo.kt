@@ -103,13 +103,11 @@ internal open class BaseStyleableInfo(
         baseStyleableInfo.styleableResourceName
     )
 
-    // TODO Make this a property
-    fun styleApplierClassName(): ClassName =
-        ClassName.get(
-            viewElementPackageName,
-            String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, viewElementName)
-        )
+    val styleApplierClassName: ClassName = ClassName.get(
+        viewElementPackageName,
+        String.format(STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT, viewElementName)
+    )
 
-    val styleBuilderClassName: ClassName = styleApplierClassName().nestedClass("StyleBuilder")
+    val styleBuilderClassName: ClassName = styleApplierClassName.nestedClass("StyleBuilder")
 }
 

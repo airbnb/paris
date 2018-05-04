@@ -157,7 +157,7 @@ internal class StyleApplierJavaClass(
         }
     }
 
-    val styleApplierClassName = styleableInfo.styleApplierClassName()
+    val styleApplierClassName = styleableInfo.styleApplierClassName
 
     addType(
         BaseStyleBuilderJavaClass(
@@ -262,7 +262,7 @@ internal class StyleApplierJavaClass(
                     }
                     add(
                         "new \$T().add\$L().build()",
-                        getStyleBuilderClassName(styleableInfo), style.formattedName
+                        styleableInfo.styleBuilderClassName, style.formattedName
                     )
                 }
             }
@@ -280,7 +280,7 @@ internal class StyleApplierJavaClass(
 }) {
 
     init {
-        packageName = styleableInfo.styleApplierClassName().packageName()
-        name = styleableInfo.styleApplierClassName().simpleName()
+        packageName = styleableInfo.styleApplierClassName.packageName()
+        name = styleableInfo.styleApplierClassName.simpleName()
     }
 }

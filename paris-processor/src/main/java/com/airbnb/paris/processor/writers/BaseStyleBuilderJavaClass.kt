@@ -12,7 +12,7 @@ internal class BaseStyleBuilderJavaClass(
     styleableInfo: StyleableInfo
 ) : SkyJavaClass(block = {
 
-    val styleApplierClassName = styleableInfo.styleApplierClassName()
+    val styleApplierClassName = styleableInfo.styleApplierClassName
 
     val superStyleBuilderClassName = if (parentStyleApplierClassName != null) {
         parentStyleApplierClassName.nestedClass("BaseStyleBuilder")
@@ -256,7 +256,7 @@ internal class BaseStyleBuilderJavaClass(
 
 }) {
     init {
-        val styleApplierClassName = styleableInfo.styleApplierClassName()
+        val styleApplierClassName = styleableInfo.styleApplierClassName
         val className = ClassName.get(
             styleApplierClassName.packageName(),
             styleApplierClassName.simpleName(),

@@ -5,7 +5,6 @@ import com.airbnb.paris.processor.SPANNABLE_BUILDER_CLASS_NAME
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.StyleableInfo
-import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.TypeName
 
 internal class ParisJavaClass(
@@ -22,7 +21,7 @@ internal class ParisJavaClass(
             it.elementName
         }
     for (styleableClassInfo in sortedStyleableClassesInfo) {
-        val styleApplierClassName = styleableClassInfo.styleApplierClassName()
+        val styleApplierClassName = styleableClassInfo.styleApplierClassName
         val viewParameterTypeName = TypeName.get(styleableClassInfo.viewElementType)
 
         method("style") {
@@ -66,11 +65,8 @@ internal class ParisJavaClass(
         for (styleableClassInfo in sortedStyleableClassesInfo) {
             addStatement(
                 "\$T.assertStylesContainSameAttributes(context)",
-                styleableClassInfo.styleApplierClassName()
+                styleableClassInfo.styleApplierClassName
             )
         }
     }
 })
-
-internal fun getStyleBuilderClassName(styleableClassInfo: BaseStyleableInfo): ClassName =
-    styleableClassInfo.styleApplierClassName().nestedClass("StyleBuilder")

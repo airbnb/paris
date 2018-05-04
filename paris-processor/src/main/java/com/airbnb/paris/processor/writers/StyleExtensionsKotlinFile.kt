@@ -37,7 +37,7 @@ internal class StyleExtensionsKotlinFile(
     function("style") {
         receiver(styleable.viewElementType)
         addParameter("style", STYLE_CLASS_NAME.toKPoet())
-        addStatement("%T(this).apply(style)", styleable.styleApplierClassName().toKPoet())
+        addStatement("%T(this).apply(style)", styleable.styleApplierClassName.toKPoet())
     }
 
     /*
@@ -50,7 +50,7 @@ internal class StyleExtensionsKotlinFile(
         addParameter("styleRes", INT) {
             addAnnotation(STYLE_RES)
         }
-        addStatement("%T(this).apply(styleRes)", styleable.styleApplierClassName().toKPoet())
+        addStatement("%T(this).apply(styleRes)", styleable.styleApplierClassName.toKPoet())
     }
 
     /*
@@ -61,7 +61,7 @@ internal class StyleExtensionsKotlinFile(
     function("style") {
         receiver(styleable.viewElementType)
         addParameter("attrs", ATTRIBUTE_SET.toKPoet().asNullable())
-        addStatement("%T(this).apply(attrs)", styleable.styleApplierClassName().toKPoet())
+        addStatement("%T(this).apply(attrs)", styleable.styleApplierClassName.toKPoet())
     }
 
     /*
@@ -92,7 +92,7 @@ internal class StyleExtensionsKotlinFile(
 
         addStatement(
                 "%T(this).apply(%T().apply(%N).build())",
-                styleable.styleApplierClassName().toKPoet(),
+                styleable.styleApplierClassName.toKPoet(),
                 extendableStyleBuilderTypeName,
                 builderParameter
         )

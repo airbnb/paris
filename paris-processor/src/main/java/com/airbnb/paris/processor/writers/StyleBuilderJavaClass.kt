@@ -10,7 +10,7 @@ internal fun getStyleBuilderClassName(styleApplierClassName: ClassName) =
 internal class StyleBuilderJavaClass(styleableInfo: StyleableInfo)
     : SkyJavaClass(block = {
 
-    val styleApplierClassName = styleableInfo.styleApplierClassName()
+    val styleApplierClassName = styleableInfo.styleApplierClassName
 
     val baseClassName = ClassName.get(styleApplierClassName.packageName(), styleApplierClassName.simpleName(), "BaseStyleBuilder")
 
@@ -58,7 +58,7 @@ internal class StyleBuilderJavaClass(styleableInfo: StyleableInfo)
 
 }) {
     init {
-        val className = getStyleBuilderClassName(styleableInfo.styleApplierClassName())
+        val className = getStyleBuilderClassName(styleableInfo.styleApplierClassName)
         packageName = className.packageName()
         name = className.simpleName()
     }
