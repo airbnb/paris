@@ -23,7 +23,7 @@ internal class StyleableChildInfoExtractor
         val attr = element.getAnnotation(StyleableChild::class.java)
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = getResourceId(StyleableChild::class.java, element, attr.value)
+            styleableResId = getResourceId(StyleableChild::class.java, element, attr.value) ?: return null
         } catch (e: AnnotationTypeMismatchException) {
             logError(element) {
                 "Incorrectly typed @StyleableChild value parameter. (This usually happens when an R value doesn't exist.)"
@@ -34,8 +34,7 @@ internal class StyleableChildInfoExtractor
         var defaultValueResId: AndroidResourceId? = null
         if (attr.defaultValue != -1) {
             try {
-                defaultValueResId =
-                        getResourceId(StyleableChild::class.java, element, attr.defaultValue)
+                defaultValueResId = getResourceId(StyleableChild::class.java, element, attr.defaultValue) ?: return null
             } catch (e: AnnotationTypeMismatchException) {
                 logError(element) {
                     "Incorrectly typed @StyleableChild defaultValue parameter. (This usually happens when an R value doesn't exist.)"

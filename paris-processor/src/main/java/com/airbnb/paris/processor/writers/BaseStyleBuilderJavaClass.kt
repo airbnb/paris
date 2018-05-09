@@ -69,7 +69,7 @@ internal class BaseStyleBuilderJavaClass(
         rClassName!!
 
         val methodName =
-            styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName!!)
+            styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName)
 
         method(methodName) {
             public()
@@ -150,7 +150,7 @@ internal class BaseStyleBuilderJavaClass(
 
         val attr =
             if (nonResTargetAttrs.isNotEmpty()) nonResTargetAttrs.first() else groupedAttrs.first()
-        val attrResourceName = attr.styleableResId.resourceName!!
+        val attrResourceName = attr.styleableResId.resourceName
         val baseMethodName = styleableInfo.attrResourceNameToCamelCase(attrResourceName)
 
         if (nonResTargetAttrs.isNotEmpty()) {

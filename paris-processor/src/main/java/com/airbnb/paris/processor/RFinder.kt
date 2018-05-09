@@ -40,7 +40,7 @@ internal class RFinder {
             else -> null
         }
         arbitraryResId?.let {
-            element = elements.getTypeElement(it.className!!.enclosingClassName().reflectionName())
+            element = elements.getTypeElement(it.className.enclosingClassName().reflectionName())
         }
     }
 

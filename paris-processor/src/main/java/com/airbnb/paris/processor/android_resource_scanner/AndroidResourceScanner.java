@@ -40,7 +40,7 @@ public class AndroidResourceScanner {
         if (results.containsKey(value)) {
             return results.get(value);
         } else {
-            return new AndroidResourceId(value);
+            return null;
         }
     }
 

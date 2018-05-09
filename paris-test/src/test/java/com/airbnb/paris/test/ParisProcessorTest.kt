@@ -47,6 +47,16 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun attrNonResValue() {
+        // An @Attr with an arbitrary int value instead of a resource ID
+        assertError(
+            "attr_non_res_value",
+            1,
+            "Could not retrieve Android resource ID from annotation."
+        )
+    }
+
+    @Test
     fun attrWrongValueType() {
         // An @Attr with an non-existent R.styleable field
         assertError(
