@@ -154,7 +154,7 @@ internal class StyleInfoExtractor {
             }
 
             elementKind = FIELD
-            // TODO Check that the target type is an int
+            // TODO Check that the target type is an int or a Style
             //targetType = element.asType()
 
             javadoc = JavaCodeBlock.of("@see \$T#\$N", enclosingElement, elementName)
