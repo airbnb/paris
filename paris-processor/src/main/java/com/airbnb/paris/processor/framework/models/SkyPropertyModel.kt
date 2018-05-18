@@ -19,21 +19,27 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
     val name: String
 
     /**
-     * Null if [isKotlin] is false
+     * The getter could be a field or a method depending on if the annotated class is in Java or in Kotlin
      */
-    val kotlinGetterElement: ExecutableElement?
+    val getterElement: Element
+
+    /**
+     * What you'd call to get the property value
+     */
+    val getter: String
 
     init {
         if (element.isJava()) {
             type = element.asType()
             name = element.simpleName.toString()
-            kotlinGetterElement = null
+            getterElement = element
+            getter = name
         } else {
             // In Kotlin it's an empty static method whose name is <property>$annotations that ends
             // up being annotated
             name = element.simpleName.toString().substringBefore("\$annotations")
             val getterName = "get${name.capitalize()}"
-            kotlinGetterElement = element.siblings().asSequence()
+            val kotlinGetterElement = element.siblings().asSequence()
                 .filter {
                     it is ExecutableElement &&
                             it.simpleName.toString() == getterName &&
@@ -41,9 +47,10 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
                 }
                 .singleOrNull() as ExecutableElement?
 
-            if (kotlinGetterElement == null) {
-                throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private.")
-            }
+            kotlinGetterElement ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private.")
+
+            getterElement = kotlinGetterElement
+            getter = "${kotlinGetterElement.simpleName}()"
 
             type = kotlinGetterElement.returnType
         }
@@ -59,6 +66,8 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
      */
     fun isJava(): Boolean = element.isJava()
 }
+
+typealias SkyFieldModel = SkyPropertyModel
 
 abstract class SkyFieldModelFactory<T : SkyPropertyModel>(annotationClass: Class<out Annotation>) :
     SkyModelFactory<T, Element>(annotationClass)

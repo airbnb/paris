@@ -27,6 +27,9 @@ internal fun ClassName.toTypeMirror(): TypeMirror = toTypeElement().asType()
 
 internal fun Element.getPackageElement(): PackageElement = elements.getPackageOf(this)
 
+internal fun Element.isPublic(): Boolean = this.modifiers.contains(Modifier.PUBLIC)
+internal fun Element.isNotPublic(): Boolean = !isPublic()
+
 internal fun Element.isPrivate(): Boolean = this.modifiers.contains(Modifier.PRIVATE)
 internal fun Element.isNotPrivate(): Boolean = !isPrivate()
 

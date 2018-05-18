@@ -49,13 +49,7 @@ internal class StyleableChildInfoExtractor
             defaultValueResId
         )
 
-        val fieldOrGetterElement: Element = if (model.isJava()) {
-            model.element
-        } else {
-            model.kotlinGetterElement!!
-        }
-
-        if (fieldOrGetterElement.isPrivate() || fieldOrGetterElement.isProtected()) {
+        if (model.getterElement.isPrivate() || model.getterElement.isProtected()) {
             logError(element) {
                 "Fields and properties annotated with @StyleableChild can't be private or protected."
             }

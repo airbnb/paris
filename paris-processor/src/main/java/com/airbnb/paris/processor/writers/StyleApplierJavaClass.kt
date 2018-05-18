@@ -184,22 +184,12 @@ internal class StyleApplierJavaClass(
         method(styleableChildInfo.name) {
             public()
             returns(subStyleApplierClassName)
-            if (styleableChildInfo.isJava()) {
-                addStatement(
-                    "\$T subApplier = new \$T(getProxy().\$N)",
-                    subStyleApplierClassName,
-                    subStyleApplierClassName,
-                    styleableChildInfo.name
-                )
-            } else {
-                // In Kotlin the field will always be private, instead we use the getter
-                addStatement(
-                    "\$T subApplier = new \$T(getProxy().\$N())",
-                    subStyleApplierClassName,
-                    subStyleApplierClassName,
-                    styleableChildInfo.kotlinGetterElement!!.simpleName
-                )
-            }
+            addStatement(
+                "\$T subApplier = new \$T(getProxy().\$L)",
+                subStyleApplierClassName,
+                subStyleApplierClassName,
+                styleableChildInfo.getter
+            )
             addStatement("subApplier.setDebugListener(getDebugListener())")
             addStatement("return subApplier", subStyleApplierClassName, styleableChildInfo.name)
         }
