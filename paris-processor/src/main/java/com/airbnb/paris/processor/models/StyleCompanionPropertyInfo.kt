@@ -1,18 +1,19 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Style
+import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModel
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModelFactory
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
 import javax.lang.model.element.VariableElement
+import javax.lang.model.type.TypeKind
 
 internal class StyleCompanionPropertyInfoExtractor
     : SkyCompanionPropertyModelFactory<StyleCompanionPropertyInfo>(Style::class.java) {
 
     override fun elementToModel(element: VariableElement): StyleCompanionPropertyInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods
-        // TODO Check that the target type is an int or a Style
 
         if (element.isNotStatic()) {
             logError(element) {
@@ -24,6 +25,16 @@ internal class StyleCompanionPropertyInfoExtractor
         if (element.isNotFinal()) {
             logError(element) {
                 "Fields annotated with @Style must be final."
+            }
+            return null
+        }
+
+        val type = element.asType()
+        if (!isSubtype(type, STYLE_CLASS_NAME.toTypeMirror()) && type.kind != TypeKind.INT && !type.isNonExistent()) {
+            // Note: if the type is non existent we ignore this error check so that users don't need to change their kapt configuration, they'll still
+            // get a build error though not as explicit.
+            logError(element) {
+                "Fields annotated with @Style must implement com.airbnb.paris.styles.Style or be of type int (and refer to a style resource)."
             }
             return null
         }

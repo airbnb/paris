@@ -14,7 +14,10 @@ import com.airbnb.paris.test.MyViewStyleApplier;
 public class MyView extends View {
 
     @Style
-    private static final Style myStyle = new MyViewStyleApplier.StyleBuilder().build();
+    static final com.airbnb.paris.styles.Style defaultStyle = new MyViewStyleApplier.StyleBuilder().build();
+
+    @Style(isDefault = true)
+    static final com.airbnb.paris.styles.Style myStyle = new MyViewStyleApplier.StyleBuilder().build();
 
     public MyView(Context context) {
         super(context);

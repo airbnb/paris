@@ -101,6 +101,20 @@ internal val TypeElement.packageName: String get() = className.packageName()
 
 internal fun TypeMirror.asTypeElement(): TypeElement = types.asElement(this) as TypeElement
 
+/**
+ * Kapt replaces unknown types by "NonExistentClass". This can happen when code refers to generated classes. For example:
+ *
+ *
+ * ```
+ * @Style val myStyle = myViewStyle { }
+ * ```
+ *
+ * myViewStyle is a generated function so the type of the field will be "NonExistentClass" when processed with kapt.
+ *
+ * This behavior can be altered by using `kapt { correctErrorTypes = true }` in the Gradle config.
+ */
+internal fun TypeMirror.isNonExistent() = this.toString() == "error.NonExistentClass"
+
 // Android specific
 
 internal fun isView(type: TypeMirror): Boolean =

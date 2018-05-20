@@ -47,28 +47,12 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun attrNonResValue() {
-        // An @Attr with an arbitrary int value instead of a resource ID
-        assertError(
-            "error_attr_non_res_value",
-            1,
-            "Could not retrieve Android resource ID from annotation."
-        )
-    }
-
-    @Test
-    fun attrWrongValueType() {
-        // An @Attr with an non-existent R.styleable field
-        assertError(
-            "error_attr_wrong_value_type",
-            2,
-            "Incorrectly typed @Attr value parameter"
-        )
+    fun atStyleStyleField() {
+        assertCase("at_style_style_field")
     }
 
     @Test
     fun attrs() {
-        // TODO Add Drawable case
         assertCase("attrs")
     }
 
@@ -78,22 +62,91 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun errorPrivateStyle() {
+    fun errorAttrNonResValue() {
+        // An @Attr with an arbitrary int value instead of a resource ID
+        assertError(
+            "error_attr_non_res_value",
+            1,
+            "Could not retrieve Android resource ID from annotation."
+        )
+    }
+
+    @Test
+    fun errorAttrWrongValueType() {
+        // An @Attr with an non-existent R.styleable field
+        assertError(
+            "error_attr_wrong_value_type",
+            2,
+            "Incorrectly typed @Attr value parameter"
+        )
+    }
+
+    @Test
+    fun errorNonFinalStyleField() {
+        // A non-final field annotated with @Style
+        assertError(
+            "error_non_final_style_field",
+            1,
+            "Fields annotated with @Style must be final."
+        )
+    }
+
+    @Test
+    fun errorNonStaticStyleField() {
+        // A non-static field annotated with @Style
+        assertError(
+            "error_non_static_style_field",
+            1,
+            "Fields annotated with @Style must be static."
+        )
+    }
+
+    @Test
+    fun errorPrivateStyleField() {
         // A private field annotated with @Style
         assertError(
-            "error_private_style",
+            "error_private_style_field",
             1,
             "Fields annotated with @Style can't be private or protected."
         )
     }
 
     @Test
-    fun styleableChildWrongValueType() {
+    fun errorStyleableChildWrongValueType() {
         // A @StyleableChild with an non-existent R.styleable field
         assertError(
             "error_styleable_child_wrong_value_type",
             2,
             "Incorrectly typed @StyleableChild value parameter"
+        )
+    }
+
+    @Test
+    fun errorStyleableOutsidePackageNoR() {
+        // A @Styleable view in an unexpected package (outside the package namespace of the module)
+        // with no R (or R2) references as annotation parameters. Paris has no way of finding the R
+        // package (which it needs to figure out the package of the generated Paris class) so this
+        // should cause an error
+        assertError("error_styleable_outside_package_no_R", 1, "R class")
+    }
+
+    @Test
+    fun errorStyleFieldInvalidType() {
+        // A @Style field with an invalid type (not a style)
+        assertError(
+            "error_style_field_invalid_type",
+            1,
+            "Fields annotated with @Style must implement com.airbnb.paris.styles.Style or be of type int (and refer to a style resource)."
+        )
+    }
+
+    @Test
+    fun errorTwoDefaultStyles() {
+        // One @Style named "defaultStyle" and another declared as isDefault = true
+        assertError(
+            "error_two_default_styles",
+            1,
+            "Naming a linked style \"default\" and annotating another with @Style(isDefault = true) is invalid."
         )
     }
 
@@ -113,15 +166,6 @@ class ParisProcessorTest {
         // A @Styleable view in an unexpected package (outside the package namespace of the module)
         // and a single @Attr method
         assertCase("styleable_outside_package_single_attr")
-    }
-
-    @Test
-    fun styleableOutsidePackageNoR() {
-        // A @Styleable view in an unexpected package (outside the package namespace of the module)
-        // with no R (or R2) references as annotation parameters. Paris has no way of finding the R
-        // package (which it needs to figure out the package of the generated Paris class) so this
-        // should cause an error
-        assertError("error_styleable_outside_package_no_R", 1, "R class")
     }
 
     @Test

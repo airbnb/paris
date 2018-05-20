@@ -54,6 +54,9 @@ internal class StyleInfoExtractor {
                     styles
                 } else if (styleMarkedAsDefault != null) {
                     // One style is marked as being the default so let's duplicate it with the name "default"
+
+                    // We suppress this warning because it is wrong, not casting results in an error
+                    @Suppress("USELESS_CAST")
                     styles + when (styleMarkedAsDefault) {
                         is StyleCompanionPropertyInfo -> StyleCompanionPropertyInfo(
                             styleMarkedAsDefault.element,
