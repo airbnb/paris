@@ -2,8 +2,7 @@ package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.models.StyleInfo
-import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.models.*
 import com.squareup.javapoet.*
 
 internal class StyleApplierJavaClass(
@@ -200,15 +199,9 @@ internal class StyleApplierJavaClass(
             addJavadoc(styleInfo.javadoc)
             public()
 
-            when (styleInfo.elementKind) {
-                StyleInfo.Kind.FIELD -> {
-                    addStatement(
-                        "apply(\$T.\$L)",
-                        styleInfo.enclosingElement,
-                        styleInfo.elementName
-                    )
-                }
-                StyleInfo.Kind.METHOD -> {
+            when (styleInfo) {
+                is StyleCompanionPropertyInfo -> addStatement("apply(\$T.\$L)", styleInfo.enclosingElement, styleInfo.javaGetter)
+                is StyleStaticMethodInfo -> {
                     addStatement(
                         "\$T builder = new \$T()",
                         styleBuilderClassName,
@@ -221,10 +214,8 @@ internal class StyleApplierJavaClass(
                         )
                         .addStatement("apply(builder.build())")
                 }
-                StyleInfo.Kind.STYLE_RES -> {
-                    addStatement("apply(\$L)", styleInfo.styleResourceCode)
-                }
-                StyleInfo.Kind.EMPTY -> {
+                is StyleResInfo -> addStatement("apply(\$L)", styleInfo.styleResourceCode)
+                is EmptyStyleInfo -> {
                     // Do nothing!
                 }
             }

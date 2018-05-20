@@ -2,7 +2,8 @@ package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.*
-import com.squareup.javapoet.*
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.ParameterizedTypeName
 
 internal fun getStyleBuilderClassName(styleApplierClassName: ClassName) =
     styleApplierClassName.nestedClass("StyleBuilder")
@@ -37,18 +38,16 @@ internal class StyleBuilderJavaClass(styleableInfo: StyleableInfo)
             public()
             returns(styleBuilderClassName)
 
-            when (it.elementKind) {
-                StyleInfo.Kind.FIELD -> addStatement("add(\$T.\$L)", it.enclosingElement, it.elementName)
-                StyleInfo.Kind.METHOD -> {
+            when (it) {
+                is StyleCompanionPropertyInfo -> addStatement("add(\$T.\$L)", it.enclosingElement, it.javaGetter)
+                is StyleStaticMethodInfo -> {
                     addStatement("consumeProgrammaticStyleBuilder()")
                     addStatement("debugName(\$S)", it.formattedName)
                     addStatement("\$T.\$L(this)", it.enclosingElement, it.elementName)
                     addStatement("consumeProgrammaticStyleBuilder()")
                 }
-                StyleInfo.Kind.STYLE_RES -> {
-                    addStatement("add(\$L)", it.styleResourceCode)
-                }
-                StyleInfo.Kind.EMPTY -> {
+                is StyleResInfo -> addStatement("add(\$L)", it.styleResourceCode)
+                is EmptyStyleInfo -> {
                     // Do nothing!
                 }
             }

@@ -78,6 +78,16 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun errorPrivateStyle() {
+        // A private field annotated with @Style
+        assertError(
+            "error_private_style",
+            1,
+            "Fields annotated with @Style can't be private or protected."
+        )
+    }
+
+    @Test
     fun styleableChildWrongValueType() {
         // A @StyleableChild with an non-existent R.styleable field
         assertError(

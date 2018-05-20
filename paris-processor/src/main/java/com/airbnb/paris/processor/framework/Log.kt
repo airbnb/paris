@@ -1,10 +1,7 @@
 package com.airbnb.paris.processor.framework
 
 import javax.annotation.processing.Messager
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
-import javax.lang.model.element.VariableElement
+import javax.lang.model.element.*
 import javax.tools.Diagnostic
 import javax.tools.Diagnostic.Kind.ERROR
 import javax.tools.Diagnostic.Kind.WARNING
@@ -29,6 +26,7 @@ internal fun logWarning(lazyMessage: () -> String) {
 
 internal fun Element.toStringId(): String {
     return when (this) {
+        is PackageElement -> qualifiedName.toString()
         is TypeElement -> qualifiedName.toString()
         is ExecutableElement,
         is VariableElement -> "${enclosingElement.toStringId()}.$simpleName"
