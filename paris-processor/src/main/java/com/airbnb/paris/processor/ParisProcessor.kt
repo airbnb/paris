@@ -10,7 +10,6 @@ import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
 import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
-import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
@@ -51,9 +50,11 @@ class ParisProcessor : SkyProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        val types: MutableSet<String> = LinkedHashSet()
-        return setOf(Styleable::class.java, Attr::class.java)
-            .mapTo(types) { it.canonicalName }
+        return setOf(
+            Attr::class.java,
+            ParisConfig::class.java,
+            Styleable::class.java
+        ).map { it.canonicalName }.toSet()
     }
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
