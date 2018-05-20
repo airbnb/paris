@@ -50,7 +50,7 @@ class ParisProcessorTest {
     fun attrNonResValue() {
         // An @Attr with an arbitrary int value instead of a resource ID
         assertError(
-            "attr_non_res_value",
+            "error_attr_non_res_value",
             1,
             "Could not retrieve Android resource ID from annotation."
         )
@@ -60,7 +60,7 @@ class ParisProcessorTest {
     fun attrWrongValueType() {
         // An @Attr with an non-existent R.styleable field
         assertError(
-            "attr_wrong_value_type",
+            "error_attr_wrong_value_type",
             2,
             "Incorrectly typed @Attr value parameter"
         )
@@ -91,7 +91,7 @@ class ParisProcessorTest {
     fun styleableChildWrongValueType() {
         // A @StyleableChild with an non-existent R.styleable field
         assertError(
-            "styleable_child_wrong_value_type",
+            "error_styleable_child_wrong_value_type",
             2,
             "Incorrectly typed @StyleableChild value parameter"
         )
@@ -121,7 +121,7 @@ class ParisProcessorTest {
         // with no R (or R2) references as annotation parameters. Paris has no way of finding the R
         // package (which it needs to figure out the package of the generated Paris class) so this
         // should cause an error
-        assertError("styleable_outside_package_no_R", 1, "R class")
+        assertError("error_styleable_outside_package_no_R", 1, "R class")
     }
 
     @Test
