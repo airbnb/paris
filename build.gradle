@@ -35,7 +35,7 @@ allprojects {
             failOnVersionConflict()
 
             force deps.kotlin, deps.kotlinReflect, deps.mockitoCore, 'com.google.errorprone:error_prone_annotations:2.0.19',
-                    'com.google.guava:guava:22.0-android', 'org.codehaus.plexus:plexus-utils:1.5.15',
+                    'com.google.guava:guava:22.0', 'org.apache.httpcomponents:httpcore:4.2.5', 'org.codehaus.plexus:plexus-utils:1.5.15',
                     "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
         }
     }
