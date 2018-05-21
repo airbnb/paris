@@ -25,6 +25,20 @@ allprojects {
         google()
         jcenter()
     }
+
+    configurations.all {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
+
+        resolutionStrategy {
+            // fail eagerly on version conflict (includes transitive dependencies)
+            // e.g. multiple different versions of the same dependency (group and name are equal)
+            failOnVersionConflict()
+
+            force deps.kotlin, deps.kotlinReflect, deps.mockitoCore, 'com.google.errorprone:error_prone_annotations:2.0.19',
+                    'com.google.guava:guava:22.0-android', 'org.codehaus.plexus:plexus-utils:1.5.15',
+                    "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
+        }
+    }
 }
 
 subprojects { project ->

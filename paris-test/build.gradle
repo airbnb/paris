@@ -2,6 +2,7 @@ import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply from: rootProject.file('gradle/workaround-missing-resource.gradle')
 
 android {
@@ -21,7 +22,7 @@ dependencies {
     implementation deps.appcompatV7
     implementation deps.kotlin
 
-    annotationProcessor project(':paris-processor')
+    kapt project(':paris-processor')
 
     testImplementation project(':paris-processor')
 

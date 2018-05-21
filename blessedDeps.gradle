@@ -1,5 +1,5 @@
-rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_7
-rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_7
+rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_8
+rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_8
 
 rootProject.ext {
     TARGET_SDK_VERSION = 27
@@ -26,7 +26,8 @@ rootProject.ext {
             espresso        : "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION",
             javaPoet        : "com.squareup:javapoet:$JAVAPOET_VERSION",
             junit           : "junit:junit:$JUNIT_VERSION",
-            kotlin          : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION",
+            kotlin          : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION",
+            kotlinReflect   : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
             kotlinPoet      : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
             kotlinTest      : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
             mockitoCore     : "org.mockito:mockito-core:$MOCKITO_VERSION",
