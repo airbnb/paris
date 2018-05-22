@@ -1,7 +1,5 @@
 <resources>
 
-    <string name="app_name">Paris</string>
-
     <!-- This dummy resource replaces the use of @null where applicable -->
     <string name="null_" />
 
