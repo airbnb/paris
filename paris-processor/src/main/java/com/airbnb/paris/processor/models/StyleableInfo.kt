@@ -90,7 +90,7 @@ internal class StyleableInfoExtractor {
  * empty either
  */
 internal class StyleableInfo(
-    val element: Element,
+    val element: TypeElement,
     val styleableChildren: List<StyleableChildInfo>,
     val beforeStyles: List<BeforeStyleInfo>,
     val afterStyles: List<AfterStyleInfo>,
