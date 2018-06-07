@@ -28,9 +28,6 @@ import com.airbnb.paris.annotations.Styleable;
 import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * The order of the methods in a styleable class dictates the order in which attributes are applied. This class relies on this fact to enforces the
  * precedence of paddings. It's unorthodox but it simplifies the logic quite a bit. DO NOT RELY ON THIS UNDOCUMENTED FEATURE IF YOUR PROJECT IMPORTS
@@ -55,7 +52,6 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     private static final SparseIntArray VISIBILITY_MAP = new SparseIntArray();
-    private static final Map<Integer, PorterDuff.Mode> PORTER_DUFF_MODE_MAP = new HashMap<>();
 
     static {
         // Visibility values passed to setVisibility are assumed to be one of View.VISIBLE (0),
@@ -67,13 +63,6 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
         VISIBILITY_MAP.put(View.GONE, View.GONE);
         VISIBILITY_MAP.put(1, View.INVISIBLE);
         VISIBILITY_MAP.put(2, View.GONE);
-
-        PORTER_DUFF_MODE_MAP.put(0, PorterDuff.Mode.ADD);
-        PORTER_DUFF_MODE_MAP.put(1, PorterDuff.Mode.MULTIPLY);
-        PORTER_DUFF_MODE_MAP.put(2, PorterDuff.Mode.SCREEN);
-        PORTER_DUFF_MODE_MAP.put(3, PorterDuff.Mode.SRC_ATOP);
-        PORTER_DUFF_MODE_MAP.put(4, PorterDuff.Mode.SRC_IN);
-        PORTER_DUFF_MODE_MAP.put(5, PorterDuff.Mode.SRC_OVER);
     }
 
     private boolean ignoreLayoutWidthAndHeight;
@@ -238,7 +227,19 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     @Attr(R2.styleable.Paris_View_android_backgroundTintMode)
     public void setBackgroundTintMode(int tintMode) {
-        ViewCompat.setBackgroundTintMode(getView(), PORTER_DUFF_MODE_MAP.get(tintMode));
+        ViewCompat.setBackgroundTintMode(getView(), parseTintMode(tintMode, null));
+    }
+
+    private PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
+        switch (value) {
+            case 3: return PorterDuff.Mode.SRC_OVER;
+            case 5: return PorterDuff.Mode.SRC_IN;
+            case 9: return PorterDuff.Mode.SRC_ATOP;
+            case 14: return PorterDuff.Mode.MULTIPLY;
+            case 15: return PorterDuff.Mode.SCREEN;
+            case 16: return PorterDuff.Mode.ADD;
+            default: return defaultMode;
+        }
     }
 
 
