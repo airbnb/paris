@@ -2,6 +2,7 @@ package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -38,10 +39,21 @@ class ViewProxyTest {
     fun setBackgroundTint() {
         // First set the tint to something else
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
-        proxy.setBackgroundTint(android.R.color.holo_red_dark)
+        proxy.setBackgroundTint(ContextCompat.getColorStateList(context, android.R.color.holo_red_dark))
         assertEquals(
                 ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
                 view.backgroundTintList
+        )
+    }
+
+    @Test
+    fun setBackgroundTintMode() {
+        // First set the porterduff mode to something else
+        view.backgroundTintMode = PorterDuff.Mode.SRC_OVER
+        proxy.setBackgroundTintMode(ViewProxy.PORTERDUFF_MODE_ADD)
+        assertEquals(
+                PorterDuff.Mode.ADD,
+                view.backgroundTintMode
         )
     }
 

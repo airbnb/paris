@@ -1,6 +1,5 @@
 package com.airbnb.paris.proxies
 
-import android.graphics.PorterDuff
 import android.os.Build
 import android.view.View
 import android.view.ViewStyleApplier.BaseStyleBuilder

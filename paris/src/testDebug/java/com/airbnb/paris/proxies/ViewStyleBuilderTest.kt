@@ -1,7 +1,6 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewStyleApplier
@@ -51,19 +50,47 @@ class ViewStyleBuilderTest {
         )
     }
 
-//    @Test
-//    fun backgroundTint() {
-//        val style = builder.backgroundTintRes(android.R.color.black).build()
-//        assertEquals(
-//                ProgrammaticStyle.builder()
-//                        .put(
-//                                android.R.attr.backgroundTint,
-//                                ContextCompat.getColorStateList(context, android.R.color.black)
-//                        )
-//                        .build(),
-//                style
-//        )
-//    }
+    @Test
+    fun backgroundTintRes() {
+        val style = builder.backgroundTintRes(android.R.color.black).build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(
+                                android.R.attr.backgroundTint,
+                                ResourceId(android.R.color.black)
+                        )
+                        .build(),
+                style
+        )
+    }
+
+    @Test
+    fun backgroundTintColorStateList() {
+        val style = builder.backgroundTint(ContextCompat.getColorStateList(context, android.R.color.black)).build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(
+                                android.R.attr.backgroundTint,
+                                ContextCompat.getColorStateList(context, android.R.color.black)
+                        )
+                        .build(),
+                style
+        )
+    }
+
+    @Test
+    fun backgroundTintMode() {
+        val style = builder.backgroundTintMode(ViewProxy.PORTERDUFF_MODE_MULTIPLY).build()
+        assertEquals(
+                ProgrammaticStyle.builder()
+                        .put(
+                                android.R.attr.backgroundTintMode,
+                                ViewProxy.PORTERDUFF_MODE_MULTIPLY
+                        )
+                        .build(),
+                style
+        )
+    }
 
     @Test
     fun visibility_visible() {

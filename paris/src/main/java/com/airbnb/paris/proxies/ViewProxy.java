@@ -2,15 +2,14 @@ package com.airbnb.paris.proxies;
 
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
+import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.AnyRes;
-import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.SparseIntArray;
 import android.view.View;
@@ -37,6 +36,13 @@ import com.airbnb.paris.utils.ViewExtensionsKt;
 public class ViewProxy extends BaseProxy<ViewProxy, View> {
 
     private static final int NOT_SET = -10;
+
+    public static final int PORTERDUFF_MODE_SRC_OVER = 3;
+    public static final int PORTERDUFF_MODE_SRC_IN = 5;
+    public static final int PORTERDUFF_MODE_SRC_ATOP = 9;
+    public static final int PORTERDUFF_MODE_MULTIPLY = 14;
+    public static final int PORTERDUFF_MODE_SCREEN = 15;
+    public static final int PORTERDUFF_MODE_ADD = 16;
 
     private static int ifSetElse(int value, int ifNotSet) {
         return value != NOT_SET ? value : ifNotSet;
@@ -218,27 +224,28 @@ public class ViewProxy extends BaseProxy<ViewProxy, View> {
     }
 
     @Attr(R2.styleable.Paris_View_android_backgroundTint)
-    public void setBackgroundTint(@ColorRes int colorRes) {
+    public void setBackgroundTint(@Nullable ColorStateList colorStateList) {
         ViewCompat.setBackgroundTintList(
                 getView(),
-                ContextCompat.getColorStateList(getView().getContext(), colorRes)
+                colorStateList
         );
     }
 
     @Attr(R2.styleable.Paris_View_android_backgroundTintMode)
     public void setBackgroundTintMode(int tintMode) {
-        ViewCompat.setBackgroundTintMode(getView(), parseTintMode(tintMode, null));
+        ViewCompat.setBackgroundTintMode(getView(), parseTintMode(tintMode));
     }
 
-    private PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
+    @Nullable
+    private PorterDuff.Mode parseTintMode(int value) {
         switch (value) {
-            case 3: return PorterDuff.Mode.SRC_OVER;
-            case 5: return PorterDuff.Mode.SRC_IN;
-            case 9: return PorterDuff.Mode.SRC_ATOP;
-            case 14: return PorterDuff.Mode.MULTIPLY;
-            case 15: return PorterDuff.Mode.SCREEN;
-            case 16: return PorterDuff.Mode.ADD;
-            default: return defaultMode;
+            case PORTERDUFF_MODE_SRC_OVER: return PorterDuff.Mode.SRC_OVER;
+            case PORTERDUFF_MODE_SRC_IN: return PorterDuff.Mode.SRC_IN;
+            case PORTERDUFF_MODE_SRC_ATOP: return PorterDuff.Mode.SRC_ATOP;
+            case PORTERDUFF_MODE_MULTIPLY: return PorterDuff.Mode.MULTIPLY;
+            case PORTERDUFF_MODE_SCREEN: return PorterDuff.Mode.SCREEN;
+            case PORTERDUFF_MODE_ADD: return PorterDuff.Mode.ADD;
+            default: return null;
         }
     }
 
