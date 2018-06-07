@@ -3,6 +3,7 @@ package com.airbnb.paris.proxies
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.support.v4.content.ContextCompat
 import android.view.View
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -31,6 +32,17 @@ class ViewProxyTest {
         view.background = ColorDrawable(Color.WHITE)
         proxy.setBackground(null)
         assertEquals(null, view.background)
+    }
+
+    @Test
+    fun setBackgroundTint() {
+        // First set the tint to something else
+        view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
+        proxy.setBackgroundTint(android.R.color.holo_red_dark)
+        assertEquals(
+                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+                view.backgroundTintList
+        )
     }
 
     @Test

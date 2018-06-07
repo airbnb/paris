@@ -3,6 +3,7 @@ package com.airbnb.paris.proxies
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStyleApplier
@@ -45,6 +46,16 @@ class ViewStyleApplierTest {
         view.background = ColorDrawable(Color.WHITE)
         applier.apply(builder.backgroundRes(R.drawable.null_).build())
         assertEquals(null, view.background)
+    }
+
+    fun background_tintRes() {
+        // First set the tint to something else
+        view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
+        applier.apply(builder.backgroundTintModeRes(android.R.color.holo_red_dark).build())
+        assertEquals(
+                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+                view.backgroundTintList
+        )
     }
 
     @Test
