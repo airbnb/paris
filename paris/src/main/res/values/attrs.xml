@@ -4,6 +4,8 @@
     <declare-styleable name="Paris_View">
         <attr name="android:alpha" />
         <attr name="android:background" />
+        <attr name="android:backgroundTint" />
+        <attr name="android:backgroundTintMode" />
         <attr name="android:contentDescription" />
         <attr name="android:elevation" />
         <attr name="android:foreground" />

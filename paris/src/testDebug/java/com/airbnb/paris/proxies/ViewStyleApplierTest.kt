@@ -2,13 +2,16 @@ package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStyleApplier
 import com.airbnb.paris.R
 import com.airbnb.paris.extensions.viewStyle
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,6 +49,61 @@ class ViewStyleApplierTest {
         applier.apply(builder.backgroundRes(R.drawable.null_).build())
         assertEquals(null, view.background)
     }
+
+    fun background_tintRes() {
+        // First set the tint to something else
+        view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
+        applier.apply(builder.backgroundTintRes(android.R.color.holo_red_dark).build())
+        assertEquals(
+                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+                view.backgroundTintList
+        )
+    }
+
+    fun background_tintColor() {
+        // First set the tint to something else
+        view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
+        applier.apply(builder.backgroundTint(ContextCompat.getColor(context, android.R.color.holo_red_dark)).build())
+        assertEquals(
+                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+                view.backgroundTintList
+        )
+    }
+
+    fun background_tintColorStateNull() {
+        // First set the tint to something else
+        view.backgroundTintList = null
+        applier.apply(builder.backgroundTint(null).build())
+        assertNull(view.backgroundTintList)
+    }
+
+    fun background_tintColorStateList() {
+        // First set the tint to something else
+        view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
+        applier.apply(builder.backgroundTint(ContextCompat.getColorStateList(context, android.R.color.holo_red_dark)).build())
+        assertEquals(
+                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+                view.backgroundTintList
+        )
+    }
+
+    fun background_tintModeNull() {
+        // First set the tint mode to something else
+        view.backgroundTintMode = null
+        applier.apply(builder.backgroundTintMode(-1).build())
+        assertNull(view.backgroundTintMode)
+    }
+
+    fun background_tintMode() {
+        // First set the tint mode to something else
+        view.backgroundTintMode = PorterDuff.Mode.SRC_OVER
+        applier.apply(builder.backgroundTintMode(ViewProxy.PORTERDUFF_MODE_ADD).build())
+        assertEquals(
+                PorterDuff.Mode.ADD,
+                view.backgroundTintMode
+        )
+    }
+
 
     @Test
     fun foreground_null() {
