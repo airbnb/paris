@@ -5,6 +5,7 @@ package com.airbnb.paris.processor.framework
 
 import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import javax.lang.model.element.Modifier
 
 internal typealias JavaClassName = com.squareup.javapoet.ClassName
@@ -100,10 +101,8 @@ internal fun JavaWildcardTypeName.toKPoet() =
     }
 
 // Does not support transferring annotations
-internal fun JavaParametrizedTypeName.toKPoet() = KotlinParameterizedTypeName.get(
-    this.rawType.toKPoet(),
-    *typeArguments.toKPoet().toTypedArray()
-)
+internal fun JavaParametrizedTypeName.toKPoet(): KotlinParameterizedTypeName =
+    this.rawType.toKPoet().parameterizedBy(*typeArguments.toKPoet().toTypedArray())
 
 // Does not support transferring annotations
 internal fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
@@ -127,10 +126,7 @@ internal fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
         }
     }
 
-    return KotlinParameterizedTypeName.get(
-        KotlinClassName(kotlinPkg, "Array"),
-        this.componentType.toKPoet()
-    )
+    return KotlinClassName(kotlinPkg, "Array").parameterizedBy(this.componentType.toKPoet())
 }
 
 // Does not support transferring annotations
