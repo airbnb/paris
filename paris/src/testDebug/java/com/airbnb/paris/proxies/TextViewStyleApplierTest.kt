@@ -2,14 +2,16 @@ package com.airbnb.paris.proxies
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
 import com.airbnb.paris.R
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,6 +32,26 @@ class TextViewStyleApplierTest {
         view = TextView(context)
         applier = TextViewStyleApplier(view)
         builder = TextViewStyleApplier.StyleBuilder()
+    }
+
+    @Test
+    fun drawableLeftProgrammatic() {
+        val drawable = ColorDrawable(Color.GREEN)
+        applier.apply(builder.drawableLeft(drawable).build())
+        assertEquals(drawable, view.compoundDrawables[0])
+    }
+
+    @Test
+    fun drawableLeftXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_DrawableLeft)
+        assertNotNull(view.compoundDrawables[0])
+    }
+
+    @Test
+    fun drawableBoundsXml() {
+        // Compound drawables should be set with their intrinsic bounds
+        applier.apply(R.style.Test_TextViewStyleApplier_DrawableLeft)
+        assertFalse(view.compoundDrawables[0].bounds.isEmpty)
     }
 
     @Test

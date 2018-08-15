@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Test_TextViewStyleApplier_DrawableLeft">
+        <item name="android:drawableLeft">@android:drawable/alert_dark_frame</item>
+    </style>
+
     <style name="Test_TextViewStyleApplier_InputType_ClassDatetime">
         <item name="android:inputType">datetime</item>
     </style>

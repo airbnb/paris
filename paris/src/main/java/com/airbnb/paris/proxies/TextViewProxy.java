@@ -192,7 +192,7 @@ public class TextViewProxy extends BaseProxy<TextViewProxy, TextView> {
     @AfterStyle
     public void afterStyle(@SuppressWarnings("unused") Style style) {
         Drawable[] drawables = getView().getCompoundDrawables();
-        getView().setCompoundDrawables(
+        getView().setCompoundDrawablesWithIntrinsicBounds(
                 drawableLeft != null ? drawableLeft : drawables[0],
                 drawableTop != null ? drawableTop : drawables[1],
                 drawableRight != null ? drawableRight : drawables[2],
