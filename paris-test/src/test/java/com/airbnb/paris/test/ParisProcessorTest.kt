@@ -62,12 +62,32 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun errorAttrNonResDefaultValue() {
+        // An @Attr with an arbitrary int default value instead of a resource ID
+        assertError(
+            "error_attr_non_res_default_value",
+            1,
+            "Could not retrieve Android resource ID from annotation."
+        )
+    }
+
+    @Test
     fun errorAttrNonResValue() {
         // An @Attr with an arbitrary int value instead of a resource ID
         assertError(
             "error_attr_non_res_value",
             1,
             "Could not retrieve Android resource ID from annotation."
+        )
+    }
+
+    @Test
+    fun errorAttrWrongDefaultValueType() {
+        // An @Attr with an non-existent R.styleable field
+        assertError(
+            "error_attr_wrong_default_value_type",
+            2,
+            "Incorrectly typed @Attr defaultValue parameter"
         )
     }
 

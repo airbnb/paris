@@ -70,7 +70,7 @@ public class AndroidResourceScanner {
 
         @Override public void visitSelect(JCTree.JCFieldAccess jcFieldAccess) {
             Symbol symbol = jcFieldAccess.sym;
-            if (symbol != null
+            if (symbol instanceof Symbol.VarSymbol
                     && symbol.getEnclosingElement() != null
                     && symbol.getEnclosingElement().getEnclosingElement() != null
                     && symbol.getEnclosingElement().getEnclosingElement().enclClass() != null) {

@@ -45,15 +45,15 @@ internal class AttrInfoExtractor(
         }
 
         var defaultValueResId: AndroidResourceId? = null
-        if (attr.defaultValue != -1) {
-            try {
+        try {
+            if (attr.defaultValue != -1) {
                 defaultValueResId = getResourceId(Attr::class.java, element, attr.defaultValue) ?: return null
-            } catch (e: AnnotationTypeMismatchException) {
-                logError(element) {
-                    "Incorrectly typed @Attr defaultValue parameter. (This usually happens when an R value doesn't exist.)"
-                }
-                return null
             }
+        } catch (e: AnnotationTypeMismatchException) {
+            logError(element) {
+                "Incorrectly typed @Attr defaultValue parameter. (This usually happens when an R value doesn't exist.)"
+            }
+            return null
         }
 
         val enclosingElement = element.enclosingElement as TypeElement

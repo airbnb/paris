@@ -30,48 +30,63 @@ public class MyView extends View {
     }
 
     @Attr(value = R2.styleable.Formats_formatBoolean, defaultValue = R2.bool.format_boolean)
-    public void formatBoolean(boolean value) {}
+    public void formatBoolean(boolean value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatColor, defaultValue = R2.color.format_color)
-    public void formatColor(@ColorInt int value) {}
+    public void formatColor(@ColorInt int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatDimension, defaultValue = R2.dimen.format_dimension)
-    public void formatDimension_px(@Px int value) {}
+    public void formatDimension_px(@Px int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatDimension, defaultValue = R2.dimen.format_dimension)
-    public void formatDimension_LayoutDimension(@LayoutDimension int value) {}
+    public void formatDimension_LayoutDimension(@LayoutDimension int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatEnum, defaultValue = R2.integer.format_enum)
-    public void formatEnum(int value) {}
+    public void formatEnum(int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatFlag, defaultValue = R2.integer.format_flag)
-    public void formatFlag(int value) {}
+    public void formatFlag(int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatFloat, defaultValue = R2.dimen.format_float)
-    public void formatFloat(float value) {}
+    public void formatFloat(float value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatFraction, defaultValue = R2.fraction.format_fraction)
-    public void formatFraction(@Fraction(base = 2, pbase = 3) float value) {}
+    public void formatFraction(@Fraction(base = 2, pbase = 3) float value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatInteger, defaultValue = R2.integer.format_integer)
-    public void formatInteger(int value) {}
+    public void formatInteger(int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.array.format_string_array)
-    public void formatReference_CharSequenceArray(CharSequence[] value) {}
+    public void formatReference_CharSequenceArray(CharSequence[] value) {
+    }
 
     // Arbitrary resource used as a default value
     @Attr(value = R2.styleable.Formats_formatReference, defaultValue = R2.bool.active)
-    public void formatReference_res(@AnyRes int value) {}
+    public void formatReference_res(@AnyRes int value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatReference2, defaultValue = R2.color.format_color_state_list)
-    public void formatReference_ColorStateList(ColorStateList value) {}
+    public void formatReference_ColorStateList(ColorStateList value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatReference3, defaultValue = R2.drawable.format_drawable)
-    public void formatReference_Drawable(Drawable value) {}
+    public void formatReference_Drawable(Drawable value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatString, defaultValue = R2.string.format_char_sequence)
-    public void formatString_CharSequence(CharSequence value) {}
+    public void formatString_CharSequence(CharSequence value) {
+    }
 
     @Attr(value = R2.styleable.Formats_formatString2, defaultValue = R2.string.format_string)
-    public void formatString_String(String value) {}
+    public void formatString_String(String value) {
+    }
 }
