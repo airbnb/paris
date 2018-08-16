@@ -2,30 +2,9 @@ package com.airbnb.paris.processor.framework
 
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.*
-import javax.lang.model.type.TypeMirror
 
-internal val filer get() = SkyProcessor.INSTANCE.filer
-internal val messager get() = SkyProcessor.INSTANCE.messager
-internal val elements get() = SkyProcessor.INSTANCE.elements
-internal val types get() = SkyProcessor.INSTANCE.types
-internal val kaptOutputPath get() = SkyProcessor.INSTANCE.kaptOutputPath
-internal val loggedMessages get() = SkyProcessor.INSTANCE.loggedMessages
-
-internal fun erasure(type: TypeMirror): TypeMirror = types.erasure(type)
-
-internal fun isSameType(type1: TypeMirror, type2: TypeMirror) = types.isSameType(type1, type2)
-
-internal fun isSubtype(type1: TypeMirror, type2: TypeMirror) = types.isSubtype(type1, type2)
-
-// ClassName
-
-internal fun ClassName.toTypeElement(): TypeElement = elements.getTypeElement(reflectionName())
-
-internal fun ClassName.toTypeMirror(): TypeMirror = toTypeElement().asType()
 
 // Element
-
-internal fun Element.getPackageElement(): PackageElement = elements.getPackageOf(this)
 
 internal fun Element.isPublic(): Boolean = this.modifiers.contains(Modifier.PUBLIC)
 internal fun Element.isNotPublic(): Boolean = !isPublic()
@@ -63,6 +42,16 @@ internal fun Element.hasAnyAnnotation(simpleNames: Set<String>): Boolean {
         .any { simpleNames.contains(it) }
 }
 
+fun Element.toStringId(): String {
+    return when (this) {
+        is PackageElement -> qualifiedName.toString()
+        is TypeElement -> qualifiedName.toString()
+        is ExecutableElement,
+        is VariableElement -> "${enclosingElement.toStringId()}.$simpleName"
+        else -> simpleName.toString()
+    }
+}
+
 internal val KOTLIN_METADATA_ANNOTATION =
     Class.forName("kotlin.Metadata").asSubclass(Annotation::class.java)
 
@@ -96,27 +85,4 @@ internal fun String.className(): ClassName =
 internal val TypeElement.className: ClassName get() = ClassName.get(this)
 
 internal val TypeElement.packageName: String get() = className.packageName()
-
-// TypeMirror
-
-internal fun TypeMirror.asTypeElement(): TypeElement = types.asElement(this) as TypeElement
-
-/**
- * Kapt replaces unknown types by "NonExistentClass". This can happen when code refers to generated classes. For example:
- *
- *
- * ```
- * @Style val myStyle = myViewStyle { }
- * ```
- *
- * myViewStyle is a generated function so the type of the field will be "NonExistentClass" when processed with kapt.
- *
- * This behavior can be altered by using `kapt { correctErrorTypes = true }` in the Gradle config.
- */
-internal fun TypeMirror.isNonExistent() = this.toString() == "error.NonExistentClass"
-
-// Android specific
-
-internal fun isView(type: TypeMirror): Boolean =
-    isSubtype(type, AndroidClassNames.VIEW.toTypeMirror())
 

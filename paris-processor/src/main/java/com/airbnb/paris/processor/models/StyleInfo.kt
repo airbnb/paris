@@ -1,19 +1,17 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.RElement
-import com.airbnb.paris.processor.defaultStyleNameFormat
+import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.elements
-import com.airbnb.paris.processor.framework.logError
 import java.util.*
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 
 private const val DEFAULT_STYLE_FORMATTED_NAME = "Default"
 
-internal class StyleInfoExtractor {
+internal class StyleInfoExtractor(override val processor: ParisProcessor) : WithParisProcessor {
 
     var models = emptyList<StyleInfo>()
         private set
@@ -21,8 +19,8 @@ internal class StyleInfoExtractor {
     var latest = emptyList<StyleInfo>()
         private set
 
-    private var styleCompanionPropertyInfoExtractor = StyleCompanionPropertyInfoExtractor()
-    private var styleStaticMethodInfoExtractor = StyleStaticMethodInfoExtractor()
+    private var styleCompanionPropertyInfoExtractor = StyleCompanionPropertyInfoExtractor(processor)
+    private var styleStaticMethodInfoExtractor = StyleStaticMethodInfoExtractor(processor)
 
     fun process(roundEnv: RoundEnvironment) {
         // TODO Check that no style was left behind?

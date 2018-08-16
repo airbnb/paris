@@ -4,8 +4,10 @@ import com.airbnb.paris.annotations.GeneratedStyleableModule
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
 import com.airbnb.paris.processor.PROXY_CLASS_NAME
+import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.WithSkyProcessor
+import com.airbnb.paris.processor.framework.packageName
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
@@ -16,7 +18,7 @@ import javax.lang.model.type.TypeMirror
  * It's important that base styleables be extracted before new ones are written for the current module, otherwise the latter will be included in the
  * results
  */
-internal class BaseStyleableInfoExtractor {
+internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {
         val baseStyleablesInfo = mutableListOf<BaseStyleableInfo>()
@@ -35,7 +37,7 @@ internal class BaseStyleableInfoExtractor {
                                 }
                                 typeElement
                             }
-                            .map { BaseStyleableInfoExtractor().fromElement(it) }
+                            .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
                     )
                 }
         }
@@ -48,11 +50,11 @@ internal class BaseStyleableInfoExtractor {
         val elementType = element.asType()
 
         val viewElementType: TypeMirror
-        if (isSubtype(elementType, erasure(PROXY_CLASS_NAME.toTypeMirror()))) {
+        viewElementType = if (isSubtype(elementType, erasure(PROXY_CLASS_NAME.toTypeMirror()))) {
             // Get the parameterized type, which should be the view type
-            viewElementType = (element.superclass as DeclaredType).typeArguments[1]
+            (element.superclass as DeclaredType).typeArguments[1]
         } else {
-            viewElementType = elementType
+            elementType
         }
 
         val viewElement = viewElementType.asTypeElement()

@@ -28,7 +28,7 @@ import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.utils.ViewExtensionsKt;
 
 /**
- * The order of the methods in a styleable class dictates the order in which attributes are applied. This class relies on this fact to enforces the
+ * The order of the methods in a styleable class dictates the order in which attributes are applied. This class relies on this fact to enforce the
  * precedence of paddings. It's unorthodox but it simplifies the logic quite a bit. DO NOT RELY ON THIS UNDOCUMENTED FEATURE IF YOUR PROJECT IMPORTS
  * THIS LIBRARY.
  */

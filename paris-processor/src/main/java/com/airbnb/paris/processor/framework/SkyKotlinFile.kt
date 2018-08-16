@@ -4,11 +4,11 @@ import com.squareup.kotlinpoet.FileSpec
 import java.io.File
 
 
-internal abstract class SkyKotlinFile(
-    private val packageName: String,
-    private val name: String,
-    private val block: FileSpec.Builder.() -> Unit
-) {
+internal abstract class SkyKotlinFile(override val processor: SkyProcessor) : WithSkyProcessor {
+
+    protected abstract val packageName: String
+    protected abstract val name: String
+    protected abstract val block: FileSpec.Builder.() -> Unit
 
     fun build(): FileSpec {
         return FileSpec.builder(packageName, name).run {

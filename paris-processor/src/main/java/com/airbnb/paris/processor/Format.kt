@@ -4,7 +4,6 @@ import com.airbnb.paris.annotations.Fraction
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.hasAnnotation
 import com.airbnb.paris.processor.framework.hasAnyAnnotation
-import com.airbnb.paris.processor.framework.isView
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import javax.lang.model.element.Element
@@ -69,17 +68,17 @@ internal class Format private constructor(
             "XmlRes"
         )
 
-        fun forElement(element: Element): Format {
+        fun forElement(processor: ParisProcessor, element: Element): Format {
             return if (element.kind == ElementKind.FIELD) {
-                forField(element)
+                forField(processor, element)
             } else {
                 forMethod(element)
             }
         }
 
-        private fun forField(element: Element): Format {
+        private fun forField(processor: ParisProcessor, element: Element): Format {
             val type = element.asType()
-            if (isView(type)) {
+            if (processor.isView(type)) {
                 // If the field is a View then the attribute must be a style or style resource id
                 return Format(Type.STYLE)
             }

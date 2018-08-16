@@ -1,13 +1,16 @@
 package com.airbnb.paris.processor.framework.models
 
+import com.airbnb.paris.processor.framework.SkyProcessor
+import com.airbnb.paris.processor.framework.WithSkyProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 
 interface SkyModel
 
 abstract class SkyModelFactory<T : SkyModel, in E : Element>(
+    override val processor: SkyProcessor,
     private val annotationClass: Class<out Annotation>
-) {
+) : WithSkyProcessor {
 
     var models = emptyList<T>()
         private set

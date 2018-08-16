@@ -4,7 +4,10 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.SkyProcessor
+import com.airbnb.paris.processor.framework.className
+import com.airbnb.paris.processor.framework.packageName
+import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.models.*
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
@@ -16,29 +19,27 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
 
-class ParisProcessor : SkyProcessor() {
+class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
-    companion object {
-        lateinit var INSTANCE: ParisProcessor
-    }
+    override val processor = this
 
     internal val resourceScanner = AndroidResourceScanner()
 
-    internal val rFinder = RFinder()
+    internal val rFinder = RFinder(this)
 
-    internal var defaultStyleNameFormat: String = ""
+    override var defaultStyleNameFormat: String = ""
 
-    private var beforeStyleInfoExtractor = BeforeStyleInfoExtractor()
+    private var beforeStyleInfoExtractor = BeforeStyleInfoExtractor(this)
 
-    private var afterStyleInfoExtractor = AfterStyleInfoExtractor()
+    private var afterStyleInfoExtractor = AfterStyleInfoExtractor(this)
 
-    private var styleableChildInfoExtractor = StyleableChildInfoExtractor()
+    private var styleableChildInfoExtractor = StyleableChildInfoExtractor(this)
 
-    private var attrInfoExtractor = AttrInfoExtractor()
+    private var attrInfoExtractor = AttrInfoExtractor(this)
 
-    private var styleInfoExtractor = StyleInfoExtractor()
+    private var styleInfoExtractor = StyleInfoExtractor(this)
 
-    private var styleableInfoExtractor = StyleableInfoExtractor()
+    private var styleableInfoExtractor = StyleableInfoExtractor(this)
 
     private lateinit var externalStyleablesInfo: List<BaseStyleableInfo>
 
@@ -46,7 +47,6 @@ class ParisProcessor : SkyProcessor() {
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
         resourceScanner.init(processingEnv)
-        INSTANCE = this
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
@@ -107,17 +107,17 @@ class ParisProcessor : SkyProcessor() {
         rFinder.processStyleables(styleablesInfo)
 
         /** Make sure to get these before writing the [ModuleJavaClass] for this module */
-        externalStyleablesInfo = BaseStyleableInfoExtractor().fromEnvironment()
+        externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
-        val styleablesTree = StyleablesTree(allStyleables)
+        val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
-            StyleApplierJavaClass(styleablesTree, styleableInfo).write()
-            StyleExtensionsKotlinFile(RElement?.className?.toKPoet(), styleableInfo).write()
+            StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
+            StyleExtensionsKotlinFile(this, RElement?.className?.toKPoet(), styleableInfo).write()
         }
 
         if (styleablesInfo.isNotEmpty()) {
-            ModuleJavaClass(styleablesInfo).write()
+            ModuleJavaClass(this, styleablesInfo).write()
         }
 
         if (allStyleables.isNotEmpty()) {
@@ -128,6 +128,7 @@ class ParisProcessor : SkyProcessor() {
             } else {
                 val parisClassPackageName = rFinder.element!!.packageName
                 ParisJavaClass(
+                    this,
                     parisClassPackageName,
                     styleablesInfo,
                     externalStyleablesInfo

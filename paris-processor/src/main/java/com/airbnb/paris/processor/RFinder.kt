@@ -1,10 +1,6 @@
 package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.ParisConfig
-import com.airbnb.paris.processor.framework.asTypeElement
-import com.airbnb.paris.processor.framework.elements
-import com.airbnb.paris.processor.framework.logError
-import com.airbnb.paris.processor.framework.types
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableChildInfo
 import com.airbnb.paris.processor.models.StyleableInfo
@@ -12,7 +8,7 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 
-internal class RFinder {
+internal class RFinder(override val processor: ParisProcessor) : WithParisProcessor {
 
     var element: TypeElement? = null
 
@@ -46,8 +42,8 @@ internal class RFinder {
 
     fun processStyleables(styleablesInfo: List<StyleableInfo>) {
         if (element == null && styleablesInfo.isNotEmpty()) {
-            styleablesInfo[0].let {
-                var packageName = it.elementPackageName
+            styleablesInfo[0].let { styleableInfo ->
+                var packageName = styleableInfo.elementPackageName
                 while (packageName.isNotBlank()) {
                     elements.getTypeElement("$packageName.R")?.let {
                         element = it

@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Style
+import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModel
@@ -9,8 +10,8 @@ import com.airbnb.paris.processor.utils.ParisProcessorUtils
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeKind
 
-internal class StyleCompanionPropertyInfoExtractor
-    : SkyCompanionPropertyModelFactory<StyleCompanionPropertyInfo>(Style::class.java) {
+internal class StyleCompanionPropertyInfoExtractor(processor: ParisProcessor)
+    : SkyCompanionPropertyModelFactory<StyleCompanionPropertyInfo>(processor, Style::class.java) {
 
     override fun elementToModel(element: VariableElement): StyleCompanionPropertyInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods

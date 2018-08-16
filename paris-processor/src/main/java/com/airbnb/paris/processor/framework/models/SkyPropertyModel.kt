@@ -1,9 +1,6 @@
 package com.airbnb.paris.processor.framework.models
 
-import com.airbnb.paris.processor.framework.isJava
-import com.airbnb.paris.processor.framework.isKotlin
-import com.airbnb.paris.processor.framework.siblings
-import com.airbnb.paris.processor.framework.toStringId
+import com.airbnb.paris.processor.framework.*
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
@@ -69,5 +66,7 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
 
 typealias SkyFieldModel = SkyPropertyModel
 
-abstract class SkyFieldModelFactory<T : SkyPropertyModel>(annotationClass: Class<out Annotation>) :
-    SkyModelFactory<T, Element>(annotationClass)
+abstract class SkyFieldModelFactory<T : SkyPropertyModel>(
+    processor: SkyProcessor,
+    annotationClass: Class<out Annotation>
+) : SkyModelFactory<T, Element>(processor, annotationClass)

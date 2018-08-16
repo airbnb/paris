@@ -2,18 +2,23 @@ package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.processor.Format
+import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.JavaCodeBlock
+import com.airbnb.paris.processor.framework.KotlinCodeBlock
+import com.airbnb.paris.processor.framework.isPrivate
+import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
-import com.airbnb.paris.processor.getResourceId
 import java.lang.annotation.AnnotationTypeMismatchException
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 
-internal class AttrInfoExtractor
-    : SkyMethodModelFactory<AttrInfo>(Attr::class.java) {
+internal class AttrInfoExtractor(
+    override val processor: ParisProcessor
+) : SkyMethodModelFactory<AttrInfo>(processor, Attr::class.java), WithParisProcessor {
 
     override fun elementToModel(element: ExecutableElement): AttrInfo? {
         if (element.isPrivate() || element.isProtected()) {
@@ -27,7 +32,7 @@ internal class AttrInfoExtractor
 
         val targetType = element.parameters[0].asType()
 
-        val targetFormat = Format.forElement(element)
+        val targetFormat = Format.forElement(processor, element)
 
         val styleableResId: AndroidResourceId
         try {

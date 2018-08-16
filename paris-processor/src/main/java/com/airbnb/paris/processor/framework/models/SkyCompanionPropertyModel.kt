@@ -1,9 +1,6 @@
 package com.airbnb.paris.processor.framework.models
 
-import com.airbnb.paris.processor.framework.JavaCodeBlock
-import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.isJava
-import com.airbnb.paris.processor.framework.siblings
+import com.airbnb.paris.processor.framework.*
 import javax.lang.model.element.*
 import javax.lang.model.type.TypeMirror
 
@@ -44,8 +41,9 @@ abstract class SkyCompanionPropertyModel(val element: VariableElement) : SkyMode
 }
 
 abstract class SkyCompanionPropertyModelFactory<T : SkyCompanionPropertyModel>(
+    override val processor: SkyProcessor,
     annotationClass: Class<out Annotation>
-) : SkyModelFactory<T, VariableElement>(annotationClass) {
+) : SkyModelFactory<T, VariableElement>(processor, annotationClass) {
 
     override fun filter(element: Element): Boolean = element.kind == ElementKind.FIELD
 }

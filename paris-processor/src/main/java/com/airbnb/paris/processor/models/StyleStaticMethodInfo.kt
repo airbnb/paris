@@ -1,14 +1,15 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Style
+import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.models.SkyStaticMethodModel
 import com.airbnb.paris.processor.framework.models.SkyStaticMethodModelFactory
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
 import javax.lang.model.element.ExecutableElement
 
-internal class StyleStaticMethodInfoExtractor
-    : SkyStaticMethodModelFactory<StyleStaticMethodInfo>(Style::class.java) {
+internal class StyleStaticMethodInfoExtractor(processor: ParisProcessor)
+    : SkyStaticMethodModelFactory<StyleStaticMethodInfo>(processor, Style::class.java) {
 
     override fun elementToModel(element: ExecutableElement): StyleStaticMethodInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods

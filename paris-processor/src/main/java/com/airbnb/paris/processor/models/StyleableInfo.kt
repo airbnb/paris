@@ -1,13 +1,13 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.framework.logError
-import com.airbnb.paris.processor.framework.logWarning
+import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.framework.WithSkyProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
-internal class StyleableInfoExtractor {
+internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
 
     private val mutableModels = mutableListOf<StyleableInfo>()
 
@@ -58,7 +58,7 @@ internal class StyleableInfoExtractor {
         styles: List<StyleInfo>
     ): StyleableInfo? {
 
-        val baseStyleableInfo = BaseStyleableInfoExtractor().fromElement(element)
+        val baseStyleableInfo = BaseStyleableInfoExtractor(processor).fromElement(element)
 
         if (baseStyleableInfo.styleableResourceName.isEmpty() && (attrs.isNotEmpty() || styleableChildren.isNotEmpty())) {
             logError(element) {
@@ -74,6 +74,7 @@ internal class StyleableInfoExtractor {
         }
 
         return StyleableInfo(
+            processor,
             element,
             styleableChildren,
             beforeStyles,
@@ -90,6 +91,7 @@ internal class StyleableInfoExtractor {
  * empty either
  */
 internal class StyleableInfo(
+    override val processor: ParisProcessor,
     val element: TypeElement,
     val styleableChildren: List<StyleableChildInfo>,
     val beforeStyles: List<BeforeStyleInfo>,
@@ -97,7 +99,7 @@ internal class StyleableInfo(
     val attrs: List<AttrInfo>,
     val styles: List<StyleInfo>,
     baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(baseStyleableInfo) {
+) : BaseStyleableInfo(baseStyleableInfo), WithSkyProcessor {
 
     /**
      * Applies lower camel case formatting

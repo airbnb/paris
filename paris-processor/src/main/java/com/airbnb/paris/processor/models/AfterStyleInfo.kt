@@ -1,18 +1,16 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.AfterStyle
+import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.framework.logError
 import com.airbnb.paris.processor.framework.isPrivate
 import com.airbnb.paris.processor.framework.isProtected
-import com.airbnb.paris.processor.framework.isSameType
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
-import com.airbnb.paris.processor.framework.toTypeMirror
 import javax.lang.model.element.ExecutableElement
 
-internal class AfterStyleInfoExtractor
-    : SkyMethodModelFactory<AfterStyleInfo>(AfterStyle::class.java) {
+internal class AfterStyleInfoExtractor(processor: ParisProcessor)
+    : SkyMethodModelFactory<AfterStyleInfo>(processor, AfterStyle::class.java) {
 
     override fun elementToModel(element: ExecutableElement): AfterStyleInfo? {
         if (element.isPrivate() || element.isProtected()) {

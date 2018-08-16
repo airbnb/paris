@@ -1,20 +1,21 @@
 package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.StyleableChild
+import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.isPrivate
 import com.airbnb.paris.processor.framework.isProtected
-import com.airbnb.paris.processor.framework.logError
 import com.airbnb.paris.processor.framework.models.SkyFieldModelFactory
 import com.airbnb.paris.processor.framework.models.SkyPropertyModel
-import com.airbnb.paris.processor.getResourceId
 import java.lang.annotation.AnnotationTypeMismatchException
 import javax.lang.model.element.Element
 
 // TODO Forward Javadoc to the generated functions/methods
 
-internal class StyleableChildInfoExtractor
-    : SkyFieldModelFactory<StyleableChildInfo>(StyleableChild::class.java) {
+internal class StyleableChildInfoExtractor(
+    override val processor: ParisProcessor
+) : SkyFieldModelFactory<StyleableChildInfo>(processor, StyleableChild::class.java), WithParisProcessor {
 
     /**
      * @param element Represents a field annotated with @StyleableChild
