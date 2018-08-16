@@ -75,6 +75,17 @@ class TextViewStyleBuilderTest {
     }
 
     @Test
+    fun maxWidth() {
+        val style = builder.maxWidth(100).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.maxWidth, 100)
+                .build(),
+            style
+        )
+    }
+
+    @Test
     fun textColor_null() {
         val style = builder.textColor(null).build()
         assertEquals(

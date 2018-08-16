@@ -159,6 +159,13 @@ class TextViewStyleApplierTest {
     }
 
     @Test
+    fun maxWidth() {
+        view.maxWidth = 0
+        applier.apply(builder.maxWidth(100).build())
+        assertEquals(100, view.maxWidth)
+    }
+
+    @Test
     fun textColor_null() {
         applier.apply(builder.textColor(null).build())
         assertEquals(ColorStateList.valueOf(0xFF000000.toInt()), view.textColors)

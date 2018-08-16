@@ -56,6 +56,7 @@
         <attr name="android:lineSpacingExtra" />
         <attr name="android:lineSpacingMultiplier" />
         <attr name="android:maxLines" />
+        <attr name="android:maxWidth" />
         <attr name="android:minLines" />
         <attr name="android:minWidth" />
         <attr name="android:singleLine" />

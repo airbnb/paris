@@ -119,6 +119,11 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
         view.minLines = minLines
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_maxWidth)
+    fun setMaxWidth(@Px maxWidth: Int) {
+        view.maxWidth = maxWidth
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_minWidth)
     fun setMinWidth(@Px minWidth: Int) {
         view.minWidth = minWidth

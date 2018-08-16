@@ -113,6 +113,13 @@ class TextViewProxyTest {
     }
 
     @Test
+    fun setMaxWidth() {
+        view.maxWidth = 0
+        proxy.setMaxWidth(100)
+        assertEquals(100, view.maxWidth)
+    }
+
+    @Test
     fun setSingleLine_true() {
         view.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         proxy.setSingleLine(true)
