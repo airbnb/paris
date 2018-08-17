@@ -18,12 +18,4 @@
         android:layout_height="wrap_content"
         />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space2"
-        android:visibility="gone"
-        />
-
 </LinearLayout>

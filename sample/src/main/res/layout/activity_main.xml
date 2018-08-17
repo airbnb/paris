@@ -9,34 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:fitsSystemWindows="true"
         >
-
-        <com.airbnb.paris.sample.MarqueeView
-            android:id="@+id/marquee"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:displayText="Paris Sample"
-            app:image="@drawable/eiffel_header"
-            style="@style/MarqueeView"
-            />
 
         <com.airbnb.paris.sample.SectionView
             android:id="@+id/section1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentText="Paris let's you create, organize and apply styles in completely new ways."
+            app:contentText="Paris let's you create, organize and apply styles in completely new ways.\n\nThis screen is composed of 3 views of the same custom type. It has a title, content and a divider. Its 3 styles are declared and applied programmatically.\n\nClick on a section to cycle through its styles."
             app:titleText="Android Styles on Steroid"
-            app:buttonText="Restyle this screen!"
-            style="@style/SectionView"
             />
 
         <com.airbnb.paris.sample.SectionView
             android:id="@+id/section2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentText="Paris separates styles from layouts which means you can create complex, semantic view components and customize them endlessly.\n\nThis entire screen is built with 2 custom view types."
+            app:contentText="Styles are separated from the layout which means you can create complex, semantic view components and customize them endlessly.\n\nThis becomes very valuable in large applications and enable the use of a common set of visual components."
             app:titleText="Semantic Components"
-            style="@style/SectionView.Interstitial"
             />
 
         <com.airbnb.paris.sample.SectionView
@@ -45,7 +34,7 @@
             android:layout_height="wrap_content"
             app:contentText="Paris is used extensively at Airbnb and powers most of what's displayed on any given screen."
             app:titleText="Powering Airbnb"
-            style="@style/SectionView"
+            app:dividerHeight="0dp"
             />
 
     </LinearLayout>

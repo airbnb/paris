@@ -1,72 +1,12 @@
 <resources>
 
     <declare-styleable name="SectionView">
-        <attr name="buttonStyle" format="reference" />
-        <attr name="buttonText" format="string" />
         <attr name="contentStyle" format="reference" />
         <attr name="contentText" format="string" />
+        <attr name="dividerColor" format="color" />
+        <attr name="dividerHeight" format="dimension" />
         <attr name="titleStyle" format="reference" />
         <attr name="titleText" format="string" />
     </declare-styleable>
-
-    <style name="SectionView">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:paddingBottom">@dimen/space4</item>
-        <item name="android:paddingEnd">@dimen/space4</item>
-        <item name="android:paddingStart">@dimen/space4</item>
-        <item name="android:paddingTop">@dimen/space4</item>
-        <item name="titleStyle">@style/Text.Headline</item>
-        <item name="contentStyle">@style/Text.Body1</item>
-        <item name="buttonStyle">@style/Button_SectionView</item>
-    </style>
-
-    <style name="SectionView.Alternate">
-        <item name="android:background">#02113F</item>
-        <item name="titleStyle">@style/Text.Headline.SectionView_Alternate_Title</item>
-        <item name="contentStyle">@style/Text.Body1.SectionView_Alternate_Content</item>
-        <item name="buttonStyle">@style/Button_SectionView_Alternate</item>
-    </style>
-
-    <style name="SectionView.Interstitial">
-        <item name="android:background">#02113F</item>
-        <item name="android:paddingBottom">@dimen/space8</item>
-        <item name="android:paddingTop">@dimen/space8</item>
-        <item name="titleStyle">@style/Text.Headline.SectionView_Interstitial_Title</item>
-        <item name="contentStyle">@style/Text.Body2.SectionView_Interstitial_Content</item>
-    </style>
-
-    <style name="SectionView.Interstitial.Alternate">
-        <item name="android:background">#A0B8FF</item>
-        <item name="titleStyle">@style/Text.Headline</item>
-        <item name="contentStyle">@style/Text.Body2</item>
-    </style>
-
-    <style name="Text.Headline.SectionView_Alternate_Title">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="Text.Headline.SectionView_Interstitial_Title">
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:letterSpacing">.2</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">#E5C57D</item>
-    </style>
-
-    <style name="Text.Body1.SectionView_Alternate_Content">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="Text.Body2.SectionView_Interstitial_Content" parent="@style/Text.Body2">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="Button_SectionView" parent="Base.Widget.AppCompat.Button">
-        <item name="android:textColor">#18A805</item>
-    </style>
-
-    <style name="Button_SectionView_Alternate">
-        <item name="android:textColor">#A81805</item>
-    </style>
-
 
 </resources>
