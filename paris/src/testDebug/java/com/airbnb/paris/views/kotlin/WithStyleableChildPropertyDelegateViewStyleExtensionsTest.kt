@@ -62,4 +62,16 @@ class WithStyleableChildPropertyDelegateViewStyleExtensionsTest {
         }
         assertEquals(withStyleableChildPropertyDelegateView.arbitrarySubView.visibility, View.INVISIBLE)
     }
+
+    @Test
+    fun withStyleableChildPropertyDelegateViewStyle() {
+        // Tests that the extension to build and set a style exists and works with an arbitrary attribute.
+        withStyleableChildPropertyDelegateView.arbitrarySubView.visibility = View.VISIBLE
+        withStyleableChildPropertyDelegateView.style(withStyleableChildKotlinViewStyle {
+            testArbitraryStyle {
+                visibility(View.INVISIBLE)
+            }
+        })
+        assertEquals(withStyleableChildPropertyDelegateView.arbitrarySubView.visibility, View.INVISIBLE)
+    }
 }

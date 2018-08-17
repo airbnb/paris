@@ -319,17 +319,22 @@ internal class StyleExtensionsKotlinFile(
             addModifiers(KModifier.INLINE)
             returns(STYLE_CLASS_NAME.toKPoet())
 
+            val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
+                EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                styleable.viewElementType.asTypeName()
+            )
+
             val builderParam = parameter(
                 "builder",
                 LambdaTypeName.get(
-                    receiver = styleable.styleBuilderClassName.toKPoet(),
+                    receiver = extendableStyleBuilderTypeName,
                     returnType = UNIT
                 )
             )
 
             addStatement(
                 "return %T().apply(%N).build()",
-                styleable.styleBuilderClassName.toKPoet(),
+                extendableStyleBuilderTypeName,
                 builderParam
             )
         }

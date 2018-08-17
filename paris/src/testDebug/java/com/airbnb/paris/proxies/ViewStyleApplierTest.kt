@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStyleApplier
 import com.airbnb.paris.R
-import com.airbnb.paris.extensions.viewStyle
+import com.airbnb.paris.extensions.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before

@@ -62,4 +62,16 @@ class WithStyleableChildKotlinViewStyleExtensionsTest {
         }
         assertEquals(withStyleableChildKotlinView.arbitrarySubView.visibility, View.INVISIBLE)
     }
+
+    @Test
+    fun withStyleableChildKotlinViewStyle() {
+        // Tests that the extension to build and set a style exists and works with an arbitrary attribute.
+        withStyleableChildKotlinView.arbitrarySubView.visibility = View.VISIBLE
+        withStyleableChildKotlinView.style(withStyleableChildKotlinViewStyle {
+            testArbitraryStyle {
+                visibility(View.INVISIBLE)
+            }
+        })
+        assertEquals(withStyleableChildKotlinView.arbitrarySubView.visibility, View.INVISIBLE)
+    }
 }
