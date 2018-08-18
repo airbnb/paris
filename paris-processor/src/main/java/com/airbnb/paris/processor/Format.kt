@@ -2,6 +2,7 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Fraction
 import com.airbnb.paris.processor.framework.AndroidClassNames
+import com.airbnb.paris.processor.framework.AndroidClassNames.RESOURCES_COMPAT
 import com.airbnb.paris.processor.framework.hasAnnotation
 import com.airbnb.paris.processor.framework.hasAnyAnnotation
 import com.squareup.javapoet.ClassName
@@ -32,6 +33,7 @@ internal class Format private constructor(
             DIMENSION_PIXEL_SIZE,
             DRAWABLE,
             FLOAT,
+            FONT,
             FRACTION,
             INT,
             INTEGER,
@@ -118,6 +120,7 @@ internal class Format private constructor(
                 "java.lang.CharSequence" -> Type.CHARSEQUENCE
                 "java.lang.CharSequence[]" -> Type.CHARSEQUENCE_ARRAY
                 "android.content.res.ColorStateList" -> Type.COLOR_STATE_LIST
+                "android.graphics.Typeface" -> Type.FONT
                 "android.graphics.drawable.Drawable" -> Type.DRAWABLE
                 "java.lang.Float", "float" -> Type.FLOAT
                 "java.lang.Integer", "int" -> Type.INT
@@ -144,6 +147,7 @@ internal class Format private constructor(
             Type.CHARSEQUENCE_ARRAY,
             Type.COLOR_STATE_LIST,
             Type.DRAWABLE,
+            Type.FONT,
             Type.STRING -> AndroidClassNames.NULLABLE
             Type.DIMENSION,
             Type.DIMENSION_PIXEL_OFFSET,
@@ -173,6 +177,7 @@ internal class Format private constructor(
                 AndroidClassNames.DIMEN_RES
             }
             Type.DRAWABLE -> AndroidClassNames.DRAWABLE_RES
+            Type.FONT -> AndroidClassNames.FONT_RES
             Type.FRACTION -> AndroidClassNames.FRACTION_RES
             Type.INT,
             Type.INTEGER -> {
@@ -184,7 +189,7 @@ internal class Format private constructor(
             Type.RESOURCE_ID -> AndroidClassNames.ANY_RES
         }
 
-    fun resourcesMethodCode(resourcesVar: String, valueResIdCode: CodeBlock): CodeBlock {
+    fun resourcesMethodCode(contextVar: String, resourcesVar: String, valueResIdCode: CodeBlock): CodeBlock {
         val statement = when (type) {
             Type.BOOLEAN -> "getBoolean(\$L)"
             Type.CHARSEQUENCE -> "getText(\$L)"
@@ -206,6 +211,9 @@ internal class Format private constructor(
             Type.FLOAT -> "\$T.getFloat(\$L, \$L)"
             Type.STYLE -> "\$T.getStyle(\$L, \$L)"
 
+        // Using ResourcesCompat with context and font resource arguments
+            Type.FONT -> "\$T.getFont(\$L, \$L)"
+
         // Special case, the resource id is the value
             Type.RESOURCE_ID -> "\$L"
         }
@@ -222,6 +230,14 @@ internal class Format private constructor(
                     statement,
                     RESOURCES_EXTENSIONS_CLASS_NAME,
                     resourcesVar,
+                    valueResIdCode
+                )
+            }
+            Type.FONT -> {
+                CodeBlock.of(
+                    statement,
+                    RESOURCES_COMPAT,
+                    contextVar,
                     valueResIdCode
                 )
             }
@@ -245,6 +261,7 @@ internal class Format private constructor(
                 Type.DRAWABLE -> "getDrawable(\$L)"
                 Type.FLOAT -> "getFloat(\$L)"
                 Type.FRACTION -> "getFraction(\$L, %d, %d)".format(base, pbase)
+                Type.FONT -> "getFont(\$L)"
                 Type.INT -> "getInt(\$L)"
                 Type.INTEGER -> "getInteger(\$L)"
                 Type.LAYOUT_DIMENSION -> "getLayoutDimension(\$L)"

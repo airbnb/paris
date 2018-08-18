@@ -2,6 +2,7 @@ package com.airbnb.paris.test;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.AnyRes;
 import android.support.annotation.BoolRes;
@@ -77,6 +78,9 @@ public class MyView extends View {
 
     @Attr(R2.styleable.Formats_formatReference3)
     public void formatReference3_Drawable(Drawable value) {}
+
+    @Attr(R2.styleable.Formats_formatReference4)
+    public void formatReference4_Font(Typeface value) {}
 
     @Attr(R2.styleable.Formats_formatString)
     public void formatString_CharSequence(CharSequence value) {}

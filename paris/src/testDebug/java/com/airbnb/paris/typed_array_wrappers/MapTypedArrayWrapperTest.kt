@@ -2,10 +2,13 @@ package com.airbnb.paris.typed_array_wrappers
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
+import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.attribute_values.ResourceId
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -198,6 +201,51 @@ class MapTypedArrayWrapperTest {
             )
         ).let {
             assertEquals(0, it.getResourceId(R.styleable.Paris_View_android_background))
+        }
+    }
+
+    @Test
+    fun getFont_null() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_TextView, mapOf(
+                android.R.attr.fontFamily to null
+            )
+        ).let {
+            assertEquals(null, it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+        }
+    }
+
+    @Test
+    fun getFont_nullRes() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_TextView, mapOf(
+                android.R.attr.fontFamily to ResourceId(R.font.null_)
+            )
+        ).let {
+            assertEquals(null, it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+        }
+    }
+
+    @Test
+    fun getFont_string() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_TextView, mapOf(
+                android.R.attr.fontFamily to "sans-serif"
+            )
+        ).let {
+            assertEquals(Typeface.create("sans-serif", Typeface.NORMAL), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+        }
+    }
+
+    @Test
+    @Ignore("Robolectric can't handle font resources - see https://github.com/robolectric/robolectric/issues/3590")
+    fun getFont_resource() {
+        MapTypedArrayWrapper(
+            context, R.styleable.Paris_TextView, mapOf(
+                android.R.attr.fontFamily to ResourceId(R.font.roboto_regular)
+            )
+        ).let {
+            assertEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 }

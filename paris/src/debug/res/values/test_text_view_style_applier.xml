@@ -43,4 +43,12 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="Test_TextViewStyleApplier_FontFamily_String">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_FontFamily_Resource">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
 </resources>

@@ -159,24 +159,57 @@ class TextViewProxyTest {
         // Since normal is the default first set the style to something else
         view.setTypeface(view.typeface, Typeface.BOLD)
         proxy.setTextStyle(Typeface.NORMAL)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(Typeface.NORMAL, view.typeface.style)
     }
 
     @Test
     fun setTextStyle_bold() {
         proxy.setTextStyle(Typeface.BOLD)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(Typeface.BOLD, view.typeface.style)
     }
 
     @Test
     fun setTextStyle_italic() {
         proxy.setTextStyle(Typeface.ITALIC)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(Typeface.ITALIC, view.typeface.style)
     }
 
     @Test
     fun setTextStyle_boldItalic() {
         proxy.setTextStyle(Typeface.BOLD_ITALIC)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
         assertEquals(Typeface.BOLD_ITALIC, view.typeface.style)
+    }
+
+    @Test
+    fun setFontFamily_sansSerif_normal() {
+        proxy.setFontFamily(Typeface.create("sans-serif", Typeface.NORMAL))
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(Typeface.create("sans-serif", Typeface.NORMAL), view.typeface)
+    }
+
+    @Test
+    fun setFontFamily_sansSerif_boldStyle() {
+        proxy.setFontFamily(Typeface.create("sans-serif", Typeface.BOLD))
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(Typeface.create("sans-serif-bold", Typeface.BOLD), view.typeface)
+    }
+
+    @Test
+    fun setFontFamily_sansSerif_boldTextStyle() {
+        proxy.setFontFamily(Typeface.create("sans-serif", Typeface.NORMAL))
+        proxy.setTextStyle(Typeface.BOLD)
+        // IMPLEMENTATION DETAIL: the style isn't needed
+        proxy.afterStyle(null)
+        assertEquals(Typeface.create("sans-serif", Typeface.BOLD), view.typeface)
     }
 }

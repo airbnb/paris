@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.support.v4.content.res.ResourcesCompat
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.view.View
@@ -13,6 +14,7 @@ import android.widget.TextViewStyleApplier
 import com.airbnb.paris.R
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -52,6 +54,19 @@ class TextViewStyleApplierTest {
         // Compound drawables should be set with their intrinsic bounds
         applier.apply(R.style.Test_TextViewStyleApplier_DrawableLeft)
         assertFalse(view.compoundDrawables[0].bounds.isEmpty)
+    }
+
+    @Test
+    fun fontFamily_sansSerif() {
+        applier.apply(R.style.Test_TextViewStyleApplier_FontFamily_String)
+        assertEquals(Typeface.create("sans-serif", Typeface.NORMAL), view.typeface)
+    }
+
+    @Test
+    @Ignore("Robolectric can't handle font resources - see https://github.com/robolectric/robolectric/issues/3590")
+    fun fontFamily_fontReference() {
+        applier.apply(R.style.Test_TextViewStyleApplier_FontFamily_Resource)
+        assertEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), view.typeface)
     }
 
     @Test

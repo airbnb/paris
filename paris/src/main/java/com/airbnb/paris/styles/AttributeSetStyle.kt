@@ -21,5 +21,5 @@ data class AttributeSetStyle constructor(private val attributeSet: AttributeSet)
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-            TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(attributeSet, attrs, 0, 0))
+            TypedArrayTypedArrayWrapper(context, context.obtainStyledAttributes(attributeSet, attrs, 0, 0))
 }

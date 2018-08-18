@@ -2,9 +2,11 @@ package com.airbnb.paris.typed_array_wrappers
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.AttrRes
+import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.attribute_values.DpValue
 import com.airbnb.paris.attribute_values.ResourceId
@@ -24,7 +26,7 @@ import com.airbnb.paris.utils.toColorStateList
  * Styleable attribute index: R.styleable.MyView_attribute
  */
 internal class MapTypedArrayWrapper constructor(
-    context: Context,
+    private val context: Context,
     private val styleableAttrs: IntArray,
     private val attrResToValueMap: Map<Int, Any?>
 ) : TypedArrayWrapper() {
@@ -104,6 +106,11 @@ internal class MapTypedArrayWrapper constructor(
     override fun getFloat(index: Int): Float =
         getValue(index, { resId -> resources.getFloat(resId) })
 
+    override fun getFont(index: Int): Typeface? =
+        getFontValue(index,
+            { resId -> if (isNullRes(resId)) null else ResourcesCompat.getFont(context, resId) },
+            { stringValue -> Typeface.create(stringValue, Typeface.NORMAL) })
+
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
         getValue(index, { resId -> resources.getFraction(resId, base, pbase) })
 
@@ -154,6 +161,21 @@ internal class MapTypedArrayWrapper constructor(
             is Styles -> MultiStyle.fromStyles("a_MapTypedArrayWrapper_MultiStyle", value.list) as T
             else -> {
                 return value as T
+            }
+        }
+    }
+
+    private fun getFontValue(
+        index: Int,
+        resourceGetter: (Int) -> Typeface?,
+        stringValueGetter: (String) -> Typeface?
+    ): Typeface? {
+        val value = styleableAttrIndexToValueRes(index)
+        return when (value) {
+            is String -> stringValueGetter(value)
+            is ResourceId -> resourceGetter(value.resId)
+            else -> {
+                return value as Typeface?
             }
         }
     }

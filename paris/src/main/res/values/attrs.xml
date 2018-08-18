@@ -50,6 +50,7 @@
         <attr name="android:ellipsize" />
         <attr name="android:hint" />
         <attr name="android:inputType" />
+        <attr name="android:fontFamily" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
         <attr name="android:lines" />

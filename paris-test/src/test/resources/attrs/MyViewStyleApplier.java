@@ -3,6 +3,7 @@ package com.airbnb.paris.test;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.AnyRes;
 import android.support.annotation.ArrayRes;
@@ -12,6 +13,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.FontRes;
 import android.support.annotation.FractionRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
@@ -46,12 +48,14 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   @Override
   protected void processStyleableFields(Style style, TypedArrayWrapper a) {
-    Resources res = getView().getContext().getResources();
+    Context context = getView().getContext();
+    Resources res = context.getResources();
   }
 
   @Override
   protected void processAttributes(Style style, TypedArrayWrapper a) {
-    Resources res = getView().getContext().getResources();
+    Context context = getView().getContext()
+    Resources res = context.getResources();
     if (a.hasValue(R.styleable.Formats_formatBoolean)) {
       getProxy().formatBoolean(a.getBoolean(R.styleable.Formats_formatBoolean));
     }
@@ -99,6 +103,9 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
     if (a.hasValue(R.styleable.Formats_formatReference3)) {
       getProxy().formatReference3_Drawable(a.getDrawable(R.styleable.Formats_formatReference3));
+    }
+    if (a.hasValue(R.styleable.Formats_formatReference4)) {
+      getProxy().formatReference4_Font(a.getFont(R.styleable.Formats_formatReference4));
     }
     if (a.hasValue(R.styleable.Formats_formatString)) {
       getProxy().formatString_CharSequence(a.getText(R.styleable.Formats_formatString));
@@ -302,6 +309,20 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
      * @see MyView#formatReference3_Drawable(Drawable) */
     public B formatReference3Res(@DrawableRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference3], resId);
+      return (B) this;
+    }
+
+    /**
+     * @see MyView#formatReference4_Font(Typeface) */
+    public B formatReference4(@Nullable Typeface value) {
+      getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatReference4], value);
+      return (B) this;
+    }
+
+    /**
+     * @see MyView#formatReference4_Font(Drawable) */
+    public B formatReference4Res(@FontRes int resId) {
+      getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatReference4], resId);
       return (B) this;
     }
 
