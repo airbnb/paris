@@ -55,7 +55,7 @@ internal class TypedArrayTypedArrayWrapper constructor(
         return if (isNull(index)) {
             null
         } else {
-            val resourceId = getResourceId(index)
+            val resourceId = typedArray.getResourceId(index, 0)
             if (resourceId != 0) {
                 ResourcesCompat.getFont(context, resourceId)
             } else {
