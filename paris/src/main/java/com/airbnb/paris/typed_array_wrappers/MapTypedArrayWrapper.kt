@@ -106,10 +106,14 @@ internal class MapTypedArrayWrapper constructor(
     override fun getFloat(index: Int): Float =
         getValue(index, { resId -> resources.getFloat(resId) })
 
-    override fun getFont(index: Int): Typeface? =
-        getFontValue(index,
-            { resId -> if (isNullRes(resId)) null else ResourcesCompat.getFont(context, resId) },
-            { stringValue -> Typeface.create(stringValue, Typeface.NORMAL) })
+    override fun getFont(index: Int): Typeface? {
+        val value = styleableAttrIndexToValueRes(index)
+        return when (value) {
+            is String -> Typeface.create(value, Typeface.NORMAL)
+            is ResourceId -> if (isNullRes(value.resId)) null else ResourcesCompat.getFont(context, value.resId)
+            else -> return value as Typeface?
+        }
+    }
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
         getValue(index, { resId -> resources.getFraction(resId, base, pbase) })
@@ -161,21 +165,6 @@ internal class MapTypedArrayWrapper constructor(
             is Styles -> MultiStyle.fromStyles("a_MapTypedArrayWrapper_MultiStyle", value.list) as T
             else -> {
                 return value as T
-            }
-        }
-    }
-
-    private fun getFontValue(
-        index: Int,
-        resourceGetter: (Int) -> Typeface?,
-        stringValueGetter: (String) -> Typeface?
-    ): Typeface? {
-        val value = styleableAttrIndexToValueRes(index)
-        return when (value) {
-            is String -> stringValueGetter(value)
-            is ResourceId -> resourceGetter(value.resId)
-            else -> {
-                return value as Typeface?
             }
         }
     }
