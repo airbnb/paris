@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
+import com.airbnb.paris.utils.getFont
 
 internal class TypedArrayTypedArrayWrapper constructor(
     private val context: Context,
@@ -57,7 +58,7 @@ internal class TypedArrayTypedArrayWrapper constructor(
         } else {
             val resourceId = typedArray.getResourceId(index, 0)
             if (resourceId != 0) {
-                ResourcesCompat.getFont(context, resourceId)
+                context.getFont(resourceId)
             } else {
                 Typeface.create(typedArray.getString(index), Typeface.NORMAL)
             }

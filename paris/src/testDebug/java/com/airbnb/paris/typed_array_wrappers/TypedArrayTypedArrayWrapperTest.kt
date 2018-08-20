@@ -7,6 +7,7 @@ import com.airbnb.paris.R
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
+import com.airbnb.paris.utils.getFont
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -144,7 +145,7 @@ class TypedArrayTypedArrayWrapperTest {
             R.styleable.Paris_TextView
         )
         TypedArrayTypedArrayWrapper(context, typedArray).run {
-            assertTypefaceEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(context.getFont(R.font.roboto_regular), getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 }

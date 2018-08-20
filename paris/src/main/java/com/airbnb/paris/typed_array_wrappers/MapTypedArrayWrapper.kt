@@ -14,10 +14,7 @@ import com.airbnb.paris.attribute_values.Styles
 import com.airbnb.paris.styles.MultiStyle
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
-import com.airbnb.paris.utils.dpToPx
-import com.airbnb.paris.utils.getFloat
-import com.airbnb.paris.utils.getLayoutDimension
-import com.airbnb.paris.utils.toColorStateList
+import com.airbnb.paris.utils.*
 
 /*
  * Lexicon:
@@ -110,7 +107,7 @@ internal class MapTypedArrayWrapper constructor(
         val value = styleableAttrIndexToValueRes(index)
         return when (value) {
             is String -> Typeface.create(value, Typeface.NORMAL)
-            is ResourceId -> if (isNullRes(value.resId)) null else ResourcesCompat.getFont(context, value.resId)
+            is ResourceId -> if (isNullRes(value.resId)) null else context.getFont(value.resId)
             else -> return value as Typeface?
         }
     }

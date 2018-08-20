@@ -236,7 +236,7 @@ internal class Format private constructor(
             Type.FONT -> {
                 CodeBlock.of(
                     statement,
-                    RESOURCES_COMPAT,
+                    CONTEXT_EXTENSIONS_CLASS_NAME,
                     contextVar,
                     valueResIdCode
                 )

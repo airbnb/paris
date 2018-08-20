@@ -14,6 +14,7 @@ import android.widget.TextViewStyleApplier
 import com.airbnb.paris.R
 import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
+import com.airbnb.paris.utils.getFont
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -68,7 +69,7 @@ class TextViewStyleApplierTest {
     @Test
     fun fontFamily_fontReference() {
         applier.apply(R.style.Test_TextViewStyleApplier_FontFamily_Resource)
-        assertTypefaceEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), view.typeface)
+        assertTypefaceEquals(context.getFont(R.font.roboto_regular), view.typeface)
     }
 
     @Test

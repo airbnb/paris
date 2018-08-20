@@ -20,11 +20,11 @@ import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.ViewStyleApplier;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper;
+import com.airbnb.paris.utils.ContextExtensionsKt;
 import com.airbnb.paris.utils.ResourcesExtensionsKt;
 import java.lang.CharSequence;
 import java.lang.Override;
@@ -145,7 +145,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
       getProxy().formatReference_Font(a.getFont(R.styleable.Formats_formatReference4));
     }
     else if (style.getShouldApplyDefaults()) {
-      getProxy().formatReference_Font(ResourcesCompat.getFont(context, R.font.format_font));
+      getProxy().formatReference_Font(ContextExtensionsKt.getFont(context, R.font.format_font));
     }
     if (a.hasValue(R.styleable.Formats_formatString)) {
       getProxy().formatString_CharSequence(a.getText(R.styleable.Formats_formatString));
