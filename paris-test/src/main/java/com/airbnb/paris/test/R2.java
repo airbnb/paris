@@ -34,49 +34,49 @@ public final class R2 {
     }
 
     public static final class integer {
-        public static final int format_enum = 700;
-        public static final int format_flag = 701;
-        public static final int format_integer = 702;
+        public static final int format_enum = 800;
+        public static final int format_flag = 801;
+        public static final int format_integer = 802;
     }
 
     public static final class string {
-        public static final int app_name = 800;
-        public static final int format_char_sequence = 801;
-        public static final int format_string = 802;
+        public static final int app_name = 900;
+        public static final int format_char_sequence = 901;
+        public static final int format_string = 902;
     }
 
     public static final class style {
-        public static final int MyView_Red = 900;
-        public static final int MyView_Green = 901;
-        public static final int MyView_Blue = 902;
+        public static final int MyView_Red = 1000;
+        public static final int MyView_Green = 1001;
+        public static final int MyView_Blue = 1002;
     }
 
     public static final class styleable {
-        public static final int Formats_formatBoolean = 1000;
-        public static final int Formats_formatBoolean2 = 1001;
-        public static final int Formats_formatColor = 1002;
-        public static final int Formats_formatDimension = 1003;
-        public static final int Formats_formatEnum = 1004;
-        public static final int Formats_formatFlag = 1005;
-        public static final int Formats_formatFloat = 1006;
-        public static final int Formats_formatFraction = 1007;
-        public static final int Formats_formatInteger = 1008;
-        public static final int Formats_formatReference = 1009;
-        public static final int Formats_formatReference2 = 1010;
-        public static final int Formats_formatReference3 = 1011;
-        public static final int Formats_formatReference4 = 1012;
-        public static final int Formats_formatString = 1013;
-        public static final int Formats_formatString2 = 1014;
-        public static final int ManuallyWritten_attribute1 = 1015;
-        public static final int MyView_active = 1016;
-        public static final int MyView_dividerStyle = 1017;
-        public static final int MyView_factor = 1018;
-        public static final int MyView_image = 1019;
-        public static final int MyView_index = 1020;
-        public static final int MyView_subtitle = 1021;
-        public static final int MyView_subtitleStyle = 1022;
-        public static final int MyView_title = 1023;
-        public static final int MyView_titleStyle = 1024;
-        public static final int MyView_verticalPadding = 1025;
+        public static final int Formats_formatBoolean = 1100;
+        public static final int Formats_formatBoolean2 = 1101;
+        public static final int Formats_formatColor = 1102;
+        public static final int Formats_formatDimension = 1103;
+        public static final int Formats_formatEnum = 1104;
+        public static final int Formats_formatFlag = 1105;
+        public static final int Formats_formatFloat = 1106;
+        public static final int Formats_formatFraction = 1107;
+        public static final int Formats_formatInteger = 1108;
+        public static final int Formats_formatReference = 1109;
+        public static final int Formats_formatReference2 = 1110;
+        public static final int Formats_formatReference3 = 1111;
+        public static final int Formats_formatReference4 = 1112;
+        public static final int Formats_formatString = 1113;
+        public static final int Formats_formatString2 = 1114;
+        public static final int ManuallyWritten_attribute1 = 1115;
+        public static final int MyView_active = 1116;
+        public static final int MyView_dividerStyle = 1117;
+        public static final int MyView_factor = 1118;
+        public static final int MyView_image = 1119;
+        public static final int MyView_index = 1120;
+        public static final int MyView_subtitle = 1121;
+        public static final int MyView_subtitleStyle = 1122;
+        public static final int MyView_title = 1123;
+        public static final int MyView_titleStyle = 1124;
+        public static final int MyView_verticalPadding = 1125;
     }
 }
