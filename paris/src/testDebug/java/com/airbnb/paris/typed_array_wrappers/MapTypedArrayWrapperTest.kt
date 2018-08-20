@@ -6,16 +6,18 @@ import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.*
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [ShadowResourcesCompat::class])
 class MapTypedArrayWrapperTest {
 
     private lateinit var context: Context
@@ -239,7 +241,6 @@ class MapTypedArrayWrapperTest {
     }
 
     @Test
-    @Ignore("Robolectric can't handle font resources - see https://github.com/robolectric/robolectric/issues/3590")
     fun getFont_resource() {
         MapTypedArrayWrapper(
             context, R.styleable.Paris_TextView, mapOf(

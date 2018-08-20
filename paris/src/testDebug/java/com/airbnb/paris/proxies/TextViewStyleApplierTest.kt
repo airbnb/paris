@@ -12,16 +12,18 @@ import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
 import com.airbnb.paris.R
+import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.*
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [ShadowResourcesCompat::class])
 class TextViewStyleApplierTest {
 
     private lateinit var context: Context
@@ -64,7 +66,6 @@ class TextViewStyleApplierTest {
     }
 
     @Test
-    @Ignore("Robolectric can't handle font resources - see https://github.com/robolectric/robolectric/issues/3590")
     fun fontFamily_fontReference() {
         applier.apply(R.style.Test_TextViewStyleApplier_FontFamily_Resource)
         assertTypefaceEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), view.typeface)

@@ -5,20 +5,22 @@ import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 /**
  * Most TypedArrayWrapper methods are forwarded to an underlying TypedArray, they are not tested
  * here as it doesn't seem necessary
  */
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [ShadowResourcesCompat::class])
 class TypedArrayTypedArrayWrapperTest {
 
     private lateinit var context: Context
@@ -136,7 +138,6 @@ class TypedArrayTypedArrayWrapperTest {
     }
 
     @Test
-    @Ignore("Robolectric can't handle font resources - see https://github.com/robolectric/robolectric/issues/3590")
     fun getFont_resource() {
         val typedArray = context.obtainStyledAttributes(
             R.style.Test_TypedArrayTypedArrayWrapper_GetFont_Resource,
