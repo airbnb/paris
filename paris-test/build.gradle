@@ -27,6 +27,7 @@ dependencies {
 
     implementation deps.appcompatV7
     implementation deps.kotlin
+    implementation deps.supportV4
 
     kapt project(':paris-processor')
 

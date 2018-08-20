@@ -22,6 +22,7 @@ android {
 
 dependencies {
     implementation deps.appcompatV7
+    implementation deps.supportV4
 
     api project(':paris-annotations')
 

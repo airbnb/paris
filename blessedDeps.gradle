@@ -33,6 +33,7 @@ rootProject.ext {
             mockitoCore     : "org.mockito:mockito-core:$MOCKITO_VERSION",
             mockitoAndroid  : "org.mockito:mockito-android:$MOCKITO_VERSION",
             robolectric     : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
+            supportV4       : "com.android.support:support-v4:$SUPPORT_LIBS_VERSION",
             testingCompile  : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
     ]
 }

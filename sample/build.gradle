@@ -18,6 +18,7 @@ dependencies {
     implementation deps.appcompatV7
     implementation deps.constraintLayout
     implementation deps.kotlin
+    implementation deps.supportV4
 
     kapt project(':paris-processor')
 }
