@@ -44,7 +44,7 @@
     </style>
 
     <style name="Test_TextViewStyleApplier_FontFamily_String">
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif-bold</item>
     </style>
 
     <style name="Test_TextViewStyleApplier_FontFamily_Resource">

@@ -191,6 +191,8 @@ class TextViewProxyTest {
 
     @Test
     fun setFontFamily_sansSerif_normal() {
+        // Set typeface to sans-serif-bold since sans-serif is default one
+        view.typeface = Typeface.create("sans-serif-bold", Typeface.NORMAL)
         proxy.setFontFamily(Typeface.create("sans-serif", Typeface.NORMAL))
         // IMPLEMENTATION DETAIL: the style isn't needed
         proxy.afterStyle(null)

@@ -58,9 +58,9 @@ class TextViewStyleApplierTest {
     }
 
     @Test
-    fun fontFamily_sansSerif() {
+    fun fontFamily_string() {
         applier.apply(R.style.Test_TextViewStyleApplier_FontFamily_String)
-        assertTypefaceEquals(Typeface.create("sans-serif", Typeface.NORMAL), view.typeface)
+        assertTypefaceEquals(Typeface.create("sans-serif-bold", Typeface.NORMAL), view.typeface)
     }
 
     @Test
