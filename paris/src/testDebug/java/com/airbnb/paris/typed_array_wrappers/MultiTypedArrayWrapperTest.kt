@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Ignore
@@ -148,7 +149,7 @@ class MultiTypedArrayWrapperTest {
             ),
             R.styleable.Paris_TextView
         ).let {
-            assertEquals(Typeface.create("sans-serif", Typeface.NORMAL), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(Typeface.create("sans-serif", Typeface.NORMAL), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 
@@ -165,7 +166,7 @@ class MultiTypedArrayWrapperTest {
             ),
             R.styleable.Paris_TextView
         ).let {
-            assertEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 }

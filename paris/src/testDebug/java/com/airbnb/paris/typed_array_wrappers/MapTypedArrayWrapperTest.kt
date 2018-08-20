@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.attribute_values.ResourceId
+import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
@@ -211,7 +212,7 @@ class MapTypedArrayWrapperTest {
                 android.R.attr.fontFamily to null
             )
         ).let {
-            assertEquals(null, it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(null, it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 
@@ -222,7 +223,7 @@ class MapTypedArrayWrapperTest {
                 android.R.attr.fontFamily to ResourceId(R.font.null_)
             )
         ).let {
-            assertEquals(null, it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(null, it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 
@@ -233,7 +234,7 @@ class MapTypedArrayWrapperTest {
                 android.R.attr.fontFamily to "sans-serif"
             )
         ).let {
-            assertEquals(Typeface.create("sans-serif", Typeface.NORMAL), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(Typeface.create("sans-serif", Typeface.NORMAL), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 
@@ -245,7 +246,7 @@ class MapTypedArrayWrapperTest {
                 android.R.attr.fontFamily to ResourceId(R.font.roboto_regular)
             )
         ).let {
-            assertEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
+            assertTypefaceEquals(ResourcesCompat.getFont(context, R.font.roboto_regular), it.getFont(R.styleable.Paris_TextView_android_fontFamily))
         }
     }
 }

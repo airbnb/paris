@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
 import android.widget.TextView
+import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -193,7 +194,7 @@ class TextViewProxyTest {
         proxy.setFontFamily(Typeface.create("sans-serif", Typeface.NORMAL))
         // IMPLEMENTATION DETAIL: the style isn't needed
         proxy.afterStyle(null)
-        assertEquals(Typeface.create("sans-serif", Typeface.NORMAL), view.typeface)
+        assertTypefaceEquals(Typeface.create("sans-serif", Typeface.NORMAL), view.typeface)
     }
 
     @Test
@@ -201,7 +202,7 @@ class TextViewProxyTest {
         proxy.setFontFamily(Typeface.create("sans-serif", Typeface.BOLD))
         // IMPLEMENTATION DETAIL: the style isn't needed
         proxy.afterStyle(null)
-        assertEquals(Typeface.create("sans-serif-bold", Typeface.BOLD), view.typeface)
+        assertTypefaceEquals(Typeface.create("sans-serif-bold", Typeface.BOLD), view.typeface)
     }
 
     @Test
@@ -210,6 +211,6 @@ class TextViewProxyTest {
         proxy.setTextStyle(Typeface.BOLD)
         // IMPLEMENTATION DETAIL: the style isn't needed
         proxy.afterStyle(null)
-        assertEquals(Typeface.create("sans-serif", Typeface.BOLD), view.typeface)
+        assertTypefaceEquals(Typeface.create("sans-serif", Typeface.BOLD), view.typeface)
     }
 }
