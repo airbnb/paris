@@ -202,7 +202,7 @@ class TextViewProxyTest {
         proxy.setFontFamily(Typeface.create("sans-serif", Typeface.BOLD))
         // IMPLEMENTATION DETAIL: the style isn't needed
         proxy.afterStyle(null)
-        assertTypefaceEquals(Typeface.create("sans-serif-bold", Typeface.BOLD), view.typeface)
+        assertTypefaceEquals(Typeface.create("sans-serif", Typeface.BOLD), view.typeface)
     }
 
     @Test
