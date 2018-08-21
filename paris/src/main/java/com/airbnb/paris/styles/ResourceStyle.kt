@@ -19,5 +19,5 @@ data class ResourceStyle constructor(
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-            TypedArrayTypedArrayWrapper(context.obtainStyledAttributes(styleRes, attrs))
+            TypedArrayTypedArrayWrapper(context, context.obtainStyledAttributes(styleRes, attrs))
 }

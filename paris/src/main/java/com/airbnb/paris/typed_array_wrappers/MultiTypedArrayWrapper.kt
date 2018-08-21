@@ -1,6 +1,7 @@
 package com.airbnb.paris.typed_array_wrappers
 
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import com.airbnb.paris.styles.MultiStyle
 import com.airbnb.paris.styles.Style
@@ -70,6 +71,9 @@ internal class MultiTypedArrayWrapper constructor(
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
         getWrapper(index).getFraction(index, base, pbase)
+
+    override fun getFont(index: Int): Typeface? =
+        getWrapper(index).getFont(index)
 
     override fun getInt(index: Int): Int =
         getWrapper(index).getInt(index)

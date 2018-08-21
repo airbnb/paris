@@ -32,7 +32,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   @Override
   protected void processStyleableFields(Style style, TypedArrayWrapper a) {
-    Resources res = getView().getContext().getResources();
+    Context context = getView().getContext();
+    Resources res = context.getResources();
     if (a.hasValue(R.styleable.MyView_titleStyle)) {
       title().apply(a.getStyle(R.styleable.MyView_titleStyle));
     }
@@ -46,7 +47,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
   @Override
   protected void processAttributes(Style style, TypedArrayWrapper a) {
-    Resources res = getView().getContext().getResources();
+    Context context = getView().getContext();
+    Resources res = context.getResources();
   }
 
   public StyleBuilder builder() {

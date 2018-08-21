@@ -88,7 +88,11 @@ internal class StyleApplierJavaClass(
                 addParameter(STYLE_CLASS_NAME, "style")
                 addParameter(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a")
                 addStatement(
-                    "\$T res = getView().getContext().getResources()",
+                    "\$T context = getView().getContext()",
+                    AndroidClassNames.CONTEXT
+                )
+                addStatement(
+                    "\$T res = context.getResources()",
                     AndroidClassNames.RESOURCES
                 )
 
@@ -107,6 +111,7 @@ internal class StyleApplierJavaClass(
                                 "\$N().apply(\$L)",
                                 styleableChild.name,
                                 Format.STYLE.resourcesMethodCode(
+                                    "context",
                                     "res",
                                     styleableChild.defaultValueResId.code
                                 )
@@ -122,7 +127,11 @@ internal class StyleApplierJavaClass(
                 addParameter(STYLE_CLASS_NAME, "style")
                 addParameter(TYPED_ARRAY_WRAPPER_CLASS_NAME, "a")
                 addStatement(
-                    "\$T res = getView().getContext().getResources()",
+                    "\$T context = getView().getContext()",
+                    AndroidClassNames.CONTEXT
+                )
+                addStatement(
+                    "\$T res = context.getResources()",
                     AndroidClassNames.RESOURCES
                 )
 
@@ -146,6 +155,7 @@ internal class StyleApplierJavaClass(
                                 "getProxy().\$N(\$L)",
                                 attr.name,
                                 attr.targetFormat.resourcesMethodCode(
+                                    "context",
                                     "res",
                                     attr.defaultValueResId.code
                                 )

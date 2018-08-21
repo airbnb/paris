@@ -2,9 +2,11 @@ package com.airbnb.paris.typed_array_wrappers
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.AttrRes
+import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.attribute_values.DpValue
 import com.airbnb.paris.attribute_values.ResourceId
@@ -12,10 +14,7 @@ import com.airbnb.paris.attribute_values.Styles
 import com.airbnb.paris.styles.MultiStyle
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
-import com.airbnb.paris.utils.dpToPx
-import com.airbnb.paris.utils.getFloat
-import com.airbnb.paris.utils.getLayoutDimension
-import com.airbnb.paris.utils.toColorStateList
+import com.airbnb.paris.utils.*
 
 /*
  * Lexicon:
@@ -24,7 +23,7 @@ import com.airbnb.paris.utils.toColorStateList
  * Styleable attribute index: R.styleable.MyView_attribute
  */
 internal class MapTypedArrayWrapper constructor(
-    context: Context,
+    private val context: Context,
     private val styleableAttrs: IntArray,
     private val attrResToValueMap: Map<Int, Any?>
 ) : TypedArrayWrapper() {
@@ -103,6 +102,15 @@ internal class MapTypedArrayWrapper constructor(
 
     override fun getFloat(index: Int): Float =
         getValue(index, { resId -> resources.getFloat(resId) })
+
+    override fun getFont(index: Int): Typeface? {
+        val value = styleableAttrIndexToValueRes(index)
+        return when (value) {
+            is String -> Typeface.create(value, Typeface.NORMAL)
+            is ResourceId -> if (isNullRes(value.resId)) null else context.getFont(value.resId)
+            else -> return value as Typeface?
+        }
+    }
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
         getValue(index, { resId -> resources.getFraction(resId, base, pbase) })

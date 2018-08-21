@@ -1,12 +1,17 @@
 package com.airbnb.paris.typed_array_wrappers
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
+import com.airbnb.paris.utils.getFont
 
 internal class TypedArrayTypedArrayWrapper constructor(
+    private val context: Context,
     private val typedArray: TypedArray
 ) : TypedArrayWrapper() {
 
@@ -46,6 +51,19 @@ internal class TypedArrayTypedArrayWrapper constructor(
 
     override fun getFraction(index: Int, base: Int, pbase: Int): Float =
         typedArray.getFraction(index, base, pbase, -1f)
+
+    override fun getFont(index: Int): Typeface? {
+        return if (isNull(index)) {
+            null
+        } else {
+            val resourceId = typedArray.getResourceId(index, 0)
+            if (resourceId != 0) {
+                context.getFont(resourceId)
+            } else {
+                Typeface.create(typedArray.getString(index), Typeface.NORMAL)
+            }
+        }
+    }
 
     override fun getInt(index: Int): Int = typedArray.getInt(index, -1)
 

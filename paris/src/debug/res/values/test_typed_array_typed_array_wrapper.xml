@@ -35,4 +35,16 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
+    <style name="Test_TypedArrayTypedArrayWrapper_GetFont_String">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Test_TypedArrayTypedArrayWrapper_GetFont_Resource">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="Test_TypedArrayTypedArrayWrapper_GetFont_Null">
+        <item name="android:fontFamily">@font/null_</item>
+    </style>
+
 </resources>

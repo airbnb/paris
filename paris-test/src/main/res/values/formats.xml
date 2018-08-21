@@ -22,6 +22,7 @@
         <attr name="formatReference" format="reference" />
         <attr name="formatReference2" format="reference" />
         <attr name="formatReference3" format="reference" />
+        <attr name="formatReference4" format="reference" />
         <attr name="formatString" format="string" />
         <attr name="formatString2" format="string" />
     </declare-styleable>

@@ -1,6 +1,7 @@
 package com.airbnb.paris.typed_array_wrappers
 
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.support.annotation.AnyRes
 import android.support.annotation.ColorInt
@@ -29,6 +30,7 @@ abstract class TypedArrayWrapper {
             R.array.null_,
             R.color.null_,
             R.drawable.null_,
+            R.font.null_,
             R.string.null_
         )
     }
@@ -56,6 +58,8 @@ abstract class TypedArrayWrapper {
     abstract fun getFloat(@StyleableRes index: Int): Float
 
     abstract fun getFraction(index: Int, base: Int, pbase: Int): Float
+
+    abstract fun getFont(@StyleableRes index: Int): Typeface?
 
     abstract fun getInt(@StyleableRes index: Int): Int
 

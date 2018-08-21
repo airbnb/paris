@@ -35,6 +35,10 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
      */
     private var inputType: Int? = null
 
+    private var typeface: Typeface? = null
+
+    private var textStyleIndex: Int? = null
+
     @Attr(R2.styleable.Paris_TextView_android_drawableBottom)
     fun setDrawableBottom(drawable: Drawable?) {
         drawableBottom = drawable
@@ -65,6 +69,11 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
             4 -> TextUtils.TruncateAt.MARQUEE
             else -> throw IllegalStateException("Invalid value for ellipsize.")
         }
+    }
+
+    @Attr(R2.styleable.Paris_TextView_android_fontFamily)
+    fun setFontFamily(typeface: Typeface?) {
+        this.typeface = typeface
     }
 
     @Attr(R2.styleable.Paris_TextView_android_hint)
@@ -165,11 +174,7 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
 
     @Attr(R2.styleable.Paris_TextView_android_textStyle)
     fun setTextStyle(styleIndex: Int) {
-        // Removes any style already applied to the typeface and applies the appropriate one instead
-        val typeface = Typeface.create(view.typeface, styleIndex)
-        // Purposefully pass in the styleIndex again here because the view will apply "fake" bold
-        // and/or italic if the typeface doesn't support it
-        view.setTypeface(typeface, styleIndex)
+        this.textStyleIndex = styleIndex
     }
 
     @AfterStyle
@@ -202,6 +207,17 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
         }
 
         inputType = null
+
+        if (typeface != null || textStyleIndex != null) {
+            val typefaceToSet = typeface ?: view.typeface
+            val textStyleToSet = textStyleIndex ?: typefaceToSet.style
+
+            // Removes any style already applied to the typeface and applies the appropriate one instead
+            val typeface = Typeface.create(typefaceToSet, textStyleToSet)
+            // Purposefully pass in the styleIndex again here because the view will apply "fake" bold
+            // and/or italic if the typeface doesn't support it
+            view.setTypeface(typeface, textStyleToSet)
+        }
     }
 
     private fun isMultilineInputType(inputType: Int): Boolean {
