@@ -32,6 +32,15 @@ internal class StyleExtensionsKotlinFile(
     override val name = EXTENSIONS_FILE_NAME_FORMAT.format(styleable.viewElementName)
 
     override val block: FileSpec.Builder.() -> Unit = {
+
+        // We suppress Deprecation warnings for this class in case any of the models used are deprecated.
+        // This prevents the generated file from causing errors for using deprecated classes.
+        addAnnotation(
+            AnnotationSpec.builder(Suppress::class)
+                .addMember("%S", "DEPRECATION")
+                .build()
+        )
+
         /*
          * An extension for setting a Style object on the view.
          *
