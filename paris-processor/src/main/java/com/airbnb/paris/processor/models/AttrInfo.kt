@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.models
 
+import android.support.annotation.RequiresApi
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.ParisProcessor
@@ -61,6 +62,13 @@ internal class AttrInfoExtractor(
         val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, name, targetType)
         val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, name)
 
+        // We rely on the `RequiresApi` Android annotation to disable certain attributes based on the Android SDK version.
+        // 1 is the default since that's the minimum version.
+        val requiresApi = element.getAnnotation(RequiresApi::class.java)?.let {
+            // value is an alias of api, so we give precedence to api.
+            if (it.api > 1) it.api else it.value
+        } ?: 1
+
         return AttrInfo(
             element,
             targetType,
@@ -68,7 +76,8 @@ internal class AttrInfoExtractor(
             styleableResId,
             defaultValueResId,
             javadoc,
-            kdoc
+            kdoc,
+            requiresApi
         )
     }
 }
@@ -84,5 +93,6 @@ internal class AttrInfo(
     val styleableResId: AndroidResourceId,
     val defaultValueResId: AndroidResourceId?,
     val javadoc: JavaCodeBlock,
-    val kdoc: KotlinCodeBlock
+    val kdoc: KotlinCodeBlock,
+    val requiresApi: Int
 ) : SkyMethodModel(element)

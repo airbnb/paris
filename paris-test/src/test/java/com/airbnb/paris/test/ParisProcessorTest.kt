@@ -52,6 +52,16 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun attr_requires_api() {
+        assertCase("attr_requires_api")
+    }
+
+    @Test
+    fun attr_requires_api_default_value() {
+        assertCase("attr_requires_api_default_value")
+    }
+
+    @Test
     fun attrs() {
         assertCase("attrs")
     }

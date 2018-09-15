@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.Px
+import android.support.annotation.RequiresApi
 import android.text.InputType
 import android.text.TextUtils
 import android.text.method.PasswordTransformationMethod
@@ -93,10 +94,9 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
     }
 
     @Attr(R2.styleable.Paris_TextView_android_letterSpacing)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setLetterSpacing(letterSpacing: Float) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view.letterSpacing = letterSpacing
-        }
+        view.letterSpacing = letterSpacing
     }
 
     @Attr(R2.styleable.Paris_TextView_android_lines)

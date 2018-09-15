@@ -5,7 +5,7 @@ rootProject.ext {
     TARGET_SDK_VERSION = 27
     COMPILE_SDK_VERSION = 27
     MIN_SDK_VERSION = 16
-    SAMPLE_MIN_SDK_VERSION = 21
+    SAMPLE_MIN_SDK_VERSION = 16
 
     // Keep these alphabetized
     CONSTRAINT_LAYOUT_VERSION = '1.1.0'
@@ -21,19 +21,20 @@ rootProject.ext {
 
     deps = [
             // Keep these alphabetized
-            appcompatV7     : "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION",
-            constraintLayout: "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION",
-            espresso        : "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION",
-            javaPoet        : "com.squareup:javapoet:$JAVAPOET_VERSION",
-            junit           : "junit:junit:$JUNIT_VERSION",
-            kotlin          : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION",
-            kotlinReflect   : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
-            kotlinPoet      : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
-            kotlinTest      : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
-            mockitoCore     : "org.mockito:mockito-core:$MOCKITO_VERSION",
-            mockitoAndroid  : "org.mockito:mockito-android:$MOCKITO_VERSION",
-            robolectric     : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
-            supportV4       : "com.android.support:support-v4:$SUPPORT_LIBS_VERSION",
-            testingCompile  : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
+            androidAnnotations: "com.android.support:support-annotations:$SUPPORT_LIBS_VERSION",
+            appcompatV7       : "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION",
+            constraintLayout  : "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION",
+            espresso          : "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION",
+            javaPoet          : "com.squareup:javapoet:$JAVAPOET_VERSION",
+            junit             : "junit:junit:$JUNIT_VERSION",
+            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION",
+            kotlinReflect     : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
+            kotlinPoet        : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
+            kotlinTest        : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
+            mockitoCore       : "org.mockito:mockito-core:$MOCKITO_VERSION",
+            mockitoAndroid    : "org.mockito:mockito-android:$MOCKITO_VERSION",
+            robolectric       : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
+            supportV4         : "com.android.support:support-v4:$SUPPORT_LIBS_VERSION",
+            testingCompile    : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
     ]
 }

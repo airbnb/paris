@@ -3,6 +3,7 @@ package com.airbnb.paris.proxies
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.annotation.RequiresApi
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 
@@ -22,10 +23,9 @@ class ImageViewProxy(view: ImageView) : BaseProxy<ImageViewProxy, ImageView>(vie
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_tint)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setTint(color: ColorStateList?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view.imageTintList = color
-        }
+        view.imageTintList = color
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_src)

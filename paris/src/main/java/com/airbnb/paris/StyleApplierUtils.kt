@@ -1,16 +1,18 @@
 package com.airbnb.paris
 
-import android.content.*
-import android.support.annotation.*
-import android.view.*
-import com.airbnb.paris.styles.*
-import com.airbnb.paris.typed_array_wrappers.*
+import android.content.Context
+import android.content.res.Resources
+import android.support.annotation.UiThread
+import android.view.View
+import com.airbnb.paris.styles.Style
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 class StyleApplierUtils {
 
     class DebugListener(
-            private val viewToStyles: HashMap<View, MutableSet<Style>>,
-            private val styleToAttrNames: HashMap<Style, MutableSet<String>>) : StyleApplier.DebugListener {
+        private val viewToStyles: HashMap<View, MutableSet<Style>>,
+        private val styleToAttrNames: HashMap<Style, MutableSet<String>>
+    ) : StyleApplier.DebugListener {
 
         private fun <K, V> getOrDefault(map: Map<K, V>, key: K, default: V): V {
             return if (map.containsKey(key)) {
@@ -20,23 +22,37 @@ class StyleApplierUtils {
             }
         }
 
-        override fun processAttributes(view: View, style: Style, attributes: IntArray, attributesWithDefaultValue: IntArray?, typedArray: TypedArrayWrapper) {
+        override fun processAttributes(
+            view: View,
+            style: Style,
+            attributes: IntArray,
+            attributesWithDefaultValue: IntArray?,
+            typedArray: TypedArrayWrapper
+        ) {
             val styles = getOrDefault(viewToStyles, view, HashSet())
             styles.add(style)
-            viewToStyles.put(view, styles)
+            viewToStyles[view] = styles
 
             val attrIndexes = getAttributeIndexes(typedArray, attributesWithDefaultValue)
             val newAttrNames = getAttrNames(view.context, attributes, attrIndexes)
             val attrNames = getOrDefault(styleToAttrNames, style, HashSet())
             attrNames.addAll(newAttrNames)
-            styleToAttrNames.put(style, attrNames)
+            styleToAttrNames[style] = attrNames
         }
     }
 
     companion object {
 
         private fun getAttrNames(context: Context, attrs: IntArray, attrIndexes: Set<Int>) =
-                attrIndexes.map { index -> context.resources.getResourceEntryName(attrs[index]) }.toSet()
+            attrIndexes.map { index ->
+                try {
+                    context.resources.getResourceEntryName(attrs[index])
+                } catch (e: Resources.NotFoundException) {
+                    // This can happen when the device SDK doesn't support the attribute. In that case we can still take it into account and make sure
+                    // it's in all the style, but we can't get its name so we use a substitute (which must be unique).
+                    "NotFoundException:id=${attrs[index]}"
+                }
+            }.toSet()
 
         /**
          * TODO Add comment, including the fact that an Activity context must be used on the Paris method
@@ -95,9 +111,9 @@ class StyleApplierUtils {
 
         internal fun getAttributeIndexes(typedArray: TypedArrayWrapper, ignoredAttributeIndexes: IntArray?): Set<Int> {
             return (0 until typedArray.getIndexCount())
-                    .map { typedArray.getIndex(it) }
-                    .filter { ignoredAttributeIndexes == null || !ignoredAttributeIndexes.contains(it) }
-                    .toSet()
+                .map { typedArray.getIndex(it) }
+                .filter { ignoredAttributeIndexes == null || !ignoredAttributeIndexes.contains(it) }
+                .toSet()
         }
     }
 }
