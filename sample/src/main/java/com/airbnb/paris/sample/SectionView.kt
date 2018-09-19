@@ -107,6 +107,8 @@ class SectionView : FrameLayout {
             // Set each padding value independently so that they can be overridden in other styles.
             paddingBottomRes(R.dimen.space4)
             paddingEndRes(R.dimen.space4)
+            paddingLeftRes(R.dimen.space4)
+            paddingRightRes(R.dimen.space4)
             paddingStartRes(R.dimen.space4)
             paddingTopRes(R.dimen.space4)
             titleStyle(DEFAULT_TITLE_STYLE)

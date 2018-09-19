@@ -40,6 +40,7 @@ internal fun MethodSpec.Builder.controlFlow(controlFlow: String, arg: Any, block
     controlFlow(controlFlow, arrayOf(arg), block)
 }
 
+// TODO This interface is confusing because unless `args` is explicitly `Array<Any>` then it's the other controlFlow function that gets called, which usually results in an error.
 internal fun MethodSpec.Builder.controlFlow(controlFlow: String, args: Array<Any> = emptyArray(), block: MethodSpec.Builder.() -> Unit) {
     beginControlFlow(controlFlow, *args)
     block()

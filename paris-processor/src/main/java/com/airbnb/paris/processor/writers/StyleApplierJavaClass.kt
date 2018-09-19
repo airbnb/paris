@@ -141,26 +141,38 @@ internal class StyleApplierJavaClass(
                 }
 
                 for (attr in styleableInfo.attrs) {
-                    controlFlow("if (a.hasValue(\$L))", attr.styleableResId.code) {
-                        addStatement(
-                            "getProxy().\$N(\$L)",
-                            attr.name,
-                            attr.targetFormat.typedArrayMethodCode("a", attr.styleableResId.code)
-                        )
-                    }
-
-                    if (attr.defaultValueResId != null) {
-                        controlFlow("else if (style.getShouldApplyDefaults())") {
+                    val applyAttribute: MethodSpec.Builder.() -> Unit = {
+                        controlFlow("if (a.hasValue(\$L))", attr.styleableResId.code) {
                             addStatement(
                                 "getProxy().\$N(\$L)",
                                 attr.name,
-                                attr.targetFormat.resourcesMethodCode(
-                                    "context",
-                                    "res",
-                                    attr.defaultValueResId.code
-                                )
+                                attr.targetFormat.typedArrayMethodCode("a", attr.styleableResId.code)
                             )
                         }
+
+                        if (attr.defaultValueResId != null) {
+                            controlFlow("else if (style.getShouldApplyDefaults())") {
+                                addStatement(
+                                    "getProxy().\$N(\$L)",
+                                    attr.name,
+                                    attr.targetFormat.resourcesMethodCode(
+                                        "context",
+                                        "res",
+                                        attr.defaultValueResId.code
+                                    )
+                                )
+                            }
+                        }
+
+                    }
+
+                    // If the attribute requires a minimum SDK version we add a conditional check before accessing the typed array.
+                    if (attr.requiresApi > 1) {
+                        controlFlow("if (\$T.VERSION.SDK_INT >= \$L)", arrayOf<Any>(AndroidClassNames.BUILD, attr.requiresApi)) {
+                            applyAttribute()
+                        }
+                    } else {
+                        applyAttribute()
                     }
                 }
 

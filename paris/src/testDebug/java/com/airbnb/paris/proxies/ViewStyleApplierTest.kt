@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 class ViewStyleApplierTest {
@@ -55,8 +57,8 @@ class ViewStyleApplierTest {
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
         applier.apply(builder.backgroundTintRes(android.R.color.holo_red_dark).build())
         assertEquals(
-                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
-                view.backgroundTintList
+            ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+            view.backgroundTintList
         )
     }
 
@@ -65,8 +67,8 @@ class ViewStyleApplierTest {
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
         applier.apply(builder.backgroundTint(ContextCompat.getColor(context, android.R.color.holo_red_dark)).build())
         assertEquals(
-                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
-                view.backgroundTintList
+            ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+            view.backgroundTintList
         )
     }
 
@@ -82,8 +84,8 @@ class ViewStyleApplierTest {
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
         applier.apply(builder.backgroundTint(ContextCompat.getColorStateList(context, android.R.color.holo_red_dark)).build())
         assertEquals(
-                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
-                view.backgroundTintList
+            ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+            view.backgroundTintList
         )
     }
 
@@ -99,8 +101,8 @@ class ViewStyleApplierTest {
         view.backgroundTintMode = PorterDuff.Mode.SRC_OVER
         applier.apply(builder.backgroundTintMode(ViewProxy.PORTERDUFF_MODE_ADD).build())
         assertEquals(
-                PorterDuff.Mode.ADD,
-                view.backgroundTintMode
+            PorterDuff.Mode.ADD,
+            view.backgroundTintMode
         )
     }
 
@@ -152,6 +154,17 @@ class ViewStyleApplierTest {
     }
 
     @Test
+    @Config(sdk = [(Build.VERSION_CODES.JELLY_BEAN)])
+    fun layout_marginEnd_requiresApi() {
+        // layout_marginEnd requires JELLY_BEAN_MR1 (17) so here the attribute should be ignored.
+        applier.apply(viewStyle {
+            layoutMarginEnd(10)
+        })
+        // The margin doesn't get set so the layout parameters should still be null.
+        assertNull(view.layoutParams)
+    }
+
+    @Test
     fun layout_marginStart_precedence() {
         applier.apply(viewStyle {
             layoutMarginStart(20)
@@ -159,6 +172,17 @@ class ViewStyleApplierTest {
         })
         val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
         assertEquals(20, layoutParams.marginStart)
+    }
+
+    @Test
+    @Config(sdk = [(Build.VERSION_CODES.JELLY_BEAN)])
+    fun layout_marginStart_requiresApi() {
+        // layout_marginStart requires JELLY_BEAN_MR1 (17) so here the attribute should be ignored.
+        applier.apply(viewStyle {
+            layoutMarginStart(10)
+        })
+        // The margin doesn't get set so the layout parameters should still be null.
+        assertNull(view.layoutParams)
     }
 
     @Test

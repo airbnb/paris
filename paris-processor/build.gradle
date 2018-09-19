@@ -9,6 +9,7 @@ targetCompatibility = rootProject.JAVA_TARGET_VERSION
 dependencies {
     implementation project(':paris-annotations')
 
+    implementation deps.androidAnnotations
     implementation deps.javaPoet
     implementation deps.kotlinPoet
     implementation deps.kotlin

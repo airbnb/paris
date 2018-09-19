@@ -152,13 +152,13 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginEnd)
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setLayoutMarginEnd(@Px marginEnd: Int) {
         this.marginEnd = marginEnd
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginStart)
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setLayoutMarginStart(@Px marginStart: Int) {
         this.marginStart = marginStart
     }
@@ -206,16 +206,16 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
         view.contentDescription = contentDescription
     }
 
+    // TODO Fix Samsung bug, see https://github.com/airbnb/paris/issues/70#issuecomment-421332864
     @Attr(R2.styleable.Paris_View_android_elevation)
     fun setElevation(@Px elevation: Int) {
         ViewCompat.setElevation(view, elevation.toFloat())
     }
 
     @Attr(R2.styleable.Paris_View_android_foreground)
+    @RequiresApi(Build.VERSION_CODES.M)
     fun setForeground(drawable: Drawable?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.foreground = drawable
-        }
+        view.foreground = drawable
     }
 
     @Attr(R2.styleable.Paris_View_android_minHeight)
@@ -264,27 +264,26 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingEnd)
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setPaddingEnd(@Px padding: Int) {
         view.setPaddingEnd(padding)
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingStart)
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setPaddingStart(@Px padding: Int) {
         view.setPaddingStart(padding)
     }
 
     @Attr(R2.styleable.Paris_View_android_stateListAnimator)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setStateListAnimator(@AnyRes animatorRes: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val animator = if (animatorRes != 0) {
-                AnimatorInflater.loadStateListAnimator(view.context, animatorRes)
-            } else {
-                null
-            }
-            view.stateListAnimator = animator
+        val animator = if (animatorRes != 0) {
+            AnimatorInflater.loadStateListAnimator(view.context, animatorRes)
+        } else {
+            null
         }
+        view.stateListAnimator = animator
     }
 
     @Attr(R2.styleable.Paris_View_android_visibility)

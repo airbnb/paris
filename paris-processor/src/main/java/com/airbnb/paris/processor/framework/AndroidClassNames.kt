@@ -3,6 +3,7 @@ package com.airbnb.paris.processor.framework
 internal object AndroidClassNames {
 
     val ATTRIBUTE_SET = "android.util.AttributeSet".className()
+    val BUILD = "android.os.Build".className()
     val R = "android.R".className()
     val CONTEXT = "android.content.Context".className()
     val RESOURCES = "android.content.res.Resources".className()
