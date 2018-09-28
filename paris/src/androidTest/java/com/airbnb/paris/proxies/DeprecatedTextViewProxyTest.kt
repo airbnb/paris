@@ -55,8 +55,8 @@ class DeprecatedTextViewProxyTest {
     }
 
     @Test
-    fun setCompoundDrawablePadding_value() {
-        proxy.setCompoundDrawablePadding(20)
+    fun setDrawablePadding_value() {
+        proxy.setDrawablePadding(20)
         assertEquals(20, view.compoundDrawablePadding)
     }
 

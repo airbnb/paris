@@ -61,8 +61,8 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
         drawableTop = drawable
     }
 
-    @Attr(R2.styleable.Paris_TextView_android_compoundDrawablePadding)
-    fun setCompoundDrawablePadding(@Px padding: Int) {
+    @Attr(R2.styleable.Paris_TextView_android_drawablePadding)
+    fun setDrawablePadding(@Px padding: Int) {
         view.setCompoundDrawablePadding(padding)
     }
 

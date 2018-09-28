@@ -110,15 +110,15 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             { it.compoundDrawables[1] }
     ))
 
-    // compoundDrawablePadding
+    // drawablePadding
     add(withAssertEquals(
             ARBITRARY_INTS,
             android.R.attr.drawablePadding,
-            TextViewProxy::setCompoundDrawablePadding,
-            StyleBuilder::compoundDrawablePadding,
-            StyleBuilder::compoundDrawablePaddingRes,
+            TextViewProxy::setDrawablePadding,
+            StyleBuilder::drawablePadding,
+            StyleBuilder::drawablePaddingRes,
             { view, input ->
-                assertEquals(input, view.compoundDrawablePadding)
+                assertEquals(input, view.drawablePadding)
             }
     ))
 

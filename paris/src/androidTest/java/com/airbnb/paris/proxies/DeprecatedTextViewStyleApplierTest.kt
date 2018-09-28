@@ -78,10 +78,10 @@ class DeprecatedTextViewStyleApplierTest {
     }
 
     @Test
-    fun applyCompoundDrawablePadding() {
+    fun applydrawablePadding() {
         val padding = 20
         apply {
-            compoundDrawablePadding(padding)
+            drawablePadding(padding)
         }
         assertEquals(padding, view.compoundDrawablePadding)
     }
