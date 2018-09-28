@@ -61,6 +61,11 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
         drawableTop = drawable
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_drawablePadding)
+    fun setDrawablePadding(@Px padding: Int) {
+        view.setCompoundDrawablePadding(padding)
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_ellipsize)
     fun setEllipsize(ellipsize: Int) {
         view.ellipsize = when (ellipsize) {

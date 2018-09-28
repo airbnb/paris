@@ -45,6 +45,7 @@
     <declare-styleable name="Paris_TextView">
         <attr name="android:drawableBottom" />
         <attr name="android:drawableLeft" />
+        <attr name="android:drawablePadding" />
         <attr name="android:drawableRight" />
         <attr name="android:drawableTop" />
         <attr name="android:ellipsize" />

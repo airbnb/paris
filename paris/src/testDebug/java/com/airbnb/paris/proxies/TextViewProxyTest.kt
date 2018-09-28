@@ -215,4 +215,11 @@ class TextViewProxyTest {
         proxy.afterStyle(null)
         assertTypefaceEquals(Typeface.create("sans-serif", Typeface.BOLD), view.typeface)
     }
+
+    @Test
+    fun setDrawablePadding() {
+        view.compoundDrawablePadding = 0
+        proxy.setDrawablePadding(100)
+        assertEquals(100, view.compoundDrawablePadding)
+    }
 }
