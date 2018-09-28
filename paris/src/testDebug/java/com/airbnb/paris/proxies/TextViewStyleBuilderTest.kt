@@ -129,4 +129,26 @@ class TextViewStyleBuilderTest {
             style
         )
     }
+
+    @Test
+    fun drawablePadding() {
+        val style = builder.drawablePadding(20).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.drawablePadding, 20)
+                .build(),
+            style
+        )
+    }
+
+    @Test
+    fun drawablePaddingRes() {
+        val style = builder.drawablePaddingRes(R.integer.test_arbitrary).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.drawablePadding, ResourceId(R.integer.test_arbitrary))
+                .build(),
+            style
+        )
+    }
 }

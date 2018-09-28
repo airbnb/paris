@@ -177,6 +177,12 @@ class TextViewStyleApplierTest {
     }
 
     @Test
+    fun drawablePaddingXml() {
+        applier.apply(R.style.Test_TextViewStyleApplier_DrawablePadding)
+        assertEquals(10, view.compoundDrawablePadding)
+    }
+
+    @Test
     fun maxWidth() {
         view.maxWidth = 0
         applier.apply(builder.maxWidth(100).build())
@@ -228,4 +234,10 @@ class TextViewStyleApplierTest {
         assertEquals(View.INVISIBLE, view.visibility)
     }
 
+    @Test
+    fun drawablePadding() {
+        view.compoundDrawablePadding = 0
+        applier.apply(builder.drawablePadding(100).build())
+        assertEquals(100, view.compoundDrawablePadding)
+    }
 }

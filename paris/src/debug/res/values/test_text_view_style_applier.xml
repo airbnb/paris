@@ -51,4 +51,8 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
+    <style name="Test_TextViewStyleApplier_DrawablePadding">
+        <item name="android:drawablePadding">10dp</item>
+    </style>
+
 </resources>

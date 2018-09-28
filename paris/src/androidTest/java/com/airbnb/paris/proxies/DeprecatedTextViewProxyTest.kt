@@ -54,12 +54,6 @@ class DeprecatedTextViewProxyTest {
         assertEquals(drawableTop, view.compoundDrawables[1])
     }
 
-    @Test
-    fun setDrawablePadding_value() {
-        proxy.setDrawablePadding(20)
-        assertEquals(20, view.compoundDrawablePadding)
-    }
-
     @Test(expected = IllegalStateException::class)
     fun setEllipsize_invalidValue() {
         proxy.setEllipsize(5)
