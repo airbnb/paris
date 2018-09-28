@@ -8,11 +8,6 @@
         <item name="android:drawableTop">@android:drawable/ic_delete</item>
     </style>
 
-    <dimen name="text_view_proxy_style_applier_test_drawable_padding">4dp</dimen>
-    <style name="TextViewStyleApplierTest_drawablePadding">
-        <item name="android:drawablePadding">@dimen/text_view_proxy_style_applier_test_drawable_padding</item>
-    </style>
-
     <style name="TextViewStyleApplierTest_no_drawables">
         <item name="android:textAllCaps">true</item>
     </style>
