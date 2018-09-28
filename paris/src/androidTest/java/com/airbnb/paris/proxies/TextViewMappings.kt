@@ -110,6 +110,18 @@ internal val TEXT_VIEW_MAPPINGS = ArrayList<TextViewMapping<*>>().apply {
             { it.compoundDrawables[1] }
     ))
 
+    // compoundDrawablePadding
+    add(withAssertEquals(
+            ARBITRARY_INTS,
+            android.R.attr.drawablePadding,
+            TextViewProxy::setCompoundDrawablePadding,
+            StyleBuilder::compoundDrawablePadding,
+            StyleBuilder::compoundDrawablePaddingRes,
+            { view, input ->
+                assertEquals(input, view.compoundDrawablePadding)
+            }
+    ))
+
     // ellipsize
     add(withAssertEquals(
             (1..4).toList(),

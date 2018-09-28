@@ -78,6 +78,15 @@ class DeprecatedTextViewStyleApplierTest {
     }
 
     @Test
+    fun applyCompoundDrawablePadding() {
+        val padding = 20
+        apply {
+            compoundDrawablePadding(padding)
+        }
+        assertEquals(padding, view.compoundDrawablePadding)
+    }
+
+    @Test
     fun applyDrawables_noReset() {
         // If a style is applied that doesn't change the drawable then it should still be there
 

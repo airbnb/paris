@@ -109,6 +109,31 @@ class TextViewStyleApplier_StyleBuilderTest {
     }
 
     @Test
+    fun compoundDrawablePadding() {
+        val padding = 20
+        programmaticStyle {
+            put(android.R.attr.drawablePadding, padding)
+
+            assertEqualsTextViewStyleBuilder {
+                compoundDrawablePadding(padding)
+            }
+        }
+    }
+
+    @Test
+    fun compoundDrawablePadding_dp() {
+        listOf(Integer.MIN_VALUE, -5, 0, 1, 2, 3, 5, 15, Integer.MAX_VALUE).forEach {
+            programmaticStyle {
+                putDp(android.R.attr.drawablePadding, it)
+
+                assertEqualsTextViewStyleBuilder {
+                    drawablePaddingDp(it)
+                }
+            }
+        }
+    }
+
+    @Test
     fun lineSpacingExtra_dp() {
         listOf(Integer.MIN_VALUE, -5, 0, 1, 2, 3, 5, 15, Integer.MAX_VALUE).forEach {
             programmaticStyle {

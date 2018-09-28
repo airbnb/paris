@@ -70,6 +70,11 @@
         <item name="android:drawableTop">@android:drawable/ic_delete</item>
     </style>
 
+    <dimen name="Test_text_view_compoundDrawablePadding">40dp</dimen>
+    <style name="Test_TextView_compoundDrawablePadding">
+        <item name="android:drawablePadding">@dimen/Test_text_view_compoundDrawablePadding</item>
+    </style>
+
     <style name="Test_TextView_no_drawables">
         <item name="android:textAllCaps">true</item>
     </style>
