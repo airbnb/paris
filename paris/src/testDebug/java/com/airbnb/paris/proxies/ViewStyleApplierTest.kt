@@ -127,6 +127,8 @@ class ViewStyleApplierTest {
     fun layout_margin_precedence() {
         applier.apply(viewStyle {
             layoutMargin(20)
+            layoutMarginHorizontal(10)
+            layoutMarginVertical(10)
             layoutMarginBottom(10)
             layoutMarginEnd(10)
             layoutMarginLeft(10)
@@ -180,6 +182,52 @@ class ViewStyleApplierTest {
         // layout_marginStart requires JELLY_BEAN_MR1 (17) so here the attribute should be ignored.
         applier.apply(viewStyle {
             layoutMarginStart(10)
+        })
+        // The margin doesn't get set so the layout parameters should still be null.
+        assertNull(view.layoutParams)
+    }
+
+    @Test
+    fun layout_marginHorizontal_precedence() {
+        applier.apply(viewStyle {
+            layoutMarginHorizontal(20)
+            layoutMarginLeft(10)
+            layoutMarginRight(10)
+        })
+        val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertEquals(20, layoutParams.leftMargin)
+        assertEquals(20, layoutParams.rightMargin)
+    }
+
+    @Test
+    @Config(sdk = [(Build.VERSION_CODES.N_MR1)])
+    fun layout_marginHorizontal_requiresApi() {
+        // layout_marginHorizontal requires O (26) so here the attribute should be ignored.
+        applier.apply(viewStyle {
+            layoutMarginHorizontal(10)
+        })
+        // The margin doesn't get set so the layout parameters should still be null.
+        assertNull(view.layoutParams)
+    }
+
+    @Test
+    fun layout_marginVertical_precedence() {
+        applier.apply(viewStyle {
+            layoutMarginVertical(20)
+            layoutMarginTop(10)
+            layoutMarginBottom(10)
+        })
+        val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+        assertEquals(20, layoutParams.topMargin)
+        assertEquals(20, layoutParams.bottomMargin)
+    }
+
+    @Test
+    @Config(sdk = [(Build.VERSION_CODES.N_MR1)])
+    fun layout_marginVertical_requiresApi() {
+        // layout_marginVertical requires O (26) so here the attribute should be ignored.
+        applier.apply(viewStyle {
+            layoutMarginVertical(10)
         })
         // The margin doesn't get set so the layout parameters should still be null.
         assertNull(view.layoutParams)

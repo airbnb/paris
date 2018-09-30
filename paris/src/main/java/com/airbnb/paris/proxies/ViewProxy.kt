@@ -41,10 +41,12 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     private var marginRight: Int? = null
     private var marginStart: Int? = null
     private var marginTop: Int? = null
+    private var marginHorizontal: Int? = null
+    private var marginVertical: Int? = null
 
     @AfterStyle
     fun afterStyle(@Suppress("UNUSED_PARAMETER") style: Style?) {
-        val isMarginSet = listOf(margin, marginBottom, marginEnd, marginLeft, marginRight, marginStart, marginTop).any { it != null }
+        val isMarginSet = listOf(margin, marginBottom, marginEnd, marginLeft, marginRight, marginStart, marginTop, marginHorizontal, marginVertical).any { it != null }
 
         if (!ignoreLayoutWidthAndHeight) {
             if ((width != null) xor (height != null)) {
@@ -82,10 +84,25 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
             if (margin != null) {
                 marginParams.setMargins(margin, margin, margin, margin)
             } else {
-                marginBottom?.let { marginParams.bottomMargin = it }
-                marginLeft?.let { marginParams.leftMargin = it }
-                marginRight?.let { marginParams.rightMargin = it }
-                marginTop?.let { marginParams.topMargin = it }
+                if (marginHorizontal?.let { it >= 0 } == true) {
+                    marginHorizontal?.let {
+                        marginParams.leftMargin = it
+                        marginParams.rightMargin = it
+                    }
+                } else {
+                    marginLeft?.let { marginParams.leftMargin = it }
+                    marginRight?.let { marginParams.rightMargin = it }
+                }
+
+                if (marginVertical?.let { it >= 0 } == true) {
+                    marginVertical?.let {
+                        marginParams.bottomMargin = it
+                        marginParams.topMargin = it
+                    }
+                } else {
+                    marginBottom?.let { marginParams.bottomMargin = it }
+                    marginTop?.let { marginParams.topMargin = it }
+                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     // Note: setting negatives marginEnd or marginStart doesn't work (the view resets them to 0)
@@ -106,6 +123,8 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
         marginRight = null
         marginStart = null
         marginTop = null
+        marginHorizontal = null
+        marginVertical = null
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_width)
@@ -129,6 +148,18 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
             }
             view.layoutParams = params
         }
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginHorizontal)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setLayoutMarginHorizontal(@Px marginHorizontal: Int) {
+        this.marginHorizontal = marginHorizontal
+    }
+
+    @Attr(R2.styleable.Paris_View_android_layout_marginVertical)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setLayoutMarginVertical(@Px marginVertical: Int) {
+        this.marginVertical = marginVertical
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginBottom)
