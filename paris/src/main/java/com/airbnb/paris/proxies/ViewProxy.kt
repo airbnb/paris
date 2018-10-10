@@ -84,24 +84,20 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
             if (margin != null) {
                 marginParams.setMargins(margin, margin, margin, margin)
             } else {
-                if (marginHorizontal?.let { it >= 0 } == true) {
-                    marginHorizontal?.let {
-                        marginParams.leftMargin = it
-                        marginParams.rightMargin = it
-                    }
-                } else {
-                    marginLeft?.let { marginParams.leftMargin = it }
-                    marginRight?.let { marginParams.rightMargin = it }
+                (marginHorizontal ?: marginLeft)?.let {
+                    marginParams.leftMargin = it
                 }
 
-                if (marginVertical?.let { it >= 0 } == true) {
-                    marginVertical?.let {
-                        marginParams.bottomMargin = it
-                        marginParams.topMargin = it
-                    }
-                } else {
-                    marginBottom?.let { marginParams.bottomMargin = it }
-                    marginTop?.let { marginParams.topMargin = it }
+                (marginHorizontal ?: marginRight)?.let {
+                    marginParams.rightMargin = it
+                }
+
+                (marginVertical ?: marginBottom)?.let {
+                    marginParams.bottomMargin = it
+                }
+
+                (marginVertical ?: marginTop)?.let {
+                    marginParams.topMargin = it
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
