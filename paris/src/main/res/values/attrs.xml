@@ -15,11 +15,11 @@
         <attr name="android:layout_margin" />
         <attr name="android:layout_marginBottom" />
         <attr name="android:layout_marginEnd" />
+        <attr name="android:layout_marginHorizontal" />
         <attr name="android:layout_marginLeft" />
         <attr name="android:layout_marginRight" />
         <attr name="android:layout_marginStart" />
         <attr name="android:layout_marginTop" />
-        <attr name="android:layout_marginHorizontal" />
         <attr name="android:layout_marginVertical" />
         <attr name="android:minHeight" />
         <attr name="android:minWidth" />
