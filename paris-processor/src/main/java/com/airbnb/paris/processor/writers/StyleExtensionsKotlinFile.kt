@@ -33,11 +33,14 @@ internal class StyleExtensionsKotlinFile(
 
     override val block: FileSpec.Builder.() -> Unit = {
 
-        // We suppress Deprecation warnings for this class in case any of the models used are deprecated.
-        // This prevents the generated file from causing errors for using deprecated classes.
         addAnnotation(
             AnnotationSpec.builder(Suppress::class)
+                // We suppress Deprecation warnings for this class in case any of the models used are deprecated.
+                // This prevents the generated file from causing errors for using deprecated classes.
                 .addMember("%S", "DEPRECATION")
+                // Similarly we suppress the max line length warning since readability isn't so much an issue with generated files and there's no
+                // easy fix.
+                .addMember("%S", "Detekt.MaxLineLength")
                 .build()
         )
 
