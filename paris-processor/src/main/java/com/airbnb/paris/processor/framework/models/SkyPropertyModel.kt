@@ -38,13 +38,16 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
             val getterName = "get${name.capitalize()}"
             val kotlinGetterElement = element.siblings().asSequence()
                 .filter {
+                    val elementSimpleName = it.simpleName.toString()
                     it is ExecutableElement &&
-                            it.simpleName.toString() == getterName &&
+                            // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
+                            // be appended with "$" and an arbitrary string for obfuscation purposes.
+                            (elementSimpleName == getterName || elementSimpleName.startsWith("$getterName$")) &&
                             it.parameters.isEmpty()
                 }
                 .singleOrNull() as ExecutableElement?
 
-            kotlinGetterElement ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private.")
+            kotlinGetterElement ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private or protected.")
 
             getterElement = kotlinGetterElement
             getter = "${kotlinGetterElement.simpleName}()"
