@@ -30,7 +30,11 @@ abstract class SkyCompanionPropertyModel(val element: VariableElement) : SkyMode
                 }
                 .enclosedElements
                 .single {
-                    it is ExecutableElement && it.simpleName.toString() == getterName
+                    val elementSimpleName = it.simpleName.toString()
+                    it is ExecutableElement &&
+                            // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
+                            // be appended with "$" and an arbitrary string for obfuscation purposes.
+                            (elementSimpleName == getterName || elementSimpleName.startsWith("$getterName$"))
                 }
 
             javaGetter = JavaCodeBlock.of("Companion.\$N()", getterElement.simpleName)
