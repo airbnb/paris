@@ -60,7 +60,10 @@ internal class AttrInfoExtractor(
         val enclosingElement = element.enclosingElement as TypeElement
         val name = element.simpleName.toString()
         val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, name, targetType)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, name)
+        // internal functions have a '$' in their name which creates a kdoc error. We could escape it but the part after the '$' is meant for
+        // obfuscation anyway so not using it should result in clearer documentation.
+        val kdocName = name.substringBefore('$')
+        val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, kdocName)
 
         // We rely on the `RequiresApi` Android annotation to disable certain attributes based on the Android SDK version.
         // 1 is the default since that's the minimum version.
