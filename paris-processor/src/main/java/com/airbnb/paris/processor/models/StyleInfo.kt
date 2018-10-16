@@ -107,7 +107,7 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
         if (defaultStyleExists) {
             val styleResourceCode = JavaCodeBlock.of("\$T.\$L", rStyleTypeElement, defaultStyleName)
 
-            val javadoc = JavaCodeBlock.of("See $defaultStyleName style (defined as an XML resource)")
+            val javadoc = JavaCodeBlock.of("See $defaultStyleName style (defined as an XML resource).")
             val kdoc = KotlinCodeBlock.of(javadoc.toString())
 
             return StyleResInfo(
@@ -139,7 +139,7 @@ class EmptyStyleInfo(override val enclosingElement: Element, override val isDefa
 
     override val elementName = "empty_default"
     override val formattedName = DEFAULT_STYLE_FORMATTED_NAME
-    override val javadoc: JavaCodeBlock = JavaCodeBlock.of("Empty style")
+    override val javadoc: JavaCodeBlock = JavaCodeBlock.of("Empty style.")
     override val kdoc = KotlinCodeBlock.of(javadoc.toString())
 }
 
