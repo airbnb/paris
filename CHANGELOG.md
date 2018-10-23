@@ -1,3 +1,30 @@
+# 1.1.0 (October 23, 2018)
+
+- Updated the sample app.
+- Annotations are now included in the "paris" artifact.
+- New attribute support:
+  - View
+    - `android:backgroundTint`
+    - `android:backgroundTintMode`
+    - `android:layout_marginHorizontal`
+    - `android:layout_marginVertical`
+  - TextView
+    - `android:drawablePadding`
+    - `android:fontFamily`
+    - `android:inputType`
+    - `android:hint`
+    - `android:maxWidth`
+    - `android:textStyle`
+- Added support for null attribute values.
+- Kotlin support:
+  - Extensions are now generated for styleable views as an alternative to calling `Paris…`.
+  - Added support for `@Styleable` Kotlin classes.
+- Clarified various error messages.
+- Bugs:
+  - Fixed password inputType + singleLine bug.
+  - Fixed precedence of margin and padding attribute.
+  - Fixed compound drawables not using intrinsic bounds.
+
 # 1.0.0 (April 13, 2018)
 
 - Apply styles programmatically at any time.
