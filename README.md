@@ -35,7 +35,7 @@ Paris.style(myView).apply(R.style.MyStyle);
 ```
 </details><br/>
 
-Where `myView` is an arbitrary view instance and `MyStyle` an XML-defined style. Many but not all attributes are supported, for more see [Supported View Types and Attributes](../../wiki/Supported-View-Types-and-Attributes).
+Where `myView` is an arbitrary view instance, `MyStyle` an XML-defined style, and `style` an extension function provided by Paris. Many but not all attributes are supported, for more see [Supported View Types and Attributes](../../wiki/Supported-View-Types-and-Attributes).
 
 ### Combining 2 or More Styles
 
@@ -269,6 +269,8 @@ Paris.styleBuilder(myHeader)
 ```
 </details><br/>
 
+**Attention:** Extension functions like `titleStyle` and `subtitleStyle` are generated during compilation by the Paris annotation processor. When new `@StyleableChild` annotations are added, the project must be (re)compiled once for the related functions to become available.
+
 For more see [Styling Subviews](../../wiki/Custom-Views#styling-subviews).
 
 ### Linking Styles to Views
@@ -333,6 +335,8 @@ Paris.styleBuilder(myView)
         .apply();
 ```
 </details><br/>
+
+**Attention:** Extension functions like `addRed` and `addGreen` are generated during compilation by the Paris annotation processor. When new `@Style` annotations are added, the project must be (re)compiled once for the related functions to become available.
 
 For more see [Linking Styles to Custom Views](../../wiki/Custom-Views#linking-styles-to-custom-views).
 
