@@ -23,7 +23,6 @@ android {
 
 dependencies {
     implementation project(':paris')
-    implementation project(':paris-annotations')
 
     implementation deps.appcompatV7
     implementation deps.kotlin
