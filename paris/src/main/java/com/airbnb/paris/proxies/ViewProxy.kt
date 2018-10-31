@@ -233,10 +233,10 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
         view.contentDescription = contentDescription
     }
 
-    // TODO Fix Samsung bug, see https://github.com/airbnb/paris/issues/70#issuecomment-421332864
     @Attr(R2.styleable.Paris_View_android_elevation)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setElevation(@Px elevation: Int) {
-        ViewCompat.setElevation(view, elevation.toFloat())
+        view.elevation = elevation.toFloat()
     }
 
     @Attr(R2.styleable.Paris_View_android_foreground)
