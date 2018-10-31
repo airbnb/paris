@@ -2,8 +2,8 @@ package com.airbnb.paris.test;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.UiThread;
 import android.view.ViewStyleApplier;
+import androidx.annotation.UiThread;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.StyleApplierUtils;
 import com.airbnb.paris.styles.Style;
@@ -51,7 +51,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * Empty style */
+   * Empty style. */
   public void applyDefault() {
   }
 
@@ -93,7 +93,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * Empty style */
+     * Empty style. */
     public StyleBuilder addDefault() {
       return this;
     }

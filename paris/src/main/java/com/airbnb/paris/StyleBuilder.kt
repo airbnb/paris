@@ -1,6 +1,6 @@
 package com.airbnb.paris
 
-import android.support.annotation.StyleRes
+import androidx.annotation.StyleRes
 import android.util.AttributeSet
 import com.airbnb.paris.styles.*
 

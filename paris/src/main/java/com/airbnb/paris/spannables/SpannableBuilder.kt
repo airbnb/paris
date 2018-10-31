@@ -1,7 +1,7 @@
 package com.airbnb.paris.spannables
 
 import android.content.Context
-import android.support.annotation.StyleRes
+import androidx.annotation.StyleRes
 import android.widget.TextView
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style

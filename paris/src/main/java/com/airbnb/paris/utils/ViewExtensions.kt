@@ -1,8 +1,8 @@
 package com.airbnb.paris.utils
 
 import android.os.Build
-import android.support.annotation.Px
-import android.support.annotation.RequiresApi
+import androidx.annotation.Px
+import androidx.annotation.RequiresApi
 import android.view.View
 
 fun View.setPaddingBottom(@Px px: Int) {

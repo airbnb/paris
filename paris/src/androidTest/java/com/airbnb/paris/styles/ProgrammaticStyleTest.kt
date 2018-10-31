@@ -1,7 +1,7 @@
 package com.airbnb.paris.styles
 
 import android.graphics.Color
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.test.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals

@@ -1,9 +1,9 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewStyleApplier
+import androidx.core.content.ContextCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.attribute_values.ResourceId
 import com.airbnb.paris.styles.ProgrammaticStyle

@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
 import com.airbnb.paris.utils.getFont

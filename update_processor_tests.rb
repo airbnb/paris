@@ -20,7 +20,7 @@ def updateTestClass(test_class_result)
     end
 
     # We expect to see a line like:
-    # Expected file: </Users/eli_hart/repos/epoxy/epoxy-processortest/build/intermediates/classes/test/debug/ModelWithViewClickListener_.java>;
+    # Expected file: </at_style_style_field/MyViewStyleApplier.java>;
     # Which tells us where the original processor test file lives
     expected_file_match = /Expected file: <([^>]*)>/m.match(preBlock)
     if expected_file_match.nil? || expected_file_match.captures.empty?
@@ -29,7 +29,7 @@ def updateTestClass(test_class_result)
     end
 
     # The test copies the source file to the build folder. We need to modify the original file to update its expected source
-    expected_source_file_path = expected_file_match.captures[0].sub "build/intermediates/classes/test/debug", "src/test/resources"
+    expected_source_file_path = "paris-test/src/test/resources" + expected_file_match.captures[0]
 
     # The error message includes the source code that was generated. We use a regex to extract the source from the following expected pattern
     #

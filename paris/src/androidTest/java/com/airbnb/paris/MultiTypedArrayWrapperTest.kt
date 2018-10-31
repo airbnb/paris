@@ -2,8 +2,8 @@ package com.airbnb.paris
 
 import android.content.Context
 import android.content.res.Resources
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.attribute_values.ResourceId
 import com.airbnb.paris.styles.MultiStyle
 import com.airbnb.paris.styles.ProgrammaticStyle

@@ -2,7 +2,6 @@ package com.airbnb.paris.typed_array_wrappers
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.v4.content.res.ResourcesCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.utils.ShadowResourcesCompat

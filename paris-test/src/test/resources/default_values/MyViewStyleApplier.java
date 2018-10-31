@@ -5,22 +5,22 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.AnyRes;
-import android.support.annotation.ArrayRes;
-import android.support.annotation.BoolRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.Dimension;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.FontRes;
-import android.support.annotation.FractionRes;
-import android.support.annotation.IntegerRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.support.annotation.StringRes;
-import android.support.annotation.UiThread;
 import android.view.ViewStyleApplier;
+import androidx.annotation.AnyRes;
+import androidx.annotation.ArrayRes;
+import androidx.annotation.BoolRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.FontRes;
+import androidx.annotation.FractionRes;
+import androidx.annotation.IntegerRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.annotation.StringRes;
+import androidx.annotation.UiThread;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.styles.Style;
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper;
@@ -166,7 +166,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * Empty style */
+   * Empty style. */
   public void applyDefault() {
   }
 
@@ -409,7 +409,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * Empty style */
+     * Empty style. */
     public StyleBuilder addDefault() {
       return this;
     }

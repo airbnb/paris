@@ -2,8 +2,8 @@ package com.airbnb.paris.proxies
 
 import android.content.*
 import android.content.res.*
-import android.support.test.*
-import android.support.test.runner.*
+import androidx.test.*
+import androidx.test.runner.*
 import android.view.*
 import android.widget.*
 import android.view.ViewStyleApplier.*

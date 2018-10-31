@@ -15,7 +15,7 @@ android {
 dependencies {
     implementation project(':paris')
 
-    implementation deps.appcompatV7
+    implementation deps.appcompat
     implementation deps.constraintLayout
     implementation deps.kotlin
 

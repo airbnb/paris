@@ -4,8 +4,8 @@ import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.Px
-import android.support.annotation.RequiresApi
+import androidx.annotation.Px
+import androidx.annotation.RequiresApi
 import android.text.InputType
 import android.text.TextUtils
 import android.text.method.PasswordTransformationMethod

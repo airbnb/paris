@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.AnyRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.Px;
+import androidx.annotation.AnyRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.Px;
 import android.util.AttributeSet;
 import android.view.View;
 

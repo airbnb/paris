@@ -1,6 +1,6 @@
 package com.airbnb.paris.processor.models
 
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.ParisProcessor

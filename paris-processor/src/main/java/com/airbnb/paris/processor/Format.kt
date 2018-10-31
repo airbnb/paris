@@ -2,7 +2,6 @@ package com.airbnb.paris.processor
 
 import com.airbnb.paris.annotations.Fraction
 import com.airbnb.paris.processor.framework.AndroidClassNames
-import com.airbnb.paris.processor.framework.AndroidClassNames.RESOURCES_COMPAT
 import com.airbnb.paris.processor.framework.hasAnnotation
 import com.airbnb.paris.processor.framework.hasAnyAnnotation
 import com.squareup.javapoet.ClassName

@@ -5,8 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.AttrRes
-import android.support.v4.content.res.ResourcesCompat
+import androidx.annotation.AttrRes
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.attribute_values.DpValue
 import com.airbnb.paris.attribute_values.ResourceId

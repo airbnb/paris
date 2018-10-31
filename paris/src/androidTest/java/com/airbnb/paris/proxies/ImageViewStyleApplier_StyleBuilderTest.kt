@@ -1,6 +1,6 @@
 package com.airbnb.paris.proxies
 
-import android.support.test.runner.*
+import androidx.test.runner.*
 import android.widget.*
 import android.widget.ImageViewStyleApplier.*
 import com.airbnb.paris.styles.*

@@ -5,10 +5,10 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStyleApplier
+import androidx.core.content.ContextCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.extensions.*
 import org.junit.Assert.assertEquals

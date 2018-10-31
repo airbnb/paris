@@ -2,8 +2,8 @@ package com.airbnb.paris.utils
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.annotation.FontRes
-import android.support.v4.content.res.ResourcesCompat
+import androidx.annotation.FontRes
+import androidx.core.content.res.ResourcesCompat
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 

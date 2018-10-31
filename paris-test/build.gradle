@@ -11,7 +11,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -24,7 +24,7 @@ android {
 dependencies {
     implementation project(':paris')
 
-    implementation deps.appcompatV7
+    implementation deps.appcompat
     implementation deps.kotlin
 
     kapt project(':paris-processor')

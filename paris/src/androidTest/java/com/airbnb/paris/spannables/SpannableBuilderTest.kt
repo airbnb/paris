@@ -1,7 +1,7 @@
 package com.airbnb.paris.spannables
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.spannables.SpannableBuilder
 import com.airbnb.paris.spannables.StyleConverter
 import com.airbnb.paris.styles.ProgrammaticStyle

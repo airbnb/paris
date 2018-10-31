@@ -1,9 +1,9 @@
 package com.airbnb.paris.utils
 
 import android.content.res.Resources
-import android.support.annotation.AnyRes
-import android.support.annotation.DimenRes
-import android.support.annotation.StyleRes
+import androidx.annotation.AnyRes
+import androidx.annotation.DimenRes
+import androidx.annotation.StyleRes
 import android.util.TypedValue
 import com.airbnb.paris.styles.ResourceStyle
 

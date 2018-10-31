@@ -2,8 +2,8 @@ package com.airbnb.paris.styles
 
 import android.annotation.*
 import android.content.*
-import android.support.annotation.*
-import android.support.annotation.IntRange
+import androidx.annotation.*
+import androidx.annotation.IntRange
 import com.airbnb.paris.typed_array_wrappers.*
 
 data class ResourceStyle constructor(

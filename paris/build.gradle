@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     testOptions {
@@ -21,8 +21,7 @@ android {
 }
 
 dependencies {
-    implementation deps.appcompatV7
-    implementation deps.supportV4
+    implementation deps.appcompat
 
     api project(':paris-annotations')
 

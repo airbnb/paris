@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        ANDROID_PLUGIN_VERSION = '3.1.0'
+        ANDROID_PLUGIN_VERSION = '3.2.1'
         BUTTERKNIFE_VERSION = '9.0.0-SNAPSHOT'
         KOTLIN_VERSION = '1.2.60'
     }

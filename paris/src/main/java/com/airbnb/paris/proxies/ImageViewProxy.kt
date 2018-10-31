@@ -3,7 +3,7 @@ package com.airbnb.paris.proxies
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 

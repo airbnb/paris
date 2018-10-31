@@ -6,8 +6,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.support.annotation.ColorInt
-import android.support.annotation.Px
+import androidx.annotation.ColorInt
+import androidx.annotation.Px
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout

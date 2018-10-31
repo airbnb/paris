@@ -1,18 +1,18 @@
 package com.airbnb.paris.proxies
 
-import android.content.*
-import android.content.res.*
-import android.graphics.*
-import android.graphics.drawable.*
-import android.support.test.*
-import android.support.test.runner.*
-import android.widget.*
-import android.widget.TextViewStyleApplier.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
-import org.mockito.*
-import org.mockito.Mockito.*
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.TextView
+import android.widget.TextViewStyleApplier
+import android.widget.TextViewStyleApplier.StyleBuilder
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
@@ -97,19 +97,5 @@ class DeprecatedTextViewStyleApplierTest {
         view.maxLines = 1
         apply { singleLine(false) }
         assertEquals(Integer.MAX_VALUE, view.maxLines)
-    }
-
-    @Test
-    fun applyTextAllCaps_true() {
-        view = spy(view)
-        apply { textAllCaps(true) }
-        Mockito.verify(view).setAllCaps(true)
-    }
-
-    @Test
-    fun applyTextAllCaps_false() {
-        view = spy(view)
-        apply { textAllCaps(false) }
-        Mockito.verify(view).setAllCaps(false)
     }
 }

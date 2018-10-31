@@ -1,8 +1,8 @@
 package com.airbnb.paris
 
 import android.graphics.*
-import android.support.test.*
-import android.support.test.runner.*
+import androidx.test.*
+import androidx.test.runner.*
 import android.util.*
 import android.widget.*
 import com.airbnb.paris.styles.*

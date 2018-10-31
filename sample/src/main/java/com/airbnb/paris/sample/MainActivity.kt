@@ -2,9 +2,9 @@ package com.airbnb.paris.sample
 
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.annotation.StyleRes
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.annotation.StyleRes
+import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.paris.extensions.dividerHeight
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style

@@ -2,8 +2,8 @@ package com.airbnb.paris.spannables
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
 import android.text.style.*
 import com.airbnb.paris.test.R
 import com.airbnb.paris.attribute_values.ColorValue

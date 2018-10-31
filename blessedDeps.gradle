@@ -8,23 +8,24 @@ rootProject.ext {
     SAMPLE_MIN_SDK_VERSION = 16
 
     // Keep these alphabetized
-    CONSTRAINT_LAYOUT_VERSION = '1.1.0'
-    ESPRESSO_VERSION = '3.0.2-beta1'
+    ANDROIDX_ANNOTATIONS_VERSION = '1.0.0'
+    ANDROIDX_APPCOMPAT_VERSION = '1.0.0'
+    ANDROIDX_CONSTRAINTLAYOUT_VERSION = '1.1.0'
+    ANDROIDX_ESPRESSO_VERSION = '3.1.0'
     JAVAPOET_VERSION = '1.11.1'
     JUNIT_VERSION = '4.12'
     KOTLINPOET_VERSION = '0.7.0'
     KOTLIN_TEST_VERSION = '2.0.7'
     MOCKITO_VERSION = '2.18.3'
     ROBOLECTRIC_VERSION = '3.8'
-    SUPPORT_LIBS_VERSION = '27.1.1'
     TESTING_COMPILE_VERSION = '0.13'
 
     deps = [
             // Keep these alphabetized
-            androidAnnotations: "com.android.support:support-annotations:$SUPPORT_LIBS_VERSION",
-            appcompatV7       : "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION",
-            constraintLayout  : "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION",
-            espresso          : "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION",
+            androidAnnotations: "androidx.annotation:annotation:$ANDROIDX_ANNOTATIONS_VERSION",
+            appcompat         : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT_VERSION",
+            constraintLayout  : "androidx.constraintlayout:constraintlayout:$ANDROIDX_CONSTRAINTLAYOUT_VERSION",
+            espresso          : "androidx.test.espresso:espresso-core:$ANDROIDX_ESPRESSO_VERSION",
             javaPoet          : "com.squareup:javapoet:$JAVAPOET_VERSION",
             junit             : "junit:junit:$JUNIT_VERSION",
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION",
@@ -34,7 +35,6 @@ rootProject.ext {
             mockitoCore       : "org.mockito:mockito-core:$MOCKITO_VERSION",
             mockitoAndroid    : "org.mockito:mockito-android:$MOCKITO_VERSION",
             robolectric       : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
-            supportV4         : "com.android.support:support-v4:$SUPPORT_LIBS_VERSION",
             testingCompile    : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
     ]
 }

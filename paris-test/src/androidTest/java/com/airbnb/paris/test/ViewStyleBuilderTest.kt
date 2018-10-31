@@ -1,8 +1,8 @@
 package com.airbnb.paris.test
 
 import android.graphics.*
-import android.support.test.*
-import android.support.test.runner.*
+import androidx.test.*
+import androidx.test.runner.*
 import com.airbnb.paris.styles.*
 import org.junit.*
 import org.junit.Assert.*

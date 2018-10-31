@@ -2,9 +2,9 @@ package com.airbnb.paris.styles
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.AnyRes
-import android.support.annotation.AttrRes
-import android.support.annotation.ColorInt
+import androidx.annotation.AnyRes
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.attribute_values.DpValue
 import com.airbnb.paris.attribute_values.ResourceId

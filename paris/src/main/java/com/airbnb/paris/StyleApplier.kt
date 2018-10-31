@@ -2,7 +2,7 @@
 
 package com.airbnb.paris
 
-import android.support.annotation.*
+import androidx.annotation.*
 import android.util.*
 import android.view.*
 import com.airbnb.paris.proxies.*

@@ -2,10 +2,11 @@ package com.airbnb.paris.sample;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.airbnb.paris.Paris;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SpannableActivity extends AppCompatActivity {
 
