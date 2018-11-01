@@ -233,10 +233,16 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
         view.contentDescription = contentDescription
     }
 
-    // TODO Fix Samsung bug, see https://github.com/airbnb/paris/issues/70#issuecomment-421332864
+    /**
+     * android:elevation attribute and View.setElevation() method are supported since Lollipop. ViewCompat version of setElevation() method is
+     * available, but currently doesn't have any effect on pre-Lollipop devices. Also, requesting android:elevation attribute value gives some
+     * unpredicted values on some Kitkat-based Samsung devices (see https://github.com/airbnb/paris/issues/73). That's why we're parsing
+     * android:elevation attribute only when running Lollipop and use View.setElevation() for now.
+     */
     @Attr(R2.styleable.Paris_View_android_elevation)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setElevation(@Px elevation: Int) {
-        ViewCompat.setElevation(view, elevation.toFloat())
+        view.elevation = elevation.toFloat()
     }
 
     @Attr(R2.styleable.Paris_View_android_foreground)
