@@ -1,3 +1,10 @@
+# 1.2.0 (November 6, 2018)
+
+- Set Android version to 28.
+- Migrated to AndroidX.
+- Updated dependencies (ButterKnife, ConstraintLayout, Gradle, Kotlin, Mockito, Testing Compile).
+- Fixed Samsung-specific crash related to `android:elevation` on Android version 19.
+
 # 1.1.0 (October 23, 2018)
 
 - Updated the sample app.
