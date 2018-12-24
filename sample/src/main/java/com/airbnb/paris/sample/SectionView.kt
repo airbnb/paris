@@ -73,6 +73,7 @@ class SectionView : FrameLayout {
         invalidate()
     }
 
+    @SuppressWarnings("NewApi")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // A divider at the bottom of the view
