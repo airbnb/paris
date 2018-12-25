@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.annotation.RequiresApi
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.models.StyleableInfo
@@ -177,6 +178,12 @@ internal class BaseStyleBuilderJavaClass(
                         ParameterSpec.builder(TypeName.get(attr.targetType), "value")
                     attr.targetFormat.valueAnnotation?.let {
                         valueParameterBuilder.addAnnotation(it)
+                    }
+
+                    if (attr.requiresApi > 1) {
+                        addAnnotation(AnnotationSpec.builder(RequiresApi::class.java)
+                            .addMember("value", "\$L", attr.requiresApi)
+                            .build())
                     }
 
                     public()

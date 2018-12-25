@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.view.ViewStyleApplier;
 import androidx.annotation.BoolRes;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
 import com.airbnb.paris.StyleApplier;
 import com.airbnb.paris.styles.Style;
@@ -70,6 +71,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatBoolean(boolean) */
+    @RequiresApi(21)
     public B formatBoolean(boolean value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatBoolean], value);
       return (B) this;
