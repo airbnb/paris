@@ -87,6 +87,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
 
     /**
      * @see MyView#formatBoolean(boolean) */
+    @RequiresApi(21)
     public B formatBooleanRes(@BoolRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatBoolean], resId);
       return (B) this;
