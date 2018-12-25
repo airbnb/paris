@@ -33,8 +33,8 @@ internal class StyleStaticMethodInfoExtractor(processor: ParisProcessor)
         // TODO Check that the target type is a builder
         val targetType = element.parameters[0].asType()
 
-        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)", enclosingElement, elementName, targetType)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, elementName)
+        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement, elementName, targetType)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement, elementName)
 
         return StyleStaticMethodInfo(
             element,

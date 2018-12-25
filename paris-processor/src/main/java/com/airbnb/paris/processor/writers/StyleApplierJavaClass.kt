@@ -251,7 +251,7 @@ internal class StyleApplierJavaClass(
         }
 
         method("assertStylesContainSameAttributes") {
-            addJavadoc("For debugging")
+            addJavadoc("For debugging\n")
             public()
             static()
             addParameter(AndroidClassNames.CONTEXT, "context")
