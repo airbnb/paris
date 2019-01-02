@@ -6,12 +6,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
@@ -73,6 +75,7 @@ class SectionView : FrameLayout {
         invalidate()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // A divider at the bottom of the view
