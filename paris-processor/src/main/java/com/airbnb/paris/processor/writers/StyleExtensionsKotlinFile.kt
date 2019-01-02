@@ -7,6 +7,7 @@ import com.airbnb.paris.processor.framework.AndroidClassNames.COLOR_INT
 import com.airbnb.paris.processor.framework.AndroidClassNames.STYLE_RES
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 /**
  * This generates a kt file with extension functions to style a specific view.
@@ -75,7 +76,7 @@ internal class StyleExtensionsKotlinFile(
          */
         function("style") {
             receiver(styleable.viewElementType)
-            addParameter("attrs", ATTRIBUTE_SET.toKPoet().asNullable())
+            addParameter("attrs", ATTRIBUTE_SET.toKPoet().copy(nullable = true))
             addStatement("%T(this).apply(attrs)", styleable.styleApplierClassName.toKPoet())
         }
 
@@ -98,10 +99,7 @@ internal class StyleExtensionsKotlinFile(
 
             receiver(viewTypeName)
 
-            val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-                viewTypeName
-            )
+            val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(viewTypeName)
             val builderParameter = ParameterSpec.builder(
                 "builder",
                 LambdaTypeName.get(
@@ -131,8 +129,7 @@ internal class StyleExtensionsKotlinFile(
             function("add${it.formattedName}") {
                 addKdoc(it.kdoc)
 
-                val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                    EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
                     styleable.viewElementType.asTypeName()
                 )
                 receiver(extendableStyleBuilderTypeName)
@@ -144,9 +141,8 @@ internal class StyleExtensionsKotlinFile(
             }
         }
 
-        val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-            EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
-            WildcardTypeName.subtypeOf(styleable.viewElementType.asTypeName())
+        val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
+            WildcardTypeName.producerOf(styleable.viewElementType.asTypeName())
         )
 
         /*
@@ -199,8 +195,7 @@ internal class StyleExtensionsKotlinFile(
             function(functionName) {
                 receiver(extendableStyleBuilderTypeName)
 
-                val subExtendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                    EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+                val subExtendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
                     styleableChildInfo.type.asTypeName()
                 )
                 val builderParameter = parameter(
@@ -331,8 +326,7 @@ internal class StyleExtensionsKotlinFile(
             addModifiers(KModifier.INLINE)
             returns(STYLE_CLASS_NAME.toKPoet())
 
-            val extendableStyleBuilderTypeName = KotlinParameterizedTypeName.get(
-                EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet(),
+            val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
                 styleable.viewElementType.asTypeName()
             )
 
