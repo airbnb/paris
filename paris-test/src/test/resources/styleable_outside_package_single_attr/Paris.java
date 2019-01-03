@@ -7,6 +7,8 @@ import android.view.ViewGroupStyleApplier;
 import android.view.ViewStyleApplier;
 import android.widget.ImageView;
 import android.widget.ImageViewStyleApplier;
+import android.widget.LinearLayout;
+import android.widget.LinearLayoutStyleApplier;
 import android.widget.TextView;
 import android.widget.TextViewStyleApplier;
 import com.airbnb.other.MyView;
@@ -20,6 +22,14 @@ public final class Paris {
 
   public static ImageViewStyleApplier.StyleBuilder styleBuilder(ImageView view) {
     return new ImageViewStyleApplier.StyleBuilder(new ImageViewStyleApplier(view));
+  }
+
+  public static LinearLayoutStyleApplier style(LinearLayout view) {
+    return new LinearLayoutStyleApplier(view);
+  }
+
+  public static LinearLayoutStyleApplier.StyleBuilder styleBuilder(LinearLayout view) {
+    return new LinearLayoutStyleApplier.StyleBuilder(new LinearLayoutStyleApplier(view));
   }
 
   public static MyOtherViewStyleApplier style(MyOtherView view) {
@@ -67,9 +77,11 @@ public final class Paris {
   }
 
   /**
-   * For debugging */
+   * For debugging
+   */
   public static void assertStylesContainSameAttributes(Context context) {
     ImageViewStyleApplier.assertStylesContainSameAttributes(context);
+    LinearLayoutStyleApplier.assertStylesContainSameAttributes(context);
     MyOtherViewStyleApplier.assertStylesContainSameAttributes(context);
     MyViewStyleApplier.assertStylesContainSameAttributes(context);
     TextViewStyleApplier.assertStylesContainSameAttributes(context);
