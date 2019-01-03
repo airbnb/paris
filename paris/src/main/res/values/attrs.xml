@@ -44,6 +44,10 @@
         <attr name="android:tint" />
     </declare-styleable>
 
+    <declare-styleable name="Paris_LinearLayout">
+        <attr name="android:layout_weight"/>
+    </declare-styleable>
+
     <declare-styleable name="Paris_TextView">
         <attr name="android:drawableBottom" />
         <attr name="android:drawableLeft" />
