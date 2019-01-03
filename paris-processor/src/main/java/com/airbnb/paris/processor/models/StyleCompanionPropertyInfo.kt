@@ -49,8 +49,8 @@ internal class StyleCompanionPropertyInfoExtractor(processor: ParisProcessor)
 
         val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
 
-        val javadoc = JavaCodeBlock.of("@see \$T#\$N", enclosingElement, elementName)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N", enclosingElement, elementName)
+        val javadoc = JavaCodeBlock.of("@see \$T#\$N\n", enclosingElement, elementName)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement, elementName)
 
         val styleInfo = StyleCompanionPropertyInfo(
             element,

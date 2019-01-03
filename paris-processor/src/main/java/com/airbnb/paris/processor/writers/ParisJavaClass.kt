@@ -64,7 +64,7 @@ internal class ParisJavaClass(
 
         // TODO Should the method take in an Activity since anything else seems to screw up view inflation?
         method("assertStylesContainSameAttributes") {
-            addJavadoc("For debugging")
+            addJavadoc("For debugging\n")
             public()
             static()
             addParameter(AndroidClassNames.CONTEXT, "context")
