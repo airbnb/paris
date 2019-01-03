@@ -1,7 +1,9 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.annotation.RequiresApi
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.*
 
@@ -179,6 +181,8 @@ internal class BaseStyleBuilderJavaClass(
                         valueParameterBuilder.addAnnotation(it)
                     }
 
+                    addRequiresApiAnnotation(this, attr)
+
                     public()
                     addParameter(valueParameterBuilder.build())
                     returns(TypeVariableName.get("B"))
@@ -200,6 +204,7 @@ internal class BaseStyleBuilderJavaClass(
                         .addAnnotation(attr.targetFormat.resAnnotation)
                         .build()
                 )
+                addRequiresApiAnnotation(this, attr)
                 returns(TypeVariableName.get("B"))
                 addStatement(
                     "getBuilder().putRes(\$T.styleable.\$L[\$L], resId)",
@@ -224,6 +229,7 @@ internal class BaseStyleBuilderJavaClass(
                             )
                             .build()
                     )
+                    addRequiresApiAnnotation(this, attr)
                     returns(TypeVariableName.get("B"))
                     addStatement(
                         "getBuilder().putDp(\$T.styleable.\$L[\$L], value)",
@@ -245,6 +251,7 @@ internal class BaseStyleBuilderJavaClass(
                             .addAnnotation(AndroidClassNames.COLOR_INT)
                             .build()
                     )
+                    addRequiresApiAnnotation(this, attr)
                     returns(TypeVariableName.get("B"))
                     addStatement(
                         "getBuilder().putColor(\$T.styleable.\$L[\$L], color)",
@@ -268,6 +275,14 @@ internal class BaseStyleBuilderJavaClass(
             returns(TypeVariableName.get("B"))
             addStatement("new \$T(view).apply(build())", styleApplierClassName)
             addStatement("return (B) this")
+        }
+    }
+
+    private fun addRequiresApiAnnotation(builder: MethodSpec.Builder, attr: AttrInfo) {
+        if (attr.requiresApi > 1) {
+            builder.addAnnotation(AnnotationSpec.builder(RequiresApi::class.java)
+                .addMember("value", "\$L", attr.requiresApi)
+                .build())
         }
     }
 }

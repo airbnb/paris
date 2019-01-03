@@ -1,10 +1,12 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.annotation.RequiresApi
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.AndroidClassNames.ATTRIBUTE_SET
 import com.airbnb.paris.processor.framework.AndroidClassNames.COLOR_INT
 import com.airbnb.paris.processor.framework.AndroidClassNames.STYLE_RES
+import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -241,6 +243,8 @@ internal class StyleExtensionsKotlinFile(
                     addKdoc(attr.kdoc)
                     receiver(extendableStyleBuilderTypeName)
 
+                    addRequiresApiAnnotation(this, attr)
+
                     // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
                     parameter("value", JavaTypeName.get(attr.targetType).toKPoet()) {
                         attr.targetFormat.valueAnnotation?.let {
@@ -262,6 +266,8 @@ internal class StyleExtensionsKotlinFile(
                 addKdoc(attr.kdoc)
                 receiver(extendableStyleBuilderTypeName)
 
+                addRequiresApiAnnotation(this, attr)
+
                 parameter("resId", Integer.TYPE) {
                     addAnnotation(attr.targetFormat.resAnnotation)
                 }
@@ -279,6 +285,8 @@ internal class StyleExtensionsKotlinFile(
                 function("${baseMethodName}Dp") {
                     addKdoc(attr.kdoc)
                     receiver(extendableStyleBuilderTypeName)
+
+                    addRequiresApiAnnotation(this, attr)
 
                     parameter("value", Integer.TYPE) {
                         addAnnotation(
@@ -302,6 +310,8 @@ internal class StyleExtensionsKotlinFile(
                 function(baseMethodName) {
                     addKdoc(attr.kdoc)
                     receiver(extendableStyleBuilderTypeName)
+
+                    addRequiresApiAnnotation(this, attr)
 
                     parameter("color", Integer.TYPE) {
                         addAnnotation(COLOR_INT)
@@ -343,6 +353,15 @@ internal class StyleExtensionsKotlinFile(
                 extendableStyleBuilderTypeName,
                 builderParam
             )
+        }
+    }
+
+    private fun addRequiresApiAnnotation(builder: FunSpec.Builder, attr: AttrInfo) {
+        if (attr.requiresApi > 1) {
+            builder.addAnnotation(
+                AnnotationSpec.builder(RequiresApi::class.java)
+                    .addMember("%L", attr.requiresApi)
+                    .build())
         }
     }
 }
