@@ -1,3 +1,8 @@
+# 1.2.1 (January 2, 2019)
+
+- Updated KotlinPoet dependency to 1.0.0.
+- Added `@RequiresApi` to style builder functions when appropriate.
+
 # 1.2.0 (November 6, 2018)
 
 - Set Android version to 28.
