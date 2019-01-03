@@ -43,7 +43,7 @@ class StyleApplierUtils {
 
     companion object {
 
-        private fun getAttrNames(context: Context, attrs: IntArray, attrIndexes: Set<Int>) =
+        internal fun getAttrNames(context: Context, attrs: IntArray, attrIndexes: Set<Int>) =
             attrIndexes.map { index ->
                 try {
                     context.resources.getResourceEntryName(attrs[index])
@@ -96,7 +96,7 @@ class StyleApplierUtils {
             }
         }
 
-        private fun getMissingStyleAttributesError(view: View, style: Style, otherStyles: Set<Style>, missingAttrNames: Set<String>): String {
+        internal fun getMissingStyleAttributesError(view: View, style: Style, otherStyles: Set<Style>, missingAttrNames: Set<String>): String {
             val context = view.context
             val viewName = view.javaClass.simpleName
             val styleName = style.name(context)

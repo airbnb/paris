@@ -18,6 +18,11 @@ android {
             includeAndroidResources = true
         }
     }
+
+    lintOptions {
+        checkAllWarnings true
+        warningsAsErrors true
+    }
 }
 
 dependencies {
