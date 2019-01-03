@@ -52,6 +52,7 @@ class ViewStyleApplierTest {
         assertEquals(null, view.background)
     }
 
+    @Test
     fun background_tintRes() {
         // First set the tint to something else
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
@@ -62,6 +63,7 @@ class ViewStyleApplierTest {
         )
     }
 
+    @Test
     fun background_tintColor() {
         // First set the tint to something else
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
@@ -72,6 +74,7 @@ class ViewStyleApplierTest {
         )
     }
 
+    @Test
     fun background_tintColorStateNull() {
         // First set the tint to something else
         view.backgroundTintList = null
@@ -79,6 +82,7 @@ class ViewStyleApplierTest {
         assertNull(view.backgroundTintList)
     }
 
+    @Test
     fun background_tintColorStateList() {
         // First set the tint to something else
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
@@ -89,6 +93,7 @@ class ViewStyleApplierTest {
         )
     }
 
+    @Test
     fun background_tintModeNull() {
         // First set the tint mode to something else
         view.backgroundTintMode = null
@@ -96,6 +101,7 @@ class ViewStyleApplierTest {
         assertNull(view.backgroundTintMode)
     }
 
+    @Test
     fun background_tintMode() {
         // First set the tint mode to something else
         view.backgroundTintMode = PorterDuff.Mode.SRC_OVER
