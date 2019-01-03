@@ -14,6 +14,7 @@ import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.annotation.FloatRange
 import androidx.core.view.ViewCompat
 import com.airbnb.paris.R2
 import com.airbnb.paris.annotations.AfterStyle
@@ -143,6 +144,21 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
                 params.gravity = gravity
             }
             view.layoutParams = params
+        }
+    }
+
+    /**
+     * Set layout weight on [LinearLayout].
+     *
+     * @param weight The weight. Must be a float >= 0.0
+     */
+    @Attr(R2.styleable.Paris_View_android_layout_weight)
+    fun setLayoutWeight(@FloatRange(from = 0.0) weight: Float) {
+        view.layoutParams?.let { params ->
+            if (params is LinearLayout.LayoutParams) {
+                params.weight = weight
+                view.layoutParams = params
+            }
         }
     }
 

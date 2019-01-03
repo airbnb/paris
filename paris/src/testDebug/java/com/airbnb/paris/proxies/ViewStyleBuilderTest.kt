@@ -163,4 +163,16 @@ class ViewStyleBuilderTest {
             style
         )
     }
+
+    @Test
+    fun layoutWeight() {
+        val weight = 2f
+        val style = builder.layoutWeight(weight).build()
+
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.layout_weight, weight)
+                .build(),
+            style)
+    }
 }

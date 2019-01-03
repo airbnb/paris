@@ -8,6 +8,7 @@ import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStyleApplier
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.airbnb.paris.R
 import com.airbnb.paris.extensions.*
@@ -318,5 +319,13 @@ class ViewStyleApplierTest {
     fun visibility_gone() {
         applier.apply(builder.visibility(View.GONE).build())
         assertEquals(View.GONE, view.visibility)
+    }
+
+    @Test
+    fun layoutWeight() {
+        val weight = 0.43f
+        view.layoutParams = LinearLayout.LayoutParams(100, 100)
+        applier.apply(builder.layoutWeight(weight).build())
+        assertEquals(weight, (view.layoutParams as LinearLayout.LayoutParams).weight)
     }
 }

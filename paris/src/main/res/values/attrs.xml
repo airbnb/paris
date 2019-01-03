@@ -34,6 +34,7 @@
         <attr name="android:paddingVertical" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />
+        <attr name="android:layout_weight"/>
 
         <attr name="ignoreLayoutWidthAndHeight" format="boolean" />
     </declare-styleable>
@@ -42,10 +43,6 @@
         <attr name="android:scaleType" />
         <attr name="android:src" />
         <attr name="android:tint" />
-    </declare-styleable>
-
-    <declare-styleable name="Paris_LinearLayout">
-        <attr name="android:layout_weight"/>
     </declare-styleable>
 
     <declare-styleable name="Paris_TextView">
