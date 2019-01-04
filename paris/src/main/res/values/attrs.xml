@@ -21,6 +21,7 @@
         <attr name="android:layout_marginStart" />
         <attr name="android:layout_marginTop" />
         <attr name="android:layout_marginVertical" />
+        <attr name="android:layout_weight"/>
         <attr name="android:minHeight" />
         <attr name="android:minWidth" />
         <attr name="android:padding" />
@@ -34,7 +35,6 @@
         <attr name="android:paddingVertical" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />
-        <attr name="android:layout_weight"/>
 
         <attr name="ignoreLayoutWidthAndHeight" format="boolean" />
     </declare-styleable>
