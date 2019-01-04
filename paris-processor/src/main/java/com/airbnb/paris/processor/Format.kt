@@ -139,6 +139,11 @@ internal class Format private constructor(
 
     val isColorStateListType = type == Type.COLOR_STATE_LIST
 
+    val isNullable: Boolean
+        get() {
+            return valueAnnotation == AndroidClassNames.NULLABLE
+        }
+
     val valueAnnotation: ClassName?
         get() = when (type) {
             Type.COLOR -> AndroidClassNames.COLOR_INT
