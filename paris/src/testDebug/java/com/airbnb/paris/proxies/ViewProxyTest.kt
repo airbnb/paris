@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.view.View
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -114,5 +115,13 @@ class ViewProxyTest {
         // When set in XML the index corresponding to gone is 2
         proxy.setVisibility(2)
         assertEquals(View.GONE, view.visibility)
+    }
+
+    @Test
+    fun setLayoutWeight() {
+        val weight = 0.78f
+        view.layoutParams = LinearLayout.LayoutParams(100, 100)
+        proxy.setLayoutWeight(weight)
+        assertEquals(weight, (view.layoutParams as LinearLayout.LayoutParams).weight)
     }
 }

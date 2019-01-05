@@ -65,7 +65,8 @@ public final class Paris {
   }
 
   /**
-   * For debugging */
+   * For debugging
+   */
   public static void assertStylesContainSameAttributes(Context context) {
     ImageViewStyleApplier.assertStylesContainSameAttributes(context);
     MyOtherViewStyleApplier.assertStylesContainSameAttributes(context);
