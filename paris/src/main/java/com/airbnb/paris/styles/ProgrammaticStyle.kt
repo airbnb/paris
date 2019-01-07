@@ -18,7 +18,7 @@ data class ProgrammaticStyle internal constructor(
     private var name: String? = null
 ) : Style {
 
-    private constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
+    internal constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
 
     data class Builder internal constructor(
         internal val attrResToValueResMap: MutableMap<Int, Any?> = HashMap(),
