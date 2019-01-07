@@ -246,8 +246,10 @@ internal class StyleExtensionsKotlinFile(
                     addRequiresApiAnnotation(this, attr)
 
                     // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
-                    parameter("value", JavaTypeName.get(attr.targetType).toKPoet()) {
-                        attr.targetFormat.valueAnnotation?.let {
+                    parameter("value", JavaTypeName.get(attr.targetType).toKPoet().copy(nullable = attr.targetFormat.isNullable)) {
+                        // Filter out the Nullable annotation since we defer to idiomatic Kotlin by attaching
+                        // the nullability to the type.
+                        attr.targetFormat.valueAnnotation?.takeIf { it != AndroidClassNames.NULLABLE }?.let {
                             addAnnotation(it)
                         }
                     }
