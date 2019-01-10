@@ -10,6 +10,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
+import androidx.test.core.app.ApplicationProvider
 import com.airbnb.paris.R
 import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
@@ -19,7 +20,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
@@ -33,7 +33,7 @@ class TextViewStyleApplierTest {
 
     @Before
     fun setup() {
-        context = RuntimeEnvironment.application
+        context = ApplicationProvider.getApplicationContext()
         view = TextView(context)
         applier = TextViewStyleApplier(view)
         builder = TextViewStyleApplier.StyleBuilder()
@@ -238,5 +238,13 @@ class TextViewStyleApplierTest {
     fun drawablePaddingXml() {
         applier.apply(R.style.Test_TextViewStyleApplier_DrawablePadding)
         assertEquals(10, view.compoundDrawablePadding)
+    }
+
+    @Config(sdk = [28])
+    @Test
+    fun lineHeight() {
+        val lineHeight = 16
+        applier.apply(builder.lineHeight(lineHeight).build())
+        assertEquals(lineHeight, view.lineHeight)
     }
 }

@@ -104,6 +104,12 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
         view.letterSpacing = letterSpacing
     }
 
+    @Attr(R2.styleable.Paris_TextView_android_lineHeight)
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun setLineHeight(lineHeight: Int) {
+        view.lineHeight = lineHeight
+    }
+
     @Attr(R2.styleable.Paris_TextView_android_lines)
     fun setLines(lines: Int) {
         view.setLines(lines)

@@ -6,6 +6,7 @@ import android.text.InputType
 import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
+import androidx.test.core.app.ApplicationProvider
 import com.airbnb.paris.R
 import com.airbnb.paris.attribute_values.ResourceId
 import com.airbnb.paris.styles.ProgrammaticStyle
@@ -14,7 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 class TextViewStyleBuilderTest {
@@ -25,7 +26,7 @@ class TextViewStyleBuilderTest {
 
     @Before
     fun setup() {
-        context = RuntimeEnvironment.application
+        context = ApplicationProvider.getApplicationContext()
         view = TextView(context)
         builder = TextViewStyleApplier.StyleBuilder()
     }
@@ -150,5 +151,17 @@ class TextViewStyleBuilderTest {
                 .build(),
             style
         )
+    }
+
+    @Config(sdk = [28])
+    @Test
+    fun lineHeight() {
+        val lineHeight = 16
+        val style = builder.lineHeight(lineHeight).build()
+
+        assertEquals(ProgrammaticStyle.builder()
+            .put(android.R.attr.lineHeight, lineHeight)
+            .build(),
+            style)
     }
 }

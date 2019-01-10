@@ -35,6 +35,7 @@ dependencies {
 
     kapt project(':paris-processor')
 
+    testImplementation deps.androidxTestCore
     testImplementation deps.junit
     testImplementation deps.kotlinTest
     testImplementation deps.mockitoCore

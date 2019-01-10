@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
 import android.widget.TextView
+import androidx.test.core.app.ApplicationProvider
 import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -13,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 class TextViewProxyTest {
@@ -24,7 +25,7 @@ class TextViewProxyTest {
 
     @Before
     fun setup() {
-        context = RuntimeEnvironment.application
+        context = ApplicationProvider.getApplicationContext()
         view = TextView(context)
         proxy = TextViewProxy(view)
     }
@@ -221,5 +222,14 @@ class TextViewProxyTest {
         view.compoundDrawablePadding = 0
         proxy.setDrawablePadding(100)
         assertEquals(100, view.compoundDrawablePadding)
+    }
+
+    @Config(sdk = [28])
+    @Test
+    fun setLineHeight() {
+        val lineHeight = 16
+        proxy.setLineHeight(lineHeight)
+
+        assertEquals(lineHeight, view.lineHeight)
     }
 }
