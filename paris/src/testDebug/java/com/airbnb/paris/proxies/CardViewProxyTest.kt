@@ -31,7 +31,7 @@ class CardViewProxyTest {
         proxy.setRadius(2)
         assertEquals(
                 view.radius,
-                2
+                2f
         )
     }
 
@@ -50,7 +50,7 @@ class CardViewProxyTest {
         proxy.setElevation(2)
         assertEquals(
                 view.elevation,
-                2
+                2f
         )
     }
 
