@@ -89,9 +89,9 @@
     </declare-styleable>
 
     <declare-styleable name="Paris_CardView">
+        <attr name="cardBackgroundColor" />
         <attr name="cardCornerRadius" />
         <attr name="cardElevation" />
-        <attr name="cardBackgroundColor" />
         <attr name="contentPadding" />
     </declare-styleable>
 </resources>

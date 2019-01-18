@@ -26,6 +26,7 @@ dependencies {
 
     implementation deps.appcompat
     implementation deps.kotlin
+    implementation deps.cardView
 
     kapt project(':paris-processor')
 
