@@ -28,7 +28,7 @@ class CardViewProxyTest {
     @Test
     fun setRadius() {
         view.radius = 1f
-        proxy.setRadius(2)
+        proxy.setRadius(2f)
         assertEquals(
                 view.radius,
                 2f
@@ -47,7 +47,7 @@ class CardViewProxyTest {
     @Test
     fun setElevation() {
         view.elevation = 1f
-        proxy.setElevation(2)
+        proxy.setElevation(2f)
         assertEquals(
                 view.elevation,
                 2f
