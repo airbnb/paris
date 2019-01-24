@@ -9,11 +9,21 @@ import android.widget.ImageView;
 import android.widget.ImageViewStyleApplier;
 import android.widget.TextView;
 import android.widget.TextViewStyleApplier;
+import androidx.cardview.widget.CardView;
+import androidx.cardview.widget.CardViewStyleApplier;
 import com.airbnb.other.MyView;
 import com.airbnb.other.MyViewStyleApplier;
 import com.airbnb.paris.spannables.SpannableBuilder;
 
 public final class Paris {
+  public static CardViewStyleApplier style(CardView view) {
+    return new CardViewStyleApplier(view);
+  }
+
+  public static CardViewStyleApplier.StyleBuilder styleBuilder(CardView view) {
+    return new CardViewStyleApplier.StyleBuilder(new CardViewStyleApplier(view));
+  }
+
   public static ImageViewStyleApplier style(ImageView view) {
     return new ImageViewStyleApplier(view);
   }
@@ -70,6 +80,7 @@ public final class Paris {
    * For debugging
    */
   public static void assertStylesContainSameAttributes(Context context) {
+    CardViewStyleApplier.assertStylesContainSameAttributes(context);
     ImageViewStyleApplier.assertStylesContainSameAttributes(context);
     MyOtherViewStyleApplier.assertStylesContainSameAttributes(context);
     MyViewStyleApplier.assertStylesContainSameAttributes(context);
