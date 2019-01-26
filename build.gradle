@@ -2,8 +2,8 @@ apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
     ext {
-        ANDROID_PLUGIN_VERSION = '3.2.1'
-        BUTTERKNIFE_VERSION = '9.0.0-rc1'
+        ANDROID_PLUGIN_VERSION = '3.3.0'
+        BUTTERKNIFE_VERSION = '10.0.0'
         KOTLIN_VERSION = '1.3.0'
         VERSIONS_VERSION = '0.20.0'
     }
