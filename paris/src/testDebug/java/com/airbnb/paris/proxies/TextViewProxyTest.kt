@@ -222,4 +222,12 @@ class TextViewProxyTest {
         proxy.setDrawablePadding(100)
         assertEquals(100, view.compoundDrawablePadding)
     }
+
+    @Test
+    fun setLineHeight() {
+        val lineHeight = 18
+        proxy.setLineHeight(lineHeight)
+
+        assertEquals(lineHeight, view.lineHeight)
+    }
 }

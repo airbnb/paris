@@ -239,4 +239,10 @@ class TextViewStyleApplierTest {
         applier.apply(R.style.Test_TextViewStyleApplier_DrawablePadding)
         assertEquals(10, view.compoundDrawablePadding)
     }
+
+    @Test
+    fun lineHeight() {
+        applier.apply(builder.lineHeight(12).build())
+        assertEquals(12, view.lineHeight)
+    }
 }

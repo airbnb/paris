@@ -151,4 +151,14 @@ class TextViewStyleBuilderTest {
             style
         )
     }
+
+    @Test
+    fun lineHeight() {
+        val style = builder.lineHeight(12).build()
+        assertEquals(
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.lineHeight, 12).build(),
+            style
+        )
+    }
 }

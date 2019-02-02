@@ -11,6 +11,8 @@ import android.text.TextUtils
 import android.text.method.PasswordTransformationMethod
 import android.util.TypedValue
 import android.widget.TextView
+import androidx.annotation.IntRange
+import androidx.core.widget.TextViewCompat
 
 import com.airbnb.paris.R2
 import com.airbnb.paris.annotations.AfterStyle
@@ -180,6 +182,11 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
     @Attr(R2.styleable.Paris_TextView_android_textStyle)
     fun setTextStyle(styleIndex: Int) {
         this.textStyleIndex = styleIndex
+    }
+
+    @Attr(R2.styleable.Paris_TextView_android_lineHeight)
+    fun setLineHeight(@Px @IntRange(from = 0) lineHeight: Int) {
+        TextViewCompat.setLineHeight(view, lineHeight)
     }
 
     @AfterStyle
