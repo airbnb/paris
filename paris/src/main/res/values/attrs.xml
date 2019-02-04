@@ -57,6 +57,7 @@
         <attr name="android:fontFamily" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
+        <attr name="android:lineHeight"/>
         <attr name="android:lines" />
         <attr name="android:lineSpacingExtra" />
         <attr name="android:lineSpacingMultiplier" />
