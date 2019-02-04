@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.cardview.widget.CardView
+import com.airbnb.paris.cardview.CardViewProxy
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

@@ -1,12 +1,12 @@
-package com.airbnb.paris.proxies
+package com.airbnb.paris.cardview
 
 import android.content.res.ColorStateList
 import androidx.annotation.Px
 import androidx.cardview.widget.CardView
 import com.airbnb.paris.R2
 import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.annotations.LayoutDimension
 import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.proxies.BaseProxy
 
 @Styleable("Paris_CardView")
 class CardViewProxy(view: CardView) : BaseProxy<CardViewProxy, CardView>(view) {
