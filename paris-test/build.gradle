@@ -23,6 +23,7 @@ android {
 
 dependencies {
     implementation project(':paris')
+    implementation project(':paris-cardview')
 
     implementation deps.appcompat
     implementation deps.kotlin
