@@ -93,7 +93,9 @@ class SectionView : FrameLayout {
         private val DEFAULT_TITLE_STYLE = textViewStyle {
             add(TEXT_HEADLINE)
             backgroundRes(android.R.color.transparent)
-            letterSpacing(0f)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                letterSpacing(0f)
+            }
             textAllCaps(false)
             textStyle(Typeface.NORMAL)
         }
@@ -109,10 +111,14 @@ class SectionView : FrameLayout {
             backgroundRes(android.R.color.transparent)
             // Set each padding value independently so that they can be overridden in other styles.
             paddingBottomRes(R.dimen.space4)
-            paddingEndRes(R.dimen.space4)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                paddingEndRes(R.dimen.space4)
+            }
             paddingLeftRes(R.dimen.space4)
             paddingRightRes(R.dimen.space4)
-            paddingStartRes(R.dimen.space4)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                paddingStartRes(R.dimen.space4)
+            }
             paddingTopRes(R.dimen.space4)
             titleStyle(DEFAULT_TITLE_STYLE)
             contentStyle(DEFAULT_CONTENT_STYLE)
@@ -143,7 +149,9 @@ class SectionView : FrameLayout {
             background(ColorDrawable(Color.parseColor("#001f3f")))
             paddingBottomRes(R.dimen.space5)
             titleStyle {
-                letterSpacing(.2f)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    letterSpacing(.2f)
+                }
                 textAllCaps(true)
                 textColor(Color.YELLOW)
                 textStyle(Typeface.BOLD)
