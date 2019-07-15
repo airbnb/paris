@@ -12,6 +12,7 @@ import android.text.method.PasswordTransformationMethod
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.annotation.IntRange
+import androidx.annotation.StyleRes
 import androidx.core.widget.TextViewCompat
 
 import com.airbnb.paris.R2
@@ -158,6 +159,11 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
     @Attr(R2.styleable.Paris_TextView_android_textAllCaps)
     fun setTextAllCaps(textAllCaps: Boolean) {
         view.setAllCaps(textAllCaps)
+    }
+
+    @Attr(R2.styleable.Paris_TextView_android_textAppearance)
+    fun setTextAppearance(@StyleRes textAppearance: Int) {
+        TextViewCompat.setTextAppearance(view, textAppearance)
     }
 
     /**
