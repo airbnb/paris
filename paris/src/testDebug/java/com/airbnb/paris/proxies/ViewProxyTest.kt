@@ -59,11 +59,25 @@ class ViewProxyTest {
     }
 
     @Test
+    fun setClickable() {
+        view.isClickable = false
+        proxy.setClickable(true)
+        assert(view.isClickable)
+    }
+
+    @Test
     fun setContentDescription_null() {
         // Since null is the default first set the content description to something else
         view.contentDescription = "Hello"
         proxy.setContentDescription(null)
         assertEquals(null, view.contentDescription)
+    }
+
+    @Test
+    fun setFocusable() {
+        view.isFocusable = false
+        proxy.setFocusable(true)
+        assert(view.isFocusable)
     }
 
     @Test

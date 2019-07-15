@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
 import android.widget.TextView
+import com.airbnb.paris.R
 import com.airbnb.paris.utils.assertTypefaceEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -139,6 +140,14 @@ class TextViewProxyTest {
             InputType.TYPE_TEXT_FLAG_MULTI_LINE,
             view.inputType and InputType.TYPE_MASK_FLAGS
         )
+    }
+
+    @Test
+    fun setTextAppearance_textSize() {
+        view.textSize = 24.toFloat()
+
+        proxy.setTextAppearance(R.style.Base_TextAppearance_AppCompat_Medium)
+        assertEquals(view.textSize, view.resources.getDimension(R.dimen.abc_text_size_medium_material))
     }
 
     @Test
