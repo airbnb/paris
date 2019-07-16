@@ -1,3 +1,12 @@
+# 1.3.0 (July 16, 2019)
+
+- New attribute support:
+  - View: `android:layout_weight`
+  - TextView
+    - `android:line_height`
+    - `android:text_appearance`
+- Now using Kotlin nullable types in generated extension functions, rather than `@Nullable`.
+
 # 1.2.1 (January 2, 2019)
 
 - Updated KotlinPoet dependency to 1.0.0.
