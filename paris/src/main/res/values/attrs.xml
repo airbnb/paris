@@ -6,8 +6,10 @@
         <attr name="android:background" />
         <attr name="android:backgroundTint" />
         <attr name="android:backgroundTintMode" />
+        <attr name="android:clickable" />
         <attr name="android:contentDescription" />
         <attr name="android:elevation" />
+        <attr name="android:focusable" />
         <attr name="android:foreground" />
         <attr name="android:layout_width" />
         <attr name="android:layout_height" />
@@ -68,6 +70,7 @@
         <attr name="android:singleLine" />
         <attr name="android:text" />
         <attr name="android:textAllCaps" />
+        <attr name="android:textAppearance" />
         <attr name="android:textColor" />
         <attr name="android:textColorHint" />
         <attr name="android:textSize" />

@@ -231,6 +231,11 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
         ViewCompat.setBackgroundTintMode(view, parseTintMode(tintMode))
     }
 
+    @Attr(R2.styleable.Paris_View_android_clickable)
+    fun setClickable(clickable: Boolean) {
+        view.isClickable = clickable
+    }
+
     private fun parseTintMode(value: Int): PorterDuff.Mode? {
         return when (value) {
             PORTERDUFF_MODE_SRC_OVER -> PorterDuff.Mode.SRC_OVER
@@ -259,6 +264,11 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setElevation(@Px elevation: Int) {
         view.elevation = elevation.toFloat()
+    }
+
+    @Attr(R2.styleable.Paris_View_android_focusable)
+    fun setFocusable(focusable: Boolean) {
+        view.isFocusable = focusable
     }
 
     @Attr(R2.styleable.Paris_View_android_foreground)
