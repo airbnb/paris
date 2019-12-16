@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.TextViewStyleApplier
 import com.airbnb.paris.R
+import com.airbnb.paris.extensions.*
 import com.airbnb.paris.utils.ShadowResourcesCompat
 import com.airbnb.paris.utils.assertTypefaceEquals
 import com.airbnb.paris.utils.getFont
@@ -69,6 +70,16 @@ class TextViewStyleApplierTest {
     fun fontFamily_fontReference() {
         applier.apply(R.style.Test_TextViewStyleApplier_FontFamily_Resource)
         assertTypefaceEquals(context.getFont(R.font.roboto_regular), view.typeface)
+    }
+
+    @Test
+    fun fontFamily_precedence() {
+        val typeface = Typeface.create("sans-serif-light", Typeface.ITALIC)
+        applier.apply(textViewStyle {
+            fontFamily(typeface)
+            textAppearanceRes(android.R.style.TextAppearance_Material)
+        })
+        assertEquals(typeface, view.typeface)
     }
 
     @Test
@@ -176,10 +187,30 @@ class TextViewStyleApplierTest {
     }
 
     @Test
+    fun letterSpacing_precedence() {
+        applier.apply(textViewStyle {
+            textAppearanceRes(R.style.Test_TextViewStyleApplier_TextAppearance_LetterSpacing)
+            letterSpacing(.2f)
+        })
+        assertEquals(.2f, view.letterSpacing)
+    }
+
+    @Test
     fun maxWidth() {
         view.maxWidth = 0
         applier.apply(builder.maxWidth(100).build())
         assertEquals(100, view.maxWidth)
+    }
+
+    @Test
+    fun textAllCaps_precedence() {
+        // Assumes that the transformation method is null when all caps is false.
+        assertNull(view.transformationMethod)
+        applier.apply(textViewStyle {
+            textAppearanceRes(android.R.style.TextAppearance_Material)
+            textAllCaps(true)
+        })
+        assertNotNull(view.transformationMethod)
     }
 
     @Test
@@ -192,6 +223,15 @@ class TextViewStyleApplierTest {
     fun textColor_nullRes() {
         applier.apply(builder.textColorRes(R.color.null_).build())
         assertEquals(ColorStateList.valueOf(0xFF000000.toInt()), view.textColors)
+    }
+
+    @Test
+    fun textColor_precedence() {
+        applier.apply(textViewStyle {
+            textAppearanceRes(android.R.style.TextAppearance_Material)
+            textColor(Color.CYAN)
+        })
+        assertEquals(Color.CYAN, view.currentTextColor)
     }
 
     @Test

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Test_TextViewStyleApplier_DrawableLeft">
         <item name="android:drawableLeft">@android:drawable/alert_dark_frame</item>
@@ -53,6 +53,10 @@
 
     <style name="Test_TextViewStyleApplier_DrawablePadding">
         <item name="android:drawablePadding">10dp</item>
+    </style>
+
+    <style name="Test_TextViewStyleApplier_TextAppearance_LetterSpacing">
+        <item name="android:letterSpacing" tools:targetApi="lollipop">.5</item>
     </style>
 
 </resources>

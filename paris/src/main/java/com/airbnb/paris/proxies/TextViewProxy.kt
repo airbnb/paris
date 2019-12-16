@@ -4,17 +4,16 @@ import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import androidx.annotation.Px
-import androidx.annotation.RequiresApi
 import android.text.InputType
 import android.text.TextUtils
 import android.text.method.PasswordTransformationMethod
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.annotation.IntRange
+import androidx.annotation.Px
+import androidx.annotation.RequiresApi
 import androidx.annotation.StyleRes
 import androidx.core.widget.TextViewCompat
-
 import com.airbnb.paris.R2
 import com.airbnb.paris.annotations.AfterStyle
 import com.airbnb.paris.annotations.Attr
@@ -42,6 +41,13 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
     private var typeface: Typeface? = null
 
     private var textStyleIndex: Int? = null
+
+    // This function is at the top of the class so that textAppearance is applied before other
+    // attributes, since it never has precedence.
+    @Attr(R2.styleable.Paris_TextView_android_textAppearance)
+    fun setTextAppearance(@StyleRes textAppearance: Int) {
+        TextViewCompat.setTextAppearance(view, textAppearance)
+    }
 
     @Attr(R2.styleable.Paris_TextView_android_drawableBottom)
     fun setDrawableBottom(drawable: Drawable?) {
@@ -158,12 +164,7 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
 
     @Attr(R2.styleable.Paris_TextView_android_textAllCaps)
     fun setTextAllCaps(textAllCaps: Boolean) {
-        view.setAllCaps(textAllCaps)
-    }
-
-    @Attr(R2.styleable.Paris_TextView_android_textAppearance)
-    fun setTextAppearance(@StyleRes textAppearance: Int) {
-        TextViewCompat.setTextAppearance(view, textAppearance)
+        view.isAllCaps = textAllCaps
     }
 
     /**
