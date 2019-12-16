@@ -55,8 +55,4 @@
         <item name="android:drawablePadding">10dp</item>
     </style>
 
-    <style name="Test_TextViewStyleApplier_TextAppearance_LetterSpacing">
-        <item name="android:letterSpacing" tools:targetApi="lollipop">.5</item>
-    </style>
-
 </resources>

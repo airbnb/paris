@@ -187,15 +187,6 @@ class TextViewStyleApplierTest {
     }
 
     @Test
-    fun letterSpacing_precedence() {
-        applier.apply(textViewStyle {
-            textAppearanceRes(R.style.Test_TextViewStyleApplier_TextAppearance_LetterSpacing)
-            letterSpacing(.2f)
-        })
-        assertEquals(.2f, view.letterSpacing)
-    }
-
-    @Test
     fun maxWidth() {
         view.maxWidth = 0
         applier.apply(builder.maxWidth(100).build())
