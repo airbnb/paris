@@ -1,3 +1,8 @@
+# 1.3.1 (December 16, 2019)
+
+- Fixed precedence of `android:textAppearance` attribute.
+- Fixed theme attributes not being applied through programmatic styles.
+
 # 1.3.0 (July 16, 2019)
 
 - New attribute support:
