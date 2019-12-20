@@ -30,6 +30,8 @@ dependencies {
     implementation deps.appcompat
 
     api project(':paris-annotations')
+    implementation project(':paris')
+    implementation deps.material
 
     // We use "api" here instead of "implementation" to avoid app module warnings like:
     // "Warning: unknown enum constant AnnotationTarget.FIELD"
