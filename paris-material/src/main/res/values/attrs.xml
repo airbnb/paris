@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Paris_MaterialButton">
+        <attr name="android:checkable"/>
+        <attr name="android:insetBottom"/>
+        <attr name="android:insetLeft"/>
+        <attr name="android:insetRight"/>
+        <attr name="android:insetTop"/>
+        <attr name="backgroundTint"/>
+        <attr name="backgroundTintMode"/>
+        <attr name="elevation"/>
+        <attr name="icon" />
+        <attr name="iconSize" />
+        <attr name="iconPadding" />
+        <attr name="iconGravity"/>
+        <attr name="iconTint" />
+        <attr name="iconTintMode"/>
+        <attr name="shapeAppearance"/>
+        <attr name="shapeAppearanceOverlay"/>
+        <attr name="strokeColor"/>
+        <attr name="strokeWidth"/>
+        <attr name="cornerRadius" />
+        <attr name="rippleColor"/>
+        <attr name="android:textColor" />
+        <attr name="android:textAppearance" />
+    </declare-styleable>
+</resources>
