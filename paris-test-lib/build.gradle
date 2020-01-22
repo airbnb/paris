@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.jakewharton.butterknife'
+
+android {
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
+
+    defaultConfig {
+        minSdkVersion rootProject.MIN_SDK_VERSION
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation project(':paris')
+
+    implementation deps.appcompat
+    implementation deps.kotlin
+
+    kapt project(':paris-processor')
+}

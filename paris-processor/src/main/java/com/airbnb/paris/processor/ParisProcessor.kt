@@ -113,7 +113,7 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
-            StyleExtensionsKotlinFile(this, RElement?.className?.toKPoet(), styleableInfo).write()
+            StyleExtensionsKotlinFile(this, styleableInfo).write()
         }
 
         if (styleablesInfo.isNotEmpty()) {

@@ -4,6 +4,7 @@ import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
+import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
 
 
@@ -23,6 +24,23 @@ class ParisProcessorTest {
             .generatesSources(generatedParisClass)
             .and()
             .generatesSources(generatedStyleApplierClass)
+    }
+
+    private fun assertCaseWithPackageInfo(folder: String) {
+        val view = JavaFileObjects.forResource("$folder/MyView.java")
+        val packageInfo = JavaFileObjects.forResource("$folder/package-info.java")
+        val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java")
+        val generatedStyleApplierClass =
+                JavaFileObjects.forResource("$folder/MyViewStyleApplier.java")
+
+        assert_().about(javaSources())
+                .that(listOf(view, packageInfo))
+                .processedWith(ParisProcessor())
+                .compilesWithoutError()
+                .and()
+                .generatesSources(generatedParisClass)
+                .and()
+                .generatesSources(generatedStyleApplierClass)
     }
 
     private fun assertError(
@@ -183,6 +201,11 @@ class ParisProcessorTest {
     @Test
     fun styleableFields() {
         assertCase("styleable_fields")
+    }
+
+    @Test
+    fun styleableInOtherModule() {
+        assertCaseWithPackageInfo("styleable_in_other_module_single_attr")
     }
 
     @Test

@@ -10,7 +10,6 @@ import com.squareup.javapoet.*
 internal class BaseStyleBuilderJavaClass(
     override val processor: ParisProcessor,
     parentStyleApplierClassName: ClassName?,
-    rClassName: ClassName?,
     styleablesTree: StyleablesTree,
     styleableInfo: StyleableInfo
 ) : SkyJavaClass(processor), WithSkyProcessor {
@@ -84,7 +83,6 @@ internal class BaseStyleBuilderJavaClass(
         val distinctStyleableChildren =
             styleableInfo.styleableChildren.distinctBy { it.styleableResId.resourceName }
         for (styleableChildInfo in distinctStyleableChildren) {
-            rClassName!!
 
             val methodName =
                 styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName)
@@ -99,7 +97,7 @@ internal class BaseStyleBuilderJavaClass(
                 returns(TypeVariableName.get("B"))
                 addStatement(
                     "getBuilder().putStyle(\$T.styleable.\$L[\$L], resId)",
-                    rClassName,
+                    styleableChildInfo.styleableResId.rClassName,
                     styleableInfo.styleableResourceName,
                     styleableChildInfo.styleableResId.code
                 )
@@ -112,7 +110,7 @@ internal class BaseStyleBuilderJavaClass(
                 returns(TypeVariableName.get("B"))
                 addStatement(
                     "getBuilder().putStyle(\$T.styleable.\$L[\$L], style)",
-                    rClassName,
+                    styleableChildInfo.styleableResId.rClassName,
                     styleableInfo.styleableResourceName,
                     styleableChildInfo.styleableResId.code
                 )
@@ -142,7 +140,7 @@ internal class BaseStyleBuilderJavaClass(
                 addStatement("function.invoke(subBuilder)")
                 addStatement(
                     "getBuilder().putStyle(\$T.styleable.\$L[\$L], subBuilder.build())",
-                    rClassName,
+                    styleableChildInfo.styleableResId.rClassName,
                     styleableInfo.styleableResourceName,
                     styleableChildInfo.styleableResId.code
                 )
@@ -152,7 +150,6 @@ internal class BaseStyleBuilderJavaClass(
 
         val groupedAttrInfos = styleableInfo.attrs.groupBy { it.styleableResId.resourceName }
         for (groupedAttrs in groupedAttrInfos.values) {
-            rClassName!!
 
             val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
@@ -188,7 +185,7 @@ internal class BaseStyleBuilderJavaClass(
                     returns(TypeVariableName.get("B"))
                     addStatement(
                         "getBuilder().put(\$T.styleable.\$L[\$L], value)",
-                        rClassName,
+                        attr.styleableResId.rClassName,
                         styleableInfo.styleableResourceName,
                         attr.styleableResId.code
                     )
@@ -208,7 +205,7 @@ internal class BaseStyleBuilderJavaClass(
                 returns(TypeVariableName.get("B"))
                 addStatement(
                     "getBuilder().putRes(\$T.styleable.\$L[\$L], resId)",
-                    rClassName,
+                    attr.styleableResId.rClassName,
                     styleableInfo.styleableResourceName,
                     attr.styleableResId.code
                 )
@@ -233,7 +230,7 @@ internal class BaseStyleBuilderJavaClass(
                     returns(TypeVariableName.get("B"))
                     addStatement(
                         "getBuilder().putDp(\$T.styleable.\$L[\$L], value)",
-                        rClassName,
+                        attr.styleableResId.rClassName,
                         styleableInfo.styleableResourceName,
                         attr.styleableResId.code
                     )
@@ -255,7 +252,7 @@ internal class BaseStyleBuilderJavaClass(
                     returns(TypeVariableName.get("B"))
                     addStatement(
                         "getBuilder().putColor(\$T.styleable.\$L[\$L], color)",
-                        rClassName,
+                        attr.styleableResId.rClassName,
                         styleableInfo.styleableResourceName,
                         attr.styleableResId.code
                     )

@@ -8,6 +8,8 @@ import com.squareup.javapoet.ClassName
 
 internal class AndroidResourceId(val value: Int, val className: ClassName, val resourceName: String) {
 
+    val rClassName: ClassName = className.topLevelClassName()
+
     val code: JavaCodeBlock = if (className.topLevelClassName() == AndroidClassNames.R) {
         JavaCodeBlock.of("\$L.\$N", className, resourceName)
     } else {
