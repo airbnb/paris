@@ -1,17 +1,18 @@
-package com.airbnb.paris.material
+package com.airbnb.paris.material.proxies
 
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.util.TypedValue
-import androidx.annotation.DrawableRes
 import androidx.annotation.Px
 import androidx.annotation.StyleRes
 import com.airbnb.paris.annotations.AfterStyle
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.material.util.ViewUtils
+import com.airbnb.paris.material.R
+import com.airbnb.paris.material.R2
+import com.airbnb.paris.material.utils.ViewUtils
 import com.airbnb.paris.proxies.BaseProxy
 import com.airbnb.paris.styles.Style
 import com.google.android.material.button.MaterialButton

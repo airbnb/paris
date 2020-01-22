@@ -1,4 +1,4 @@
-package com.airbnb.paris.material.util
+package com.airbnb.paris.material.utils
 
 import android.graphics.PorterDuff
 

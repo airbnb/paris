@@ -30,12 +30,12 @@ class MainActivity : AppCompatActivity() {
         * don't work
         * */
 
-        button.style(R.style.Widget_MaterialComponents_Button_OutlinedButton)
+        //button.style(R.style.Widget_MaterialComponents_Button_OutlinedButton)
 
         //button.style { addRed() }
 
-        /*button.style {
-            text("Alu potol")
+        button.style {
+            text("Button")
 
             backgroundTintRes(R.color.white)
             backgroundTintMode(9)
@@ -45,14 +45,14 @@ class MainActivity : AppCompatActivity() {
             iconSizeDp(14)
             iconGravity(MaterialButton.ICON_GRAVITY_END)
             iconPaddingDp(23)
-            iconTintRes(R.color.colorPrimaryDark)
+            iconTintRes(R.color.colorPrimary)
             iconTintMode(9)
-            rippleColorRes(R.color.colorPrimaryDark)
-            strokeColorRes(R.color.colorPrimaryDark)
-            strokeWidthDp(2)
-            //textColor(Color.BLACK)
+            rippleColorRes(R.color.colorPrimary)
+            strokeColorRes(R.color.colorPrimary)
+            strokeWidthDp(1)
+            textColorRes(R.color.colorPrimary)
             //textAppearanceRes(R.style.TextAppearance_MaterialComponents_Headline1)
-        }*/
+        }
 
 
         //button.text = "Kotlin"
