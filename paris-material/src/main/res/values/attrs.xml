@@ -6,22 +6,22 @@
         <attr name="android:insetLeft"/>
         <attr name="android:insetRight"/>
         <attr name="android:insetTop"/>
+        <attr name="android:textAppearance" />
+        <attr name="android:textColor" />
         <attr name="backgroundTint"/>
         <attr name="backgroundTintMode"/>
+        <attr name="cornerRadius" />
         <attr name="elevation"/>
         <attr name="icon" />
         <attr name="iconSize" />
-        <attr name="iconPadding" />
         <attr name="iconGravity"/>
+        <attr name="iconPadding" />
         <attr name="iconTint" />
         <attr name="iconTintMode"/>
+        <attr name="rippleColor"/>
         <attr name="shapeAppearance"/>
         <attr name="shapeAppearanceOverlay"/>
         <attr name="strokeColor"/>
         <attr name="strokeWidth"/>
-        <attr name="cornerRadius" />
-        <attr name="rippleColor"/>
-        <attr name="android:textColor" />
-        <attr name="android:textAppearance" />
     </declare-styleable>
 </resources>
