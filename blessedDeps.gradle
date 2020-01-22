@@ -19,6 +19,7 @@ rootProject.ext {
     MOCKITO_VERSION = '2.23.0'
     ROBOLECTRIC_VERSION = '3.8'
     TESTING_COMPILE_VERSION = '0.15'
+    MATERIAL_VERSION = '1.1.0-rc01'
 
     deps = [
             // Keep these alphabetized
@@ -32,6 +33,7 @@ rootProject.ext {
             kotlinReflect     : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
             kotlinPoet        : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
             kotlinTest        : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
+            material          : "com.google.android.material:material:$MATERIAL_VERSION",
             mockitoCore       : "org.mockito:mockito-core:$MOCKITO_VERSION",
             mockitoAndroid    : "org.mockito:mockito-android:$MOCKITO_VERSION",
             robolectric       : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",

@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.jakewharton.butterknife'
+
+android {
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
+
+
+    defaultConfig {
+        minSdkVersion rootProject.MIN_SDK_VERSION
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    lintOptions {
+        warningsAsErrors true
+    }
+
+}
+
+dependencies {
+    implementation deps.appcompat
+
+    api project(':paris-annotations')
+    implementation project(':paris')
+    implementation deps.material
+
+    // We use "api" here instead of "implementation" to avoid app module warnings like:
+    // "Warning: unknown enum constant AnnotationTarget.FIELD"
+    api deps.kotlin
+
+    kapt project(':paris-processor')
+
+    testImplementation deps.junit
+    testImplementation deps.kotlinTest
+    testImplementation deps.mockitoCore
+    testImplementation deps.robolectric
+
+    kaptTest project(':paris-processor')
+
+    androidTestImplementation deps.mockitoAndroid
+    androidTestImplementation deps.espresso
+}
+
+//apply from: rootProject.file('gradle/gradle-maven-push.gradle')

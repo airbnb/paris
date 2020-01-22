@@ -1,1 +1,1 @@
-include ':sample', ':paris-annotations', ':paris-processor', ':paris', ':paris-test'
+include ':sample', ':paris-annotations', ':paris-processor', ':paris', ':paris-test', ':paris-material', ':sample-material'
