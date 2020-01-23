@@ -81,6 +81,10 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
                     if (defaultNameFormatStyle != null) {
                         styles + defaultNameFormatStyle
                     } else {
+                        if (processor.namespacedResourcesEnabled && !styleableElement.getAnnotation(Styleable::class.java).emptyDefaultStyle) {
+                            logError { "No default style found for ${styleableElement.simpleName}. Link an appropriate default style, " +
+                                    "or set @Styleable(emptyDefaultStyle = true) for this element if none exist." }
+                        }
                         styles + EmptyStyleInfo(styleableElement, true)
                     }
                 }
@@ -100,7 +104,7 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
         val defaultStyleName = String.format(Locale.US, defaultStyleNameFormat, elementName)
 
         val rStyleTypeElement = elements.getTypeElement("${RElement!!.qualifiedName}.style")
-        val defaultStyleExists = elements.getAllMembers(rStyleTypeElement).any {
+        val defaultStyleExists = rStyleTypeElement != null && elements.getAllMembers(rStyleTypeElement).any {
             it.simpleName.toString() == defaultStyleName
         }
 

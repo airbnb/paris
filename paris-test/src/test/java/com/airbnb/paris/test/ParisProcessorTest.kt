@@ -1,11 +1,14 @@
 package com.airbnb.paris.test
 
 import com.airbnb.paris.processor.ParisProcessor
+import com.google.common.io.Resources
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
+import java.io.File
+import javax.tools.JavaFileObject
 
 
 class ParisProcessorTest {
@@ -107,6 +110,11 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun emptyDefaultStyle() {
+        assertCaseWithInput("empty_default_style")
+    }
+
+    @Test
     fun errorAttrNonResDefaultValue() {
         // An @Attr with an arbitrary int default value instead of a resource ID
         assertError(
@@ -143,6 +151,15 @@ class ParisProcessorTest {
             "error_attr_wrong_value_type",
             2,
             "Incorrectly typed @Attr value parameter"
+        )
+    }
+
+    @Test
+    fun errorNoDefaultStyle() {
+        assertErrorWithInput(
+            "error_no_default_style",
+            1,
+            "No default style found for MyViewWithoutStyle."
         )
     }
 
