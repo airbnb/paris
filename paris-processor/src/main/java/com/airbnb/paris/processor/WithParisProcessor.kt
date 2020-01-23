@@ -12,6 +12,8 @@ internal interface WithParisProcessor : WithSkyProcessor {
 
     val defaultStyleNameFormat get() = processor.defaultStyleNameFormat
 
+    val validateDefaultStyles: Boolean get() = processor.validateDefaultStyles
+
     fun getResourceId(annotation: Class<out Annotation>, element: Element, value: Int): AndroidResourceId? {
         val resourceId = processor.resourceScanner.getId(annotation, element, value)
         if (resourceId == null) {

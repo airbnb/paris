@@ -73,7 +73,7 @@ interface WithSkyProcessor {
     }
 
     fun logWarning(element: Element, lazyMessage: () -> String) {
-        logError { "${element.toStringId()}: ${lazyMessage()}" }
+        logWarning { "${element.toStringId()}: ${lazyMessage()}" }
     }
 
     fun logWarning(lazyMessage: () -> String) {

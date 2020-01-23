@@ -29,6 +29,8 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     override var defaultStyleNameFormat: String = ""
 
+    override var validateDefaultStyles: Boolean = false
+
     private var beforeStyleInfoExtractor = BeforeStyleInfoExtractor(this)
 
     private var afterStyleInfoExtractor = AfterStyleInfoExtractor(this)
@@ -72,6 +74,7 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
             ?.getAnnotation(ParisConfig::class.java)
             ?.let {
                 defaultStyleNameFormat = it.defaultStyleNameFormat
+                validateDefaultStyles = it.validateDefaultStyle
                 rFinder.processConfig(it)
             }
 
