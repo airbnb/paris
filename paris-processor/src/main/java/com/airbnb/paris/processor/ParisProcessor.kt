@@ -29,6 +29,8 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     override var defaultStyleNameFormat: String = ""
 
+    override var namespacedResourcesEnabled: Boolean = false
+
     private var beforeStyleInfoExtractor = BeforeStyleInfoExtractor(this)
 
     private var afterStyleInfoExtractor = AfterStyleInfoExtractor(this)
@@ -72,6 +74,7 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
             ?.getAnnotation(ParisConfig::class.java)
             ?.let {
                 defaultStyleNameFormat = it.defaultStyleNameFormat
+                namespacedResourcesEnabled = it.namespacedResourcesEnabled
                 rFinder.processConfig(it)
             }
 
@@ -110,6 +113,14 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
+        if (allStyleables.isNotEmpty()) {
+            if (rFinder.element == null) {
+                logError {
+                    "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
+                }
+                return
+            }
+        }
         val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
@@ -121,19 +132,13 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         }
 
         if (allStyleables.isNotEmpty()) {
-            if (rFinder.element == null) {
-                logError {
-                    "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
-                }
-            } else {
-                val parisClassPackageName = rFinder.element!!.packageName
-                ParisJavaClass(
-                    this,
-                    parisClassPackageName,
-                    styleablesInfo,
-                    externalStyleablesInfo
-                ).write()
-            }
+            val parisClassPackageName = rFinder.element!!.packageName
+            ParisJavaClass(
+                this,
+                parisClassPackageName,
+                styleablesInfo,
+                externalStyleablesInfo
+            ).write()
         }
     }
 

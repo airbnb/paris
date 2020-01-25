@@ -12,4 +12,6 @@ public @interface ParisConfig {
     String defaultStyleNameFormat() default "";
 
     Class<?> rClass() default Void.class;
+
+    boolean namespacedResourcesEnabled() default false;
 }

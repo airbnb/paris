@@ -42,7 +42,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     Context context = getView().getContext();
     Resources res = context.getResources();
     if (a.hasValue(R.styleable.MyLibView_title)) {
-      getProxy().setHint(a.getString(R.styleable.MyLibView_title));
+      getProxy().setTitle(a.getString(R.styleable.MyLibView_title));
     }
   }
 
@@ -70,7 +70,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * @see MyView#setHint(String)
+     * @see MyView#setTitle(String)
      */
     public B title(@Nullable String value) {
       getBuilder().put(R.styleable.MyLibView[R.styleable.MyLibView_title], value);
@@ -78,7 +78,7 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * @see MyView#setHint(String)
+     * @see MyView#setTitle(String)
      */
     public B titleRes(@StringRes int resId) {
       getBuilder().putRes(R.styleable.MyLibView[R.styleable.MyLibView_title], resId);

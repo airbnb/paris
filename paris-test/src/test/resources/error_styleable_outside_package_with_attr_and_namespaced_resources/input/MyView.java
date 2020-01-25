@@ -1,4 +1,4 @@
-package com.airbnb.paris.test;
+package com.airbnb.other;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -23,7 +23,7 @@ public class MyView extends View {
     }
 
     @Attr(com.airbnb.paris.test.lib.R2.styleable.MyLibView_title)
-    public void setHint(String title) {
+    public void setTitle(String title) {
 
     }
 }
