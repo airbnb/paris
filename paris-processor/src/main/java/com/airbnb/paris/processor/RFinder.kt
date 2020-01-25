@@ -27,7 +27,7 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
         attrsInfo: List<AttrInfo>
     ) {
         // If using namespacedResources, an attribute might reference another module's R2 file, so we
-        // skip this method of determing the R file.
+        // skip this method of determining the R file.
         if (element != null || processor.namespacedResourcesEnabled) {
             return
         }
