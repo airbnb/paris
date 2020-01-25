@@ -1,14 +1,11 @@
 package com.airbnb.paris.test
 
 import com.airbnb.paris.processor.ParisProcessor
-import com.google.common.io.Resources
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
-import java.io.File
-import javax.tools.JavaFileObject
 
 
 class ParisProcessorTest {
@@ -29,21 +26,16 @@ class ParisProcessorTest {
             .generatesSources(generatedStyleApplierClass)
     }
 
-    private fun assertCaseWithInput(folder: String) {
-        val input = fileObjects("$folder/input")
-        val output= fileObjects("$folder/output")
+    private fun assertCaseWithInput(folder: String, input: List<String>, output: List<String>) {
+        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}") }
+        val outputFileObjects = output.map { JavaFileObjects.forResource("$folder/output/${it}") }
 
         assert_().about(javaSources())
-            .that(input)
+            .that(inputFileObjects)
             .processedWith(ParisProcessor())
             .compilesWithoutError()
             .and()
-            .generatesSources(output.first(), *output.drop(1).toTypedArray())
-    }
-
-    private fun fileObjects(folder: String): List<JavaFileObject> {
-        val inputFolder = Resources.getResource(folder)
-        return File(inputFolder.path).listFiles().map { JavaFileObjects.forResource("$folder/${it.name}") }
+            .generatesSources(outputFileObjects.first(), *outputFileObjects.drop(1).toTypedArray())
     }
 
     private fun assertError(
@@ -70,12 +62,13 @@ class ParisProcessorTest {
     private fun assertErrorWithInput(
         folder: String,
         errorCount: Int? = null,
-        errorFragment: String? = null
+        errorFragment: String? = null,
+        input: List<String>
     ) {
-        val input = fileObjects("$folder/input")
+        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}") }
 
         assert_().about(javaSources())
-            .that(input)
+            .that(inputFileObjects)
             .processedWith(ParisProcessor())
             .failsToCompile()
             .apply {
@@ -207,7 +200,12 @@ class ParisProcessorTest {
         // A @Styleable view in an unexpected package (outside the package namespace of the module)
         // with an attribute reference to an r file. If namespaced resources is turned on this will fail, like [errorStyleableOutsidePackageNoR]
         // If namespaced resource is turned off, it will pass as asserted in [styleableOutsidePackageSingleAttr]
-        assertErrorWithInput("error_styleable_outside_package_with_attr_and_namespaced_resources", 1,"R class")
+        assertErrorWithInput(
+            "error_styleable_outside_package_with_attr_and_namespaced_resources",
+            1,
+            "R class",
+            input = listOf("MyView.java", "package-info.java")
+        )
     }
 
     @Test
@@ -237,7 +235,11 @@ class ParisProcessorTest {
 
     @Test
     fun styleableInOtherModule() {
-        assertCaseWithInput("styleable_in_other_module_single_attr")
+        assertCaseWithInput(
+            "styleable_in_other_module_single_attr",
+            input = listOf("MyView.java", "package-info.java"),
+            output = listOf("MyViewStyleApplier.java", "Paris.java")
+        )
     }
 
     @Test
