@@ -113,13 +113,11 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
-        if (allStyleables.isNotEmpty()) {
-            if (rFinder.element == null) {
-                logError {
-                    "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
-                }
-                return
+        if (allStyleables.isNotEmpty() && rFinder.element == null) {
+            logError {
+                "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
             }
+            return
         }
         val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
