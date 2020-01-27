@@ -13,5 +13,9 @@ public @interface ParisConfig {
 
     Class<?> rClass() default Void.class;
 
+    /**
+     * This is an experimental gradle flag (android.namespacedRClass=true). Setting to true allows Paris to generate code compatible
+     * with R files that only have resources from the module the resource was declared in.
+     */
     boolean namespacedResourcesEnabled() default false;
 }
