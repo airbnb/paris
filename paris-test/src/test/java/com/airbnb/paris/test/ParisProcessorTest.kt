@@ -1,14 +1,11 @@
 package com.airbnb.paris.test
 
 import com.airbnb.paris.processor.ParisProcessor
-import com.google.common.io.Resources
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
-import java.io.File
-import javax.tools.JavaFileObject
 
 
 class ParisProcessorTest {
@@ -111,7 +108,11 @@ class ParisProcessorTest {
 
     @Test
     fun emptyDefaultStyle() {
-        assertCaseWithInput("empty_default_style")
+        assertCaseWithInput(
+            "empty_default_style",
+            listOf("MyViewWithoutStyle.java", "package-info.java"),
+            listOf("MyViewWithoutStyleStyleApplier.java", "Paris.java")
+        )
     }
 
     @Test
@@ -159,7 +160,8 @@ class ParisProcessorTest {
         assertErrorWithInput(
             "error_no_default_style",
             1,
-            "No default style found for MyViewWithoutStyle."
+            "No default style found for MyViewWithoutStyle.",
+            listOf("MyViewWithoutStyle.java", "package-info.java")
         )
     }
 

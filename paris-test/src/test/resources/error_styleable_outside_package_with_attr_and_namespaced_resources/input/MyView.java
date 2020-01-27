@@ -5,7 +5,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.airbnb.paris.annotations.Attr;
+import com.airbnb.paris.annotations.Style;
 import com.airbnb.paris.annotations.Styleable;
+import com.airbnb.paris.test.R;
 
 @Styleable("MyLibView")
 public class MyView extends View {
@@ -26,4 +28,6 @@ public class MyView extends View {
     public void setTitle(String title) {
 
     }
+
+    @Style static final int DEFAULT_STYLE = R.style.MyView_Blue;
 }
