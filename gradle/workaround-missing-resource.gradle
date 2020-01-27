@@ -16,7 +16,7 @@ gradle.projectsEvaluated {
 
         // Specific copy task for each variant
         def copyTestResourcesTask = project.tasks.create("copyTest${variationName}Resources", Copy)
-        copyTestResourcesTask.from(fileTree("${projectDir}/src/test/resources"))
+        copyTestResourcesTask.from("${projectDir}/src/test/resources")
         copyTestResourcesTask.into("${testClassesPath}/sourceFolderJavaResources/${variationPath}")
         copyTestResourcesTask.execute()
     }
