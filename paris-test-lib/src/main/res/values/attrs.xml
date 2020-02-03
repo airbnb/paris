@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MyLibView">
+        <attr name="active" format="boolean" />
+        <attr name="dividerStyle" format="reference" />
+        <attr name="factor" format="float" />
+        <attr name="image" format="reference" />
+        <attr name="index" format="integer" />
+        <attr name="subtitle" format="string" />
+        <attr name="subtitleStyle" format="reference" />
+        <attr name="title" format="string" />
+        <attr name="titleStyle" format="reference" />
+        <attr name="verticalPadding" format="dimension" />
+    </declare-styleable>
+
+</resources>

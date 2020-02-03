@@ -57,12 +57,12 @@ internal class StyleApplierJavaClass(
             }
         }
 
-        if (!styleableInfo.styleableResourceName.isEmpty()) {
+        if (styleableInfo.styleableResourceName.isNotEmpty()) {
             method("attributes") {
                 override()
                 protected()
                 returns(ArrayTypeName.of(Integer.TYPE))
-                addStatement("return \$T.styleable.\$L", RElement, styleableInfo.styleableResourceName)
+                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: RElement, styleableInfo.styleableResourceName)
             }
 
             val attrsWithDefaultValue = styleableInfo.attrs
@@ -189,7 +189,6 @@ internal class StyleApplierJavaClass(
             BaseStyleBuilderJavaClass(
                 processor,
                 parentStyleApplierClassName,
-                RElement?.className,
                 styleablesTree,
                 styleableInfo
             ).build()

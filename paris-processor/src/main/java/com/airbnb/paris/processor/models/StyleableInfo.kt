@@ -3,6 +3,7 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.WithSkyProcessor
+import com.squareup.javapoet.ClassName
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
@@ -68,7 +69,7 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
         }
 
         if (baseStyleableInfo.styleableResourceName.isNotEmpty() && styleableChildren.isEmpty() && attrs.isEmpty()) {
-            logWarning {
+            logWarning(element) {
                 "No need to specify the @Styleable value parameter if no class members are annotated with @Attr."
             }
         }
@@ -100,6 +101,12 @@ internal class StyleableInfo(
     val styles: List<StyleInfo>,
     baseStyleableInfo: BaseStyleableInfo
 ) : BaseStyleableInfo(baseStyleableInfo), WithSkyProcessor {
+
+    /**
+     * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.
+     * `min` is used to ensure in the case there are multiple R files, a consistent one is chosen.
+     */
+    val styleableRClassName = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).min()
 
     /**
      * Applies lower camel case formatting

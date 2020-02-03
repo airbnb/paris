@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.writers
 
 import androidx.annotation.RequiresApi
+import androidx.annotation.StyleRes
 import com.airbnb.paris.processor.*
 import com.airbnb.paris.processor.framework.*
 import com.airbnb.paris.processor.framework.AndroidClassNames.ATTRIBUTE_SET
@@ -27,7 +28,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
  */
 internal class StyleExtensionsKotlinFile(
     override val processor: ParisProcessor,
-    rClassName: KotlinClassName?,
     styleable: StyleableInfo
 ) : SkyKotlinFile(processor) {
 
@@ -156,7 +156,6 @@ internal class StyleExtensionsKotlinFile(
          */
         val distinctStyleableChildren = styleable.styleableChildren.distinctBy { it.styleableResId.resourceName }
         for (styleableChildInfo in distinctStyleableChildren) {
-            rClassName!!
 
             val functionName = styleable.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName)
 
@@ -168,7 +167,7 @@ internal class StyleExtensionsKotlinFile(
                 }
                 addStatement(
                     "builder.putStyle(%T.styleable.%L[%L], resId)",
-                    rClassName,
+                    styleableChildInfo.styleableResId.rClassName.toKPoet(),
                     styleable.styleableResourceName,
                     styleableChildInfo.styleableResId.kotlinCode
                 )
@@ -180,7 +179,7 @@ internal class StyleExtensionsKotlinFile(
                 parameter("style", STYLE_CLASS_NAME.toKPoet())
                 addStatement(
                     "builder.putStyle(%T.styleable.%L[%L], style)",
-                    rClassName,
+                    styleableChildInfo.styleableResId.rClassName.toKPoet(),
                     styleable.styleableResourceName,
                     styleableChildInfo.styleableResId.kotlinCode
                 )
@@ -208,7 +207,7 @@ internal class StyleExtensionsKotlinFile(
                 )
                 addStatement(
                     "builder.putStyle(%T.styleable.%L[%L], %T().apply(%N).build())",
-                    rClassName,
+                    styleableChildInfo.styleableResId.rClassName.toKPoet(),
                     styleable.styleableResourceName,
                     styleableChildInfo.styleableResId.kotlinCode,
                     subExtendableStyleBuilderTypeName,
@@ -226,7 +225,6 @@ internal class StyleExtensionsKotlinFile(
          */
         val attrGroups = styleable.attrs.groupBy { it.styleableResId.resourceName }
         for (groupedAttrs in attrGroups.values) {
-            rClassName!!
 
             val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
@@ -256,7 +254,7 @@ internal class StyleExtensionsKotlinFile(
 
                     addStatement(
                         "builder.put(%T.styleable.%L[%L], value)",
-                        rClassName,
+                        attr.styleableResId.rClassName.toKPoet(),
                         styleable.styleableResourceName,
                         attr.styleableResId.kotlinCode
                     )
@@ -276,7 +274,7 @@ internal class StyleExtensionsKotlinFile(
 
                 addStatement(
                     "builder.putRes(%T.styleable.%L[%L], resId)",
-                    rClassName,
+                    attr.styleableResId.rClassName.toKPoet(),
                     styleable.styleableResourceName,
                     attr.styleableResId.kotlinCode
                 )
@@ -300,7 +298,7 @@ internal class StyleExtensionsKotlinFile(
 
                     addStatement(
                         "builder.putDp(%T.styleable.%L[%L], value)",
-                        rClassName,
+                        attr.styleableResId.rClassName.toKPoet(),
                         styleable.styleableResourceName,
                         attr.styleableResId.kotlinCode
                     )
@@ -321,7 +319,7 @@ internal class StyleExtensionsKotlinFile(
 
                     addStatement(
                         "builder.putColor(%T.styleable.%L[%L], color)",
-                        rClassName,
+                        attr.styleableResId.rClassName.toKPoet(),
                         styleable.styleableResourceName,
                         attr.styleableResId.kotlinCode
                     )

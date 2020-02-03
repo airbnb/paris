@@ -4,6 +4,7 @@ import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
+import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
 
 
@@ -25,6 +26,18 @@ class ParisProcessorTest {
             .generatesSources(generatedStyleApplierClass)
     }
 
+    private fun assertCaseWithInput(folder: String, input: List<String>, output: List<String>) {
+        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}") }
+        val outputFileObjects = output.map { JavaFileObjects.forResource("$folder/output/${it}") }
+
+        assert_().about(javaSources())
+            .that(inputFileObjects)
+            .processedWith(ParisProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(outputFileObjects.first(), *outputFileObjects.drop(1).toTypedArray())
+    }
+
     private fun assertError(
         folder: String,
         errorCount: Int? = null,
@@ -34,6 +47,28 @@ class ParisProcessorTest {
 
         assert_().about(javaSource())
             .that(view)
+            .processedWith(ParisProcessor())
+            .failsToCompile()
+            .apply {
+                errorCount?.let {
+                    withErrorCount(it)
+                }
+                errorFragment?.let {
+                    withErrorContaining(it)
+                }
+            }
+    }
+
+    private fun assertErrorWithInput(
+        folder: String,
+        errorCount: Int? = null,
+        errorFragment: String? = null,
+        input: List<String>
+    ) {
+        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}") }
+
+        assert_().about(javaSources())
+            .that(inputFileObjects)
             .processedWith(ParisProcessor())
             .failsToCompile()
             .apply {
@@ -69,6 +104,15 @@ class ParisProcessorTest {
     @Test
     fun defaultValues() {
         assertCase("default_values")
+    }
+
+    @Test
+    fun emptyDefaultStyle() {
+        assertCaseWithInput(
+            "empty_default_style",
+            listOf("MyViewWithoutStyle.java", "package-info.java"),
+            listOf("MyViewWithoutStyleStyleApplier.java", "Paris.java")
+        )
     }
 
     @Test
@@ -108,6 +152,16 @@ class ParisProcessorTest {
             "error_attr_wrong_value_type",
             2,
             "Incorrectly typed @Attr value parameter"
+        )
+    }
+
+    @Test
+    fun errorNoDefaultStyle() {
+        assertErrorWithInput(
+            "error_no_default_style",
+            1,
+            "No default style found for MyViewWithoutStyle.",
+            listOf("MyViewWithoutStyle.java", "package-info.java")
         )
     }
 
@@ -161,6 +215,19 @@ class ParisProcessorTest {
     }
 
     @Test
+    fun errorStyleableOutsidePackageWithAttrAndNamespacedResources() {
+        // A @Styleable view in an unexpected package (outside the package namespace of the module)
+        // with an attribute reference to an r file. If namespaced resources is turned on this will fail, like [errorStyleableOutsidePackageNoR]
+        // If namespaced resource is turned off, it will pass as asserted in [styleableOutsidePackageSingleAttr]
+        assertErrorWithInput(
+            "error_styleable_outside_package_with_attr_and_namespaced_resources",
+            1,
+            "R class",
+            input = listOf("MyView.java", "package-info.java")
+        )
+    }
+
+    @Test
     fun errorStyleFieldInvalidType() {
         // A @Style field with an invalid type (not a style)
         assertError(
@@ -183,6 +250,15 @@ class ParisProcessorTest {
     @Test
     fun styleableFields() {
         assertCase("styleable_fields")
+    }
+
+    @Test
+    fun styleableInOtherModule() {
+        assertCaseWithInput(
+            "styleable_in_other_module_single_attr",
+            input = listOf("MyView.java", "package-info.java"),
+            output = listOf("MyViewStyleApplier.java", "Paris.java")
+        )
     }
 
     @Test
