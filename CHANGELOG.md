@@ -1,3 +1,7 @@
+# 1.4.0 (February 14, 2020)
+
+- Added support for namespaced resources.
+
 # 1.3.1 (December 16, 2019)
 
 - Fixed precedence of `android:textAppearance` attribute.
