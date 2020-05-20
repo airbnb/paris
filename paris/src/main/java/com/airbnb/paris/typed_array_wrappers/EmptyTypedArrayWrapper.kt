@@ -82,7 +82,7 @@ internal object EmptyTypedArrayWrapper : TypedArrayWrapper() {
     override fun recycle() {
         // Nothing to do here
     }
-    
+
     private fun illegalStateException(): Exception {
         return IllegalStateException("This ${TypedArrayWrapper::class.java.simpleName} is empty")
     }

@@ -1,11 +1,8 @@
 package com.airbnb.paris.styles
 
 import android.content.Context
-import android.graphics.Color
-import android.widget.TextView
 import com.airbnb.paris.R
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

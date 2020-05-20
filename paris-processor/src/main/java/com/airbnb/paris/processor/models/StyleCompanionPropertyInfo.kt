@@ -3,15 +3,20 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.JavaCodeBlock
+import com.airbnb.paris.processor.framework.KotlinCodeBlock
+import com.airbnb.paris.processor.framework.isNotFinal
+import com.airbnb.paris.processor.framework.isNotStatic
+import com.airbnb.paris.processor.framework.isPrivate
+import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModel
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModelFactory
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeKind
 
-internal class StyleCompanionPropertyInfoExtractor(processor: ParisProcessor)
-    : SkyCompanionPropertyModelFactory<StyleCompanionPropertyInfo>(processor, Style::class.java) {
+internal class StyleCompanionPropertyInfoExtractor(override val processor: ParisProcessor) :
+    SkyCompanionPropertyModelFactory<StyleCompanionPropertyInfo>(processor, Style::class.java) {
 
     override fun elementToModel(element: VariableElement): StyleCompanionPropertyInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods
@@ -31,7 +36,7 @@ internal class StyleCompanionPropertyInfoExtractor(processor: ParisProcessor)
         }
 
         val type = element.asType()
-        if (!isSubtype(type, STYLE_CLASS_NAME.toTypeMirror()) && type.kind != TypeKind.INT && !type.isNonExistent()) {
+        if (type.kind != TypeKind.INT && !isSubtype(type, processor.memoizer.styleClassType) && !type.isNonExistent()) {
             // Note: if the type is non existent we ignore this error check so that users don't need to change their kapt configuration, they'll still
             // get a build error though not as explicit.
             logError(element) {

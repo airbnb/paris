@@ -1,9 +1,37 @@
 package com.airbnb.paris.processor.writers
 
-import com.airbnb.paris.processor.*
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.models.*
-import com.squareup.javapoet.*
+import com.airbnb.paris.processor.Format
+import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.STYLE_APPLIER_CLASS_NAME
+import com.airbnb.paris.processor.STYLE_APPLIER_UTILS_CLASS_NAME
+import com.airbnb.paris.processor.STYLE_CLASS_NAME
+import com.airbnb.paris.processor.StyleablesTree
+import com.airbnb.paris.processor.TYPED_ARRAY_WRAPPER_CLASS_NAME
+import com.airbnb.paris.processor.WithParisProcessor
+import com.airbnb.paris.processor.framework.AndroidClassNames
+import com.airbnb.paris.processor.framework.SkyJavaClass
+import com.airbnb.paris.processor.framework.codeBlock
+import com.airbnb.paris.processor.framework.constructor
+import com.airbnb.paris.processor.framework.controlFlow
+import com.airbnb.paris.processor.framework.final
+import com.airbnb.paris.processor.framework.method
+import com.airbnb.paris.processor.framework.override
+import com.airbnb.paris.processor.framework.protected
+import com.airbnb.paris.processor.framework.public
+import com.airbnb.paris.processor.framework.static
+import com.airbnb.paris.processor.models.EmptyStyleInfo
+import com.airbnb.paris.processor.models.StyleCompanionPropertyInfo
+import com.airbnb.paris.processor.models.StyleResInfo
+import com.airbnb.paris.processor.models.StyleStaticMethodInfo
+import com.airbnb.paris.processor.models.StyleableInfo
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import javax.lang.model.element.Element
 
 internal class StyleApplierJavaClass(
     override val processor: ParisProcessor,
@@ -13,6 +41,12 @@ internal class StyleApplierJavaClass(
 
     override val packageName = styleableInfo.styleApplierClassName.packageName()!!
     override val name = styleableInfo.styleApplierClassName.simpleName()!!
+    override val originatingElements: List<Element> = listOfNotNull(
+        styleableInfo.annotatedElement,
+        // The R.style class is used to look up matching default style names, so if
+        // the R class changes it can affect the code we generate.
+        processor.memoizer.rStyleTypeElement
+    )
 
     override val block: TypeSpec.Builder.() -> Unit = {
         addAnnotation(AndroidClassNames.UI_THREAD)
@@ -39,10 +73,14 @@ internal class StyleApplierJavaClass(
 
         // If the view type is "View" then there is no parent
         var parentStyleApplierClassName: ClassName? = null
-        if (!isSameType(AndroidClassNames.VIEW.toTypeMirror(), styleableInfo.viewElementType)) {
-            parentStyleApplierClassName = styleablesTree.findStyleApplier(
+        if (!isSameType(processor.memoizer.androidViewClassType, styleableInfo.viewElementType)) {
+            val parentStyleApplierDetails = styleablesTree.findStyleApplier(
                 styleableInfo.viewElementType.asTypeElement().superclass.asTypeElement()
             )
+
+            parentStyleApplierClassName = parentStyleApplierDetails.className
+            addOriginatingElement(parentStyleApplierDetails.annotatedElement)
+
             method("applyParent") {
                 override()
                 protected()
@@ -204,9 +242,13 @@ internal class StyleApplierJavaClass(
         }
 
         for (styleableChildInfo in styleableInfo.styleableChildren) {
-            val subStyleApplierClassName = styleablesTree.findStyleApplier(
+            val (subStyleApplierAnnotatedElement, subStyleApplierClassName) = styleablesTree.findStyleApplier(
                 styleableChildInfo.type.asTypeElement()
             )
+            // If the name of the proxy or subStyle type changes then our generated code needs to update as well,
+            // therefore we must depend on it as an originating element.
+            addOriginatingElement(subStyleApplierAnnotatedElement)
+
             method(styleableChildInfo.name) {
                 public()
                 returns(subStyleApplierClassName)

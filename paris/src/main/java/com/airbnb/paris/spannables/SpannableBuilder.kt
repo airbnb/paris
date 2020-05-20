@@ -1,8 +1,8 @@
 package com.airbnb.paris.spannables
 
 import android.content.Context
-import androidx.annotation.StyleRes
 import android.widget.TextView
+import androidx.annotation.StyleRes
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
 
@@ -37,7 +37,7 @@ class SpannableBuilder internal constructor() {
 
     fun build(context: Context): CharSequence = StyleConverter(context).createSpannable(stringBuilder.toString(), markupItems)
 
-    fun applyTo(textView : TextView) {
+    fun applyTo(textView: TextView) {
         textView.text = build(textView.context)
     }
 }

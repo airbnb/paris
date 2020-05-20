@@ -1,3 +1,7 @@
+# 1.5.0 (May 20, 2020)
+
+- Adds support for incremental annotation processing
+
 # 1.4.0 (February 14, 2020)
 
 - Added support for namespaced resources.

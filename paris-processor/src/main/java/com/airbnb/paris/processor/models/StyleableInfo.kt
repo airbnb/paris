@@ -3,7 +3,6 @@ package com.airbnb.paris.processor.models
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.WithSkyProcessor
-import com.squareup.javapoet.ClassName
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
@@ -34,18 +33,16 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
             }
         }
 
-        return styleableElements
-            .mapNotNull {
-                fromElement(
-                    it as TypeElement,
-                    classesToStyleableChildInfo[it] ?: emptyList(),
-                    classesToBeforeStyleInfo[it] ?: emptyList(),
-                    classesToAfterStyleInfo[it] ?: emptyList(),
-                    classesToAttrsInfo[it] ?: emptyList(),
-                    classesToStylesInfo[it] ?: emptyList()
-                )
-            }
-            .also {
+        return styleableElements.mapNotNull {
+            fromElement(
+                it as TypeElement,
+                classesToStyleableChildInfo[it] ?: emptyList(),
+                classesToBeforeStyleInfo[it] ?: emptyList(),
+                classesToAfterStyleInfo[it] ?: emptyList(),
+                classesToAttrsInfo[it] ?: emptyList(),
+                classesToStylesInfo[it] ?: emptyList()
+            )
+        }.also {
                 mutableModels.addAll(it)
             }
     }
@@ -119,8 +116,7 @@ internal class StyleableInfo(
             }
         }
 
-        val formattedName = name.removePrefix("${styleableResourceName}_")
-            .removePrefix("android_")
+        val formattedName = name.removePrefix("${styleableResourceName}_").removePrefix("android_")
         return formattedName
             .foldRightIndexed("") { index, c, acc ->
                 if (c == '_') {

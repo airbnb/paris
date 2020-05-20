@@ -20,10 +20,9 @@ abstract class SkyModelFactory<T : SkyModel, in E : Element>(
 
     fun process(roundEnv: RoundEnvironment) {
         roundEnv.getElementsAnnotatedWith(annotationClass)
-            .filter { filter(it) }
             .mapNotNull {
                 @Suppress("UNCHECKED_CAST")
-                elementToModel(it as E)
+                if (filter(it)) elementToModel(it as E) else null
             }
             .let {
                 models += it

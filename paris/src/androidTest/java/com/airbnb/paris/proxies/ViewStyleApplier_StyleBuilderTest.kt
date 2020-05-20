@@ -1,15 +1,18 @@
 package com.airbnb.paris.proxies
 
-import androidx.test.*
-import androidx.test.runner.*
-import android.view.*
-import android.widget.*
-import android.view.ViewStyleApplier.*
-import com.airbnb.paris.styles.*
+import android.view.View
+import android.view.ViewStyleApplier.StyleBuilder
+import android.widget.TextView
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.test.R
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ViewStyleApplier_StyleBuilderTest {
@@ -58,10 +61,11 @@ class ViewStyleApplier_StyleBuilderTest {
     fun background() {
         assertNull(view.background)
         StyleBuilder()
-                .backgroundRes(R.drawable.format_drawable)
-                .applyTo(view)
+            .backgroundRes(R.drawable.format_drawable)
+            .applyTo(view)
         Assert.assertEquals(
-                res.getDrawable(R.drawable.format_drawable).constantState,
-                view.background.constantState)
+            res.getDrawable(R.drawable.format_drawable).constantState,
+            view.background.constantState
+        )
     }
 }

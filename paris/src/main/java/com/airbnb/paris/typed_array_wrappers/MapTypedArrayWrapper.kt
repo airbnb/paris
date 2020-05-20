@@ -13,7 +13,11 @@ import com.airbnb.paris.attribute_values.Styles
 import com.airbnb.paris.styles.MultiStyle
 import com.airbnb.paris.styles.ResourceStyle
 import com.airbnb.paris.styles.Style
-import com.airbnb.paris.utils.*
+import com.airbnb.paris.utils.dpToPx
+import com.airbnb.paris.utils.getFloat
+import com.airbnb.paris.utils.getFont
+import com.airbnb.paris.utils.getLayoutDimension
+import com.airbnb.paris.utils.toColorStateList
 
 /*
  * Lexicon:

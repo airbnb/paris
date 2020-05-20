@@ -77,10 +77,10 @@ class ImageViewStyleExtensionsTest {
             visibility(View.VISIBLE)
         }
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(android.R.attr.visibility, View.VISIBLE)
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(android.R.attr.visibility, View.VISIBLE)
+                .build(),
+            style
         )
     }
 }

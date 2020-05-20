@@ -2,10 +2,10 @@ apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
     ext {
-        ANDROID_PLUGIN_VERSION = '3.3.0'
-        BUTTERKNIFE_VERSION = '10.0.0'
-        KOTLIN_VERSION = '1.3.50'
-        VERSIONS_VERSION = '0.20.0'
+        ANDROID_PLUGIN_VERSION = '3.6.3'
+        BUTTERKNIFE_VERSION = '10.2.1'
+        KOTLIN_VERSION = '1.3.72'
+        VERSIONS_VERSION = '0.28.0'
     }
 
     repositories {
@@ -19,6 +19,7 @@ buildscript {
         classpath "com.jakewharton:butterknife-gradle-plugin:$BUTTERKNIFE_VERSION"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
         classpath "com.github.ben-manes:gradle-versions-plugin:$VERSIONS_VERSION"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
     }
 }
 

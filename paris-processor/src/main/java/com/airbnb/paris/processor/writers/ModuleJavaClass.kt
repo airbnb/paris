@@ -5,12 +5,17 @@ import com.airbnb.paris.annotations.GeneratedStyleableModule
 import com.airbnb.paris.processor.MODULE_SIMPLE_CLASS_NAME_FORMAT
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.SkyJavaClass
+import com.airbnb.paris.processor.framework.annotation
+import com.airbnb.paris.processor.framework.final
+import com.airbnb.paris.processor.framework.public
+import com.airbnb.paris.processor.framework.value
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.TypeSpec
 import java.math.BigInteger
 import java.security.MessageDigest
+import javax.lang.model.element.Element
 
 /**
  * Module classes index the styleable views available in their module. Since they are all put in the
@@ -24,6 +29,7 @@ internal class ModuleJavaClass(
 
     override val packageName = PARIS_MODULES_PACKAGE_NAME
     override val name: String
+    override val originatingElements: List<Element> = styleablesInfo.map { it.annotatedElement }
 
     init {
         // The class name is a hash of all the styleable views' canonical names so the likelihood of

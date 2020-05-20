@@ -113,8 +113,7 @@ internal class Format private constructor(
                 return Format.RESOURCE_ID
             }
 
-            val typeString = element.asType().toString()
-            val formatType = when (typeString) {
+            val formatType = when (val typeString = element.asType().toString()) {
                 "java.lang.Boolean", "boolean" -> Type.BOOLEAN
                 "java.lang.CharSequence" -> Type.CHARSEQUENCE
                 "java.lang.CharSequence[]" -> Type.CHARSEQUENCE_ARRAY
@@ -124,7 +123,7 @@ internal class Format private constructor(
                 "java.lang.Float", "float" -> Type.FLOAT
                 "java.lang.Integer", "int" -> Type.INT
                 "java.lang.String" -> Type.STRING
-                else -> throw IllegalArgumentException(String.format("Invalid type"))
+                else -> throw IllegalArgumentException("Invalid type: $typeString")
             }
             return Format(formatType)
         }
@@ -210,15 +209,15 @@ internal class Format private constructor(
             Type.NON_RESOURCE_STRING -> "getNonResourceString(\$L)"
             Type.STRING -> "getString(\$L)"
 
-        // Using extension functions because unsupported by Resources
+            // Using extension functions because unsupported by Resources
             Type.LAYOUT_DIMENSION -> "\$T.getLayoutDimension(\$L, \$L)"
             Type.FLOAT -> "\$T.getFloat(\$L, \$L)"
             Type.STYLE -> "\$T.getStyle(\$L, \$L)"
 
-        // Using ResourcesCompat with context and font resource arguments
+            // Using ResourcesCompat with context and font resource arguments
             Type.FONT -> "\$T.getFont(\$L, \$L)"
 
-        // Special case, the resource id is the value
+            // Special case, the resource id is the value
             Type.RESOURCE_ID -> "\$L"
         }
 

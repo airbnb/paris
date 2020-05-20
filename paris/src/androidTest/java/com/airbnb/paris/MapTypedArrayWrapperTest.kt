@@ -3,9 +3,9 @@ package com.airbnb.paris
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
+import android.view.ViewGroup
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import android.view.ViewGroup
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.attribute_values.DpValue
 import com.airbnb.paris.attribute_values.ResourceId
@@ -32,16 +32,16 @@ class MapTypedArrayWrapperTest {
     private lateinit var wrapper: MapTypedArrayWrapper
 
     private val attrResToValueResMaps = listOf(
-            emptyMap(),
-            mapOf(R.attr.formatBoolean to ResourceId(R.bool.format_boolean)),
-            mapOf(
-                    R.attr.formatBoolean to ResourceId(R.bool.format_boolean),
-                    R.attr.formatColor to ResourceId(R.color.format_color),
-                    R.attr.formatDimension to ResourceId(R.dimen.format_dimension),
-                    // This attr is not included in R.styleable.Format, as a result it should be ignored by
-                    // the MapTypedArrayWrapper
-                    R.attr.background to ResourceId(R.color.format_color)
-            )
+        emptyMap(),
+        mapOf(R.attr.formatBoolean to ResourceId(R.bool.format_boolean)),
+        mapOf(
+            R.attr.formatBoolean to ResourceId(R.bool.format_boolean),
+            R.attr.formatColor to ResourceId(R.color.format_color),
+            R.attr.formatDimension to ResourceId(R.dimen.format_dimension),
+            // This attr is not included in R.styleable.Format, as a result it should be ignored by
+            // the MapTypedArrayWrapper
+            R.attr.background to ResourceId(R.color.format_color)
+        )
     )
 
     @Before

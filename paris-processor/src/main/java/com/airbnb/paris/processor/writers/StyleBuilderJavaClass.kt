@@ -1,11 +1,22 @@
 package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.framework.*
-import com.airbnb.paris.processor.models.*
+import com.airbnb.paris.processor.framework.AndroidClassNames
+import com.airbnb.paris.processor.framework.SkyJavaClass
+import com.airbnb.paris.processor.framework.constructor
+import com.airbnb.paris.processor.framework.final
+import com.airbnb.paris.processor.framework.method
+import com.airbnb.paris.processor.framework.public
+import com.airbnb.paris.processor.framework.static
+import com.airbnb.paris.processor.models.EmptyStyleInfo
+import com.airbnb.paris.processor.models.StyleCompanionPropertyInfo
+import com.airbnb.paris.processor.models.StyleResInfo
+import com.airbnb.paris.processor.models.StyleStaticMethodInfo
+import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
+import javax.lang.model.element.Element
 
 internal fun getStyleBuilderClassName(styleApplierClassName: ClassName) =
     styleApplierClassName.nestedClass("StyleBuilder")
@@ -17,6 +28,7 @@ internal class StyleBuilderJavaClass(
 
     override val packageName: String
     override val name: String
+    override val originatingElements: List<Element> = listOf(styleableInfo.annotatedElement)
 
     init {
         val className = getStyleBuilderClassName(styleableInfo.styleApplierClassName)

@@ -1,7 +1,6 @@
 package com.airbnb.paris.processor.framework
 
 import com.squareup.kotlinpoet.FileSpec
-import java.io.File
 
 
 internal abstract class SkyKotlinFile(override val processor: SkyProcessor) : WithSkyProcessor {
@@ -21,8 +20,6 @@ internal abstract class SkyKotlinFile(override val processor: SkyProcessor) : Wi
      * If this module is being processed with kapt then the file is written, otherwise this is a no-op.
      */
     fun write() {
-        kaptOutputPath?.let {
-            build().writeTo(File(it))
-        }
+        build().writeTo(processor.filer)
     }
 }

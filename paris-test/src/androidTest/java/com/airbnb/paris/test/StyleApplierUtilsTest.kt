@@ -1,13 +1,16 @@
 package com.airbnb.paris.test
 
-import androidx.test.*
-import androidx.test.runner.*
-import android.util.*
-import android.view.*;
-import com.airbnb.paris.*
-import com.airbnb.paris.styles.*
-import org.junit.*
-import org.junit.runner.*
+import android.util.LayoutDirection
+import android.util.TypedValue
+import android.view.ViewGroup
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import com.airbnb.paris.StyleApplierUtils
+import com.airbnb.paris.styles.ResourceStyle
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class StyleApplierUtilsTest {
@@ -30,37 +33,47 @@ class StyleApplierUtilsTest {
 
     @Test
     fun subStylesSameStyle() {
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1))
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1)
+        )
     }
 
     @Test
     fun subStylesSameAttributes() {
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_2))
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_2)
+        )
     }
 
     @Test(expected = AssertionError::class)
     fun subStylesDifferentAttributes() {
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textSizePadding))
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textSizePadding)
+        )
     }
 
     @Test
     fun emptyStyleSameStyle() {
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                ResourceStyle(R.style.Empty),
-                ResourceStyle(R.style.Empty))
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            ResourceStyle(R.style.Empty),
+            ResourceStyle(R.style.Empty)
+        )
     }
 
     @Test(expected = AssertionError::class)
     fun emptyStyleDifferentAttributes() {
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
-                ResourceStyle(R.style.Empty))
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_titleStyle_textColorTextSizePadding_1),
+            ResourceStyle(R.style.Empty)
+        )
     }
 
     @Test
@@ -75,9 +88,11 @@ class StyleApplierUtilsTest {
     fun defaultValues() {
         // Because MyView specifies a default value for active this should be fine
 
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                ResourceStyle(R.style.StyleApplierUtilsTest_MyView_active),
-                ResourceStyle(R.style.Empty))
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            ResourceStyle(R.style.StyleApplierUtilsTest_MyView_active),
+            ResourceStyle(R.style.Empty)
+        )
     }
 
     @Test
@@ -87,13 +102,14 @@ class StyleApplierUtilsTest {
 
         myOtherView.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, 10f)
         Assert.assertEquals(10f, myOtherView.title.textSize)
-        StyleApplierUtils.assertSameAttributes(myViewApplier,
-                myViewApplier.builder()
-                        .titleStyle({ it.textSize(15) })
-                        .build(),
-                myViewApplier.builder()
-                        .titleStyle({ it.textSize(15) })
-                        .build()
+        StyleApplierUtils.assertSameAttributes(
+            myViewApplier,
+            myViewApplier.builder()
+                .titleStyle({ it.textSize(15) })
+                .build(),
+            myViewApplier.builder()
+                .titleStyle({ it.textSize(15) })
+                .build()
         )
         Assert.assertEquals(10f, myOtherView.title.textSize)
     }

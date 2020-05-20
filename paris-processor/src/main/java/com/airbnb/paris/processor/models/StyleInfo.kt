@@ -5,7 +5,7 @@ import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import java.util.*
+import java.util.Locale
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 
@@ -19,8 +19,8 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
     var latest = emptyList<StyleInfo>()
         private set
 
-    private var styleCompanionPropertyInfoExtractor = StyleCompanionPropertyInfoExtractor(processor)
-    private var styleStaticMethodInfoExtractor = StyleStaticMethodInfoExtractor(processor)
+    private val styleCompanionPropertyInfoExtractor = StyleCompanionPropertyInfoExtractor(processor)
+    private val styleStaticMethodInfoExtractor = StyleStaticMethodInfoExtractor(processor)
 
     fun process(roundEnv: RoundEnvironment) {
         // TODO Check that no style was left behind?
@@ -82,8 +82,10 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
                         styles + defaultNameFormatStyle
                     } else {
                         if (processor.namespacedResourcesEnabled && !styleableElement.getAnnotation(Styleable::class.java).emptyDefaultStyle) {
-                            logError { "No default style found for ${styleableElement.simpleName}. Link an appropriate default style, " +
-                                    "or set @Styleable(emptyDefaultStyle = true) for this element if none exist." }
+                            logError {
+                                "No default style found for ${styleableElement.simpleName}. Link an appropriate default style, " +
+                                        "or set @Styleable(emptyDefaultStyle = true) for this element if none exist."
+                            }
                         }
                         styles + EmptyStyleInfo(styleableElement, true)
                     }
@@ -103,7 +105,7 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
         val elementName = styleableElement.simpleName.toString()
         val defaultStyleName = String.format(Locale.US, defaultStyleNameFormat, elementName)
 
-        val rStyleTypeElement = elements.getTypeElement("${RElement!!.qualifiedName}.style")
+        val rStyleTypeElement = processor.memoizer.rStyleTypeElement
         val defaultStyleExists = rStyleTypeElement != null && elements.getAllMembers(rStyleTypeElement).any {
             it.simpleName.toString() == defaultStyleName
         }
@@ -120,8 +122,8 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
                 DEFAULT_STYLE_FORMATTED_NAME,
                 javadoc,
                 kdoc,
-                true,
-                styleResourceCode
+                isDefault = true,
+                styleResourceCode = styleResourceCode
             )
         } else {
             return null
@@ -133,6 +135,7 @@ internal interface StyleInfo {
     val enclosingElement: Element
     val elementName: String
     val formattedName: String
+
     //    val styleResourceCode: JavaCodeBlock?
     val javadoc: JavaCodeBlock
     val kdoc: KotlinCodeBlock

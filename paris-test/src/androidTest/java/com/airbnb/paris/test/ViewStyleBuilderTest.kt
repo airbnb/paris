@@ -1,12 +1,13 @@
 package com.airbnb.paris.test
 
-import android.graphics.*
-import androidx.test.*
-import androidx.test.runner.*
-import com.airbnb.paris.styles.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import android.graphics.Color
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import com.airbnb.paris.styles.EmptyStyle
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ViewStyleBuilderTest {
@@ -30,13 +31,13 @@ class ViewStyleBuilderTest {
     @Test
     fun subStyleCombination() {
         val style = myViewBuilder
-                .titleStyle { builder ->
-                    builder.textColor(Color.RED)
-                }
-                .titleStyle { builder ->
-                    builder.textSize(16)
-                }
-                .build()
+            .titleStyle { builder ->
+                builder.textColor(Color.RED)
+            }
+            .titleStyle { builder ->
+                builder.textSize(16)
+            }
+            .build()
         val typedArray = style.obtainStyledAttributes(context, R.styleable.MyView)
         val subStyle = typedArray.getStyle(R.styleable.MyView_titleStyle)
         val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
@@ -48,13 +49,13 @@ class ViewStyleBuilderTest {
     @Test
     fun subStyleCombinationPrecedence() {
         val style = myViewBuilder
-                .titleStyle { builder ->
-                    builder.textColor(Color.RED)
-                }
-                .titleStyle { builder ->
-                    builder.textColor(Color.GREEN)
-                }
-                .build()
+            .titleStyle { builder ->
+                builder.textColor(Color.RED)
+            }
+            .titleStyle { builder ->
+                builder.textColor(Color.GREEN)
+            }
+            .build()
         val typedArray = style.obtainStyledAttributes(context, R.styleable.MyView)
         val subStyle = typedArray.getStyle(R.styleable.MyView_titleStyle)
         val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
@@ -70,14 +71,14 @@ class ViewStyleBuilderTest {
         // substyle combinatory rules it had to be removed
 
         val style = myViewBuilder
-                .titleStyle { builder ->
-                    builder.textColor(Color.RED)
-                }
-                .add(EmptyStyle)
-                .titleStyle { builder ->
-                    builder.textColor(Color.GREEN)
-                }
-                .build()
+            .titleStyle { builder ->
+                builder.textColor(Color.RED)
+            }
+            .add(EmptyStyle)
+            .titleStyle { builder ->
+                builder.textColor(Color.GREEN)
+            }
+            .build()
         val typedArray = style.obtainStyledAttributes(context, intArrayOf(R.attr.titleStyle))
         val subStyle = typedArray.getStyle(0)
         val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)

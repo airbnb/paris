@@ -9,6 +9,7 @@ import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
 import com.airbnb.paris.processor.framework.WithSkyProcessor
 import com.airbnb.paris.processor.framework.packageName
 import com.squareup.javapoet.ClassName
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.MirroredTypeException
@@ -28,16 +29,18 @@ internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor
                 .forEach { styleableModule ->
                     baseStyleablesInfo.addAll(
                         styleableModule.value
-                            .mapNotNull {
+                            .mapNotNull { generatedStyleableClass ->
                                 var typeElement: TypeElement? = null
                                 try {
-                                    it.value
+                                    generatedStyleableClass.value
                                 } catch (e: MirroredTypeException) {
                                     typeElement = e.typeMirror.asTypeElement()
                                 }
                                 typeElement
                             }
-                            .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
+                            .map { typeElement ->
+                                BaseStyleableInfoExtractor(processor).fromElement(typeElement)
+                            }
                     )
                 }
         }
@@ -50,7 +53,7 @@ internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor
         val elementType = element.asType()
 
         val viewElementType: TypeMirror
-        viewElementType = if (isSubtype(elementType, erasure(PROXY_CLASS_NAME.toTypeMirror()))) {
+        viewElementType = if (isSubtype(elementType, processor.memoizer.proxyClassTypeErased)) {
             // Get the parameterized type, which should be the view type
             (element.superclass as DeclaredType).typeArguments[1]
         } else {
@@ -65,19 +68,25 @@ internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor
         val styleableResourceName = styleable.value
 
         return BaseStyleableInfo(
-            elementPackageName,
-            elementName,
-            elementType,
-            viewElementPackageName,
-            viewElement,
-            viewElementName,
-            viewElementType,
-            styleableResourceName
+            annotatedElement = element,
+            elementPackageName = elementPackageName,
+            elementName = elementName,
+            elementType = elementType,
+            viewElementPackageName = viewElementPackageName,
+            viewElement = viewElement,
+            viewElementName = viewElementName,
+            viewElementType = viewElementType,
+            styleableResourceName = styleableResourceName
         )
     }
 }
 
 internal open class BaseStyleableInfo(
+    /**
+     * The element that is annotated with @Styleable.
+     * This is used to determine the originating element of generated files.
+     */
+    val annotatedElement: Element,
     val elementPackageName: String,
     val elementName: String,
     /**
@@ -86,8 +95,8 @@ internal open class BaseStyleableInfo(
      */
     val elementType: TypeMirror,
     private val viewElementPackageName: String,
-    /** The simple name of the view eg. "AirImageView" */
     val viewElement: TypeElement,
+    /** The simple name of the view eg. "AirImageView" */
     val viewElementName: String,
     /**
      * If the styleable class is not a proxy, will be equal to [elementType]. Refers to the view
@@ -98,14 +107,15 @@ internal open class BaseStyleableInfo(
 ) {
 
     constructor(baseStyleableInfo: BaseStyleableInfo) : this(
-        baseStyleableInfo.elementPackageName,
-        baseStyleableInfo.elementName,
-        baseStyleableInfo.elementType,
-        baseStyleableInfo.viewElementPackageName,
-        baseStyleableInfo.viewElement,
-        baseStyleableInfo.viewElementName,
-        baseStyleableInfo.viewElementType,
-        baseStyleableInfo.styleableResourceName
+        annotatedElement = baseStyleableInfo.annotatedElement,
+        elementPackageName = baseStyleableInfo.elementPackageName,
+        elementName = baseStyleableInfo.elementName,
+        elementType = baseStyleableInfo.elementType,
+        viewElementPackageName = baseStyleableInfo.viewElementPackageName,
+        viewElement = baseStyleableInfo.viewElement,
+        viewElementName = baseStyleableInfo.viewElementName,
+        viewElementType = baseStyleableInfo.viewElementType,
+        styleableResourceName = baseStyleableInfo.styleableResourceName
     )
 
     val styleApplierClassName: ClassName = ClassName.get(
