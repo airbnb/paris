@@ -4,21 +4,30 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
+import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.framework.SkyProcessor
-import com.airbnb.paris.processor.framework.className
 import com.airbnb.paris.processor.framework.packageName
-import com.airbnb.paris.processor.framework.toKPoet
-import com.airbnb.paris.processor.models.*
+import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
+import com.airbnb.paris.processor.models.AttrInfoExtractor
+import com.airbnb.paris.processor.models.BaseStyleableInfo
+import com.airbnb.paris.processor.models.BaseStyleableInfoExtractor
+import com.airbnb.paris.processor.models.BeforeStyleInfoExtractor
+import com.airbnb.paris.processor.models.StyleInfoExtractor
+import com.airbnb.paris.processor.models.StyleableChildInfoExtractor
+import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.models.StyleableInfoExtractor
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
 import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
-
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
 class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     override val processor = this
@@ -31,17 +40,19 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     override var namespacedResourcesEnabled: Boolean = false
 
-    private var beforeStyleInfoExtractor = BeforeStyleInfoExtractor(this)
+    override val memoizer = Memoizer(this)
 
-    private var afterStyleInfoExtractor = AfterStyleInfoExtractor(this)
+    private val beforeStyleInfoExtractor = BeforeStyleInfoExtractor(this)
 
-    private var styleableChildInfoExtractor = StyleableChildInfoExtractor(this)
+    private val afterStyleInfoExtractor = AfterStyleInfoExtractor(this)
 
-    private var attrInfoExtractor = AttrInfoExtractor(this)
+    private val styleableChildInfoExtractor = StyleableChildInfoExtractor(this)
 
-    private var styleInfoExtractor = StyleInfoExtractor(this)
+    private val attrInfoExtractor = AttrInfoExtractor(this)
 
-    private var styleableInfoExtractor = StyleableInfoExtractor(this)
+    private val styleInfoExtractor = StyleInfoExtractor(this)
+
+    private val styleableInfoExtractor = StyleableInfoExtractor(this)
 
     private lateinit var externalStyleablesInfo: List<BaseStyleableInfo>
 

@@ -28,16 +28,16 @@ class StyleBuilderTest {
     @Test
     fun equals_styleRes_same() {
         assertEquals(
-                builder1.add(android.R.style.Widget_Button),
-                builder2.add(android.R.style.Widget_Button)
+            builder1.add(android.R.style.Widget_Button),
+            builder2.add(android.R.style.Widget_Button)
         )
     }
 
     @Test
     fun equals_styleRes_different() {
         assertNotEquals(
-                builder1.add(android.R.style.Widget_Button),
-                builder2.add(android.R.style.Widget_Button_Small)
+            builder1.add(android.R.style.Widget_Button),
+            builder2.add(android.R.style.Widget_Button_Small)
         )
     }
 }

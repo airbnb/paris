@@ -4,9 +4,19 @@
 package com.airbnb.paris.processor.framework
 
 import com.squareup.javapoet.TypeName
-import com.squareup.kotlinpoet.*
-import javax.lang.model.element.Modifier
+import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.BOOLEAN
+import com.squareup.kotlinpoet.BYTE
+import com.squareup.kotlinpoet.CHAR
+import com.squareup.kotlinpoet.DOUBLE
+import com.squareup.kotlinpoet.FLOAT
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.SHORT
+import com.squareup.kotlinpoet.UNIT
+import javax.lang.model.element.Modifier
 
 internal typealias JavaClassName = com.squareup.javapoet.ClassName
 internal typealias JavaTypeName = com.squareup.javapoet.TypeName

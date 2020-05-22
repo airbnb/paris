@@ -2,13 +2,17 @@ package com.airbnb.paris.spannables
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.text.style.TextAppearanceSpan
+import android.text.style.TypefaceSpan
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import android.text.style.*
-import com.airbnb.paris.test.R
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.styles.ProgrammaticStyle
 import com.airbnb.paris.styles.Style
+import com.airbnb.paris.test.R
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.Test
@@ -21,11 +25,11 @@ class StyleConverterTest {
     private val converter = StyleConverter(InstrumentationRegistry.getTargetContext()!!)
 
     @Test
-    fun textSize(){
+    fun textSize() {
 
         val bigTextStyle = ProgrammaticStyle.builder()
-                .put(android.R.attr.textSize, 30)
-                .build()
+            .put(android.R.attr.textSize, 30)
+            .build()
 
         assertStyleAppliesCorrectlyOnSampleString(bigTextStyle, AbsoluteSizeSpan::class) {
             assertThat(it.size, equalTo(30))
@@ -33,11 +37,11 @@ class StyleConverterTest {
     }
 
     @Test
-    fun textColor(){
+    fun textColor() {
 
         val cyanTextStyle = ProgrammaticStyle.builder()
-                .put(android.R.attr.textColor, ColorValue(Color.CYAN))
-                .build()
+            .put(android.R.attr.textColor, ColorValue(Color.CYAN))
+            .build()
 
         assertStyleAppliesCorrectlyOnSampleString(cyanTextStyle, ForegroundColorSpan::class) {
             assertThat(it.foregroundColor, equalTo(Color.CYAN))
@@ -45,11 +49,11 @@ class StyleConverterTest {
     }
 
     @Test
-    fun textAppearance(){
+    fun textAppearance() {
 
         val cyanTextStyle = ProgrammaticStyle.builder()
-                .put(android.R.attr.textAppearance, R.style.StyleConverterTest_MyTextAppearance)
-                .build()
+            .put(android.R.attr.textAppearance, R.style.StyleConverterTest_MyTextAppearance)
+            .build()
 
         assertStyleAppliesCorrectlyOnSampleString(cyanTextStyle, TextAppearanceSpan::class) {
             assertThat(it.textColor.defaultColor, equalTo(Color.GREEN))
@@ -58,11 +62,11 @@ class StyleConverterTest {
     }
 
     @Test
-    fun fontFamily(){
+    fun fontFamily() {
 
         val cyanTextStyle = ProgrammaticStyle.builder()
-                .put(android.R.attr.fontFamily, "monospace")
-                .build()
+            .put(android.R.attr.fontFamily, "monospace")
+            .build()
 
         assertStyleAppliesCorrectlyOnSampleString(cyanTextStyle, TypefaceSpan::class) {
             assertThat(it.family, equalTo("monospace"))
@@ -70,11 +74,11 @@ class StyleConverterTest {
     }
 
     @Test
-    fun typeFace(){
+    fun typeFace() {
 
         val cyanTextStyle = ProgrammaticStyle.builder()
-                .put(android.R.attr.typeface, "sans-serif")
-                .build()
+            .put(android.R.attr.typeface, "sans-serif")
+            .build()
 
         assertStyleAppliesCorrectlyOnSampleString(cyanTextStyle, TypefaceSpan::class) {
             assertThat(it.family, equalTo("sans-serif"))
@@ -82,21 +86,22 @@ class StyleConverterTest {
     }
 
     @Test
-    fun textStyle(){
+    fun textStyle() {
 
         val cyanTextStyle = ProgrammaticStyle.builder()
-                .put(android.R.attr.textStyle, Typeface.BOLD_ITALIC)
-                .build()
+            .put(android.R.attr.textStyle, Typeface.BOLD_ITALIC)
+            .build()
 
         assertStyleAppliesCorrectlyOnSampleString(cyanTextStyle, StyleSpan::class) {
             assertThat(it.style, equalTo(Typeface.BOLD_ITALIC))
         }
     }
 
-    private fun <T: Any> assertStyleAppliesCorrectlyOnSampleString(
-            style: Style,
-            expectedGeneratedSpanClass: KClass<T>,
-            spanAssertions: ((T) -> Unit)) {
+    private fun <T : Any> assertStyleAppliesCorrectlyOnSampleString(
+        style: Style,
+        expectedGeneratedSpanClass: KClass<T>,
+        spanAssertions: ((T) -> Unit)
+    ) {
 
         val sampleString = "Hello World"
         val spanned = converter.createSpannable(sampleString, setOf(StyleConverter.MarkupItem(IntRange(3, 5), style)))

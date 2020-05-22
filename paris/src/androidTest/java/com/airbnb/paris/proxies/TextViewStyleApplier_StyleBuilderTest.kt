@@ -1,15 +1,17 @@
 package com.airbnb.paris.proxies
 
-import android.graphics.*
-import android.graphics.drawable.*
-import androidx.test.*
-import androidx.test.runner.*
-import android.widget.*
-import android.widget.TextViewStyleApplier.*
-import com.airbnb.paris.styles.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.TextView
+import android.widget.TextViewStyleApplier.StyleBuilder
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import com.airbnb.paris.styles.ProgrammaticStyle
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class TextViewStyleApplier_StyleBuilderTest {
@@ -28,7 +30,7 @@ class TextViewStyleApplier_StyleBuilderTest {
     private lateinit var styleBuilder: StyleBuilder
 
     private fun programmaticStyle(builderFunctions: ProgrammaticStyle.Builder.() -> Any) =
-            ProgrammaticStyle.builder().debugName("test").builderFunctions()
+        ProgrammaticStyle.builder().debugName("test").builderFunctions()
 
     private fun ProgrammaticStyle.Builder.assertEqualsTextViewStyleBuilder(builderFunctions: StyleBuilder.() -> StyleBuilder) {
         assertEquals(build(), StyleBuilder().debugName("test").builderFunctions().build())
@@ -44,9 +46,9 @@ class TextViewStyleApplier_StyleBuilderTest {
                 putDp(attrRes, value)
                 val programmaticStyle = build()
                 val textViewStyle = StyleBuilder()
-                        .debugName("test")
-                        .builderFunctions(value)
-                        .build()
+                    .debugName("test")
+                    .builderFunctions(value)
+                    .build()
                 assertEquals(programmaticStyle, textViewStyle)
             }
         }

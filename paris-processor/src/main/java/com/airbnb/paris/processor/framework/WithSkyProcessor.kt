@@ -21,8 +21,8 @@ interface WithSkyProcessor {
     val messager get() = processor.messager
     val elements get() = processor.elements
     val types get() = processor.types
-    val kaptOutputPath get() = processor.kaptOutputPath
     val loggedMessages get() = processor.loggedMessages
+    val memoizer get() = processor.memoizer
 
     fun erasure(type: TypeMirror): TypeMirror = types.erasure(type)
 
@@ -60,7 +60,7 @@ interface WithSkyProcessor {
 
     // Android specific
 
-    fun isView(type: TypeMirror): Boolean = isSubtype(type, AndroidClassNames.VIEW.toTypeMirror())
+    fun isView(type: TypeMirror): Boolean = isSubtype(type, processor.memoizer.androidViewClassType)
 
     // Error handling
 

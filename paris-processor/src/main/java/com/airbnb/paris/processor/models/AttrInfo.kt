@@ -31,7 +31,12 @@ internal class AttrInfoExtractor(
 
         val attr = element.getAnnotation(Attr::class.java)
 
-        val targetType = element.parameters[0].asType()
+        val targetType = element.parameters.firstOrNull()?.asType() ?: run {
+            logError(element) {
+                "Method with @Attr must provide a single parameter"
+            }
+            return null
+        }
 
         val targetFormat = Format.forElement(processor, element)
 

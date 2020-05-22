@@ -1,14 +1,16 @@
 package com.airbnb.paris.styles
 
-import android.annotation.*
-import android.content.*
-import androidx.annotation.*
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.annotation.IntRange
-import com.airbnb.paris.typed_array_wrappers.*
+import androidx.annotation.StyleRes
+import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 data class ResourceStyle constructor(
-        @StyleRes @IntRange(from = 0) private val styleRes: Int,
-        private var name: String? = null) : Style {
+    @StyleRes @IntRange(from = 0) private val styleRes: Int,
+    private var name: String? = null
+) : Style {
 
     override val shouldApplyParent = true
 
@@ -19,5 +21,5 @@ data class ResourceStyle constructor(
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-            TypedArrayTypedArrayWrapper(context, context.obtainStyledAttributes(styleRes, attrs))
+        TypedArrayTypedArrayWrapper(context, context.obtainStyledAttributes(styleRes, attrs))
 }

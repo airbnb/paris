@@ -14,6 +14,7 @@ internal interface WithParisProcessor : WithSkyProcessor {
 
     val namespacedResourcesEnabled get() = processor.namespacedResourcesEnabled
 
+
     fun getResourceId(annotation: Class<out Annotation>, element: Element, value: Int): AndroidResourceId? {
         val resourceId = processor.resourceScanner.getId(annotation, element, value)
         if (resourceId == null) {

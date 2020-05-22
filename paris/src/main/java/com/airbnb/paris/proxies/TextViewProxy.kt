@@ -82,7 +82,7 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
             2 -> TextUtils.TruncateAt.MIDDLE
             3 -> TextUtils.TruncateAt.END
             4 -> TextUtils.TruncateAt.MARQUEE
-            else -> throw IllegalStateException("Invalid value for ellipsize.")
+            else -> throw IllegalStateException("Invalid value for ellipsize. $ellipsize")
         }
     }
 

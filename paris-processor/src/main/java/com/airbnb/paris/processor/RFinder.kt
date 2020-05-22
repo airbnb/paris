@@ -11,6 +11,7 @@ import javax.lang.model.type.TypeMirror
 internal class RFinder(override val processor: ParisProcessor) : WithParisProcessor {
 
     var element: TypeElement? = null
+        private set
 
     fun processConfig(config: ParisConfig) {
         if (element != null) {
@@ -43,20 +44,20 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
     }
 
     fun processStyleables(styleablesInfo: List<StyleableInfo>) {
-        if (element == null && styleablesInfo.isNotEmpty()) {
-            styleablesInfo[0].let { styleableInfo ->
-                var packageName = styleableInfo.elementPackageName
-                while (packageName.isNotBlank()) {
-                    elements.getTypeElement("$packageName.R")?.let {
-                        element = it
-                        return
-                    }
-                    val lastIndexOfDot = packageName.lastIndexOf('.')
-                    packageName = if (lastIndexOfDot > 0) {
-                        packageName.substring(0, lastIndexOfDot)
-                    } else {
-                        ""
-                    }
+        if (element != null || styleablesInfo.isEmpty()) return
+
+        styleablesInfo[0].let { styleableInfo ->
+            var packageName = styleableInfo.elementPackageName
+            while (packageName.isNotBlank()) {
+                elements.getTypeElement("$packageName.R")?.let {
+                    element = it
+                    return
+                }
+                val lastIndexOfDot = packageName.lastIndexOf('.')
+                packageName = if (lastIndexOfDot > 0) {
+                    packageName.substring(0, lastIndexOfDot)
+                } else {
+                    ""
                 }
             }
         }

@@ -9,8 +9,7 @@ import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import javax.lang.model.element.ExecutableElement
 
-internal class AfterStyleInfoExtractor(processor: ParisProcessor)
-    : SkyMethodModelFactory<AfterStyleInfo>(processor, AfterStyle::class.java) {
+internal class AfterStyleInfoExtractor(override val processor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(processor, AfterStyle::class.java) {
 
     override fun elementToModel(element: ExecutableElement): AfterStyleInfo? {
         if (element.isPrivate() || element.isProtected()) {
@@ -20,10 +19,9 @@ internal class AfterStyleInfoExtractor(processor: ParisProcessor)
             return null
         }
 
-        val styleType = STYLE_CLASS_NAME.toTypeMirror()
-        val parameterType = element.parameters[0].asType()
+        val parameterType = element.parameters.firstOrNull()?.asType()
 
-        if (element.parameters.size != 1 || !isSameType(styleType, parameterType)) {
+        if (parameterType == null || !isSameType(processor.memoizer.styleClassType, parameterType)) {
             logError(element) {
                 "Methods annotated with @AfterStyle must have a single Style parameter."
             }

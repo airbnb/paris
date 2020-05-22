@@ -1,13 +1,13 @@
 package com.airbnb.paris.proxies
 
 import android.content.Context
-import androidx.test.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -31,7 +31,10 @@ class GenericViewProxyTests {
         assertProxySet(IMAGE_VIEW_MAPPINGS as List<BaseViewMapping<Any, ImageViewProxy, ImageView, Any>>)
     }
 
-    private inline fun <reified P : Proxy<P, V>, reified V : View> assertProxySet(mappings: List<BaseViewMapping<Any, P, V, Any>>, setups: List<(V) -> Unit> = listOf({ _ -> })) {
+    private inline fun <reified P : Proxy<P, V>, reified V : View> assertProxySet(
+        mappings: List<BaseViewMapping<Any, P, V, Any>>,
+        setups: List<(V) -> Unit> = listOf({ _ -> })
+    ) {
         for (setup in setups) {
             for (mapping in mappings) {
                 assertProxySet(mapping, setup)
@@ -39,7 +42,10 @@ class GenericViewProxyTests {
         }
     }
 
-    private inline fun <reified P : Proxy<P, V>, reified V : View> assertProxySet(mapping: BaseViewMapping<Any, P, V, Any>, noinline setup: (V) -> Unit) {
+    private inline fun <reified P : Proxy<P, V>, reified V : View> assertProxySet(
+        mapping: BaseViewMapping<Any, P, V, Any>,
+        noinline setup: (V) -> Unit
+    ) {
         val view: V
         if (V::class == ViewGroup::class) {
             // ViewGroup is abstract so we can't instantiate it

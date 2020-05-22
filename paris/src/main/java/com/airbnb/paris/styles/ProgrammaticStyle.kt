@@ -13,18 +13,18 @@ import com.airbnb.paris.typed_array_wrappers.MapTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
-import java.util.*
+import java.util.HashMap
 
 data class ProgrammaticStyle internal constructor(
-        private val attributeMap: Map<Int, Any?>,
-        private var name: String? = null
+    private val attributeMap: Map<Int, Any?>,
+    private var name: String? = null
 ) : Style {
 
     internal constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
 
     data class Builder internal constructor(
-            internal val attrResToValueResMap: MutableMap<Int, Any?> = HashMap(),
-            internal var name: String = "a programmatic style"
+        internal val attrResToValueResMap: MutableMap<Int, Any?> = HashMap(),
+        internal var name: String = "a programmatic style"
     ) {
 
         fun isEmpty(): Boolean = attrResToValueResMap.isEmpty()
@@ -35,13 +35,13 @@ data class ProgrammaticStyle internal constructor(
         }
 
         fun putRes(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
-                put(attrRes, ResourceId(valueRes))
+            put(attrRes, ResourceId(valueRes))
 
         fun putDp(@AttrRes attrRes: Int, dps: Int): Builder =
-                put(attrRes, DpValue(dps))
+            put(attrRes, DpValue(dps))
 
         fun putColor(@AttrRes attrRes: Int, @ColorInt color: Int): Builder =
-                put(attrRes, ColorValue(color))
+            put(attrRes, ColorValue(color))
 
         fun put(@AttrRes attrRes: Int, value: Any?): Builder {
             attrResToValueResMap[attrRes] = value
@@ -49,7 +49,7 @@ data class ProgrammaticStyle internal constructor(
         }
 
         fun putStyle(@AttrRes attrRes: Int, @AnyRes valueRes: Int): Builder =
-                putStyle(attrRes, ResourceStyle(valueRes))
+            putStyle(attrRes, ResourceStyle(valueRes))
 
         fun putStyle(@AttrRes attrRes: Int, style: Style): Builder {
             val styles: Styles
@@ -86,8 +86,8 @@ data class ProgrammaticStyle internal constructor(
         return if (themeTypedArrayWrapper.getIndexCount() > 0) {
             // Returns theme attributes by default.
             MultiTypedArrayWrapper(
-                    wrappers = listOf(themeTypedArrayWrapper, styleTypedArrayWrapper),
-                    styleableAttrs = attrs
+                wrappers = listOf(themeTypedArrayWrapper, styleTypedArrayWrapper),
+                styleableAttrs = attrs
             )
         } else {
             styleTypedArrayWrapper

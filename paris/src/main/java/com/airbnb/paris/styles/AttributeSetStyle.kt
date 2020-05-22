@@ -1,10 +1,10 @@
 package com.airbnb.paris.styles
 
-import android.annotation.*
-import android.content.*
-import android.util.*
-import com.airbnb.paris.typed_array_wrappers.*
-import java.lang.*
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.AttributeSet
+import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 data class AttributeSetStyle constructor(private val attributeSet: AttributeSet) : Style {
 
@@ -17,9 +17,9 @@ data class AttributeSetStyle constructor(private val attributeSet: AttributeSet)
     override val shouldApplyDefaults = true
 
     override fun name(context: Context): String =
-            throw UnsupportedOperationException("Style names are meant to be used in a debug context and never for AttributeSetStyle")
+        throw UnsupportedOperationException("Style names are meant to be used in a debug context and never for AttributeSetStyle")
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-            TypedArrayTypedArrayWrapper(context, context.obtainStyledAttributes(attributeSet, attrs, 0, 0))
+        TypedArrayTypedArrayWrapper(context, context.obtainStyledAttributes(attributeSet, attrs, 0, 0))
 }

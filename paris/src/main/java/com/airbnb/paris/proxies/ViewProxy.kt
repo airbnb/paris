@@ -5,16 +5,16 @@ import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
-import androidx.annotation.AnyRes
-import androidx.annotation.Px
-import androidx.annotation.RequiresApi
 import android.util.SparseIntArray
 import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.annotation.AnyRes
 import androidx.annotation.FloatRange
+import androidx.annotation.Px
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import com.airbnb.paris.R2
 import com.airbnb.paris.annotations.AfterStyle
@@ -22,7 +22,14 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.LayoutDimension
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.styles.Style
-import com.airbnb.paris.utils.*
+import com.airbnb.paris.utils.setPaddingBottom
+import com.airbnb.paris.utils.setPaddingEnd
+import com.airbnb.paris.utils.setPaddingHorizontal
+import com.airbnb.paris.utils.setPaddingLeft
+import com.airbnb.paris.utils.setPaddingRight
+import com.airbnb.paris.utils.setPaddingStart
+import com.airbnb.paris.utils.setPaddingTop
+import com.airbnb.paris.utils.setPaddingVertical
 
 /**
  * The order of the methods in a styleable class dictates the order in which attributes are applied. This class relies on this fact to enforce the
@@ -47,7 +54,17 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
 
     @AfterStyle
     fun afterStyle(@Suppress("UNUSED_PARAMETER") style: Style?) {
-        val isMarginSet = listOf(margin, marginBottom, marginEnd, marginLeft, marginRight, marginStart, marginTop, marginHorizontal, marginVertical).any { it != null }
+        val isMarginSet = listOf(
+            margin,
+            marginBottom,
+            marginEnd,
+            marginLeft,
+            marginRight,
+            marginStart,
+            marginTop,
+            marginHorizontal,
+            marginVertical
+        ).any { it != null }
 
         if (!ignoreLayoutWidthAndHeight) {
             if ((width != null) xor (height != null)) {

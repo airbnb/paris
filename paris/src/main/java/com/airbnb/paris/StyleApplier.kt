@@ -2,12 +2,15 @@
 
 package com.airbnb.paris
 
-import androidx.annotation.*
-import android.util.*
-import android.view.*
-import com.airbnb.paris.proxies.*
-import com.airbnb.paris.styles.*
-import com.airbnb.paris.typed_array_wrappers.*
+import android.util.AttributeSet
+import android.view.View
+import androidx.annotation.StyleRes
+import androidx.annotation.UiThread
+import com.airbnb.paris.proxies.Proxy
+import com.airbnb.paris.styles.AttributeSetStyle
+import com.airbnb.paris.styles.ResourceStyle
+import com.airbnb.paris.styles.Style
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 @UiThread
 abstract class StyleApplier<P, V : View> private constructor(val proxy: P, val view: V) {

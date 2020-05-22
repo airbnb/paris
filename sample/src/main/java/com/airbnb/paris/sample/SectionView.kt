@@ -7,18 +7,37 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.annotation.ColorInt
-import androidx.annotation.Px
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.annotations.StyleableChild
-import com.airbnb.paris.extensions.*
+import com.airbnb.paris.extensions.addDefault
+import com.airbnb.paris.extensions.background
+import com.airbnb.paris.extensions.backgroundRes
+import com.airbnb.paris.extensions.contentStyle
+import com.airbnb.paris.extensions.dividerColor
+import com.airbnb.paris.extensions.dividerHeightDp
+import com.airbnb.paris.extensions.letterSpacing
+import com.airbnb.paris.extensions.paddingBottomRes
+import com.airbnb.paris.extensions.paddingEndRes
+import com.airbnb.paris.extensions.paddingLeftRes
+import com.airbnb.paris.extensions.paddingRightRes
+import com.airbnb.paris.extensions.paddingStartRes
+import com.airbnb.paris.extensions.paddingTopRes
+import com.airbnb.paris.extensions.sectionViewStyle
+import com.airbnb.paris.extensions.style
+import com.airbnb.paris.extensions.textAllCaps
+import com.airbnb.paris.extensions.textColor
+import com.airbnb.paris.extensions.textStyle
+import com.airbnb.paris.extensions.textViewStyle
+import com.airbnb.paris.extensions.titleStyle
 
 /**
  * A simple component with a title, content and divider.

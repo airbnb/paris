@@ -1,11 +1,33 @@
 package com.airbnb.paris.processor.writers
 
 import androidx.annotation.RequiresApi
-import com.airbnb.paris.processor.*
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.Format
+import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.STYLE_APPLIER_CLASS_NAME
+import com.airbnb.paris.processor.STYLE_BUILDER_CLASS_NAME
+import com.airbnb.paris.processor.STYLE_BUILDER_FUNCTION_CLASS_NAME
+import com.airbnb.paris.processor.STYLE_CLASS_NAME
+import com.airbnb.paris.processor.StyleablesTree
+import com.airbnb.paris.processor.framework.AndroidClassNames
+import com.airbnb.paris.processor.framework.SkyJavaClass
+import com.airbnb.paris.processor.framework.WithSkyProcessor
+import com.airbnb.paris.processor.framework.abstract
+import com.airbnb.paris.processor.framework.constructor
+import com.airbnb.paris.processor.framework.method
+import com.airbnb.paris.processor.framework.public
+import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
-import com.squareup.javapoet.*
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.TypeVariableName
+import com.squareup.javapoet.WildcardTypeName
+import javax.lang.model.element.Element
 
 internal class BaseStyleBuilderJavaClass(
     override val processor: ParisProcessor,
@@ -16,6 +38,10 @@ internal class BaseStyleBuilderJavaClass(
 
     override val packageName: String
     override val name: String
+    override val originatingElements: List<Element> = listOfNotNull(
+        styleableInfo.annotatedElement,
+        processor.memoizer.rStyleTypeElement
+    )
 
     init {
         val styleApplierClassName = styleableInfo.styleApplierClassName
@@ -84,8 +110,7 @@ internal class BaseStyleBuilderJavaClass(
             styleableInfo.styleableChildren.distinctBy { it.styleableResId.resourceName }
         for (styleableChildInfo in distinctStyleableChildren) {
 
-            val methodName =
-                styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName)
+            val methodName = styleableInfo.attrResourceNameToCamelCase(styleableChildInfo.styleableResId.resourceName)
 
             method(methodName) {
                 public()
@@ -117,9 +142,11 @@ internal class BaseStyleBuilderJavaClass(
                 addStatement("return (B) this")
             }
 
-            val subStyleApplierClassName = styleablesTree.findStyleApplier(
+            val (subStyleApplierAnnotatedElement, subStyleApplierClassName) = styleablesTree.findStyleApplier(
                 styleableChildInfo.type.asTypeElement()
             )
+            addOriginatingElement(subStyleApplierAnnotatedElement)
+
             val subStyleBuilderClassName = subStyleApplierClassName.nestedClass("StyleBuilder")
             method(methodName) {
                 public()
@@ -277,9 +304,11 @@ internal class BaseStyleBuilderJavaClass(
 
     private fun addRequiresApiAnnotation(builder: MethodSpec.Builder, attr: AttrInfo) {
         if (attr.requiresApi > 1) {
-            builder.addAnnotation(AnnotationSpec.builder(RequiresApi::class.java)
-                .addMember("value", "\$L", attr.requiresApi)
-                .build())
+            builder.addAnnotation(
+                AnnotationSpec.builder(RequiresApi::class.java)
+                    .addMember("value", "\$L", attr.requiresApi)
+                    .build()
+            )
         }
     }
 }

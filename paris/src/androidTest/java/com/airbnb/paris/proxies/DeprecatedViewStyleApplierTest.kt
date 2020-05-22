@@ -1,16 +1,21 @@
 package com.airbnb.paris.proxies
 
-import android.content.*
-import android.content.res.*
-import androidx.test.*
-import androidx.test.runner.*
-import android.view.*
-import android.widget.*
-import android.view.ViewStyleApplier.*
+import android.content.Context
+import android.content.res.Resources
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewStyleApplier
+import android.view.ViewStyleApplier.StyleBuilder
+import android.widget.FrameLayout
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.test.R
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class DeprecatedViewStyleApplierTest {
@@ -70,10 +75,10 @@ class DeprecatedViewStyleApplierTest {
         assertNull(params)
 
         ViewStyleApplier(view)
-                .builder()
-                .ignoreLayoutWidthAndHeight(true)
-                .add(R.style.Test_View_width_height)
-                .apply()
+            .builder()
+            .ignoreLayoutWidthAndHeight(true)
+            .add(R.style.Test_View_width_height)
+            .apply()
 
         params = view.layoutParams
         assertNull(params)

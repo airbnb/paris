@@ -1,14 +1,16 @@
 package com.airbnb.paris
 
-import android.content.*
-import androidx.test.*
-import androidx.test.runner.*
-import android.view.*
-import com.airbnb.paris.styles.*
-import com.airbnb.paris.typed_array_wrappers.*
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import android.content.Context
+import android.view.View
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import com.airbnb.paris.styles.Style
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class StyleApplierTest {
@@ -17,7 +19,7 @@ class StyleApplierTest {
 
     private lateinit var context: Context
     private lateinit var view: View
-    private lateinit var applier : TestStyleApplier;
+    private lateinit var applier: TestStyleApplier;
 
     private fun newView() = View(context)
 

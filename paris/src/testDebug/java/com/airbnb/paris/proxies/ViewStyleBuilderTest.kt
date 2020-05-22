@@ -54,13 +54,13 @@ class ViewStyleBuilderTest {
     fun backgroundTintRes() {
         val style = builder.backgroundTintRes(android.R.color.black).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(
-                                android.R.attr.backgroundTint,
-                                ResourceId(android.R.color.black)
-                        )
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(
+                    android.R.attr.backgroundTint,
+                    ResourceId(android.R.color.black)
+                )
+                .build(),
+            style
         )
     }
 
@@ -68,13 +68,13 @@ class ViewStyleBuilderTest {
     fun backgroundTintColorStateList() {
         val style = builder.backgroundTint(ContextCompat.getColorStateList(context, android.R.color.black)).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(
-                                android.R.attr.backgroundTint,
-                                ContextCompat.getColorStateList(context, android.R.color.black)
-                        )
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(
+                    android.R.attr.backgroundTint,
+                    ContextCompat.getColorStateList(context, android.R.color.black)
+                )
+                .build(),
+            style
         )
     }
 
@@ -82,13 +82,13 @@ class ViewStyleBuilderTest {
     fun backgroundTintMode() {
         val style = builder.backgroundTintMode(ViewProxy.PORTERDUFF_MODE_MULTIPLY).build()
         assertEquals(
-                ProgrammaticStyle.builder()
-                        .put(
-                                android.R.attr.backgroundTintMode,
-                                ViewProxy.PORTERDUFF_MODE_MULTIPLY
-                        )
-                        .build(),
-                style
+            ProgrammaticStyle.builder()
+                .put(
+                    android.R.attr.backgroundTintMode,
+                    ViewProxy.PORTERDUFF_MODE_MULTIPLY
+                )
+                .build(),
+            style
         )
     }
 
@@ -173,6 +173,7 @@ class ViewStyleBuilderTest {
             ProgrammaticStyle.builder()
                 .put(android.R.attr.layout_weight, weight)
                 .build(),
-            style)
+            style
+        )
     }
 }

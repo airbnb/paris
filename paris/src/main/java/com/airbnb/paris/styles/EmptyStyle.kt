@@ -1,8 +1,9 @@
 package com.airbnb.paris.styles
 
-import android.annotation.*
-import android.content.*
-import com.airbnb.paris.typed_array_wrappers.*
+import android.annotation.SuppressLint
+import android.content.Context
+import com.airbnb.paris.typed_array_wrappers.EmptyTypedArrayWrapper
+import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 object EmptyStyle : Style {
 
@@ -15,5 +16,5 @@ object EmptyStyle : Style {
 
     @SuppressLint("Recycle")
     override fun obtainStyledAttributes(context: Context, attrs: IntArray): TypedArrayWrapper =
-            EmptyTypedArrayWrapper
+        EmptyTypedArrayWrapper
 }

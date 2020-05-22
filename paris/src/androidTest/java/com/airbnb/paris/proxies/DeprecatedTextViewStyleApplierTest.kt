@@ -25,11 +25,12 @@ class DeprecatedTextViewStyleApplierTest {
     private lateinit var styleBuilder: StyleBuilder
 
     private fun apply(builderFunctions: StyleBuilder.() -> StyleBuilder) =
-            TextViewStyleApplier(view).apply(
-                    StyleBuilder()
-                            .debugName("test")
-                            .builderFunctions()
-                            .build())
+        TextViewStyleApplier(view).apply(
+            StyleBuilder()
+                .debugName("test")
+                .builderFunctions()
+                .build()
+        )
 
     @Before
     fun setup() {

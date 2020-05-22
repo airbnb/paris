@@ -42,8 +42,8 @@ class ViewProxyTest {
         view.backgroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
         proxy.setBackgroundTint(ContextCompat.getColorStateList(context, android.R.color.holo_red_dark))
         assertEquals(
-                ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
-                view.backgroundTintList
+            ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+            view.backgroundTintList
         )
     }
 
@@ -53,8 +53,8 @@ class ViewProxyTest {
         view.backgroundTintMode = PorterDuff.Mode.SRC_OVER
         proxy.setBackgroundTintMode(ViewProxy.PORTERDUFF_MODE_ADD)
         assertEquals(
-                PorterDuff.Mode.ADD,
-                view.backgroundTintMode
+            PorterDuff.Mode.ADD,
+            view.backgroundTintMode
         )
     }
 

@@ -2,8 +2,8 @@ package com.airbnb.paris
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.annotation.UiThread
 import android.view.View
+import androidx.annotation.UiThread
 import com.airbnb.paris.styles.Style
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 

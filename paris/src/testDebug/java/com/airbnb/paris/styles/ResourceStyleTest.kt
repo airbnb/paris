@@ -1,7 +1,6 @@
 package com.airbnb.paris.styles
 
 import android.content.Context
-import android.widget.TextView
 import com.airbnb.paris.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals

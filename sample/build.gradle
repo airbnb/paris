@@ -10,6 +10,15 @@ android {
         minSdkVersion rootProject.SAMPLE_MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
     }
+
+    compileOptions {
+        sourceCompatibility rootProject.JAVA_SOURCE_VERSION
+        targetCompatibility rootProject.JAVA_TARGET_VERSION
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {

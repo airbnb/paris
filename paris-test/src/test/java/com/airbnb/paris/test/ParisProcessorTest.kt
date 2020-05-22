@@ -6,15 +6,26 @@ import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
+import java.io.File
+import java.net.URL
 
+
+/**
+ * Since AGP 3.6.0, the class-loader behavior has been modified.
+ * Unfortunately Guava (via compile-testing) uses a class-loader based mechanism
+ * which is valid on JVM but not supposed to be supported on Android.
+ * As the project paths are simple enough, we can hardcode them for now.
+ */
+fun String.patchResource(): URL =
+    File("build/intermediates/sourceFolderJavaResources/debug/$this").toURI().toURL()
 
 class ParisProcessorTest {
 
     private fun assertCase(folder: String) {
-        val view = JavaFileObjects.forResource("$folder/MyView.java")
-        val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java")
+        val view = JavaFileObjects.forResource("$folder/MyView.java".patchResource())
+        val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java".patchResource())
         val generatedStyleApplierClass =
-            JavaFileObjects.forResource("$folder/MyViewStyleApplier.java")
+            JavaFileObjects.forResource("$folder/MyViewStyleApplier.java".patchResource())
 
         assert_().about(javaSource())
             .that(view)
@@ -27,8 +38,8 @@ class ParisProcessorTest {
     }
 
     private fun assertCaseWithInput(folder: String, input: List<String>, output: List<String>) {
-        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}") }
-        val outputFileObjects = output.map { JavaFileObjects.forResource("$folder/output/${it}") }
+        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}".patchResource()) }
+        val outputFileObjects = output.map { JavaFileObjects.forResource("$folder/output/${it}".patchResource()) }
 
         assert_().about(javaSources())
             .that(inputFileObjects)
@@ -43,7 +54,7 @@ class ParisProcessorTest {
         errorCount: Int? = null,
         errorFragment: String? = null
     ) {
-        val view = JavaFileObjects.forResource("$folder/MyView.java")
+        val view = JavaFileObjects.forResource("$folder/MyView.java".patchResource())
 
         assert_().about(javaSource())
             .that(view)
@@ -65,7 +76,7 @@ class ParisProcessorTest {
         errorFragment: String? = null,
         input: List<String>
     ) {
-        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}") }
+        val inputFileObjects = input.map { JavaFileObjects.forResource("$folder/input/${it}".patchResource()) }
 
         assert_().about(javaSources())
             .that(inputFileObjects)
@@ -279,3 +290,4 @@ class ParisProcessorTest {
         assertCase("styles")
     }
 }
+

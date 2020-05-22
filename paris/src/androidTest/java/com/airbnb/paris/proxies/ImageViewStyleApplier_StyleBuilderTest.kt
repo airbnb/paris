@@ -1,11 +1,13 @@
 package com.airbnb.paris.proxies
 
-import androidx.test.runner.*
-import android.widget.*
-import android.widget.ImageViewStyleApplier.*
-import com.airbnb.paris.styles.*
-import org.junit.*
-import org.junit.runner.*
+import android.widget.ImageView
+import android.widget.ImageViewStyleApplier.StyleBuilder
+import androidx.test.runner.AndroidJUnit4
+import com.airbnb.paris.styles.ProgrammaticStyle
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ImageViewStyleApplier_StyleBuilderTest {

@@ -1,6 +1,6 @@
 package com.airbnb.paris.annotations
 
-import kotlin.reflect.*
+import kotlin.reflect.KClass
 
 /**
  * DO NOT USE. This annotation is meant to be used by generated classes only

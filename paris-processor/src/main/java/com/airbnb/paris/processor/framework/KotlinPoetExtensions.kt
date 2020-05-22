@@ -1,6 +1,10 @@
 package com.airbnb.paris.processor.framework
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.asTypeName
 import java.lang.reflect.Type
 import javax.lang.model.type.TypeMirror
 import kotlin.reflect.KClass
@@ -50,9 +54,9 @@ internal inline fun FunSpec.Builder.addParameter(
 }
 
 internal fun FunSpec.Builder.parameter(
-        name: String,
-        type: Type,
-        block: ParameterSpec.Builder.() -> Unit = {}
+    name: String,
+    type: Type,
+    block: ParameterSpec.Builder.() -> Unit = {}
 ): ParameterSpec {
     return ParameterSpec.builder(name, type).apply(block).build().also {
         addParameter(it)
@@ -60,9 +64,9 @@ internal fun FunSpec.Builder.parameter(
 }
 
 internal fun FunSpec.Builder.parameter(
-        name: String,
-        type: KotlinTypeName,
-        block: ParameterSpec.Builder.() -> Unit = {}
+    name: String,
+    type: KotlinTypeName,
+    block: ParameterSpec.Builder.() -> Unit = {}
 ): ParameterSpec {
     return ParameterSpec.builder(name, type).apply(block).build().also {
         addParameter(it)

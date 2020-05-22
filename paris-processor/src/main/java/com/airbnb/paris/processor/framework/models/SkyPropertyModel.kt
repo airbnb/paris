@@ -1,6 +1,10 @@
 package com.airbnb.paris.processor.framework.models
 
-import com.airbnb.paris.processor.framework.*
+import com.airbnb.paris.processor.framework.SkyProcessor
+import com.airbnb.paris.processor.framework.isJava
+import com.airbnb.paris.processor.framework.isKotlin
+import com.airbnb.paris.processor.framework.siblings
+import com.airbnb.paris.processor.framework.toStringId
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
@@ -47,7 +51,8 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
                 }
                 .singleOrNull() as ExecutableElement?
 
-            kotlinGetterElement ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private or protected.")
+            kotlinGetterElement
+                ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private or protected.")
 
             getterElement = kotlinGetterElement
             getter = "${kotlinGetterElement.simpleName}()"

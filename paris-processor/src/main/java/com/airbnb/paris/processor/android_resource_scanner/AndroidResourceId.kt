@@ -6,7 +6,7 @@ import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import com.airbnb.paris.processor.framework.toKPoet
 import com.squareup.javapoet.ClassName
 
-internal class AndroidResourceId(val value: Int, val className: ClassName, val resourceName: String) {
+class AndroidResourceId(val value: Int, val className: ClassName, val resourceName: String) {
 
     val rClassName: ClassName = className.topLevelClassName()
 
