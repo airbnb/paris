@@ -372,6 +372,11 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
         ignoreLayoutWidthAndHeight = ignore
     }
 
+    @Attr(R2.styleable.Paris_View_android_importantForAccessibility)
+    fun setImportantForAccessibility(mode: Int) {
+      view.importantForAccessibility = mode
+    }
+
     companion object {
 
         const val PORTERDUFF_MODE_SRC_OVER = 3
