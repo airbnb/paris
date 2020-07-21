@@ -37,6 +37,7 @@
         <attr name="android:paddingVertical" />
         <attr name="android:stateListAnimator" />
         <attr name="android:visibility" />
+        <attr name="android:importantForAccessibility" />
 
         <attr name="ignoreLayoutWidthAndHeight" format="boolean" />
     </declare-styleable>

@@ -138,4 +138,11 @@ class ViewProxyTest {
         proxy.setLayoutWeight(weight)
         assertEquals(weight, (view.layoutParams as LinearLayout.LayoutParams).weight)
     }
+
+    @Test
+    fun setImportantForAccessibility() {
+      val mode = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+      proxy.setImportantForAccessibility(mode)
+      assertEquals(mode, view.importantForAccessibility)
+    }
 }
