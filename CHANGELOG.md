@@ -1,3 +1,7 @@
+# 1.6.0 (July 21, 2020)
+
+- Adding support for importantForAccessibility attribute (#138)
+
 # 1.5.0 (May 20, 2020)
 
 - Adds support for incremental annotation processing

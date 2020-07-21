@@ -19,7 +19,7 @@ buildscript {
         classpath "com.jakewharton:butterknife-gradle-plugin:$BUTTERKNIFE_VERSION"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
         classpath "com.github.ben-manes:gradle-versions-plugin:$VERSIONS_VERSION"
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.12.0'
     }
 }
 
