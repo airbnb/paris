@@ -36,6 +36,8 @@ internal class ModuleJavaClass(
         // a naming conflict is insignificantly small
         val styleablesConcat = styleablesInfo
             .map { it.elementPackageName + it.elementName }
+            // Sort so that the generated code is deterministic with consistent cache key
+            .sorted()
             .reduce { acc, s -> "$acc,$s" }
         val messageDigest = MessageDigest.getInstance("MD5")
         messageDigest.update(styleablesConcat.toByteArray(), 0, styleablesConcat.length)
