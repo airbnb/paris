@@ -1,4 +1,4 @@
-# 1.7.0 (July 27, 2020)
+# 1.7.1 (July 27, 2020)
 
 - Change `ParisConfig` annotation to be applicable to class or interface types. New recommendation is to use it on an interface instead of a package
 to avoid a bug with spurious incremental annotation failure.

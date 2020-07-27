@@ -41,25 +41,28 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
             // In kotlin 1.4.0+ the method is changed to start with "get", so we need to handle both cases
             name = element.simpleName.toString()
                 .substringBefore("\$annotations")
+                // get prefix will only exist for kotlin 1.4
                 .removePrefix("get")
                 .decapitalize()
 
             val getterName = "get${name.capitalize()}"
-            val methods = mutableListOf<String>()
-            val kotlinGetterElement = element.siblings().asSequence()
+            val getters = element.siblings().asSequence()
                 .filterIsInstance<ExecutableElement>()
                 .filter { it.parameters.isEmpty() }
-                .filter {
-                    val elementSimpleName = it.simpleName.toString()
-                    methods.add(elementSimpleName)
-                    // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
-                    // be appended with "$" and an arbitrary string for obfuscation purposes.
-                   elementSimpleName.contains(getterName, ignoreCase = true)
-                }
-                .singleOrNull()
 
-            kotlinGetterElement
-                ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter ($getterName) for property annotated with @StyleableChild. options are $methods.  This probably means the property is private or protected.")
+            // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
+            // be appended with "$" and an arbitrary string for obfuscation purposes.
+            // In kotlin 1.4.0 both versions will be present, so we check for the real getter first.
+            val kotlinGetterElement = getters.firstOrNull {
+                val elementSimpleName = it.simpleName.toString()
+                elementSimpleName == getterName
+            } ?: getters.firstOrNull {
+                val elementSimpleName = it.simpleName.toString()
+                elementSimpleName.startsWith("$getterName$")
+            } ?: error(
+                "${element.toStringId()}: Could not find getter ($getterName) for property annotated with @StyleableChild. " +
+                        "This probably means the property is private or protected."
+            )
 
             getterElement = kotlinGetterElement
             getter = "${kotlinGetterElement.simpleName}()"
