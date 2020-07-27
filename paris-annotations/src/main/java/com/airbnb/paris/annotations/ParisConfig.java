@@ -5,8 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Note that when using KAPT with incremental annotation processing it is recommended to only use this annotation on class or interface elements,
+ * not on package elements in package-info.java. This is because there is a bug where package-info is not properly reprocessed in incremental builds.
+ */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.PACKAGE)
+@Target({ElementType.PACKAGE, ElementType.TYPE})
 public @interface ParisConfig {
 
     String defaultStyleNameFormat() default "";

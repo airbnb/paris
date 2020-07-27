@@ -36,23 +36,30 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
             getterElement = element
             getter = name
         } else {
-            // In Kotlin it's an empty static method whose name is <property>$annotations that ends
-            // up being annotated
-            name = element.simpleName.toString().substringBefore("\$annotations")
+            // In Kotlin it's a synthetic empty static method whose name is <property>$annotations that ends
+            // up being annotated.
+            // In kotlin 1.4.0+ the method is changed to start with "get", so we need to handle both cases
+            name = element.simpleName.toString()
+                .substringBefore("\$annotations")
+                .removePrefix("get")
+                .decapitalize()
+
             val getterName = "get${name.capitalize()}"
+            val methods = mutableListOf<String>()
             val kotlinGetterElement = element.siblings().asSequence()
+                .filterIsInstance<ExecutableElement>()
+                .filter { it.parameters.isEmpty() }
                 .filter {
                     val elementSimpleName = it.simpleName.toString()
-                    it is ExecutableElement &&
-                            // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
-                            // be appended with "$" and an arbitrary string for obfuscation purposes.
-                            (elementSimpleName == getterName || elementSimpleName.startsWith("$getterName$")) &&
-                            it.parameters.isEmpty()
+                    methods.add(elementSimpleName)
+                    // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
+                    // be appended with "$" and an arbitrary string for obfuscation purposes.
+                   elementSimpleName.contains(getterName, ignoreCase = true)
                 }
-                .singleOrNull() as ExecutableElement?
+                .singleOrNull()
 
             kotlinGetterElement
-                ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private or protected.")
+                ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter ($getterName) for property annotated with @StyleableChild. options are $methods.  This probably means the property is private or protected.")
 
             getterElement = kotlinGetterElement
             getter = "${kotlinGetterElement.simpleName}()"
