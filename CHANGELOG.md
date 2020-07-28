@@ -1,3 +1,10 @@
+# 1.7.1 (July 27, 2020)
+
+- Change `ParisConfig` annotation to be applicable to class or interface types. New recommendation is to use it on an interface instead of a package
+to avoid a bug with spurious incremental annotation failure.
+
+- Fixed annotation processor bugs with Kotlin 1.4. Project should now be compatible with Kotlin 1.4.x - previous Paris versions would crash at compile time.
+
 # 1.6.0 (July 21, 2020)
 
 - Adding support for importantForAccessibility attribute (#138)

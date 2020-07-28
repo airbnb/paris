@@ -36,23 +36,33 @@ abstract class SkyPropertyModel(val element: Element) : SkyModel {
             getterElement = element
             getter = name
         } else {
-            // In Kotlin it's an empty static method whose name is <property>$annotations that ends
-            // up being annotated
-            name = element.simpleName.toString().substringBefore("\$annotations")
-            val getterName = "get${name.capitalize()}"
-            val kotlinGetterElement = element.siblings().asSequence()
-                .filter {
-                    val elementSimpleName = it.simpleName.toString()
-                    it is ExecutableElement &&
-                            // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
-                            // be appended with "$" and an arbitrary string for obfuscation purposes.
-                            (elementSimpleName == getterName || elementSimpleName.startsWith("$getterName$")) &&
-                            it.parameters.isEmpty()
-                }
-                .singleOrNull() as ExecutableElement?
+            // In Kotlin it's a synthetic empty static method whose name is <property>$annotations that ends
+            // up being annotated.
+            // In kotlin 1.4.0+ the method is changed to start with "get", so we need to handle both cases
+            name = element.simpleName.toString()
+                .substringBefore("\$annotations")
+                // get prefix will only exist for kotlin 1.4
+                .removePrefix("get")
+                .decapitalize()
 
-            kotlinGetterElement
-                ?: throw IllegalArgumentException("${element.toStringId()}: Could not find getter for property annotated with @StyleableChild. This probably means the property is private or protected.")
+            val getterName = "get${name.capitalize()}"
+            val getters = element.siblings().asSequence()
+                .filterIsInstance<ExecutableElement>()
+                .filter { it.parameters.isEmpty() }
+
+            // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
+            // be appended with "$" and an arbitrary string for obfuscation purposes.
+            // In kotlin 1.4.0 both versions will be present, so we check for the real getter first.
+            val kotlinGetterElement = getters.firstOrNull {
+                val elementSimpleName = it.simpleName.toString()
+                elementSimpleName == getterName
+            } ?: getters.firstOrNull {
+                val elementSimpleName = it.simpleName.toString()
+                elementSimpleName.startsWith("$getterName$")
+            } ?: error(
+                "${element.toStringId()}: Could not find getter ($getterName) for property annotated with @StyleableChild. " +
+                        "This probably means the property is private or protected."
+            )
 
             getterElement = kotlinGetterElement
             getter = "${kotlinGetterElement.simpleName}()"
