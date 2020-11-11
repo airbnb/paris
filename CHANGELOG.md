@@ -1,3 +1,7 @@
+# 1.7.2 (November 11, 2020)
+
+- Fixed ArrayOutOfBoundsException on certain devices when ImageView scaleType is set.
+
 # 1.7.1 (July 27, 2020)
 
 - Change `ParisConfig` annotation to be applicable to class or interface types. New recommendation is to use it on an interface instead of a package
