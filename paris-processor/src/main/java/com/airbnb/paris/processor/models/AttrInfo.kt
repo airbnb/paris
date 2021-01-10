@@ -12,6 +12,7 @@ import com.airbnb.paris.processor.framework.isPrivate
 import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
+import com.squareup.kotlinpoet.asTypeName
 import java.lang.annotation.AnnotationTypeMismatchException
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
@@ -68,7 +69,7 @@ internal class AttrInfoExtractor(
         // internal functions have a '$' in their name which creates a kdoc error. We could escape it but the part after the '$' is meant for
         // obfuscation anyway so not using it should result in clearer documentation.
         val kdocName = name.substringBefore('$')
-        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement, kdocName)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.asType().asTypeName(), kdocName)
 
         // We rely on the `RequiresApi` Android annotation to disable certain attributes based on the Android SDK version.
         // 1 is the default since that's the minimum version.
