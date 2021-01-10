@@ -12,6 +12,7 @@ import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModel
 import com.airbnb.paris.processor.framework.models.SkyCompanionPropertyModelFactory
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
+import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeKind
 
@@ -55,7 +56,7 @@ internal class StyleCompanionPropertyInfoExtractor(override val processor: Paris
         val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
 
         val javadoc = JavaCodeBlock.of("@see \$T#\$N\n", enclosingElement, elementName)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement, elementName)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.asType().asTypeName(), elementName)
 
         val styleInfo = StyleCompanionPropertyInfo(
             element,
