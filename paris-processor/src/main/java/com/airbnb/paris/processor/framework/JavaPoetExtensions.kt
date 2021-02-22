@@ -1,5 +1,8 @@
 package com.airbnb.paris.processor.framework
 
+import com.airbnb.paris.processor.abstractions.XElement
+import com.airbnb.paris.processor.abstractions.javac.JavacElement
+import com.airbnb.paris.processor.abstractions.ksp.KspElement
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
@@ -89,5 +92,13 @@ internal fun TypeSpec.Builder.public() {
 
 internal fun TypeSpec.Builder.static() {
     addModifiers(Modifier.STATIC)
+}
+
+internal fun TypeSpec.Builder.addOriginatingElement(element: XElement) {
+    when (element) {
+        is JavacElement -> addOriginatingElement(element.element)
+        else -> {
+        }
+    }
 }
 

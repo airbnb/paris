@@ -1,5 +1,10 @@
 package com.airbnb.paris.processor.framework
 
+import com.airbnb.paris.processor.abstractions.XElement
+import com.airbnb.paris.processor.abstractions.XType
+import com.airbnb.paris.processor.abstractions.javac.JavacElement
+import com.airbnb.paris.processor.abstractions.javac.JavacType
+import com.airbnb.paris.processor.abstractions.ksp.KspType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterSpec
@@ -73,6 +78,32 @@ internal fun FunSpec.Builder.parameter(
     }
 }
 
+internal fun FunSpec.Builder.receiver(
+    type: XType,
+): FunSpec.Builder {
+    return receiver(type.typeNameKotlin())
+}
+
+internal fun FunSpec.Builder.addOriginatingElement(
+    element: XElement,
+): FunSpec.Builder {
+    return if (element is JavacElement) {
+        addOriginatingElement(element.element)
+    } else {
+        // TODO: 2/21/21 Abstraction for originating elements with ksp?
+        this
+    }
+}
+
 internal fun ParameterSpec.Builder.addAnnotation(type: JavaClassName) {
     addAnnotation(type.toKPoet())
 }
+
+fun XType.typeNameKotlin(): KotlinTypeName {
+    return when (this) {
+        is JavacType -> typeMirror.asTypeName()
+        is KspType -> error("Unsupported")
+        else -> error("Unsupported")
+    }
+}
+

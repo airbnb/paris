@@ -23,7 +23,6 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.UNIT
 import com.squareup.kotlinpoet.WildcardTypeName
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 
 /**
@@ -109,10 +108,10 @@ internal class StyleExtensionsKotlinFile(
 
             val viewTypeName: KotlinTypeName
             if (styleable.viewElement.isFinal()) {
-                viewTypeName = styleable.viewElement.asClassName()
+                viewTypeName = styleable.viewElement.type.typeNameKotlin()
             } else {
                 // If the styleable class isn't final we use generics so that subclasses are able to override this extension function
-                viewTypeName = KotlinTypeVariableName("V", styleable.viewElementType.asTypeName())
+                viewTypeName = KotlinTypeVariableName("V", styleable.viewElementType.typeNameKotlin())
                 addTypeVariable(viewTypeName)
             }
 
@@ -151,7 +150,7 @@ internal class StyleExtensionsKotlinFile(
                 addKdoc(it.kdoc)
 
                 val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-                    styleable.viewElementType.asTypeName()
+                    styleable.viewElementType.typeNameKotlin()
                 )
                 receiver(extendableStyleBuilderTypeName)
 
@@ -165,7 +164,7 @@ internal class StyleExtensionsKotlinFile(
         }
 
         val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-            WildcardTypeName.producerOf(styleable.viewElementType.asTypeName())
+            WildcardTypeName.producerOf(styleable.viewElementType.typeNameKotlin())
         )
 
         /*
@@ -223,7 +222,7 @@ internal class StyleExtensionsKotlinFile(
                 receiver(extendableStyleBuilderTypeName)
 
                 val subExtendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-                    styleableChildInfo.type.asTypeName()
+                    styleableChildInfo.type.typeNameKotlin()
                 )
                 val builderParameter = parameter(
                     "init", LambdaTypeName.get(
@@ -272,7 +271,7 @@ internal class StyleExtensionsKotlinFile(
                     addRequiresApiAnnotation(this, attr)
 
                     // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
-                    parameter("value", JavaTypeName.get(attr.targetType).toKPoet().copy(nullable = attr.targetFormat.isNullable)) {
+                    parameter("value", attr.targetType.typeNameKotlin().copy(nullable = attr.targetFormat.isNullable)) {
                         // Filter out the Nullable annotation since we defer to idiomatic Kotlin by attaching
                         // the nullability to the type.
                         attr.targetFormat.valueAnnotation?.takeIf { it != AndroidClassNames.NULLABLE }?.let {
@@ -377,7 +376,7 @@ internal class StyleExtensionsKotlinFile(
             returns(STYLE_CLASS_NAME.toKPoet())
 
             val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-                styleable.viewElementType.asTypeName()
+                styleable.viewElementType.typeNameKotlin()
             )
 
             val builderParam = parameter(

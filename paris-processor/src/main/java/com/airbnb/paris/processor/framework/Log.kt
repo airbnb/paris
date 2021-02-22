@@ -1,7 +1,13 @@
 package com.airbnb.paris.processor.framework
 
-import javax.tools.Diagnostic
+import com.airbnb.paris.processor.abstractions.XElement
 
-class Message(val kind: Diagnostic.Kind, val message: CharSequence)
+class Message(val severity: Severity, val message: String, val element: XElement?) {
+
+    enum class Severity {
+        Warning, Error
+    }
+}
+
 
 

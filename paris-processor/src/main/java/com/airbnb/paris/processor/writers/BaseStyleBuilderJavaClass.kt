@@ -8,10 +8,12 @@ import com.airbnb.paris.processor.STYLE_BUILDER_CLASS_NAME
 import com.airbnb.paris.processor.STYLE_BUILDER_FUNCTION_CLASS_NAME
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.StyleablesTree
+import com.airbnb.paris.processor.abstractions.XElement
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
-import com.airbnb.paris.processor.framework.WithSkyProcessor
+import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 import com.airbnb.paris.processor.framework.abstract
+import com.airbnb.paris.processor.framework.addOriginatingElement
 import com.airbnb.paris.processor.framework.constructor
 import com.airbnb.paris.processor.framework.method
 import com.airbnb.paris.processor.framework.public
@@ -23,24 +25,22 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
-import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.javapoet.WildcardTypeName
-import javax.lang.model.element.Element
 
 internal class BaseStyleBuilderJavaClass(
     override val processor: ParisProcessor,
     parentStyleApplierClassName: ClassName?,
     styleablesTree: StyleablesTree,
     styleableInfo: StyleableInfo
-) : SkyJavaClass(processor), WithSkyProcessor {
+) : SkyJavaClass(processor), WithJavaSkyProcessor {
 
     override val packageName: String
     override val name: String
-    override val originatingElements: List<Element> = listOfNotNull(
+    override val originatingElements: List<XElement> = listOfNotNull(
         styleableInfo.annotatedElement,
-        processor.memoizer.rStyleTypeElement
+        processor.memoizer.rStyleTypeElementX
     )
 
     init {
@@ -143,7 +143,7 @@ internal class BaseStyleBuilderJavaClass(
             }
 
             val (subStyleApplierAnnotatedElement, subStyleApplierClassName) = styleablesTree.findStyleApplier(
-                styleableChildInfo.type.asTypeElement()
+                styleableChildInfo.type.typeElement ?: error("${styleableChildInfo.type} does not have type element")
             )
             addOriginatingElement(subStyleApplierAnnotatedElement)
 
@@ -200,7 +200,7 @@ internal class BaseStyleBuilderJavaClass(
                     addJavadoc(attr.javadoc)
 
                     val valueParameterBuilder =
-                        ParameterSpec.builder(TypeName.get(attr.targetType), "value")
+                        ParameterSpec.builder(attr.targetType.typeName, "value")
                     attr.targetFormat.valueAnnotation?.let {
                         valueParameterBuilder.addAnnotation(it)
                     }
@@ -292,7 +292,7 @@ internal class BaseStyleBuilderJavaClass(
             public()
             addParameter(
                 ParameterSpec.builder(
-                    TypeName.get(styleableInfo.viewElementType),
+                    styleableInfo.viewElementType.typeName,
                     "view"
                 ).build()
             )

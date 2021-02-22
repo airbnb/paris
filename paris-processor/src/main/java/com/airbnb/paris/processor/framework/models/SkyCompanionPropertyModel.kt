@@ -1,11 +1,16 @@
 package com.airbnb.paris.processor.framework.models
 
+import com.airbnb.paris.processor.abstractions.XElement
+import com.airbnb.paris.processor.abstractions.XFieldElement
+import com.airbnb.paris.processor.abstractions.XTypeElement
+import com.airbnb.paris.processor.abstractions.isFieldElement
+import com.airbnb.paris.processor.abstractions.isMethod
+import com.airbnb.paris.processor.abstractions.javac.JavacFieldElement
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.SkyProcessor
+import com.airbnb.paris.processor.framework.JavaSkyProcessor
 import com.airbnb.paris.processor.framework.isJava
 import com.airbnb.paris.processor.framework.siblings
-import com.airbnb.paris.processor.framework.toStringId
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -16,24 +21,26 @@ import javax.lang.model.type.TypeMirror
 /**
  * Applies to Java fields and Kotlin properties
  */
-abstract class SkyCompanionPropertyModel(val element: VariableElement) : SkyModel {
+abstract class SkyCompanionPropertyModel(val element: XFieldElement) : SkyModel {
 
-    val enclosingElement: TypeElement = element.enclosingElement as TypeElement
-    val type: TypeMirror = element.asType()
-    val name: String = element.simpleName.toString()
+    val enclosingElement: XTypeElement = element.enclosingTypeElement
+    val name: String = element.name
     val getterElement: Element
     val javaGetter: JavaCodeBlock
     val kotlinGetter: KotlinCodeBlock
 
     init {
-        if (element.isJava()) {
-            getterElement = element
-            javaGetter = JavaCodeBlock.of("\$N", element.simpleName)
+        if (element !is JavacFieldElement) error("unsupported $element")
+        val variableElement = element.element
+
+        if (variableElement.isJava()) {
+            getterElement = variableElement
+            javaGetter = JavaCodeBlock.of("\$N", variableElement.simpleName)
         } else {
             // In Kotlin the annotated element is a private static field which is accompanied by a Companion method
 
             val getterName = "get${name.capitalize()}"
-            val companionFunctions = element.siblings().asSequence()
+            val companionFunctions = variableElement.siblings()
                 .single {
                     it is TypeElement && it.simpleName.toString() == "Companion"
                 }
@@ -49,7 +56,7 @@ abstract class SkyCompanionPropertyModel(val element: VariableElement) : SkyMode
             } ?: companionFunctions.firstOrNull {
                 val elementSimpleName = it.simpleName.toString()
                 elementSimpleName.startsWith("$getterName$")
-            } ?: error("${element.toStringId()} - could not get companion property")
+            } ?: error("$variableElement - could not get companion property")
 
             javaGetter = JavaCodeBlock.of("Companion.\$N()", getterElement.simpleName)
         }
@@ -59,9 +66,9 @@ abstract class SkyCompanionPropertyModel(val element: VariableElement) : SkyMode
 }
 
 abstract class SkyCompanionPropertyModelFactory<T : SkyCompanionPropertyModel>(
-    override val processor: SkyProcessor,
+    override val processor: JavaSkyProcessor,
     annotationClass: Class<out Annotation>
-) : SkyModelFactory<T, VariableElement>(processor, annotationClass) {
+) : JavaSkyModelFactory<T, XFieldElement>(processor, annotationClass) {
 
-    override fun filter(element: Element): Boolean = element.kind == ElementKind.FIELD
+    override fun filter(element: XElement): Boolean = element.isFieldElement()
 }

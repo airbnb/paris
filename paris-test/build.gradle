@@ -41,7 +41,6 @@ dependencies {
     implementation project(':paris-test-lib')
 
     implementation deps.appcompat
-    implementation deps.kotlin
 
     kapt project(':paris-processor')
 

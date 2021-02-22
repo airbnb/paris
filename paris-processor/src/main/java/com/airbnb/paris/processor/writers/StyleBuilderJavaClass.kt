@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.writers
 
 import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.abstractions.XElement
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
 import com.airbnb.paris.processor.framework.constructor
@@ -28,7 +29,7 @@ internal class StyleBuilderJavaClass(
 
     override val packageName: String
     override val name: String
-    override val originatingElements: List<Element> = listOf(styleableInfo.annotatedElement)
+    override val originatingElements: List<XElement> = listOf(styleableInfo.annotatedElement)
 
     init {
         val className = getStyleBuilderClassName(styleableInfo.styleApplierClassName)
@@ -65,11 +66,11 @@ internal class StyleBuilderJavaClass(
                 returns(styleBuilderClassName)
 
                 when (it) {
-                    is StyleCompanionPropertyInfo -> addStatement("add(\$T.\$L)", it.enclosingElement, it.javaGetter)
+                    is StyleCompanionPropertyInfo -> addStatement("add(\$T.\$L)", it.enclosingElement.className, it.javaGetter)
                     is StyleStaticMethodInfo -> {
                         addStatement("consumeProgrammaticStyleBuilder()")
                         addStatement("debugName(\$S)", it.formattedName)
-                        addStatement("\$T.\$L(this)", it.enclosingElement, it.elementName)
+                        addStatement("\$T.\$L(this)", it.enclosingElement.className, it.elementName)
                         addStatement("consumeProgrammaticStyleBuilder()")
                     }
                     is StyleResInfo -> addStatement("add(\$L)", it.styleResourceCode)

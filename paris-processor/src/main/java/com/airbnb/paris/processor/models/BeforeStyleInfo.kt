@@ -2,16 +2,13 @@ package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.BeforeStyle
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.framework.isPrivate
-import com.airbnb.paris.processor.framework.isProtected
+import com.airbnb.paris.processor.abstractions.XExecutableElement
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
-import javax.lang.model.element.ExecutableElement
 
 internal class BeforeStyleInfoExtractor(override val processor: ParisProcessor) : SkyMethodModelFactory<BeforeStyleInfo>(processor, BeforeStyle::class.java) {
 
-    override fun elementToModel(element: ExecutableElement): BeforeStyleInfo? {
+    override fun elementToModel(element: XExecutableElement): BeforeStyleInfo? {
         if (element.isPrivate() || element.isProtected()) {
             logError(element) {
                 "Methods annotated with @BeforeStyle can't be private or protected."
@@ -20,8 +17,9 @@ internal class BeforeStyleInfoExtractor(override val processor: ParisProcessor) 
         }
 
 
-        val parameterType = element.parameters.firstOrNull()?.asType()
-        if (parameterType == null || !isSameType(processor.memoizer.styleClassType, parameterType)) {
+        val parameterType = element.parameters.firstOrNull()?.type
+        // TODO: 2/21/21 BeforeStyle doesn't seem tested in the project?!
+        if (parameterType == null || processor.memoizer.styleClassTypeX.isAssignableFrom(parameterType)) {
             logError(element) {
                 "Methods annotated with @BeforeStyle must have a single Style parameter."
             }
@@ -32,5 +30,5 @@ internal class BeforeStyleInfoExtractor(override val processor: ParisProcessor) 
     }
 }
 
-internal class BeforeStyleInfo(element: ExecutableElement) : SkyMethodModel(element)
+internal class BeforeStyleInfo(element: XExecutableElement) : SkyMethodModel(element)
 

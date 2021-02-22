@@ -32,7 +32,6 @@ dependencies {
     implementation project(':paris')
 
     implementation deps.appcompat
-    implementation deps.kotlin
 
     kapt project(':paris-processor')
 }
