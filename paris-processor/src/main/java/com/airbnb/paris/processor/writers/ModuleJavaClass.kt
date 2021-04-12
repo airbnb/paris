@@ -24,8 +24,12 @@ import javax.lang.model.element.Element
  */
 internal class ModuleJavaClass(
     override val processor: ParisProcessor,
-    private val styleablesInfo: List<StyleableInfo>
+    styleablesInfo: List<StyleableInfo>
 ) : SkyJavaClass(processor) {
+
+    // Sort so that the generated code is deterministic with consistent cache key
+    private val sortedStyleablesInfo: List<StyleableInfo> = styleablesInfo
+        .sortedBy { it.elementPackageName + it.elementName }
 
     override val packageName = PARIS_MODULES_PACKAGE_NAME
     override val name: String
@@ -34,11 +38,8 @@ internal class ModuleJavaClass(
     init {
         // The class name is a hash of all the styleable views' canonical names so the likelihood of
         // a naming conflict is insignificantly small
-        val styleablesConcat = styleablesInfo
-            .map { it.elementPackageName + it.elementName }
-            // Sort so that the generated code is deterministic with consistent cache key
-            .sorted()
-            .reduce { acc, s -> "$acc,$s" }
+        val styleablesConcat = sortedStyleablesInfo
+            .joinToString { it.elementPackageName + it.elementName }
         val messageDigest = MessageDigest.getInstance("MD5")
         messageDigest.update(styleablesConcat.toByteArray(), 0, styleablesConcat.length)
         val hash = BigInteger(1, messageDigest.digest()).toString(16)
@@ -53,7 +54,7 @@ internal class ModuleJavaClass(
         annotation(GeneratedStyleableModule::class.java) {
             value {
                 add("{")
-                for (styleableInfo in styleablesInfo) {
+                for (styleableInfo in sortedStyleablesInfo) {
                     add("\$L,", AnnotationSpec.builder(GeneratedStyleableClass::class.java).apply {
                         value("\$T.class", styleableInfo.elementType)
                     }.build())
