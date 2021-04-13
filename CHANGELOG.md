@@ -1,3 +1,7 @@
+# 1.7.3 (April 13, 2021)
+
+- Fix generated code consistency in module class (#154)
+
 # 1.7.2 (November 11, 2020)
 
 - Fixed ArrayOutOfBoundsException on certain devices when ImageView scaleType is set.
