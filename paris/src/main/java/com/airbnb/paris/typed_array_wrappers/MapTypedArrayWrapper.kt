@@ -6,6 +6,8 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.AttrRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
 import com.airbnb.paris.attribute_values.ColorValue
 import com.airbnb.paris.attribute_values.DpValue
 import com.airbnb.paris.attribute_values.ResourceId
@@ -74,8 +76,7 @@ internal class MapTypedArrayWrapper constructor(
                         theme
                     )
                     else -> {
-                        @Suppress("DEPRECATION")
-                        resources.getColorStateList(resId)
+                        AppCompatResources.getColorStateList(context, resId)
                     }
                 }
             },
@@ -90,14 +91,13 @@ internal class MapTypedArrayWrapper constructor(
         return getValue(index, { resId ->
             when {
                 isNullRes(resId) -> null
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> resources.getDrawable(
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> ResourcesCompat.getDrawable(
+                    resources,
                     resId,
                     theme
                 )
                 else -> {
-
-                    @Suppress("DEPRECATION")
-                    resources.getDrawable(resId)
+                    ResourcesCompat.getDrawable(resources, resId, null)
                 }
             }
         })

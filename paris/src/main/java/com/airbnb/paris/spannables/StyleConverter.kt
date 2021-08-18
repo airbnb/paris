@@ -23,8 +23,9 @@ internal class StyleConverter(val context: Context) {
 
         val string = SpannableString(text)
 
-        markup.forEach { markupItem ->
-            spansFromStyle(markupItem.style).forEach {
+        // working around lint issue incorrectly flagging forEach as being a java language feature only for api 24+
+        markup.forEachIndexed { _, markupItem ->
+            spansFromStyle(markupItem.style).forEachIndexed { _, it ->
                 string.setSpan(it, markupItem.range.start, markupItem.range.endInclusive, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }

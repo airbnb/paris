@@ -102,6 +102,7 @@ internal class MultiTypedArrayWrapper constructor(
     }
 
     override fun recycle() {
-        wrappers.forEach { it.recycle() }
+        // working around lint issue incorrectly flagging forEach as being a java language feature only for api 24+
+        wrappers.forEachIndexed { _, typedArrayWrapper ->  typedArrayWrapper.recycle() }
     }
 }

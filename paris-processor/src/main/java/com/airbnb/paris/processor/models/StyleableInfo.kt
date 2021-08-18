@@ -103,7 +103,7 @@ internal class StyleableInfo(
      * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.
      * `min` is used to ensure in the case there are multiple R files, a consistent one is chosen.
      */
-    val styleableRClassName = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).min()
+    val styleableRClassName = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).minOrNull()
 
     /**
      * Applies lower camel case formatting
