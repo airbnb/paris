@@ -1,10 +1,11 @@
 package com.airbnb.paris.processor
 
+import com.airbnb.paris.processor.abstractions.XElement
+import com.airbnb.paris.processor.abstractions.javac.JavacElement
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
-import com.airbnb.paris.processor.framework.WithSkyProcessor
-import javax.lang.model.element.Element
+import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 
-internal interface WithParisProcessor : WithSkyProcessor {
+internal interface WithParisProcessor : WithJavaSkyProcessor {
 
     override val processor: ParisProcessor
 
@@ -15,8 +16,8 @@ internal interface WithParisProcessor : WithSkyProcessor {
     val namespacedResourcesEnabled get() = processor.namespacedResourcesEnabled
 
 
-    fun getResourceId(annotation: Class<out Annotation>, element: Element, value: Int): AndroidResourceId? {
-        val resourceId = processor.resourceScanner.getId(annotation, element, value)
+    fun getResourceId(annotation: Class<out Annotation>, element: XElement, value: Int): AndroidResourceId? {
+        val resourceId = processor.resourceScanner.getId(annotation, (element as JavacElement).element, value)
         if (resourceId == null) {
             logError(element) {
                 "Could not retrieve Android resource ID from annotation."

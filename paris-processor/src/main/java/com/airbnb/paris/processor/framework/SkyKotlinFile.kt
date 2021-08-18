@@ -3,7 +3,7 @@ package com.airbnb.paris.processor.framework
 import com.squareup.kotlinpoet.FileSpec
 
 
-internal abstract class SkyKotlinFile(override val processor: SkyProcessor) : WithSkyProcessor {
+internal abstract class SkyKotlinFile(override val processor: JavaSkyProcessor) : WithJavaSkyProcessor {
 
     protected abstract val packageName: String
     protected abstract val name: String

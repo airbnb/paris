@@ -31,7 +31,6 @@ rootProject.ext {
             incapRuntime      : "net.ltgt.gradle.incap:incap:$INCAP_VERSION",
             incapProcessor    : "net.ltgt.gradle.incap:incap-processor:$INCAP_VERSION",
             junit             : "junit:junit:$JUNIT_VERSION",
-            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION",
             kotlinReflect     : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
             kotlinPoet        : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
             kotlinTest        : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",

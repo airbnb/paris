@@ -1,5 +1,9 @@
 package com.airbnb.paris.processor.framework
 
+import com.airbnb.paris.processor.abstractions.XElement
+import com.airbnb.paris.processor.abstractions.XExecutableElement
+import com.airbnb.paris.processor.abstractions.XFieldElement
+import com.airbnb.paris.processor.abstractions.XVariableElement
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -80,6 +84,12 @@ internal fun Element.siblings(): List<Element> = when (this) {
     is VariableElement -> enclosingElement.enclosedElements.filterNot { it === this }
     else -> TODO()
 }
+
+//internal fun XElement.siblings(): List<Element> = when (this) {
+//    is XExecutableElement -> enclosingTypeElement.en
+//    is XFieldElement -> enclosingElement.enclosedElements.filterNot { it === this }
+//    else -> TODO()
+//}
 
 // String
 

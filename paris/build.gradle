@@ -22,6 +22,7 @@ android {
 
     lintOptions {
         warningsAsErrors true
+        // We use R2 to keep resource ids constant
         disable 'NonConstantResourceId'
     }
 
@@ -39,10 +40,6 @@ dependencies {
     implementation deps.appcompat
 
     api project(':paris-annotations')
-
-    // We use "api" here instead of "implementation" to avoid app module warnings like:
-    // "Warning: unknown enum constant AnnotationTarget.FIELD"
-    api deps.kotlin
 
     kapt project(':paris-processor')
 

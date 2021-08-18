@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: "com.vanniktech.maven.publish"
+
+sourceCompatibility = rootProject.JAVA_SOURCE_VERSION
+targetCompatibility = rootProject.JAVA_TARGET_VERSION
+
+dependencies {
+    implementation deps.androidAnnotations
+    api "com.google.devtools.ksp:symbol-processing-api:1.4.30-1.0.0-alpha02"
+    api "com.google.devtools.ksp:symbol-processing:1.4.30-1.0.0-alpha02"
+    api "com.google.auto:auto-common:0.11"
+    api "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.2.0"
+    api deps.javaPoet
+    api deps.kotlinPoet
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
+    }
+}

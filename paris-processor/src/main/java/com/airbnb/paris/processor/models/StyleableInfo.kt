@@ -2,40 +2,45 @@ package com.airbnb.paris.processor.models
 
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.framework.WithSkyProcessor
+import com.airbnb.paris.processor.abstractions.XProcessingEnv
+import com.airbnb.paris.processor.abstractions.XRoundEnv
+import com.airbnb.paris.processor.abstractions.XTypeElement
+import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
-internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
+internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
 
     private val mutableModels = mutableListOf<StyleableInfo>()
 
     val models get() = mutableModels.toList()
 
     fun process(
-        roundEnv: RoundEnvironment,
-        classesToStyleableChildInfo: Map<TypeElement, List<StyleableChildInfo>>,
-        classesToBeforeStyleInfo: Map<TypeElement, List<BeforeStyleInfo>>,
-        classesToAfterStyleInfo: Map<TypeElement, List<AfterStyleInfo>>,
-        classesToAttrsInfo: Map<TypeElement, List<AttrInfo>>,
-        classesToStylesInfo: Map<Element, List<StyleInfo>>
+        roundEnv: XRoundEnv,
+        classesToStyleableChildInfo: Map<XTypeElement, List<StyleableChildInfo>>,
+        classesToBeforeStyleInfo: Map<XTypeElement, List<BeforeStyleInfo>>,
+        classesToAfterStyleInfo: Map<XTypeElement, List<AfterStyleInfo>>,
+        classesToAttrsInfo: Map<XTypeElement, List<AttrInfo>>,
+        classesToStylesInfo: Map<XTypeElement, List<StyleInfo>>
     ): List<StyleableInfo> {
-        val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+
+        val styleableElements = roundEnv.getTypeElementsAnnotatedWith(Styleable::class.java)
 
         val classesMissingStyleableAnnotation =
             (classesToStyleableChildInfo + classesToAttrsInfo + classesToStylesInfo)
-                .filter { (`class`, _) -> `class` !in styleableElements }
+                .filter { (clazz, _) -> clazz !in styleableElements }
                 .keys
-        if (classesMissingStyleableAnnotation.isNotEmpty()) {
-            logError(classesMissingStyleableAnnotation.first()) {
+
+        classesMissingStyleableAnnotation.forEach {
+            logError(it) {
                 "Uses @Attr, @StyleableChild and/or @Style but is not annotated with @Styleable."
             }
         }
 
         return styleableElements.mapNotNull {
             fromElement(
-                it as TypeElement,
+                it,
                 classesToStyleableChildInfo[it] ?: emptyList(),
                 classesToBeforeStyleInfo[it] ?: emptyList(),
                 classesToAfterStyleInfo[it] ?: emptyList(),
@@ -43,12 +48,12 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
                 classesToStylesInfo[it] ?: emptyList()
             )
         }.also {
-                mutableModels.addAll(it)
-            }
+            mutableModels.addAll(it)
+        }
     }
 
     private fun fromElement(
-        element: TypeElement,
+        element: XTypeElement,
         styleableChildren: List<StyleableChildInfo>,
         beforeStyles: List<BeforeStyleInfo>,
         afterStyles: List<AfterStyleInfo>,
@@ -90,14 +95,14 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
  */
 internal class StyleableInfo(
     override val processor: ParisProcessor,
-    val element: TypeElement,
+    val element: XTypeElement,
     val styleableChildren: List<StyleableChildInfo>,
     val beforeStyles: List<BeforeStyleInfo>,
     val afterStyles: List<AfterStyleInfo>,
     val attrs: List<AttrInfo>,
     val styles: List<StyleInfo>,
     baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(baseStyleableInfo), WithSkyProcessor {
+) : BaseStyleableInfo(baseStyleableInfo), WithJavaSkyProcessor {
 
     /**
      * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.

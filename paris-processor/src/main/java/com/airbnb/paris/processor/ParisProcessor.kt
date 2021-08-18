@@ -3,9 +3,11 @@ package com.airbnb.paris.processor
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.processor.abstractions.XProcessingEnv
+import com.airbnb.paris.processor.abstractions.XRoundEnv
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.framework.Memoizer
-import com.airbnb.paris.processor.framework.SkyProcessor
+import com.airbnb.paris.processor.framework.JavaSkyProcessor
 import com.airbnb.paris.processor.framework.packageName
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
 import com.airbnb.paris.processor.models.AttrInfoExtractor
@@ -28,7 +30,7 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
-class ParisProcessor : SkyProcessor(), WithParisProcessor {
+class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
 
     override val processor = this
 
@@ -80,6 +82,10 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
             return
         }
 
+        val xProcessingEnv = XProcessingEnv.create(processingEnv)
+        val xRoundEnv = XRoundEnv.create(xProcessingEnv, roundEnv)
+
+        // TODO: 2/22/21 Package annotation support in ksp?
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
             .firstOrNull()
             ?.getAnnotation(ParisConfig::class.java)
@@ -89,28 +95,28 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
                 rFinder.processConfig(it)
             }
 
-        beforeStyleInfoExtractor.process(roundEnv)
+        beforeStyleInfoExtractor.process(xRoundEnv)
         val classesToBeforeStyleInfo =
             beforeStyleInfoExtractor.latest.groupBy { it.enclosingElement }
 
-        afterStyleInfoExtractor.process(roundEnv)
+        afterStyleInfoExtractor.process(xRoundEnv)
         val classesToAfterStyleInfo = afterStyleInfoExtractor.latest.groupBy { it.enclosingElement }
 
-        styleableChildInfoExtractor.process(roundEnv)
+        styleableChildInfoExtractor.process(xRoundEnv)
         val styleableChildrenInfo = styleableChildInfoExtractor.latest
         val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
 
-        attrInfoExtractor.process(roundEnv)
+        attrInfoExtractor.process(xRoundEnv)
         val attrsInfo = attrInfoExtractor.latest
         val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
 
         rFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
 
-        styleInfoExtractor.process(roundEnv)
+        styleInfoExtractor.process(xRoundEnv)
         val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
 
         val styleablesInfo: List<StyleableInfo> = styleableInfoExtractor.process(
-            roundEnv,
+            xRoundEnv,
             classesToStyleableChildrenInfo,
             classesToBeforeStyleInfo,
             classesToAfterStyleInfo,
@@ -162,6 +168,6 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
     override fun processingOver() {
         // Errors and warnings are only printed at the end to generate as many classes as possible
         // and avoid "could not find" errors which make debugging harder
-        printLogsIfAny(messager)
+        printLogsIfAny()
     }
 }
