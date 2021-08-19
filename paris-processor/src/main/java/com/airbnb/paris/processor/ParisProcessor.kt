@@ -1,10 +1,10 @@
 package com.airbnb.paris.processor
 
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.abstractions.XProcessingEnv
-import com.airbnb.paris.processor.abstractions.XRoundEnv
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
 import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.framework.JavaSkyProcessor

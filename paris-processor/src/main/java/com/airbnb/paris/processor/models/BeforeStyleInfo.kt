@@ -1,14 +1,14 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XMethodElement
 import com.airbnb.paris.annotations.BeforeStyle
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.abstractions.XExecutableElement
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 
 internal class BeforeStyleInfoExtractor(override val processor: ParisProcessor) : SkyMethodModelFactory<BeforeStyleInfo>(processor, BeforeStyle::class.java) {
 
-    override fun elementToModel(element: XExecutableElement): BeforeStyleInfo? {
+    override fun elementToModel(element: XMethodElement): BeforeStyleInfo? {
         if (element.isPrivate() || element.isProtected()) {
             logError(element) {
                 "Methods annotated with @BeforeStyle can't be private or protected."
@@ -30,5 +30,5 @@ internal class BeforeStyleInfoExtractor(override val processor: ParisProcessor) 
     }
 }
 
-internal class BeforeStyleInfo(element: XExecutableElement) : SkyMethodModel(element)
+internal class BeforeStyleInfo(element: XMethodElement) : SkyMethodModel(element)
 

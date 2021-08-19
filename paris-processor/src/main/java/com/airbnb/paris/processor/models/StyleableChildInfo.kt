@@ -1,15 +1,15 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.annotations.StyleableChild
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.WithParisProcessor
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XProcessingEnv
-import com.airbnb.paris.processor.abstractions.isFieldElement
-import com.airbnb.paris.processor.abstractions.isMethod
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.models.SkyFieldModelFactory
 import com.airbnb.paris.processor.framework.models.SkyPropertyModel
+import com.airbnb.paris.processor.utils.isFieldElement
 
 // TODO Forward Javadoc to the generated functions/methods
 
@@ -22,7 +22,7 @@ internal class StyleableChildInfoExtractor(
      */
     override fun elementToModel(element: XElement): StyleableChildInfo? {
 
-        val attr = element.toAnnotationBox(StyleableChild::class)?.value ?: error("@StyleableChild not found on $element")
+        val attr = element.getAnnotation(StyleableChild::class)?.value ?: error("@StyleableChild not found on $element")
         val styleableResId: AndroidResourceId
         try {
             styleableResId = getResourceId(StyleableChild::class.java, element, attr.value) ?: return null

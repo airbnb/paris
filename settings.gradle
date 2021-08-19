@@ -1,2 +1,1 @@
-include ':processor-abstractions'
 include ':sample', ':paris-annotations', ':paris-processor', ':paris', ':paris-test', ':paris-test-lib'

@@ -1,5 +1,7 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.addOriginatingElement
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_CLASS_NAME
@@ -8,10 +10,8 @@ import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.StyleablesTree
 import com.airbnb.paris.processor.TYPED_ARRAY_WRAPPER_CLASS_NAME
 import com.airbnb.paris.processor.WithParisProcessor
-import com.airbnb.paris.processor.abstractions.XElement
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
-import com.airbnb.paris.processor.framework.addOriginatingElement
 import com.airbnb.paris.processor.framework.codeBlock
 import com.airbnb.paris.processor.framework.constructor
 import com.airbnb.paris.processor.framework.controlFlow

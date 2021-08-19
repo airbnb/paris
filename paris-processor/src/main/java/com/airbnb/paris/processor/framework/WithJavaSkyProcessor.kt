@@ -1,8 +1,7 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XProcessingEnv
-import com.airbnb.paris.processor.abstractions.javac.JavacElement
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
@@ -70,19 +69,20 @@ interface WithJavaSkyProcessor : WithSkyProcessor {
     fun isView(type: TypeMirror): Boolean = isSubtype(type, processor.memoizer.androidViewClassType)
 
     override fun printLogsIfAny() {
-        loggedMessages.forEach {
-            val kind = when (it.severity) {
-                Message.Severity.Warning -> Diagnostic.Kind.WARNING
-                Message.Severity.Error -> Diagnostic.Kind.ERROR
-            }
-            if (it.element != null) {
-                val javaElement = (it.element as JavacElement).element
-                val message = it.message + " (${javaElement.toStringId()})\n "
-                messager.printMessage(kind, message, javaElement)
-            } else {
-            messager.printMessage(kind, it.message)
-            }
-        }
+        // TODO: Fix
+//        loggedMessages.forEach {
+//            val kind = when (it.severity) {
+//                Message.Severity.Warning -> Diagnostic.Kind.WARNING
+//                Message.Severity.Error -> Diagnostic.Kind.ERROR
+//            }
+//            if (it.element != null) {
+//                val javaElement = (it.element as JavacElement).element
+//                val message = it.message + " (${javaElement.toStringId()})\n "
+//                messager.printMessage(kind, message, javaElement)
+//            } else {
+//            messager.printMessage(kind, it.message)
+//            }
+//        }
     }
 }
 

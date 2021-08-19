@@ -1,6 +1,6 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.abstractions.XType
+import androidx.room.compiler.processing.XType
 import javax.lang.model.type.TypeMirror
 
 open class JavaSkyMemoizer(withSkyProcessor: WithJavaSkyProcessor) : WithJavaSkyProcessor by withSkyProcessor {

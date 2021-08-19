@@ -1,10 +1,10 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.isInt
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.abstractions.XFieldElement
-import com.airbnb.paris.processor.abstractions.isInt
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import com.airbnb.paris.processor.framework.isNotFinal
@@ -51,7 +51,7 @@ internal class StyleCompanionPropertyInfoExtractor(override val processor: Paris
         val style = element.toAnnotationBox(Style::class)!!.value
         val isDefault = style.isDefault
 
-        val enclosingElement = element.enclosingTypeElement
+        val enclosingElement = element.enclosingElement
 
         val elementName = element.name
 
@@ -69,7 +69,7 @@ internal class StyleCompanionPropertyInfoExtractor(override val processor: Paris
             isDefault
         )
 
-        if (styleInfo.getterElement.isPrivate() || styleInfo.getterElement.isProtected()) {
+        if (styleInfo.element.isPrivate() || styleInfo.element.isProtected()) {
             logError(element) {
                 "Fields annotated with @Style can't be private or protected."
             }

@@ -1,19 +1,17 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.ExperimentalProcessingApi
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
+import com.airbnb.paris.annotations.GeneratedStyleableClass
 import com.airbnb.paris.annotations.GeneratedStyleableModule
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XType
-import com.airbnb.paris.processor.abstractions.XTypeElement
-import com.airbnb.paris.processor.abstractions.javac.JavacProcessingEnv
-import com.airbnb.paris.processor.abstractions.javac.JavacTypeElement
 import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 import com.squareup.javapoet.ClassName
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.MirroredTypeException
 
 /**
  * It's important that base styleables be extracted before new ones are written for the current module, otherwise the latter will be included in the
@@ -22,32 +20,13 @@ import javax.lang.model.type.MirroredTypeException
 internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {
-        val baseStyleablesInfo = mutableListOf<BaseStyleableInfo>()
-        // TODO: 2/21/21 How to get package with ksp???
-        elements.getPackageElement(PARIS_MODULES_PACKAGE_NAME)?.let { packageElement ->
-            packageElement.enclosedElements
-                .map { it.getAnnotation(GeneratedStyleableModule::class.java) }
-                .forEach { styleableModule ->
-                    baseStyleablesInfo.addAll(
-                        styleableModule.value
-                            .mapNotNull { generatedStyleableClass ->
-                                var typeElement: TypeElement? = null
-                                try {
-                                    generatedStyleableClass.value
-                                } catch (e: MirroredTypeException) {
-                                    typeElement = e.typeMirror.asTypeElement()
-                                }
-                                typeElement
-                            }
-                            .map { typeElement ->
-                                BaseStyleableInfoExtractor(processor).fromElement(
-                                    (processingEnv as JavacProcessingEnv).wrapTypeElement(typeElement)
-                                )
-                            }
-                    )
-                }
-        }
-        return baseStyleablesInfo
+        return processingEnv.getTypeElementsFromPackage(PARIS_MODULES_PACKAGE_NAME)
+            .mapNotNull { it.getAnnotation(GeneratedStyleableModule::class) }
+            .flatMap { styleableModule ->
+                styleableModule.getAsAnnotationBoxArray<GeneratedStyleableClass>("value")
+                    .mapNotNull { it.getAsType("value")?.typeElement }
+                    .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
+            }
     }
 
     fun fromElement(element: XTypeElement): BaseStyleableInfo {

@@ -1,7 +1,7 @@
 package com.airbnb.paris.processor
 
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XTypeElement
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.squareup.javapoet.ClassName
 import javax.tools.Diagnostic

@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.abstractions.XElement
+import androidx.room.compiler.processing.XElement
+
 
 class Message(val severity: Severity, val message: String, val element: XElement?) {
 

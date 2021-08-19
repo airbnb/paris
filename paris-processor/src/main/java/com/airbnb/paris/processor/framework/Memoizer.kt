@@ -1,11 +1,11 @@
 package com.airbnb.paris.processor.framework
 
+import androidx.room.compiler.processing.XRawType
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.PROXY_CLASS_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.abstractions.XRawType
-import com.airbnb.paris.processor.abstractions.XType
-import com.airbnb.paris.processor.abstractions.XTypeElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 

@@ -1,11 +1,11 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.room.compiler.processing.XElement
 import com.airbnb.paris.annotations.GeneratedStyleableClass
 import com.airbnb.paris.annotations.GeneratedStyleableModule
 import com.airbnb.paris.processor.MODULE_SIMPLE_CLASS_NAME_FORMAT
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.abstractions.XElement
 import com.airbnb.paris.processor.framework.SkyJavaClass
 import com.airbnb.paris.processor.framework.annotation
 import com.airbnb.paris.processor.framework.final

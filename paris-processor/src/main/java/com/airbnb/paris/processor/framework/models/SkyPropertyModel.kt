@@ -1,15 +1,11 @@
 package com.airbnb.paris.processor.framework.models
 
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XExecutableElement
-import com.airbnb.paris.processor.abstractions.XFieldElement
-import com.airbnb.paris.processor.abstractions.XMethodElement
-import com.airbnb.paris.processor.abstractions.XProcessingEnv
-import com.airbnb.paris.processor.abstractions.XType
-import com.airbnb.paris.processor.abstractions.XTypeElement
-import com.airbnb.paris.processor.abstractions.javac.JavacExecutableElement
-import com.airbnb.paris.processor.abstractions.javac.JavacMethodElement
-import com.airbnb.paris.processor.abstractions.javac.JavacProcessingEnv
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.framework.JavaSkyProcessor
 import com.airbnb.paris.processor.framework.siblings
 import javax.lang.model.element.ExecutableElement
@@ -20,8 +16,8 @@ import javax.lang.model.element.ExecutableElement
 abstract class SkyPropertyModel(val processingEnv: XProcessingEnv, val element: XElement) : SkyModel {
 
     val enclosingElement: XTypeElement = when (element) {
-        is XMethodElement -> element.enclosingTypeElement
-        is XFieldElement -> element.enclosingTypeElement
+        is XMethodElement -> element.enclosingElement as XTypeElement
+        is XFieldElement -> element.enclosingElement as XTypeElement
         else -> error("Unsupported type $element")
     }
 

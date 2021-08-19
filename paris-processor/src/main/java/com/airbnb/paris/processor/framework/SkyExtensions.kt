@@ -1,9 +1,5 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XExecutableElement
-import com.airbnb.paris.processor.abstractions.XFieldElement
-import com.airbnb.paris.processor.abstractions.XVariableElement
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind

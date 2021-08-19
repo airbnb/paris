@@ -1,6 +1,6 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.abstractions.XProcessingEnv
+import androidx.room.compiler.processing.XProcessingEnv
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
@@ -53,27 +53,3 @@ abstract class JavaSkyProcessor : AbstractProcessor(), WithJavaSkyProcessor {
 
     abstract fun processingOver()
 }
-
-//class KspSkyProcessor : SymbolProcessor, WithKspSkyProcessor {
-//    override lateinit var options: Map<String, String>
-//    override lateinit var kotlinVersion: KotlinVersion
-//    override lateinit var codeGenerator: CodeGenerator
-//    override lateinit var logger: KSPLogger
-//    override val loggedMessages: MutableList<Message> = mutableListOf()
-//
-//    override fun init(options: Map<String, String>, kotlinVersion: KotlinVersion, codeGenerator: CodeGenerator, logger: KSPLogger) {
-//        this.options = options
-//        this.kotlinVersion = kotlinVersion
-//        this.codeGenerator = codeGenerator
-//        this.logger = logger
-//    }
-//
-//    override fun process(resolver: Resolver): List<KSAnnotated> {
-//
-//        return emptyList()
-//    }
-//
-//    override fun finish() {
-//
-//    }
-//}

@@ -2,21 +2,21 @@ package com.airbnb.paris.processor
 
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XVariableElement
+import androidx.room.compiler.processing.isArray
+import androidx.room.compiler.processing.isInt
+import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.annotations.Fraction
 import com.airbnb.paris.annotations.LayoutDimension
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XFieldElement
-import com.airbnb.paris.processor.abstractions.XMethodElement
-import com.airbnb.paris.processor.abstractions.XVariableElement
-import com.airbnb.paris.processor.abstractions.hasAnyAnnotationBySimpleName
-import com.airbnb.paris.processor.abstractions.isArray
-import com.airbnb.paris.processor.abstractions.isBoolean
-import com.airbnb.paris.processor.abstractions.isFieldElement
-import com.airbnb.paris.processor.abstractions.isFloat
-import com.airbnb.paris.processor.abstractions.isInt
-import com.airbnb.paris.processor.abstractions.isMethod
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.Memoizer
+import com.airbnb.paris.processor.utils.hasAnyAnnotationBySimpleName
+import com.airbnb.paris.processor.utils.isBoolean
+import com.airbnb.paris.processor.utils.isFieldElement
+import com.airbnb.paris.processor.utils.isFloat
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 
@@ -115,7 +115,7 @@ internal class Format private constructor(
             if (element.hasAnnotation(ColorInt::class)) {
                 return Format(Type.COLOR)
             }
-            element.toAnnotationBox(Fraction::class)?.value?.let { fraction ->
+            element.getAnnotation(Fraction::class)?.value?.let { fraction ->
                 return Format(Type.FRACTION, fraction.base, fraction.pbase)
             }
             if (element.hasAnnotation(LayoutDimension::class)) {

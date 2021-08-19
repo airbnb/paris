@@ -1,10 +1,10 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.WithParisProcessor
-import com.airbnb.paris.processor.abstractions.XRoundEnv
-import com.airbnb.paris.processor.abstractions.XTypeElement
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import java.util.Locale
@@ -25,7 +25,7 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
     fun process(roundEnv: XRoundEnv) {
         // TODO Check that no style was left behind?
 
-        val styleableElements = roundEnv.getTypeElementsAnnotatedWith(Styleable::class.java)
+        val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class).filterIsInstance<XTypeElement>()
 
         // TODO Make sure there aren't conflicting names?
         styleCompanionPropertyInfoExtractor.process(roundEnv)

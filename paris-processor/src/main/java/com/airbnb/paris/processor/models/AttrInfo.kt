@@ -1,13 +1,12 @@
 package com.airbnb.paris.processor.models
 
 import androidx.annotation.RequiresApi
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XType
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.WithParisProcessor
-import com.airbnb.paris.processor.abstractions.XExecutableElement
-import com.airbnb.paris.processor.abstractions.XType
-import com.airbnb.paris.processor.abstractions.XTypeElement
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
@@ -25,7 +24,7 @@ internal class AttrInfoExtractor(
     override val processor: ParisProcessor
 ) : SkyMethodModelFactory<AttrInfo>(processor, Attr::class.java), WithParisProcessor {
 
-    override fun elementToModel(element: XExecutableElement): AttrInfo? {
+    override fun elementToModel(element: XMethodElement): AttrInfo? {
         if (element.isPrivate() || element.isProtected()) {
             logError(element) {
                 "Methods annotated with @Attr can't be private or protected."
@@ -66,7 +65,7 @@ internal class AttrInfoExtractor(
             return null
         }
 
-        val enclosingElement = element.enclosingTypeElement
+        val enclosingElement = element.enclosingElement
         val name = element.name
         val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement.className, name, targetType.typeName)
         // internal functions have a '$' in their name which creates a kdoc error. We could escape it but the part after the '$' is meant for
@@ -99,7 +98,7 @@ internal class AttrInfoExtractor(
  * Target   The method parameter
  */
 internal class AttrInfo(
-    element: XExecutableElement,
+    element: XMethodElement,
     val targetType: XType,
     val targetFormat: Format,
     val styleableResId: AndroidResourceId,

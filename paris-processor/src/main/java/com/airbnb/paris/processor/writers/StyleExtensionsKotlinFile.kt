@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.writers
 
 import androidx.annotation.RequiresApi
+import androidx.room.compiler.processing.addOriginatingElement
 import com.airbnb.paris.processor.EXTENDABLE_STYLE_BUILDER_CLASS_NAME
 import com.airbnb.paris.processor.EXTENSIONS_FILE_NAME_FORMAT
 import com.airbnb.paris.processor.Format
@@ -275,7 +276,7 @@ internal class StyleExtensionsKotlinFile(
                         // Filter out the Nullable annotation since we defer to idiomatic Kotlin by attaching
                         // the nullability to the type.
                         attr.targetFormat.valueAnnotation?.takeIf { it != AndroidClassNames.NULLABLE }?.let {
-                            addAnnotation(it)
+                            addAnnotation(it.toKPoet())
                         }
                     }
 

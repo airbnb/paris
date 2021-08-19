@@ -1,23 +1,19 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XMethodElement
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.abstractions.XExecutableElement
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.isNotStatic
-import com.airbnb.paris.processor.framework.isPrivate
-import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyStaticMethodModel
 import com.airbnb.paris.processor.framework.models.SkyStaticMethodModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
-import javax.lang.model.element.ExecutableElement
 
 internal class StyleStaticMethodInfoExtractor(processor: ParisProcessor) :
     SkyStaticMethodModelFactory<StyleStaticMethodInfo>(processor, Style::class.java) {
 
-    override fun elementToModel(element: XExecutableElement): StyleStaticMethodInfo? {
+    override fun elementToModel(element: XMethodElement): StyleStaticMethodInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods
 
         if (!element.isStatic() || element.isPrivate() || element.isProtected()) {
@@ -27,10 +23,10 @@ internal class StyleStaticMethodInfoExtractor(processor: ParisProcessor) :
             return null
         }
 
-        val style = element.toAnnotationBox(Style::class)
+        val style = element.getAnnotation(Style::class)
         val isDefault = style!!.value.isDefault
 
-        val enclosingElement = element.enclosingTypeElement
+        val enclosingElement = element.enclosingElement
 
         val elementName = element.name
 
@@ -54,7 +50,7 @@ internal class StyleStaticMethodInfoExtractor(processor: ParisProcessor) :
 }
 
 internal class StyleStaticMethodInfo(
-    element: XExecutableElement,
+    element: XMethodElement,
     override val elementName: String,
     override val formattedName: String,
     override val javadoc: JavaCodeBlock,

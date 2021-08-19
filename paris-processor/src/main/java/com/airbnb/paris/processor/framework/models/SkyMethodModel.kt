@@ -1,23 +1,19 @@
 package com.airbnb.paris.processor.framework.models
 
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.XExecutableElement
-import com.airbnb.paris.processor.abstractions.XTypeElement
-import com.airbnb.paris.processor.abstractions.isMethod
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.framework.JavaSkyProcessor
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
 
 abstract class SkyMethodModel private constructor(
     val enclosingElement: XTypeElement,
-    val element: XExecutableElement,
+    val element: XMethodElement,
 ) : SkyModel {
     val name: String get() = element.name
 
-    protected constructor(element: XExecutableElement) : this(
-        element.enclosingTypeElement,
+    protected constructor(element: XMethodElement) : this(
+        element.enclosingElement as XTypeElement,
         element
     )
 }
@@ -27,7 +23,7 @@ typealias SkyStaticMethodModel = SkyMethodModel
 abstract class SkyMethodModelFactory<T : SkyMethodModel>(
     processor: JavaSkyProcessor,
     annotationClass: Class<out Annotation>
-) : JavaSkyModelFactory<T, XExecutableElement>(processor, annotationClass) {
+) : JavaSkyModelFactory<T, XMethodElement>(processor, annotationClass) {
 
     override fun filter(element: XElement): Boolean = element.isMethod()
 }

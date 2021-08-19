@@ -1,7 +1,7 @@
 package com.airbnb.paris.processor.framework
 
-import com.airbnb.paris.processor.abstractions.XElement
-import com.airbnb.paris.processor.abstractions.javac.JavacElement
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.addOriginatingElement
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.TypeSpec
 
@@ -14,8 +14,8 @@ internal abstract class SkyJavaClass(override val processor: JavaSkyProcessor) :
 
     fun build(): TypeSpec {
         val builder = TypeSpec.classBuilder(name)
-        originatingElements.filterIsInstance<JavacElement>().forEach {
-            builder.addOriginatingElement(it.element)
+        originatingElements.forEach {
+            builder.addOriginatingElement(it)
         }
         builder.block()
         return builder.build()

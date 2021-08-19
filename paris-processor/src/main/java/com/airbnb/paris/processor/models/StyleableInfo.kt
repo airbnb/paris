@@ -1,10 +1,9 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.abstractions.XProcessingEnv
-import com.airbnb.paris.processor.abstractions.XRoundEnv
-import com.airbnb.paris.processor.abstractions.XTypeElement
 import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
@@ -25,7 +24,7 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
         classesToStylesInfo: Map<XTypeElement, List<StyleInfo>>
     ): List<StyleableInfo> {
 
-        val styleableElements = roundEnv.getTypeElementsAnnotatedWith(Styleable::class.java)
+        val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class).filterIsInstance<XTypeElement>()
 
         val classesMissingStyleableAnnotation =
             (classesToStyleableChildInfo + classesToAttrsInfo + classesToStylesInfo)

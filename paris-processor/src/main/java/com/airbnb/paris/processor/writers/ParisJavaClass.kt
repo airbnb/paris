@@ -1,9 +1,9 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.room.compiler.processing.XElement
 import com.airbnb.paris.processor.PARIS_SIMPLE_CLASS_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.SPANNABLE_BUILDER_CLASS_NAME
-import com.airbnb.paris.processor.abstractions.XElement
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
 import com.airbnb.paris.processor.framework.final

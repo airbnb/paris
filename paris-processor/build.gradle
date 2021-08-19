@@ -10,8 +10,8 @@ targetCompatibility = rootProject.JAVA_TARGET_VERSION
 
 dependencies {
     implementation project(':paris-annotations')
-    implementation project(':processor-abstractions')
-//    implementation "androidx.room:room-compiler-processing:2.3.0-beta02"
+    implementation "com.google.devtools.ksp:symbol-processing-api:1.5.21-1.0.0-beta07"
+    implementation "androidx.room:room-compiler-processing:2.4.0-alpha04"
 
     implementation deps.androidAnnotations
 
@@ -24,9 +24,11 @@ dependencies {
     testImplementation deps.kotlinTest
 }
 
-compileKotlin {
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
         freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
+        freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
     }
 }
