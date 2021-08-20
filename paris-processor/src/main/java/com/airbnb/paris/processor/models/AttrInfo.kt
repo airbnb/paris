@@ -32,7 +32,7 @@ internal class AttrInfoExtractor(
             return null
         }
 
-        val attr = element.toAnnotationBox(Attr::class)?.value ?: error("@Attr annotation not found on $element")
+        val attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {
             logError(element) {
@@ -75,7 +75,7 @@ internal class AttrInfoExtractor(
 
         // We rely on the `RequiresApi` Android annotation to disable certain attributes based on the Android SDK version.
         // 1 is the default since that's the minimum version.
-        val requiresApi = element.toAnnotationBox(RequiresApi::class)?.value?.let {
+        val requiresApi = element.getAnnotation(RequiresApi::class)?.value?.let {
             // value is an alias of api, so we give precedence to api.
             if (it.api > 1) it.api else it.value
         } ?: 1

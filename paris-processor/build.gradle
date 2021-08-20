@@ -20,6 +20,7 @@ dependencies {
 
     compileOnly files(Jvm.current().getToolsJar())
 
+    testImplementation "androidx.room:room-compiler-processing-testing:2.4.0-alpha04"
     testImplementation deps.junit
     testImplementation deps.kotlinTest
 }

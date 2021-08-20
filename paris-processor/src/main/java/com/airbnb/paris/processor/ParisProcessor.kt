@@ -85,7 +85,6 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
         val xProcessingEnv = XProcessingEnv.create(processingEnv)
         val xRoundEnv = XRoundEnv.create(xProcessingEnv, roundEnv)
 
-        // TODO: 2/22/21 Package annotation support in ksp?
         roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
             .firstOrNull()
             ?.getAnnotation(ParisConfig::class.java)

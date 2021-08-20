@@ -11,10 +11,8 @@ import javax.lang.model.type.TypeMirror
 
 class Memoizer(override val processor: ParisProcessor) : JavaSkyMemoizer(processor) {
 
-    val proxyClassTypeErased: TypeMirror by lazy { erasure(PROXY_CLASS_NAME.toTypeMirror()) }
     val proxyClassTypeErasedX: XRawType by lazy { processingEnv.requireType(PROXY_CLASS_NAME).rawType }
 
-    val styleClassType: TypeMirror by lazy { STYLE_CLASS_NAME.toTypeMirror() }
     val styleClassTypeX: XType by lazy { processingEnv.requireType(STYLE_CLASS_NAME) }
 
     val rStyleTypeElement: TypeElement? by lazy {

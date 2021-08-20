@@ -85,12 +85,5 @@ internal fun ParameterSpec.Builder.addAnnotation(type: JavaClassName) {
     addAnnotation(type.toKPoet())
 }
 
-fun XType.typeNameKotlin(): KotlinTypeName {
-    return when (this) {
-        // TODO
-//        is JavacType -> typeMirror.asTypeName()
-//        is KspType -> error("Unsupported")
-        else -> error("Unsupported")
-    }
-}
+fun XType.typeNameKotlin(): KotlinTypeName = typeName.toKPoet()
 

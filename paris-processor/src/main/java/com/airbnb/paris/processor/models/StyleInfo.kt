@@ -19,7 +19,7 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
     var latest = emptyList<StyleInfo>()
         private set
 
-    private val styleCompanionPropertyInfoExtractor = StyleCompanionPropertyInfoExtractor(processor)
+    private val styleCompanionPropertyInfoExtractor = StyleStaticPropertyInfoExtractor(processor)
     private val styleStaticMethodInfoExtractor = StyleStaticMethodInfoExtractor(processor)
 
     fun process(roundEnv: XRoundEnv) {
@@ -57,7 +57,8 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
                     // We suppress this warning because it is wrong, not casting results in an error
                     @Suppress("USELESS_CAST")
                     styles + when (styleMarkedAsDefault) {
-                        is StyleCompanionPropertyInfo -> StyleCompanionPropertyInfo(
+                        is StyleStaticPropertyInfo -> StyleStaticPropertyInfo(
+                            env = processingEnv,
                             styleMarkedAsDefault.element,
                             styleMarkedAsDefault.elementName,
                             DEFAULT_STYLE_FORMATTED_NAME,
@@ -82,7 +83,7 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
                     if (defaultNameFormatStyle != null) {
                         styles + defaultNameFormatStyle
                     } else {
-                        if (processor.namespacedResourcesEnabled && !styleableElement.toAnnotationBox(Styleable::class)!!.value.emptyDefaultStyle) {
+                        if (processor.namespacedResourcesEnabled && !styleableElement.getAnnotation(Styleable::class)!!.value.emptyDefaultStyle) {
                             logError {
                                 "No default style found for ${styleableElement.name}. Link an appropriate default style, " +
                                         "or set @Styleable(emptyDefaultStyle = true) for this element if none exist."

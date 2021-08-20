@@ -11,6 +11,7 @@ import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
 import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
+import com.airbnb.paris.processor.utils.getTypeElementsFromPackageSafe
 import com.squareup.javapoet.ClassName
 
 /**
@@ -20,7 +21,7 @@ import com.squareup.javapoet.ClassName
 internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {
-        return processingEnv.getTypeElementsFromPackage(PARIS_MODULES_PACKAGE_NAME)
+        return processingEnv.getTypeElementsFromPackageSafe(PARIS_MODULES_PACKAGE_NAME)
             .mapNotNull { it.getAnnotation(GeneratedStyleableModule::class) }
             .flatMap { styleableModule ->
                 styleableModule.getAsAnnotationBoxArray<GeneratedStyleableClass>("value")
@@ -45,7 +46,7 @@ internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor
         val viewElementPackageName = viewElement.packageName
         val viewElementName = viewElement.name
 
-        val styleable = element.toAnnotationBox(Styleable::class)?.value!!
+        val styleable = element.getAnnotation(Styleable::class)?.value!!
         val styleableResourceName = styleable.value
 
         return BaseStyleableInfo(

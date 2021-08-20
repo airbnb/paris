@@ -2,6 +2,7 @@ package com.airbnb.paris.processor.framework
 
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
+import com.airbnb.paris.processor.utils.enclosingElementIfApplicable
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
@@ -42,68 +43,27 @@ interface WithJavaSkyProcessor : WithSkyProcessor {
 
     fun JavaClassName.toTypeMirror(): TypeMirror = toTypeElement().asType()
 
-    // Element
-
-    fun Element.getPackageElement(): PackageElement = elements.getPackageOf(this)
 
     // TypeMirror
 
     fun TypeMirror.asTypeElement(): TypeElement = types.asElement(this) as TypeElement
 
-    /**
-     * Kapt replaces unknown types by "NonExistentClass". This can happen when code refers to generated classes. For example:
-     *
-     *
-     * ```
-     * @Style val myStyle = myViewStyle { }
-     * ```
-     *
-     * myViewStyle is a generated function so the type of the field will be "NonExistentClass" when processed with kapt.
-     *
-     * This behavior can be altered by using `kapt { correctErrorTypes = true }` in the Gradle config.
-     */
-    fun TypeMirror.isNonExistent() = this.toString() == "error.NonExistentClass"
 
     // Android specific
 
     fun isView(type: TypeMirror): Boolean = isSubtype(type, processor.memoizer.androidViewClassType)
 
     override fun printLogsIfAny() {
-        // TODO: Fix
-//        loggedMessages.forEach {
-//            val kind = when (it.severity) {
-//                Message.Severity.Warning -> Diagnostic.Kind.WARNING
-//                Message.Severity.Error -> Diagnostic.Kind.ERROR
-//            }
-//            if (it.element != null) {
-//                val javaElement = (it.element as JavacElement).element
-//                val message = it.message + " (${javaElement.toStringId()})\n "
-//                messager.printMessage(kind, message, javaElement)
-//            } else {
-//            messager.printMessage(kind, it.message)
-//            }
-//        }
+        loggedMessages.forEach { message ->
+            val kind = when (message.severity) {
+                Message.Severity.Warning -> Diagnostic.Kind.WARNING
+                Message.Severity.Error -> Diagnostic.Kind.ERROR
+            }
+            val element = message.element
+            processingEnv.messager.printMessage(kind, message.message + " [$element : ${element?.enclosingElementIfApplicable}]", element)
+        }
     }
 }
-
-
-
-//interface WithKspSkyProcessor : WithSkyProcessor {
-//    var options: Map<String, String>
-//    var kotlinVersion: KotlinVersion
-//    var codeGenerator: CodeGenerator
-//    var logger: KSPLogger
-//
-//    override fun printLogsIfAny() {
-//        loggedMessages.forEach {
-//            val symbol = (it.element as KspElement).declaration
-//            when (it.severity) {
-//                Message.Severity.Warning -> logger.warn(it.message, symbol)
-//                Message.Severity.Error -> logger.error(it.message, symbol)
-//            }
-//        }
-//    }
-//}
 
 interface WithSkyProcessor {
 

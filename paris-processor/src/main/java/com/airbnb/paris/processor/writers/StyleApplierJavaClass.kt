@@ -22,7 +22,7 @@ import com.airbnb.paris.processor.framework.protected
 import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.EmptyStyleInfo
-import com.airbnb.paris.processor.models.StyleCompanionPropertyInfo
+import com.airbnb.paris.processor.models.StyleStaticPropertyInfo
 import com.airbnb.paris.processor.models.StyleResInfo
 import com.airbnb.paris.processor.models.StyleStaticMethodInfo
 import com.airbnb.paris.processor.models.StyleableInfo
@@ -269,7 +269,7 @@ internal class StyleApplierJavaClass(
                 public()
 
                 when (styleInfo) {
-                    is StyleCompanionPropertyInfo -> addStatement("apply(\$T.\$L)", styleInfo.enclosingElement.className, styleInfo.javaGetter)
+                    is StyleStaticPropertyInfo -> addStatement("apply(\$T.\$L)", styleInfo.enclosingElement.className, styleInfo.javaGetter)
                     is StyleStaticMethodInfo -> {
                         addStatement(
                             "\$T builder = new \$T()",
