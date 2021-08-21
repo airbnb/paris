@@ -5,8 +5,6 @@ import androidx.room.compiler.processing.XProcessingEnv
 import com.airbnb.paris.processor.utils.enclosingElementIfApplicable
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
-import javax.lang.model.element.Element
-import javax.lang.model.element.PackageElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements

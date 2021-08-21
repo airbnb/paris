@@ -10,15 +10,9 @@ import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
-import com.airbnb.paris.processor.framework.isPrivate
-import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
-import java.lang.annotation.AnnotationTypeMismatchException
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 internal class AttrInfoExtractor(
     override val processor: ParisProcessor

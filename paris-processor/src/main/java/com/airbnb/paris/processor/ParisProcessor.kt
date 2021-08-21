@@ -6,9 +6,8 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.framework.JavaSkyProcessor
-import com.airbnb.paris.processor.framework.packageName
+import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
 import com.airbnb.paris.processor.models.AttrInfoExtractor
 import com.airbnb.paris.processor.models.BaseStyleableInfo
@@ -85,12 +84,12 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
         val xProcessingEnv = XProcessingEnv.create(processingEnv)
         val xRoundEnv = XRoundEnv.create(xProcessingEnv, roundEnv)
 
-        roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
+        xRoundEnv.getElementsAnnotatedWith(ParisConfig::class)
             .firstOrNull()
-            ?.getAnnotation(ParisConfig::class.java)
+            ?.getAnnotation(ParisConfig::class)
             ?.let {
-                defaultStyleNameFormat = it.defaultStyleNameFormat
-                namespacedResourcesEnabled = it.namespacedResourcesEnabled
+                defaultStyleNameFormat = it.value.defaultStyleNameFormat
+                namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
                 rFinder.processConfig(it)
             }
 

@@ -1,6 +1,5 @@
 package com.airbnb.paris.processor.framework
 
-import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec

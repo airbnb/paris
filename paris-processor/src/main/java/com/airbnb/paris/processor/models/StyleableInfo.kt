@@ -5,9 +5,7 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
+import com.squareup.javapoet.ClassName
 
 internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
 
@@ -107,7 +105,7 @@ internal class StyleableInfo(
      * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.
      * `min` is used to ensure in the case there are multiple R files, a consistent one is chosen.
      */
-    val styleableRClassName = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).minOrNull()
+    val styleableRClassName: ClassName? = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).minOrNull()
 
     /**
      * Applies lower camel case formatting

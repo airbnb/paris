@@ -4,7 +4,6 @@ import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.squareup.javapoet.ClassName
-import javax.tools.Diagnostic
 
 internal class StyleablesTree(
     override val processor: ParisProcessor,

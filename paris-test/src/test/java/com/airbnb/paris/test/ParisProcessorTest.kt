@@ -121,7 +121,7 @@ class ParisProcessorTest {
     fun emptyDefaultStyle() {
         assertCaseWithInput(
             "empty_default_style",
-            listOf("MyViewWithoutStyle.java", "package-info.java"),
+            listOf("MyViewWithoutStyle.java", "PackageInfo.java"),
             listOf("MyViewWithoutStyleStyleApplier.java", "Paris.java")
         )
     }
@@ -174,7 +174,7 @@ class ParisProcessorTest {
             "error_no_default_style",
             1,
             "No default style found for MyViewWithoutStyle.",
-            listOf("MyViewWithoutStyle.java", "package-info.java")
+            listOf("MyViewWithoutStyle.java", "PackageInfo.java")
         )
     }
 
@@ -236,7 +236,7 @@ class ParisProcessorTest {
             "error_styleable_outside_package_with_attr_and_namespaced_resources",
             1,
             "R class",
-            input = listOf("MyView.java", "package-info.java")
+            input = listOf("MyView.java", "PackageInfo.java")
         )
     }
 
@@ -269,7 +269,7 @@ class ParisProcessorTest {
     fun styleableInOtherModule() {
         assertCaseWithInput(
             "styleable_in_other_module_single_attr",
-            input = listOf("MyView.java", "package-info.java"),
+            input = listOf("MyView.java", "PackageInfo.java"),
             output = listOf("MyViewStyleApplier.java", "Paris.java")
         )
     }

@@ -107,9 +107,9 @@ internal class StyleInfoExtractor(override val processor: ParisProcessor) : With
         val elementName = styleableElement.name
         val defaultStyleName = String.format(Locale.US, defaultStyleNameFormat, elementName)
 
-        val rStyleTypeElement = processor.memoizer.rStyleTypeElement
-        val defaultStyleExists = rStyleTypeElement != null && elements.getAllMembers(rStyleTypeElement).any {
-            it.simpleName.toString() == defaultStyleName
+        val rStyleTypeElement = processor.memoizer.rStyleTypeElementX
+        val defaultStyleExists = rStyleTypeElement != null && rStyleTypeElement.getDeclaredFields().any {
+            it.name == defaultStyleName
         }
 
         if (defaultStyleExists) {

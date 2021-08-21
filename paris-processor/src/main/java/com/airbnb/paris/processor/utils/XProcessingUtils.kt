@@ -8,7 +8,6 @@ import androidx.room.compiler.processing.XMemberContainer
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
-import androidx.room.compiler.processing.XVariableElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName

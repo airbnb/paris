@@ -4,12 +4,9 @@ import androidx.room.compiler.processing.XMethodElement
 import com.airbnb.paris.annotations.AfterStyle
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.framework.isPrivate
-import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.utils.isSameTypeName
-import javax.lang.model.element.ExecutableElement
 
 internal class AfterStyleInfoExtractor(override val processor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(processor, AfterStyle::class.java) {
 

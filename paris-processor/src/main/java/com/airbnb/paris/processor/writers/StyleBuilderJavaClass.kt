@@ -10,9 +10,9 @@ import com.airbnb.paris.processor.framework.method
 import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.EmptyStyleInfo
-import com.airbnb.paris.processor.models.StyleStaticPropertyInfo
 import com.airbnb.paris.processor.models.StyleResInfo
 import com.airbnb.paris.processor.models.StyleStaticMethodInfo
+import com.airbnb.paris.processor.models.StyleStaticPropertyInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName

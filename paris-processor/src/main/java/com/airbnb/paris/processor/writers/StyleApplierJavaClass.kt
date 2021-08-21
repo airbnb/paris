@@ -22,9 +22,9 @@ import com.airbnb.paris.processor.framework.protected
 import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.EmptyStyleInfo
-import com.airbnb.paris.processor.models.StyleStaticPropertyInfo
 import com.airbnb.paris.processor.models.StyleResInfo
 import com.airbnb.paris.processor.models.StyleStaticMethodInfo
+import com.airbnb.paris.processor.models.StyleStaticPropertyInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
@@ -100,7 +100,7 @@ internal class StyleApplierJavaClass(
                 override()
                 protected()
                 returns(ArrayTypeName.of(Integer.TYPE))
-                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: RElement, styleableInfo.styleableResourceName)
+                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: RElement?.className, styleableInfo.styleableResourceName)
             }
 
             val attrsWithDefaultValue = styleableInfo.attrs

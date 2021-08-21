@@ -1,3 +1,8 @@
+# 1.8.0
+- Support KSP
+- ParisConfig annotation can no longer be used on package elements, only on class or interfaces
+
+- Fix
 # 1.7.3 (April 13, 2021)
 
 - Fix generated code consistency in module class (#154)

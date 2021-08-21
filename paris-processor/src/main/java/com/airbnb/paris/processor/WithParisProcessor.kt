@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor
 
 import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
@@ -9,7 +10,7 @@ internal interface WithParisProcessor : WithJavaSkyProcessor {
 
     override val processor: ParisProcessor
 
-    val RElement get() = processor.rFinder.element
+    val RElement: XTypeElement? get() = processor.rFinder.element
 
     val defaultStyleNameFormat get() = processor.defaultStyleNameFormat
 

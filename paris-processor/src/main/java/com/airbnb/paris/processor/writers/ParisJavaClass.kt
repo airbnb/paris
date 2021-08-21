@@ -12,9 +12,7 @@ import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.StyleableInfo
-import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import javax.lang.model.element.Element
 
 internal class ParisJavaClass(
     override val processor: ParisProcessor,

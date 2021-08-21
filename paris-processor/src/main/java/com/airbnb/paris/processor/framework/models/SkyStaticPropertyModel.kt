@@ -11,7 +11,6 @@ import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.JavaSkyProcessor
 import com.airbnb.paris.processor.framework.siblings
-import com.airbnb.paris.processor.utils.isExecutableElement
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
 import javax.lang.model.element.ExecutableElement
