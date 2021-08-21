@@ -2,7 +2,7 @@ package com.airbnb.paris.test.styleableoutsidepackagewithattrandnamespacedresour
 
 import com.airbnb.paris.annotations.ParisConfig;
 
-@ParisConfig(rClass = com.airbnb.paris.test.R.class, namespacedResourcesEnabled = true)
+@ParisConfig(namespacedResourcesEnabled = true)
 class PackageInfo {
 
 }
