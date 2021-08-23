@@ -10,7 +10,7 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import javax.tools.Diagnostic
 
-abstract class JavaSkyProcessor : AbstractProcessor(), WithJavaSkyProcessor {
+abstract class SkyProcessor : AbstractProcessor(), WithSkyProcessor {
 
 
     override val filer: Filer by lazy { processingEnv.filer }
@@ -21,7 +21,7 @@ abstract class JavaSkyProcessor : AbstractProcessor(), WithJavaSkyProcessor {
         XProcessingEnv.create(processingEnv)
     }
 
-    override val memoizer: JavaSkyMemoizer by lazy { JavaSkyMemoizer(this) }
+    override val memoizer: SkyMemoizer by lazy { SkyMemoizer(this) }
     override val loggedMessages = mutableListOf<Message>()
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {

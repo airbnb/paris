@@ -9,7 +9,7 @@ import androidx.room.compiler.processing.compat.XConverters.toJavac
 import androidx.room.compiler.processing.compat.XConverters.toXProcessing
 import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.framework.JavaCodeBlock
-import com.airbnb.paris.processor.framework.JavaSkyProcessor
+import com.airbnb.paris.processor.framework.SkyProcessor
 import com.airbnb.paris.processor.framework.siblings
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
@@ -94,7 +94,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessin
 }
 
 abstract class SkyStaticPropertyModelFactory<T : SkyStaticPropertyModel>(
-    override val processor: JavaSkyProcessor,
+    override val processor: SkyProcessor,
     annotationClass: Class<out Annotation>
 ) : JavaSkyModelFactory<T, XElement>(processor, annotationClass) {
 

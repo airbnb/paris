@@ -39,10 +39,10 @@ internal class AttrInfoExtractor(
 
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = getResourceId(Attr::class.java, element, attr.value) ?: return null
+            styleableResId = getResourceId(Attr::class, element, attr.value) ?: return null
         } catch (e: Throwable) {
             logError(element) {
-                "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.)"
+                "Incorrectly typed @Attr value parameter. ${e.message} ${e.stackTraceToString()}"
             }
             return null
         }
@@ -50,7 +50,7 @@ internal class AttrInfoExtractor(
         var defaultValueResId: AndroidResourceId? = null
         try {
             if (attr.defaultValue != -1) {
-                defaultValueResId = getResourceId(Attr::class.java, element, attr.defaultValue) ?: return null
+                defaultValueResId = getResourceId(Attr::class, element, attr.defaultValue) ?: return null
             }
         } catch (e: Throwable) {
             logError(element) {

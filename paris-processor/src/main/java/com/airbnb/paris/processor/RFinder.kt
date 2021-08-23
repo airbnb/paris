@@ -14,6 +14,10 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
     var element: XTypeElement? = null
         private set
 
+    val requireR: XTypeElement
+        get() = element
+            ?: error("Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class.")
+
     fun processConfig(config: XAnnotationBox<ParisConfig>) {
         if (element != null) {
             return

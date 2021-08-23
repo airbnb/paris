@@ -4,10 +4,10 @@ import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
+import com.airbnb.paris.processor.framework.WithSkyProcessor
 import com.squareup.javapoet.ClassName
 
-internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
+internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
 
     private val mutableModels = mutableListOf<StyleableInfo>()
 
@@ -99,7 +99,7 @@ internal class StyleableInfo(
     val attrs: List<AttrInfo>,
     val styles: List<StyleInfo>,
     baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(baseStyleableInfo), WithJavaSkyProcessor {
+) : BaseStyleableInfo(baseStyleableInfo), WithSkyProcessor {
 
     /**
      * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.

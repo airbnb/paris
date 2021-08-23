@@ -12,7 +12,7 @@ import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.StyleablesTree
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
-import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
+import com.airbnb.paris.processor.framework.WithSkyProcessor
 import com.airbnb.paris.processor.framework.abstract
 import com.airbnb.paris.processor.framework.constructor
 import com.airbnb.paris.processor.framework.method
@@ -34,7 +34,7 @@ internal class BaseStyleBuilderJavaClass(
     parentStyleApplierClassName: ClassName?,
     styleablesTree: StyleablesTree,
     styleableInfo: StyleableInfo
-) : SkyJavaClass(processor), WithJavaSkyProcessor {
+) : SkyJavaClass(processor), WithSkyProcessor {
 
     override val packageName: String
     override val name: String

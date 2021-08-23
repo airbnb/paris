@@ -6,7 +6,7 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.framework.JavaSkyProcessor
+import com.airbnb.paris.processor.framework.SkyProcessor
 import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
 import com.airbnb.paris.processor.models.AttrInfoExtractor
@@ -29,13 +29,13 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
-class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
+class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     override val processor = this
 
-    internal val resourceScanner = AndroidResourceScanner()
-
     internal val rFinder = RFinder(this)
+
+    internal val resourceScanner = AndroidResourceScanner(rFinder, this)
 
     override var defaultStyleNameFormat: String = ""
 
@@ -60,7 +60,6 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
-        resourceScanner.init(processingEnv)
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
@@ -130,7 +129,7 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
         val allStyleables = styleablesInfo + externalStyleablesInfo
         if (allStyleables.isNotEmpty() && rFinder.element == null) {
             logError {
-                "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
+                "Unable to locate R class. Please annotate an arbitrary class with @ParisConfig and set the rClass parameter to the R class."
             }
             return
         }

@@ -6,9 +6,8 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.PROXY_CLASS_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import javax.lang.model.element.TypeElement
 
-class Memoizer(override val processor: ParisProcessor) : JavaSkyMemoizer(processor) {
+class Memoizer(override val processor: ParisProcessor) : SkyMemoizer(processor) {
 
     val proxyClassTypeErasedX: XRawType by lazy { processingEnv.requireType(PROXY_CLASS_NAME).rawType }
 

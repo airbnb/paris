@@ -5,7 +5,7 @@ import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
-import com.airbnb.paris.processor.framework.JavaSkyProcessor
+import com.airbnb.paris.processor.framework.SkyProcessor
 
 /**
  * Applies to Java fields and Kotlin properties
@@ -112,6 +112,6 @@ internal fun findGetterPropertyFromSyntheticFunction(syntheticMethod: XMethodEle
 internal data class GetterResult(val propertyName: String, val getterFunction: XMethodElement)
 
 abstract class SkyFieldModelFactory<T : SkyPropertyModel>(
-    processor: JavaSkyProcessor,
+    processor: SkyProcessor,
     annotationClass: Class<out Annotation>
 ) : JavaSkyModelFactory<T, XElement>(processor, annotationClass)

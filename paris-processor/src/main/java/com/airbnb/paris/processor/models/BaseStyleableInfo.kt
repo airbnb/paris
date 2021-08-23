@@ -9,7 +9,7 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
-import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
+import com.airbnb.paris.processor.framework.WithSkyProcessor
 import com.airbnb.paris.processor.utils.getTypeElementsFromPackageSafe
 import com.squareup.javapoet.ClassName
 
@@ -17,7 +17,7 @@ import com.squareup.javapoet.ClassName
  * It's important that base styleables be extracted before new ones are written for the current module, otherwise the latter will be included in the
  * results
  */
-internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
+internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {
         return processingEnv.getTypeElementsFromPackageSafe(PARIS_MODULES_PACKAGE_NAME)

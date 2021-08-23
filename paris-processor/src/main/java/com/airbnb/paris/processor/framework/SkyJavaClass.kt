@@ -5,7 +5,7 @@ import androidx.room.compiler.processing.addOriginatingElement
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.TypeSpec
 
-internal abstract class SkyJavaClass(override val processor: JavaSkyProcessor) : WithJavaSkyProcessor {
+internal abstract class SkyJavaClass(override val processor: SkyProcessor) : WithSkyProcessor {
 
     protected abstract val packageName: String
     protected abstract val name: String

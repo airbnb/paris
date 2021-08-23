@@ -4,7 +4,7 @@ import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.isMethod
-import com.airbnb.paris.processor.framework.JavaSkyProcessor
+import com.airbnb.paris.processor.framework.SkyProcessor
 
 abstract class SkyMethodModel private constructor(
     val enclosingElement: XTypeElement,
@@ -21,7 +21,7 @@ abstract class SkyMethodModel private constructor(
 typealias SkyStaticMethodModel = SkyMethodModel
 
 abstract class SkyMethodModelFactory<T : SkyMethodModel>(
-    processor: JavaSkyProcessor,
+    processor: SkyProcessor,
     annotationClass: Class<out Annotation>
 ) : JavaSkyModelFactory<T, XMethodElement>(processor, annotationClass) {
 

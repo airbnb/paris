@@ -1,6 +1,7 @@
 # 1.8.0
 - Support KSP
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
+- Resource values used as annotation parameters must now be defined in the same module (ie the R class must not be from a different module)
 
 - Fix
 # 1.7.3 (April 13, 2021)
