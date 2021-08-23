@@ -102,12 +102,6 @@ internal class StyleableInfo(
 ) : BaseStyleableInfo(baseStyleableInfo), WithSkyProcessor {
 
     /**
-     * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.
-     * `min` is used to ensure in the case there are multiple R files, a consistent one is chosen.
-     */
-    val styleableRClassName: ClassName? = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).minOrNull()
-
-    /**
      * Applies lower camel case formatting
      */
     fun attrResourceNameToCamelCase(name: String): String {

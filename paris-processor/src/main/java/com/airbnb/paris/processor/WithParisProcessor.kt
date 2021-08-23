@@ -4,7 +4,6 @@ import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.WithSkyProcessor
-import kotlin.reflect.KClass
 
 internal interface WithParisProcessor : WithSkyProcessor {
 
@@ -16,8 +15,7 @@ internal interface WithParisProcessor : WithSkyProcessor {
 
     val namespacedResourcesEnabled get() = processor.namespacedResourcesEnabled
 
-
-    fun getResourceId(annotation: KClass<out Annotation>, element: XElement, value: Int): AndroidResourceId? {
+    fun getResourceId(element: XElement, value: Int): AndroidResourceId? {
         val resourceId = processor.resourceScanner.getId(value)
         if (resourceId == null) {
             logError(element) {

@@ -32,7 +32,7 @@ internal class AndroidResourceScanner(val rFinder: RFinder, val processor: Paris
 
 
     /**
-     * Returns the [AndroidResourceId] that is used as an annotation value of the given [Element].
+     * Returns the [AndroidResourceId] that is used as an annotation value of the given [Element]
      */
     fun getId(value: Int): AndroidResourceId? {
         val rElement = rMap[value] ?: return null
