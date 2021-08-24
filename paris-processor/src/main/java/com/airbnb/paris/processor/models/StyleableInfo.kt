@@ -35,14 +35,14 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
             }
         }
 
-        return styleableElements.mapNotNull {
+        return styleableElements.mapNotNull { styleableElement ->
             fromElement(
-                it,
-                classesToStyleableChildInfo[it] ?: emptyList(),
-                classesToBeforeStyleInfo[it] ?: emptyList(),
-                classesToAfterStyleInfo[it] ?: emptyList(),
-                classesToAttrsInfo[it] ?: emptyList(),
-                classesToStylesInfo[it] ?: emptyList()
+                styleableElement,
+                classesToStyleableChildInfo[styleableElement] ?: emptyList(),
+                classesToBeforeStyleInfo[styleableElement] ?: emptyList(),
+                classesToAfterStyleInfo[styleableElement] ?: emptyList(),
+                classesToAttrsInfo[styleableElement] ?: emptyList(),
+                classesToStylesInfo[styleableElement] ?: emptyList()
             )
         }.also {
             mutableModels.addAll(it)

@@ -5,65 +5,26 @@ import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.isVoid
 import androidx.room.compiler.processing.isVoidObject
 import com.airbnb.paris.annotations.ParisConfig
-import com.airbnb.paris.processor.models.AttrInfo
-import com.airbnb.paris.processor.models.StyleableChildInfo
-import com.airbnb.paris.processor.models.StyleableInfo
 
 internal class RFinder(override val processor: ParisProcessor) : WithParisProcessor {
 
-    var element: XTypeElement? = null
+    private var element: XTypeElement? = null
         private set
 
     val requireR: XTypeElement
         get() = element
             ?: error("Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class.")
 
+    val r2Element: XTypeElement? by lazy {
+        processor.processingEnv.findTypeElement("${requireR.packageName}.R2")
+    }
+
     fun processConfig(config: XAnnotationBox<ParisConfig>) {
         if (element != null) {
-            return
+            error("Paris config was already processed ")
         }
 
-        element = getRTypeFromConfig(config)
-    }
-
-    fun processResourceAnnotations(
-        styleableChildrenInfo: List<StyleableChildInfo>,
-        attrsInfo: List<AttrInfo>
-    ) {
-        // If using namespacedResources, an attribute might reference another module's R2 file, so we
-        // skip this method of determining the R file.
-        if (element != null || processor.namespacedResourcesEnabled) {
-            return
-        }
-
-        val arbitraryResId = when {
-            styleableChildrenInfo.isNotEmpty() -> styleableChildrenInfo[0].styleableResId
-            attrsInfo.isNotEmpty() -> attrsInfo[0].styleableResId
-            else -> null
-        }
-        arbitraryResId?.let {
-            element = processor.processingEnv.findTypeElement(it.className.enclosingClassName().reflectionName())
-        }
-    }
-
-    fun processStyleables(styleablesInfo: List<StyleableInfo>) {
-        if (element != null || styleablesInfo.isEmpty()) return
-
-        styleablesInfo[0].let { styleableInfo ->
-            var packageName = styleableInfo.elementPackageName
-            while (packageName.isNotBlank()) {
-                processor.processingEnv.findTypeElement("$packageName.R")?.let {
-                    element = it
-                    return
-                }
-                val lastIndexOfDot = packageName.lastIndexOf('.')
-                packageName = if (lastIndexOfDot > 0) {
-                    packageName.substring(0, lastIndexOfDot)
-                } else {
-                    ""
-                }
-            }
-        }
+        element = getRTypeFromConfig(config) ?: error("No R class found in Paris config")
     }
 
     private fun getRTypeFromConfig(config: XAnnotationBox<ParisConfig>): XTypeElement? {

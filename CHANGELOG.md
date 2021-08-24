@@ -1,5 +1,6 @@
 # 1.8.0
 - Support KSP
+- R class must now be provided in all modules using Paris via a ParisConfig annotation
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
 - Resource values used as annotation parameters must now be defined in the same module (ie the R class must not be from a different module)
 

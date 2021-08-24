@@ -2,6 +2,7 @@ package com.airbnb.paris.processor
 
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
@@ -14,6 +15,7 @@ import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.BaseStyleableInfoExtractor
 import com.airbnb.paris.processor.models.BeforeStyleInfoExtractor
 import com.airbnb.paris.processor.models.StyleInfoExtractor
+import com.airbnb.paris.processor.models.StyleableChildInfo
 import com.airbnb.paris.processor.models.StyleableChildInfoExtractor
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.airbnb.paris.processor.models.StyleableInfoExtractor
@@ -21,6 +23,7 @@ import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
 import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
+import com.squareup.kotlinpoet.FileSpec
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import javax.annotation.processing.ProcessingEnvironment
@@ -90,7 +93,14 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
                 defaultStyleNameFormat = it.value.defaultStyleNameFormat
                 namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
                 rFinder.processConfig(it)
+            } ?: error("Module must provide a single @ParisConfig annotation to define the R class of this module.")
+
+        val r = rFinder.requireR
+        xProcessingEnv.filer.write(FileSpec.builder(r.packageName, "EliRCopy").apply {
+            resourceScanner.allResources.forEach { (value, element) ->
+                addComment("${element.enclosingElement.className} : $element : $value\n")
             }
+        }.build())
 
         beforeStyleInfoExtractor.process(xRoundEnv)
         val classesToBeforeStyleInfo =
@@ -101,13 +111,12 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
         styleableChildInfoExtractor.process(xRoundEnv)
         val styleableChildrenInfo = styleableChildInfoExtractor.latest
-        val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
+        val classesToStyleableChildrenInfo: Map<XTypeElement, List<StyleableChildInfo>> = styleableChildrenInfo.groupBy { it.enclosingElement }
+        println(classesToStyleableChildrenInfo.toString())
 
         attrInfoExtractor.process(xRoundEnv)
         val attrsInfo = attrInfoExtractor.latest
         val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
-
-        rFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
 
         styleInfoExtractor.process(xRoundEnv)
         val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
@@ -121,18 +130,10 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
             classesToStylesInfo
         )
 
-        rFinder.processStyleables(styleablesInfo)
-
         /** Make sure to get these before writing the [ModuleJavaClass] for this module */
         externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
-        if (allStyleables.isNotEmpty() && rFinder.element == null) {
-            logError {
-                "Unable to locate R class. Please annotate an arbitrary class with @ParisConfig and set the rClass parameter to the R class."
-            }
-            return
-        }
         val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
@@ -144,7 +145,7 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         }
 
         if (allStyleables.isNotEmpty()) {
-            val parisClassPackageName = rFinder.element!!.packageName
+            val parisClassPackageName = rFinder.requireR.packageName
             ParisJavaClass(
                 this,
                 parisClassPackageName,

@@ -24,7 +24,7 @@ internal class StyleableChildInfoExtractor(
         val attr = element.getAnnotation(StyleableChild::class)?.value ?: error("@StyleableChild not found on $element")
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = getResourceId(StyleableChild::class, element, attr.value) ?: return null
+            styleableResId = getStyleableResourceId(element, attr.value) ?: return null
         } catch (e: Throwable) {
             logError(element) {
                 "Incorrectly typed @StyleableChild value parameter. (This usually happens when an R value doesn't exist.)"
@@ -35,7 +35,7 @@ internal class StyleableChildInfoExtractor(
         var defaultValueResId: AndroidResourceId? = null
         if (attr.defaultValue != -1) {
             try {
-                defaultValueResId = getResourceId(StyleableChild::class, element, attr.defaultValue) ?: return null
+                defaultValueResId = getAnyResourceId(element, attr.defaultValue) ?: return null
             } catch (e: Throwable) {
                 logError(element) {
                     "Incorrectly typed @StyleableChild defaultValue parameter. (This usually happens when an R value doesn't exist.)"
@@ -66,4 +66,8 @@ internal class StyleableChildInfo(
     element: XElement,
     val styleableResId: AndroidResourceId,
     val defaultValueResId: AndroidResourceId?
-) : SkyPropertyModel(element)
+) : SkyPropertyModel(element) {
+    override fun toString(): String {
+        return "StyleableChildInfo(element=${element}, styleableResId=${styleableResId.code}, ${styleableResId.value}, defaultValueResId=${defaultValueResId?.code}, ${defaultValueResId?.value})"
+    }
+}

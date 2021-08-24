@@ -100,7 +100,7 @@ internal class StyleApplierJavaClass(
                 override()
                 protected()
                 returns(ArrayTypeName.of(Integer.TYPE))
-                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: RElement?.className, styleableInfo.styleableResourceName)
+                addStatement("return \$T.styleable.\$L", RElement?.className, styleableInfo.styleableResourceName)
             }
 
             val attrsWithDefaultValue = styleableInfo.attrs

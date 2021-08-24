@@ -9,14 +9,24 @@ internal interface WithParisProcessor : WithSkyProcessor {
 
     override val processor: ParisProcessor
 
-    val RElement: XTypeElement? get() = processor.rFinder.element
+    val RElement: XTypeElement get() = processor.rFinder.requireR
 
     val defaultStyleNameFormat get() = processor.defaultStyleNameFormat
 
     val namespacedResourcesEnabled get() = processor.namespacedResourcesEnabled
 
-    fun getResourceId(element: XElement, value: Int): AndroidResourceId? {
-        val resourceId = processor.resourceScanner.getId(value)
+    fun getStyleableResourceId(element: XElement, value: Int): AndroidResourceId? {
+        val resourceId = processor.resourceScanner.getIdForStyleableValue(value)
+        if (resourceId == null) {
+            logError(element) {
+                "Could not retrieve Android resource ID from annotation."
+            }
+        }
+        return resourceId
+    }
+
+    fun getAnyResourceId(element: XElement, value: Int): AndroidResourceId? {
+        val resourceId = processor.resourceScanner.getIdForAnyValue(value)
         if (resourceId == null) {
             logError(element) {
                 "Could not retrieve Android resource ID from annotation."
