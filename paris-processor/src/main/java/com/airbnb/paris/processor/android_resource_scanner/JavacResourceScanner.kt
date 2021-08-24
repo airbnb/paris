@@ -1,5 +1,7 @@
 package com.airbnb.paris.processor.android_resource_scanner
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.squareup.javapoet.ClassName
 import com.sun.source.util.Trees
 import com.sun.tools.javac.code.Symbol.VarSymbol
@@ -13,8 +15,20 @@ import javax.lang.model.element.Element
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
+import kotlin.reflect.KClass
 
-class AndroidResourceScanner {
+interface ResourceScanner {
+    /**
+     * Returns the [AndroidResourceId] that is used as an annotation value of the given [XElement]
+     */
+    fun getId(
+        annotation: KClass<out Annotation>,
+        element: XElement,
+        value: Int
+    ): AndroidResourceId?
+}
+
+class JavacResourceScanner : ResourceScanner {
     private lateinit var typeUtils: Types
     private lateinit var elementUtils: Elements
     private var trees: Trees? = null
@@ -45,14 +59,14 @@ class AndroidResourceScanner {
     }
 
     /**
-     * Returns the [AndroidResourceId] that is used as an annotation value of the given [Element]
+     * Returns the [AndroidResourceId] that is used as an annotation value of the given [XElement]
      */
-    fun getId(
-        annotation: Class<out Annotation?>,
-        element: Element,
+    override fun getId(
+        annotation: KClass<out Annotation>,
+        element: XElement,
         value: Int
     ): AndroidResourceId? {
-        val results = getResults(annotation, element)
+        val results = getResults(annotation.java, element.toJavac())
         return if (results.containsKey(value)) {
             results[value]
         } else {

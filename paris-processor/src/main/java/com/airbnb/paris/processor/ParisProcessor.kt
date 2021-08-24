@@ -5,7 +5,7 @@ import androidx.room.compiler.processing.XRoundEnv
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
+import com.airbnb.paris.processor.android_resource_scanner.JavacResourceScanner
 import com.airbnb.paris.processor.framework.JavaSkyProcessor
 import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
@@ -33,7 +33,7 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
 
     override val processor = this
 
-    internal val resourceScanner = AndroidResourceScanner()
+    internal val resourceScanner = JavacResourceScanner()
 
     internal val rFinder = RFinder(this)
 
