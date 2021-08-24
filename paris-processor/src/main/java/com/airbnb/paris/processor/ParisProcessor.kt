@@ -86,21 +86,16 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         val xProcessingEnv = XProcessingEnv.create(processingEnv)
         val xRoundEnv = XRoundEnv.create(xProcessingEnv, roundEnv)
 
-        xRoundEnv.getElementsAnnotatedWith(ParisConfig::class)
-            .firstOrNull()
-            ?.getAnnotation(ParisConfig::class)
-            ?.let {
-                defaultStyleNameFormat = it.value.defaultStyleNameFormat
-                namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
-                rFinder.processConfig(it)
-            } ?: error("Module must provide a single @ParisConfig annotation to define the R class of this module.")
-
-        val r = rFinder.requireR
-        xProcessingEnv.filer.write(FileSpec.builder(r.packageName, "EliRCopy").apply {
-            resourceScanner.allResources.forEach { (value, element) ->
-                addComment("${element.enclosingElement.className} : $element : $value\n")
-            }
-        }.build())
+        if (!rFinder.hasProcessedConfiguration) {
+            xRoundEnv.getElementsAnnotatedWith(ParisConfig::class)
+                .firstOrNull()
+                ?.getAnnotation(ParisConfig::class)
+                ?.let { config ->
+                    defaultStyleNameFormat = config.value.defaultStyleNameFormat
+                    namespacedResourcesEnabled = config.value.namespacedResourcesEnabled
+                    rFinder.processConfig(config)
+                } ?: error("Module must provide a single @ParisConfig annotation to define the R class of this module.")
+        }
 
         beforeStyleInfoExtractor.process(xRoundEnv)
         val classesToBeforeStyleInfo =
@@ -112,7 +107,6 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
         styleableChildInfoExtractor.process(xRoundEnv)
         val styleableChildrenInfo = styleableChildInfoExtractor.latest
         val classesToStyleableChildrenInfo: Map<XTypeElement, List<StyleableChildInfo>> = styleableChildrenInfo.groupBy { it.enclosingElement }
-        println(classesToStyleableChildrenInfo.toString())
 
         attrInfoExtractor.process(xRoundEnv)
         val attrsInfo = attrInfoExtractor.latest

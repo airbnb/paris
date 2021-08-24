@@ -15,12 +15,15 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
         get() = element
             ?: error("Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class.")
 
-    val r2Element: XTypeElement? by lazy {
+    val r2Element: XTypeElement by lazy {
         processor.processingEnv.findTypeElement("${requireR.packageName}.R2")
+            ?: error("No R2 class was found. The Butterknife Gradle plugin must be applied to this module so that an R2 class is generated.")
     }
 
+    val hasProcessedConfiguration: Boolean get() = element != null
+
     fun processConfig(config: XAnnotationBox<ParisConfig>) {
-        if (element != null) {
+        if (hasProcessedConfiguration) {
             error("Paris config was already processed ")
         }
 

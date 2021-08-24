@@ -14,7 +14,6 @@ class Memoizer(override val processor: ParisProcessor) : SkyMemoizer(processor) 
     val styleClassTypeX: XType by lazy { processingEnv.requireType(STYLE_CLASS_NAME) }
 
     val rStyleTypeElementX: XTypeElement? by lazy {
-        val rElement = processor.RElement ?: error("R Class not found")
-        processingEnv.findType("${rElement.qualifiedName}.style")?.typeElement
+        processingEnv.findType("${processor.RElement.qualifiedName}.style")?.typeElement
     }
 }

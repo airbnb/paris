@@ -23,12 +23,13 @@ class ParisProcessorTest {
 
     private fun assertCase(folder: String) {
         val view = JavaFileObjects.forResource("$folder/MyView.java".patchResource())
+        val packageInfo = JavaFileObjects.forResource("$folder/PackageInfo.java".patchResource())
         val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java".patchResource())
         val generatedStyleApplierClass =
             JavaFileObjects.forResource("$folder/MyViewStyleApplier.java".patchResource())
 
-        assert_().about(javaSource())
-            .that(view)
+        assert_().about(javaSources())
+            .that(listOf(view, packageInfo))
             .processedWith(ParisProcessor())
             .compilesWithoutError()
             .and()
@@ -55,9 +56,10 @@ class ParisProcessorTest {
         errorFragment: String? = null
     ) {
         val view = JavaFileObjects.forResource("$folder/MyView.java".patchResource())
+        val packageConfig = JavaFileObjects.forResource("$folder/PackageInfo.java".patchResource())
 
-        assert_().about(javaSource())
-            .that(view)
+        assert_().about(javaSources())
+            .that(listOf(view, packageConfig))
             .processedWith(ParisProcessor())
             .failsToCompile()
             .apply {
@@ -219,15 +221,6 @@ class ParisProcessorTest {
     }
 
     @Test
-    fun errorStyleableOutsidePackageNoR() {
-        // A @Styleable view in an unexpected package (outside the package namespace of the module)
-        // with no R (or R2) references as annotation parameters. Paris has no way of finding the R
-        // package (which it needs to figure out the package of the generated Paris class) so this
-        // should cause an error
-        assertError("error_styleable_outside_package_no_R", 1, "R class")
-    }
-
-    @Test
     fun errorStyleableOutsidePackageWithAttrAndNamespacedResources() {
         // A @Styleable view in an unexpected package (outside the package namespace of the module)
         // with an attribute reference to an r file. If namespaced resources is turned on this will fail, like [errorStyleableOutsidePackageNoR]
@@ -267,10 +260,11 @@ class ParisProcessorTest {
 
     @Test
     fun styleableInOtherModule() {
-        assertCaseWithInput(
+        assertErrorWithInput(
             "styleable_in_other_module_single_attr",
             input = listOf("MyView.java", "PackageInfo.java"),
-            output = listOf("MyViewStyleApplier.java", "Paris.java")
+            errorCount = 1,
+            errorFragment = "Could not retrieve Android resource ID from annotation"
         )
     }
 

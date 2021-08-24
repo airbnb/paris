@@ -1,6 +1,6 @@
-package com.airbnb.paris.test
+package com.airbnb.paris
 
 import com.airbnb.paris.annotations.ParisConfig
 
 @ParisConfig(rClass = R::class)
-object PackageConfig
+class PackageConfig

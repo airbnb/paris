@@ -11,7 +11,6 @@ import javax.lang.model.element.Element
 internal class AndroidResourceScanner(val rFinder: RFinder, val processor: ParisProcessor) {
 
 
-
     // XProcessing does not expose a way to get all nested classes, so we manually define the possibilities
     private val animResourceMap: Map<Int, XFieldElement> by lazy { buildResourceMap("anim") }
     private val arrayResourceMap: Map<Int, XFieldElement> by lazy { buildResourceMap("array") }
@@ -45,11 +44,12 @@ internal class AndroidResourceScanner(val rFinder: RFinder, val processor: Paris
         }
 
     private fun buildResourceMap(resourceType: String): Map<Int, XFieldElement> {
-        val rElement = rFinder.requireR
-        val rToUse = rFinder.r2Element ?: rElement
-
         return mutableMapOf<Int, XFieldElement>().apply {
-            putAll(getAllResources(rToUse, resourceType))
+            // R2 is required because the default R class uses non unique values for the styleable entry fields; it uses the position of the
+            // styleable attribute within the styleable array which is not unique. The R2 class on the other hand is able to get unique
+            // values for each field - all we need is to be able to look up the field on the class again to get the resource name and the actual
+            // value doesn't matter as long as it is unique for this module's compilation.
+            putAll(getAllResources(rFinder.r2Element, resourceType))
         }
     }
 
@@ -58,16 +58,16 @@ internal class AndroidResourceScanner(val rFinder: RFinder, val processor: Paris
         // Module might not have any resources of this type
             ?: return emptyMap()
 
-        // TODO: KSP does not yet implement a way to get constant value of fields
-        // https://github.com/google/ksp/issues/579
+
+        @Suppress("UNCHECKED_CAST")
         return resourceClass.getDeclaredFields().associateBy { fieldElement ->
             // Most fields are final ints, which we can get the value of.
             // A few fields are int[] which we can ignore.
-            fieldElement.toJavac().constantValue as? Int ?: run {
-                println("No constant value for $resourceType $fieldElement ${fieldElement.type}")
-                null
-            }
-        }.filterKeys { it != null } as Map<Int, XFieldElement>
+            // TODO: KSP does not yet implement a way to get constant value of fields
+            // https://github.com/google/ksp/issues/579
+            fieldElement.toJavac().constantValue as? Int
+        }
+            .filterKeys { it != null } as Map<Int, XFieldElement>
     }
 
 
@@ -79,14 +79,9 @@ internal class AndroidResourceScanner(val rFinder: RFinder, val processor: Paris
     private fun getId(value: Int, resourceMap: Map<Int, XFieldElement>): AndroidResourceId? {
         val rElement = resourceMap[value] ?: return null
 
-        val isUsingR2 = rFinder.r2Element != null
-
-        val resourceClassName: ClassName = if (isUsingR2) {
-            val r2ClassName = rElement.enclosingElement.className
-            ClassName.get(r2ClassName.packageName(), "R", r2ClassName.simpleName())
-        } else {
-            rElement.enclosingElement.className
-        }
+        // We used the R2 class in the annotation, we must convert to R to reference the field correctly in generated code
+        val r2ClassName = rElement.enclosingElement.className
+        val resourceClassName = ClassName.get(r2ClassName.packageName(), "R", r2ClassName.simpleName())
 
         return AndroidResourceId(
             value,

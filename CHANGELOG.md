@@ -1,6 +1,8 @@
 # 1.8.0
 - Support KSP
+- The butterknife gradle plugin must now be used in all modules using Paris (https://github.com/JakeWharton/butterknife#library-projects), and all annotation values referencing resources must use the generated R2 class instead of R directly
 - R class must now be provided in all modules using Paris via a ParisConfig annotation
+ - as well as in test modules too that use Paris annotations
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
 - Resource values used as annotation parameters must now be defined in the same module (ie the R class must not be from a different module)
 
