@@ -1,4 +1,5 @@
 # 1.8.0
+- TODO: Update all docs to require R2
 - Support KSP
 - The butterknife gradle plugin must now be used in all modules using Paris (https://github.com/JakeWharton/butterknife#library-projects), and all annotation values referencing resources must use the generated R2 class instead of R directly
 - R class must now be provided in all modules using Paris via a ParisConfig annotation
