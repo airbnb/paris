@@ -11,4 +11,9 @@ Releasing
     2. Release title `vX.Y.Z`
     3. Paste the content from `CHANGELOG.md` as the description
 7. `./gradlew clean uploadArchives --no-daemon --no-parallel`
+    - Use gradle properties to config release:
+    - SONATYPE_NEXUS_USERNAME
+    - SONATYPE_NEXUS_PASSWORD
+    - RELEASE_REPOSITORY_URL
+    - SNAPSHOT_REPOSITORY_URL
 8. Visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifact.
