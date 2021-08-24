@@ -7,8 +7,8 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
-import com.airbnb.paris.processor.framework.SkyProcessor
 import com.airbnb.paris.processor.framework.Memoizer
+import com.airbnb.paris.processor.framework.SkyProcessor
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
 import com.airbnb.paris.processor.models.AttrInfoExtractor
 import com.airbnb.paris.processor.models.BaseStyleableInfo
@@ -23,7 +23,6 @@ import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
 import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
-import com.squareup.kotlinpoet.FileSpec
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import javax.annotation.processing.ProcessingEnvironment

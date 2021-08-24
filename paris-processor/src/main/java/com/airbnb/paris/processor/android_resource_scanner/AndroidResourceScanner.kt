@@ -6,7 +6,6 @@ import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.RFinder
 import com.squareup.javapoet.ClassName
-import javax.lang.model.element.Element
 
 internal class AndroidResourceScanner(val rFinder: RFinder, val processor: ParisProcessor) {
 
@@ -25,23 +24,6 @@ internal class AndroidResourceScanner(val rFinder: RFinder, val processor: Paris
     private val stringResourceMap: Map<Int, XFieldElement> by lazy { buildResourceMap("string") }
     private val styleResourceMap: Map<Int, XFieldElement> by lazy { buildResourceMap("style") }
     private val styleableResourceMap: Map<Int, XFieldElement> by lazy { buildResourceMap("styleable") }
-
-    val allResources: List<Pair<Int, XFieldElement>>
-        get() {
-            return boolResourceMap.toList() +
-                    integerResourceMap.toList() +
-                    dimenResourceMap.toList() +
-                    fractionResourceMap.toList() +
-                    arrayResourceMap.toList() +
-                    colorResourceMap.toList() +
-                    fontResourceMap.toList() +
-                    drawableResourceMap.toList() +
-                    stringResourceMap.toList() +
-                    styleResourceMap.toList() +
-                    animResourceMap.toList() +
-                    attrResourceMap.toList() +
-                    styleableResourceMap.toList()
-        }
 
     private fun buildResourceMap(resourceType: String): Map<Int, XFieldElement> {
         return mutableMapOf<Int, XFieldElement>().apply {
@@ -71,9 +53,6 @@ internal class AndroidResourceScanner(val rFinder: RFinder, val processor: Paris
     }
 
 
-    /**
-     * Returns the [AndroidResourceId] that is used as an annotation value of the given [Element]
-     */
     fun getIdForStyleableValue(value: Int): AndroidResourceId? = getId(value, styleableResourceMap)
 
     private fun getId(value: Int, resourceMap: Map<Int, XFieldElement>): AndroidResourceId? {

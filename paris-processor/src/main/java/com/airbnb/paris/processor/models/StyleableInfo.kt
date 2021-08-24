@@ -5,7 +5,6 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.WithSkyProcessor
-import com.squareup.javapoet.ClassName
 
 internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
 
