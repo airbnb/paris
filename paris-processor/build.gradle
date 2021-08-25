@@ -11,7 +11,10 @@ targetCompatibility = rootProject.JAVA_TARGET_VERSION
 dependencies {
     implementation project(':paris-annotations')
     implementation "com.google.devtools.ksp:symbol-processing-api:1.5.21-1.0.0-beta07"
+    implementation "com.google.devtools.ksp:symbol-processing:1.5.21-1.0.0-beta07"
     implementation "androidx.room:room-compiler-processing:2.4.0-alpha04"
+    // Compiler needed to resolve resource references in annotations
+    implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21"
 
     implementation deps.androidAnnotations
 

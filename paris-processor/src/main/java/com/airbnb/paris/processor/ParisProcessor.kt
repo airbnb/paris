@@ -6,6 +6,7 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.android_resource_scanner.JavacResourceScanner
+import com.airbnb.paris.processor.android_resource_scanner.ResourceScanner
 import com.airbnb.paris.processor.framework.JavaSkyProcessor
 import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
@@ -33,7 +34,7 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
 
     override val processor = this
 
-    internal val resourceScanner = JavacResourceScanner()
+    lateinit var resourceScanner: ResourceScanner
 
     internal val rFinder = RFinder(this)
 
@@ -60,7 +61,7 @@ class ParisProcessor : JavaSkyProcessor(), WithParisProcessor {
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
-        resourceScanner.init(processingEnv)
+        resourceScanner = JavacResourceScanner(processingEnv)
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {

@@ -17,26 +17,14 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import kotlin.reflect.KClass
 
-interface ResourceScanner {
-    /**
-     * Returns the [AndroidResourceId] that is used as an annotation value of the given [XElement]
-     */
-    fun getId(
-        annotation: KClass<out Annotation>,
-        element: XElement,
-        value: Int
-    ): AndroidResourceId?
-}
-
-class JavacResourceScanner : ResourceScanner {
-    private lateinit var typeUtils: Types
-    private lateinit var elementUtils: Elements
+class JavacResourceScanner(
+    processingEnv: ProcessingEnvironment
+) : ResourceScanner {
+    private val typeUtils: Types = processingEnv.typeUtils
+    private val elementUtils: Elements = processingEnv.elementUtils
     private var trees: Trees? = null
 
-    fun init(processingEnv: ProcessingEnvironment) {
-        typeUtils = processingEnv.typeUtils
-        elementUtils = processingEnv.elementUtils
-
+    init {
         trees = try {
             Trees.instance(processingEnv)
         } catch (ignored: IllegalArgumentException) {
