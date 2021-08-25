@@ -24,6 +24,8 @@ android {
         warningsAsErrors true
         // We use R2 to keep resource ids constant
         disable 'NonConstantResourceId'
+        // UnusedResources has false positives
+        disable 'UnusedResources'
     }
 
     compileOptions {

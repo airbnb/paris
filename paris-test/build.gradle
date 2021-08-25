@@ -11,12 +11,6 @@ android {
         minSdkVersion rootProject.MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
     }
 
     testOptions {
@@ -47,27 +41,13 @@ dependencies {
 
     testImplementation project(':paris-processor')
 
-    testImplementation files(getRuntimeJar())
-    testImplementation files(Jvm.current().getToolsJar())
+    testImplementation files(rootProject.file("libs/rt.jar"))
+    testImplementation files(rootProject.file("libs/tools.jar"))
 
     testImplementation deps.junit
     testImplementation deps.testingCompile
 
     androidTestImplementation deps.espresso
-}
-
-static def getRuntimeJar() {
-    try {
-        final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();
-        File runtimeJar = new File(javaBase, "lib/rt.jar");
-        if (runtimeJar.exists()) {
-            return runtimeJar
-        }
-        runtimeJar = new File(javaBase, "jre/lib/rt.jar");
-        return runtimeJar.exists() ? runtimeJar : null;
-    } catch (IOException e) {
-        throw new RuntimeException(e)
-    }
 }
 
 // Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)

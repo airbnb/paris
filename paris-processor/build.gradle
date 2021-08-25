@@ -21,7 +21,7 @@ dependencies {
     compileOnly deps.incapRuntime
     kapt deps.incapProcessor
 
-    compileOnly files(Jvm.current().getToolsJar())
+    compileOnly files(rootProject.file("libs/tools.jar"))
 
     testImplementation "androidx.room:room-compiler-processing-testing:2.4.0-alpha04"
     testImplementation deps.junit
