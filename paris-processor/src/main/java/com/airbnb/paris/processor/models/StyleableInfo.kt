@@ -4,10 +4,9 @@ import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 import com.squareup.javapoet.ClassName
 
-internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithJavaSkyProcessor {
+internal class StyleableInfoExtractor(val processor: ParisProcessor)  {
 
     private val mutableModels = mutableListOf<StyleableInfo>()
 
@@ -30,7 +29,7 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
                 .keys
 
         classesMissingStyleableAnnotation.forEach {
-            logError(it) {
+            processor.logError(it) {
                 "Uses @Attr, @StyleableChild and/or @Style but is not annotated with @Styleable."
             }
         }
@@ -61,14 +60,14 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
         val baseStyleableInfo = BaseStyleableInfoExtractor(processor).fromElement(element)
 
         if (baseStyleableInfo.styleableResourceName.isEmpty() && (attrs.isNotEmpty() || styleableChildren.isNotEmpty())) {
-            logError(element) {
+            processor.logError(element) {
                 "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)."
             }
             return null
         }
 
         if (baseStyleableInfo.styleableResourceName.isNotEmpty() && styleableChildren.isEmpty() && attrs.isEmpty()) {
-            logWarning(element) {
+            processor.logWarning(element) {
                 "No need to specify the @Styleable value parameter if no class members are annotated with @Attr."
             }
         }
@@ -91,7 +90,7 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
  * empty either
  */
 internal class StyleableInfo(
-    override val processor: ParisProcessor,
+    val processor: ParisProcessor,
     val element: XTypeElement,
     val styleableChildren: List<StyleableChildInfo>,
     val beforeStyles: List<BeforeStyleInfo>,
@@ -99,7 +98,7 @@ internal class StyleableInfo(
     val attrs: List<AttrInfo>,
     val styles: List<StyleInfo>,
     baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(baseStyleableInfo), WithJavaSkyProcessor {
+) : BaseStyleableInfo(baseStyleableInfo) {
 
     /**
      * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.
@@ -113,7 +112,7 @@ internal class StyleableInfo(
     fun attrResourceNameToCamelCase(name: String): String {
         val prefix = "${styleableResourceName}_"
         if (!name.startsWith(prefix)) {
-            logError(element) {
+            processor.logError(element) {
                 "Attribute \"$name\" does not belong to styleable declaration \"$styleableResourceName\"."
             }
         }

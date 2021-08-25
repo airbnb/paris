@@ -6,7 +6,6 @@ import androidx.room.compiler.processing.XType
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.KotlinCodeBlock
@@ -15,12 +14,12 @@ import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
 
 internal class AttrInfoExtractor(
-    override val processor: ParisProcessor
-) : SkyMethodModelFactory<AttrInfo>(processor, Attr::class.java), WithParisProcessor {
+     val parisProcessor: ParisProcessor
+) : SkyMethodModelFactory<AttrInfo>(parisProcessor, Attr::class.java) {
 
     override fun elementToModel(element: XMethodElement): AttrInfo? {
         if (element.isPrivate() || element.isProtected()) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Methods annotated with @Attr can't be private or protected."
             }
             return null
@@ -29,19 +28,19 @@ internal class AttrInfoExtractor(
         val attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Method with @Attr must provide a single parameter"
             }
             return null
         }
 
-        val targetFormat = Format.forElement(processor.memoizer, element)
+        val targetFormat = Format.forElement(parisProcessor.memoizer, element)
 
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = getResourceId(Attr::class, element, attr.value) ?: return null
+            styleableResId = parisProcessor.getResourceId(Attr::class, element, attr.value) ?: return null
         } catch (e: Throwable) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.)"
             }
             return null
@@ -50,10 +49,10 @@ internal class AttrInfoExtractor(
         var defaultValueResId: AndroidResourceId? = null
         try {
             if (attr.defaultValue != -1) {
-                defaultValueResId = getResourceId(Attr::class, element, attr.defaultValue) ?: return null
+                defaultValueResId = parisProcessor.getResourceId(Attr::class, element, attr.defaultValue) ?: return null
             }
         } catch (e: Throwable) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Incorrectly typed @Attr defaultValue parameter. (This usually happens when an R value doesn't exist.)"
             }
             return null

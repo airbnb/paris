@@ -1,11 +1,13 @@
 package com.airbnb.paris.processor.framework
 
 import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.addOriginatingElement
+import com.airbnb.paris.processor.BaseProcessor
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.TypeSpec
 
-internal abstract class SkyJavaClass(override val processor: JavaSkyProcessor) : WithJavaSkyProcessor {
+internal abstract class SkyJavaClass(val processor: BaseProcessor) {
 
     protected abstract val packageName: String
     protected abstract val name: String
@@ -21,7 +23,8 @@ internal abstract class SkyJavaClass(override val processor: JavaSkyProcessor) :
         return builder.build()
     }
 
-    fun write() {
-        JavaFile.builder(packageName, build()).build().writeTo(filer)
+    fun write(mode: XFiler.Mode = XFiler.Mode.Aggregating) {
+        val javaFile = JavaFile.builder(packageName, build()).build()
+        processor.filer.write(javaFile, mode)
     }
 }

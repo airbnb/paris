@@ -22,7 +22,7 @@ internal fun getStyleBuilderClassName(styleApplierClassName: ClassName) =
     styleApplierClassName.nestedClass("StyleBuilder")
 
 internal class StyleBuilderJavaClass(
-    override val processor: ParisProcessor,
+    processor: ParisProcessor,
     styleableInfo: StyleableInfo
 ) : SkyJavaClass(processor) {
 

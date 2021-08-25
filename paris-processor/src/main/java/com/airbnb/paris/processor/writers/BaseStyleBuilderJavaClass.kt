@@ -12,7 +12,6 @@ import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.StyleablesTree
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
-import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
 import com.airbnb.paris.processor.framework.abstract
 import com.airbnb.paris.processor.framework.constructor
 import com.airbnb.paris.processor.framework.method
@@ -30,17 +29,17 @@ import com.squareup.javapoet.TypeVariableName
 import com.squareup.javapoet.WildcardTypeName
 
 internal class BaseStyleBuilderJavaClass(
-    override val processor: ParisProcessor,
+    val parisProcessor: ParisProcessor,
     parentStyleApplierClassName: ClassName?,
     styleablesTree: StyleablesTree,
     styleableInfo: StyleableInfo
-) : SkyJavaClass(processor), WithJavaSkyProcessor {
+) : SkyJavaClass(parisProcessor) {
 
     override val packageName: String
     override val name: String
     override val originatingElements: List<XElement> = listOfNotNull(
         styleableInfo.annotatedElement,
-        processor.memoizer.rStyleTypeElementX
+        parisProcessor.memoizer.rStyleTypeElementX
     )
 
     init {
@@ -181,7 +180,7 @@ internal class BaseStyleBuilderJavaClass(
             val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
             if (nonResTargetAttrs.isNotEmpty() && nonResTargetAttrs.distinctBy { it.targetType }.size > 1) {
-                logError {
+                parisProcessor.logError {
                     "The same @Attr value can't be used on methods with different parameter types (excluding resource id types)"
                 }
             }

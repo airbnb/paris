@@ -4,6 +4,7 @@ import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
+import com.google.testing.compile.JavaSourcesSubject
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
 import java.io.File
@@ -29,6 +30,7 @@ class ParisProcessorTest {
 
         assert_().about(javaSource())
             .that(view)
+            .addKotlinGeneratedOption()
             .processedWith(ParisProcessor())
             .compilesWithoutError()
             .and()
@@ -43,6 +45,7 @@ class ParisProcessorTest {
 
         assert_().about(javaSources())
             .that(inputFileObjects)
+            .addKotlinGeneratedOption()
             .processedWith(ParisProcessor())
             .compilesWithoutError()
             .and()
@@ -58,6 +61,7 @@ class ParisProcessorTest {
 
         assert_().about(javaSource())
             .that(view)
+            .addKotlinGeneratedOption()
             .processedWith(ParisProcessor())
             .failsToCompile()
             .apply {
@@ -69,6 +73,7 @@ class ParisProcessorTest {
                 }
             }
     }
+
 
     private fun assertErrorWithInput(
         folder: String,
@@ -80,6 +85,7 @@ class ParisProcessorTest {
 
         assert_().about(javaSources())
             .that(inputFileObjects)
+            .addKotlinGeneratedOption()
             .processedWith(ParisProcessor())
             .failsToCompile()
             .apply {
@@ -91,6 +97,9 @@ class ParisProcessorTest {
                 }
             }
     }
+
+    fun JavaSourcesSubject.SingleSourceAdapter.addKotlinGeneratedOption(): JavaSourcesSubject = withCompilerOptions("-Akapt.kotlin.generated=foo")
+    fun JavaSourcesSubject.addKotlinGeneratedOption(): JavaSourcesSubject = withCompilerOptions("-Akapt.kotlin.generated=foo")
 
     @Test
     fun atStyleStyleField() {
@@ -150,7 +159,7 @@ class ParisProcessorTest {
     fun errorAttrWrongDefaultValueType() {
         // An @Attr with an non-existent R.styleable field
 
-    // Compiler seems to fail on missing symbol...
+        // Compiler seems to fail on missing symbol...
 //        assertError(
 //            "error_attr_wrong_default_value_type",
 //            1,

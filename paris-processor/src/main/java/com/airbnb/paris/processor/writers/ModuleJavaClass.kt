@@ -23,7 +23,7 @@ import java.security.MessageDigest
  * dependencies through these classes
  */
 internal class ModuleJavaClass(
-    override val processor: ParisProcessor,
+    processor: ParisProcessor,
     styleablesInfo: List<StyleableInfo>
 ) : SkyJavaClass(processor) {
 

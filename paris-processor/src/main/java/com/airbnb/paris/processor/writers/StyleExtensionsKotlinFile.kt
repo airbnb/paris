@@ -40,7 +40,7 @@ import com.squareup.kotlinpoet.WildcardTypeName
  *      different packages)
  */
 internal class StyleExtensionsKotlinFile(
-    override val processor: ParisProcessor,
+    processor: ParisProcessor,
     styleable: StyleableInfo
 ) : SkyKotlinFile(processor) {
 

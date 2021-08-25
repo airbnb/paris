@@ -9,7 +9,7 @@ import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableChildInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 
-internal class RFinder(override val processor: ParisProcessor) : WithParisProcessor {
+internal class RFinder(val processor: ParisProcessor) {
 
     var element: XTypeElement? = null
         private set
@@ -38,7 +38,7 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
             else -> null
         }
         arbitraryResId?.let {
-            element = processor.processingEnv.findTypeElement(it.className.enclosingClassName().reflectionName())
+            element = processor.environment.findTypeElement(it.className.enclosingClassName().reflectionName())
         }
     }
 
@@ -48,7 +48,7 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
         styleablesInfo[0].let { styleableInfo ->
             var packageName = styleableInfo.elementPackageName
             while (packageName.isNotBlank()) {
-                processor.processingEnv.findTypeElement("$packageName.R")?.let {
+                processor.environment.findTypeElement("$packageName.R")?.let {
                     element = it
                     return
                 }
@@ -71,7 +71,7 @@ internal class RFinder(override val processor: ParisProcessor) : WithParisProces
         } else {
             val rTypeElement = rType.typeElement ?: return null
             if (rTypeElement.name != "R") {
-                logError(rTypeElement) {
+                processor.logError(rTypeElement) {
                     "@ParisConfig's rClass parameter is pointing to a non-R class"
                 }
                 null

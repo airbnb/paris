@@ -2,15 +2,14 @@ package com.airbnb.paris.processor.framework.models
 
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XRoundEnv
-import com.airbnb.paris.processor.framework.JavaSkyProcessor
-import com.airbnb.paris.processor.framework.WithJavaSkyProcessor
+import com.airbnb.paris.processor.BaseProcessor
 
 interface SkyModel
 
 abstract class JavaSkyModelFactory<T : SkyModel, in E : XElement>(
-    override val processor: JavaSkyProcessor,
+    val processor: BaseProcessor,
     private val annotationClass: Class<out Annotation>
-) : WithJavaSkyProcessor {
+) {
 
     var models = emptyList<T>()
         private set

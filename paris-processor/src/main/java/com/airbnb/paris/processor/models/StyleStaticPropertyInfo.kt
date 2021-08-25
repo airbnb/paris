@@ -17,14 +17,14 @@ import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
 import com.airbnb.paris.processor.utils.isErrorFixed
 
-internal class StyleStaticPropertyInfoExtractor(override val processor: ParisProcessor) :
-    SkyStaticPropertyModelFactory<StyleStaticPropertyInfo>(processor, Style::class.java) {
+internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcessor) :
+    SkyStaticPropertyModelFactory<StyleStaticPropertyInfo>(parisProcessor, Style::class.java) {
 
     override fun filter(element: XElement): Boolean {
         if ((element as? XFieldElement)?.isStatic() == false) {
             // Style annotations must be only on static properties, but they are filtered out before they are processed,
             // so in order to warn on this error we must do it here.
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Fields annotated with @Style must be static."
             }
         }
@@ -42,17 +42,17 @@ internal class StyleStaticPropertyInfoExtractor(override val processor: ParisPro
                 Triple(element.returnType, element.name, element.enclosingElement as XTypeElement)
             }
             else -> {
-                logError(element) {
+                parisProcessor.logError(element) {
                     "Unsupported companion property element type $element is ${element.javaClass}"
                 }
                 return null
             }
         }
 
-        if (!type.isInt() && !processor.memoizer.styleClassTypeX.isAssignableFrom(type) && !type.isErrorFixed) {
+        if (!type.isInt() && !parisProcessor.memoizer.styleClassTypeX.isAssignableFrom(type) && !type.isErrorFixed) {
             // Note: if the type is non existent we ignore this error check so that users don't need to change their kapt configuration, they'll still
             // get a build error though not as explicit.
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Fields annotated with @Style must implement com.airbnb.paris.styles.Style or be of type int (and refer to a style resource). Found type $type - ${element.toJavac().kind}"
             }
             return null
@@ -67,7 +67,7 @@ internal class StyleStaticPropertyInfoExtractor(override val processor: ParisPro
         val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.className.toKPoet(), elementName)
 
         val propertyInfo = StyleStaticPropertyInfo(
-            env = processor.processingEnv,
+            env = parisProcessor.environment,
             element = element,
             elementName = elementName,
             formattedName = formattedName,
@@ -79,14 +79,14 @@ internal class StyleStaticPropertyInfoExtractor(override val processor: ParisPro
         when (val getterElement = propertyInfo.getterElement) {
             is XFieldElement -> {
                 if (!getterElement.isFinal()) {
-                    logError(getterElement) {
+                    parisProcessor.logError(getterElement) {
                         "Fields annotated with @Style must be final."
                     }
                     return null
                 }
 
                 if (getterElement.isPrivate() || getterElement.isProtected()) {
-                    logError(element) {
+                    parisProcessor.logError(element) {
                         "Fields annotated with @Style can't be private or protected."
                     }
                     return null
@@ -97,7 +97,7 @@ internal class StyleStaticPropertyInfoExtractor(override val processor: ParisPro
             }
             is XMethodElement -> {
                 if (getterElement.isPrivate() || getterElement.isProtected()) {
-                    logError(getterElement) {
+                    parisProcessor.logError(getterElement) {
                         "Fields annotated with @Style can't be private or protected."
                     }
                     return null

@@ -1,13 +1,11 @@
 package com.airbnb.paris.processor.framework
 
 import androidx.room.compiler.processing.XType
-import javax.lang.model.type.TypeMirror
+import com.airbnb.paris.processor.BaseProcessor
 
-open class JavaSkyMemoizer(withSkyProcessor: WithJavaSkyProcessor) : WithJavaSkyProcessor by withSkyProcessor {
-
-    val androidViewClassType: TypeMirror by lazy { AndroidClassNames.VIEW.toTypeMirror() }
+open class JavaSkyMemoizer(val processor: BaseProcessor) {
 
     val androidViewClassTypeX: XType by lazy {
-        processingEnv.requireType(AndroidClassNames.VIEW)
+        processor.environment.requireType(AndroidClassNames.VIEW)
     }
 }

@@ -15,7 +15,7 @@ import com.airbnb.paris.processor.models.StyleableInfo
 import com.squareup.javapoet.TypeSpec
 
 internal class ParisJavaClass(
-    override val processor: ParisProcessor,
+    processor: ParisProcessor,
     parisClassPackageName: String,
     styleableClassesInfo: List<StyleableInfo>,
     externalStyleableClassesInfo: List<BaseStyleableInfo>

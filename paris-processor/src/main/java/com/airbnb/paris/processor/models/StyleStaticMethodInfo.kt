@@ -10,14 +10,14 @@ import com.airbnb.paris.processor.framework.models.SkyStaticMethodModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
 
-internal class StyleStaticMethodInfoExtractor(processor: ParisProcessor) :
-    SkyStaticMethodModelFactory<StyleStaticMethodInfo>(processor, Style::class.java) {
+internal class StyleStaticMethodInfoExtractor(val parisProcessor: ParisProcessor) :
+    SkyStaticMethodModelFactory<StyleStaticMethodInfo>(parisProcessor, Style::class.java) {
 
     override fun elementToModel(element: XMethodElement): StyleStaticMethodInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods
 
         if (!element.isStatic() || element.isPrivate() || element.isProtected()) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Methods annotated with @Style must be static and can't be private or protected."
             }
             return null

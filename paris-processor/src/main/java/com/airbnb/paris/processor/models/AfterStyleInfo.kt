@@ -8,12 +8,12 @@ import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.utils.isSameTypeName
 
-internal class AfterStyleInfoExtractor(override val processor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(processor, AfterStyle::class.java) {
+internal class AfterStyleInfoExtractor(val parisProcessor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(parisProcessor, AfterStyle::class.java) {
 
     override fun elementToModel(element: XMethodElement): AfterStyleInfo? {
 
         if (element.isPrivate() || element.isProtected()) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Methods annotated with @AfterStyle can't be private or protected."
             }
             return null
@@ -22,7 +22,7 @@ internal class AfterStyleInfoExtractor(override val processor: ParisProcessor) :
         val parameterType = element.parameters.firstOrNull()?.type
 
         if (parameterType == null || !parameterType.isSameTypeName(STYLE_CLASS_NAME)) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Methods annotated with @AfterStyle must have a single Style parameter."
             }
             return null

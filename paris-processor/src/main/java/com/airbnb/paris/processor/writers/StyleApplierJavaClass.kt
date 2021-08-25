@@ -9,7 +9,6 @@ import com.airbnb.paris.processor.STYLE_APPLIER_UTILS_CLASS_NAME
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.StyleablesTree
 import com.airbnb.paris.processor.TYPED_ARRAY_WRAPPER_CLASS_NAME
-import com.airbnb.paris.processor.WithParisProcessor
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
 import com.airbnb.paris.processor.framework.codeBlock
@@ -34,10 +33,10 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 
 internal class StyleApplierJavaClass(
-    override val processor: ParisProcessor,
+    val parisProcessor: ParisProcessor,
     styleablesTree: StyleablesTree,
     styleableInfo: StyleableInfo
-) : SkyJavaClass(processor), WithParisProcessor {
+) : SkyJavaClass(parisProcessor) {
 
     override val packageName = styleableInfo.styleApplierClassName.packageName()!!
     override val name = styleableInfo.styleApplierClassName.simpleName()!!
@@ -45,7 +44,7 @@ internal class StyleApplierJavaClass(
         styleableInfo.annotatedElement,
         // The R.style class is used to look up matching default style names, so if
         // the R class changes it can affect the code we generate.
-        processor.memoizer.rStyleTypeElementX
+        parisProcessor.memoizer.rStyleTypeElementX
     )
 
     override val block: TypeSpec.Builder.() -> Unit = {
@@ -73,7 +72,7 @@ internal class StyleApplierJavaClass(
 
         // If the view type is "View" then there is no parent
         var parentStyleApplierClassName: ClassName? = null
-        if (!processor.memoizer.androidViewClassTypeX.isSameType(styleableInfo.viewElementType)) {
+        if (!parisProcessor.memoizer.androidViewClassTypeX.isSameType(styleableInfo.viewElementType)) {
             val parentStyleApplierDetails = styleablesTree.findStyleApplier(
                 styleableInfo.viewElementType.typeElement?.superType?.typeElement!!
             )
@@ -100,7 +99,7 @@ internal class StyleApplierJavaClass(
                 override()
                 protected()
                 returns(ArrayTypeName.of(Integer.TYPE))
-                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: RElement?.className, styleableInfo.styleableResourceName)
+                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: parisProcessor.RElement?.className, styleableInfo.styleableResourceName)
             }
 
             val attrsWithDefaultValue = styleableInfo.attrs
@@ -225,14 +224,14 @@ internal class StyleApplierJavaClass(
 
         addType(
             BaseStyleBuilderJavaClass(
-                processor,
+                parisProcessor,
                 parentStyleApplierClassName,
                 styleablesTree,
                 styleableInfo
             ).build()
         )
         val styleBuilderClassName = styleApplierClassName.nestedClass("StyleBuilder")
-        addType(StyleBuilderJavaClass(processor, styleableInfo).build())
+        addType(StyleBuilderJavaClass(parisProcessor, styleableInfo).build())
 
         // builder() method
         method("builder") {

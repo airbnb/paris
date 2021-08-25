@@ -6,9 +6,9 @@ import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.squareup.javapoet.ClassName
 
 internal class StyleablesTree(
-    override val processor: ParisProcessor,
+    val processor: ParisProcessor,
     private val styleablesInfo: List<BaseStyleableInfo>
-) : WithParisProcessor {
+) {
 
     // This is a map of the View class qualified name to the StyleApplier class details
     // eg. "android.view.View" -> "com.airbnb.paris.ViewStyleApplier".className()
