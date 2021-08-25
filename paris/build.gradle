@@ -1,7 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
@@ -43,7 +44,7 @@ dependencies {
 
     api project(':paris-annotations')
 
-    kapt project(':paris-processor')
+    ksp project(':paris-processor')
 
     testImplementation deps.junit
     testImplementation deps.kotlinTest

@@ -129,8 +129,8 @@ internal class Format private constructor(
                 return Format.RESOURCE_ID
             }
 
-            val type = element.type
-            val typeString by lazy { type.toString() }
+            val type = element.type.makeNonNullable()
+            val typeString by lazy { type.typeName.toString() }
             val formatType = when {
                 type.isBoolean() -> Type.BOOLEAN
                 type.isFloat() -> Type.FLOAT
@@ -142,7 +142,7 @@ internal class Format private constructor(
                 typeString == "android.graphics.Typeface" -> Type.FONT
                 typeString == "android.graphics.drawable.Drawable" -> Type.DRAWABLE
                 type.isArray() && type.componentType.isTypeOf(CharSequence::class) -> Type.CHARSEQUENCE_ARRAY
-                else -> error("Invalid type: $type")
+                else -> error("Invalid type: $type $typeString")
             }
             return Format(formatType)
         }

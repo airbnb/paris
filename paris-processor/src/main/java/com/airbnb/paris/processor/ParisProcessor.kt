@@ -89,7 +89,13 @@ class ParisProcessor(
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
+    var roundCount = 0
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
+        // TODO: 8/24/21 writing to the paris and module class on every round causes an infinite loop
+        // can write to that file only in finish once we collect all styleables
+        if (roundCount > 0) return
+        println("processing round $roundCount")
+        roundCount++
 
         round.getElementsAnnotatedWith(ParisConfig::class)
             .firstOrNull()

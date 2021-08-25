@@ -12,6 +12,7 @@ import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
+import javax.tools.Diagnostic
 
 internal class AttrInfoExtractor(
      val parisProcessor: ParisProcessor
@@ -25,7 +26,10 @@ internal class AttrInfoExtractor(
             return null
         }
 
-        val attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
+        parisProcessor.messager.printMessage(Diagnostic.Kind.WARNING, "Processing $element ${element.enclosingElement}")
+        val attr: Attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
+        val attrDefaultValue = attr.defaultValue
+        val attrValue = attr.value
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {
             parisProcessor.logError(element) {
@@ -41,7 +45,7 @@ internal class AttrInfoExtractor(
             styleableResId = parisProcessor.getResourceId(Attr::class, element, attr.value) ?: return null
         } catch (e: Throwable) {
             parisProcessor.logError(element) {
-                "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.)"
+                "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.) $e"
             }
             return null
         }

@@ -28,7 +28,7 @@ dependencies {
     implementation deps.appcompat
     implementation deps.constraintLayout
 
-    kapt project(':paris-processor')
+    ksp project(':paris-processor')
 }
 
 kotlin {
