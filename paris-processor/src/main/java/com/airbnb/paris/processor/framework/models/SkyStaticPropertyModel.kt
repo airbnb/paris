@@ -84,7 +84,8 @@ abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessin
                     }
                 } else {
                     // KSP case, represents kotlin property as a field natively
-                    javaGetter = TODO()
+                    // TODO implement for real and test
+                    javaGetter = JavaCodeBlock.of("\$N", element.name)
                     getterElement = element
                 }
             }

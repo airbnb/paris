@@ -33,10 +33,13 @@ internal class BaseStyleableInfoExtractor( val processor: ParisProcessor) {
         val elementName = element.name
         val elementType = element.type
 
-        val viewElementType: XType = if (processor.memoizer.proxyClassTypeErasedX.isAssignableFrom(elementType.rawType)) {
+        println("Is ${processor.memoizer.proxyClassType} assignable from $elementType")
+        val viewElementType: XType = if (processor.memoizer.proxyClassType.rawType.isAssignableFrom(elementType)) {
+            println("yes")
             // Get the parameterized type, which should be the view type
             element.superType?.typeArguments?.getOrNull(1) ?: error("No type for $elementType")
         } else {
+            println("no")
             elementType
         }
 

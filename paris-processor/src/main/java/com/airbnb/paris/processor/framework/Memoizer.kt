@@ -9,7 +9,7 @@ import com.airbnb.paris.processor.STYLE_CLASS_NAME
 
 class Memoizer(processor: ParisProcessor) : JavaSkyMemoizer(processor) {
 
-    val proxyClassTypeErasedX: XRawType by lazy { processor.environment.requireType(PROXY_CLASS_NAME).rawType }
+    val proxyClassType: XType by lazy { processor.environment.requireType(PROXY_CLASS_NAME) }
 
     val styleClassTypeX: XType by lazy { processor.environment.requireType(STYLE_CLASS_NAME) }
 
