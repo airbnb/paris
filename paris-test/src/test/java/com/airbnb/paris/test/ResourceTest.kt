@@ -174,6 +174,7 @@ abstract class ResourceTest {
                             println(generated.readText())
 
                             println("Updating sources in build/resources. Copy updated files with `published_projects/run scabbard-test-updater")
+                            println("Updated source is at $expectedOutputFile")
                             expectedOutputFile.writeText(generated.readText())
                         }
                         that(patch.deltas).isEmpty()

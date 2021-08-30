@@ -146,12 +146,12 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun defaultValues() {
+    fun default_values() {
         assertCase("default_values")
     }
 
     @Test
-    fun emptyDefaultStyle() {
+    fun empty_default_style() {
         assertCaseWithInput(
             "empty_default_style",
             listOf("MyViewWithoutStyle.java", "PackageInfo.java"),
@@ -160,7 +160,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorAttrNonResDefaultValue() {
+    fun error_attr_non_res_default_value() {
         // An @Attr with an arbitrary int default value instead of a resource ID
         assertError(
             "error_attr_non_res_default_value",
@@ -170,7 +170,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorAttrNonResValue() {
+    fun error_attr_non_res_value() {
         // An @Attr with an arbitrary int value instead of a resource ID
         assertError(
             "error_attr_non_res_value",
@@ -192,7 +192,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorAttrWrongValueType() {
+    fun error_attr_wrong_value_type() {
         // An @Attr with an non-existent R.styleable field
         assertError(
             "error_attr_wrong_value_type",
@@ -202,7 +202,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorNoDefaultStyle() {
+    fun error_no_default_style() {
         assertErrorWithInput(
             "error_no_default_style",
             1,
@@ -212,7 +212,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorNonFinalStyleField() {
+    fun error_non_final_style_field() {
         // A non-final field annotated with @Style
         assertError(
             "error_non_final_style_field",
@@ -222,7 +222,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorNonStaticStyleField() {
+    fun error_non_static_style_field() {
         // A non-static field annotated with @Style
         assertError(
             "error_non_static_style_field",
@@ -232,7 +232,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorPrivateStyleField() {
+    fun error_private_style_field() {
         // A private field annotated with @Style
         assertError(
             "error_private_style_field",
@@ -242,7 +242,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorStyleableChildWrongValueType() {
+    fun error_styleable_child_wrong_value_type() {
         // A @StyleableChild with an non-existent R.styleable field
         assertError(
             "error_styleable_child_wrong_value_type",
@@ -252,7 +252,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorStyleableOutsidePackageNoR() {
+    fun error_styleable_outside_package_no_R() {
         // A @Styleable view in an unexpected package (outside the package namespace of the module)
         // with no R (or R2) references as annotation parameters. Paris has no way of finding the R
         // package (which it needs to figure out the package of the generated Paris class) so this
@@ -261,7 +261,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorStyleableOutsidePackageWithAttrAndNamespacedResources() {
+    fun error_styleable_outside_package_with_attr_and_namespaced_resources() {
         // A @Styleable view in an unexpected package (outside the package namespace of the module)
         // with an attribute reference to an r file. If namespaced resources is turned on this will fail, like [errorStyleableOutsidePackageNoR]
         // If namespaced resource is turned off, it will pass as asserted in [styleableOutsidePackageSingleAttr]
@@ -274,7 +274,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorStyleFieldInvalidType() {
+    fun error_style_field_invalid_type() {
         // A @Style field with an invalid type (not a style)
         assertError(
             "error_style_field_invalid_type",
@@ -284,7 +284,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun errorTwoDefaultStyles() {
+    fun error_two_default_styles() {
         // One @Style named "defaultStyle" and another declared as isDefault = true
         assertError(
             "error_two_default_styles",
@@ -294,12 +294,12 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun styleableFields() {
+    fun styleable_fields() {
         assertCase("styleable_fields")
     }
 
     @Test
-    fun styleableInOtherModule() {
+    fun styleable_in_other_module_single_attr() {
         assertCaseWithInput(
             "styleable_in_other_module_single_attr",
             input = listOf("MyView.java", "PackageInfo.java"),
@@ -308,13 +308,13 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun styleableMinimal() {
+    fun styleable_minimal() {
         // A @Styleable view with no other annotations used
         assertCase("styleable_minimal")
     }
 
     @Test
-    fun styleableOutsidePackageSingleAttr() {
+    fun styleable_outside_package_single_attr() {
         // A @Styleable view in an unexpected package (outside the package namespace of the module)
         // and a single @Attr method
         assertCase("styleable_outside_package_single_attr")
