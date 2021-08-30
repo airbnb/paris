@@ -26,7 +26,7 @@ internal class StyleableChildInfoExtractor(
             styleableResId = parisProcessor.getResourceId(StyleableChild::class, element, attr.value) ?: return null
         } catch (e: Throwable) {
             parisProcessor.logError(element) {
-                "Incorrectly typed @StyleableChild value parameter. (This usually happens when an R value doesn't exist.)"
+                "Incorrectly typed @StyleableChild value parameter. (This usually happens when an R value doesn't exist.) $e ${e.message}"
             }
             return null
         }

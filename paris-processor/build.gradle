@@ -34,5 +34,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
         freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
         freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
+        freeCompilerArgs += "-Xopt-in=com.google.devtools.ksp.KspExperimental"
     }
 }

@@ -287,7 +287,8 @@ internal class StyleExtensionsKotlinFile(
                     )
 
                     addOriginatingElement(styleable.annotatedElement)
-                    addOriginatingElement(attr.element)
+                    // TODO: update xprocessing originating element to support KspSyntheticPropertyMethodElement$Setter
+//                    addOriginatingElement(attr.element)
                 }
             }
 
@@ -310,7 +311,8 @@ internal class StyleExtensionsKotlinFile(
                 )
 
                 addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(attr.element)
+                // TODO: update xprocessing originating element to support KspSyntheticPropertyMethodElement$Setter
+//                addOriginatingElement(attr.element)
             }
 
             // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions

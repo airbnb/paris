@@ -85,13 +85,6 @@ internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcess
                     return null
                 }
 
-                if (getterElement.isPrivate() || getterElement.isProtected()) {
-                    parisProcessor.logError(element) {
-                        "Fields annotated with @Style can't be private or protected."
-                    }
-                    return null
-                }
-
                 // skipping the private/protected check, as JvmStatic companion properties are private without an easy way to easy the original
                 // kotlin property visibility.
             }

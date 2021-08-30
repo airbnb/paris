@@ -28,8 +28,6 @@ internal class AttrInfoExtractor(
 
         parisProcessor.messager.printMessage(Diagnostic.Kind.WARNING, "Processing $element ${element.enclosingElement}")
         val attr: Attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
-        val attrDefaultValue = attr.defaultValue
-        val attrValue = attr.value
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {
             parisProcessor.logError(element) {

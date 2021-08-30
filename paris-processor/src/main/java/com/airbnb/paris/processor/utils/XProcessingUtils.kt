@@ -9,6 +9,12 @@ import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
+import com.airbnb.paris.processor.android_resource_scanner.getFieldWithReflection
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSDeclaration
+import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSNode
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import kotlin.contracts.contract
@@ -85,4 +91,19 @@ val XElement.isJavac: Boolean
         true
     } catch (e: Throwable) {
         false
+    }
+
+val XProcessingEnv.resolver: Resolver
+    get() = getFieldWithReflection("resolver")
+
+val KSAnnotation.containingPackage: String?
+    get() = parent?.containingPackage
+
+val KSNode.containingPackage: String?
+    get() {
+        return when (this) {
+            is KSFile -> packageName.asString()
+            is KSDeclaration -> packageName.asString()
+            else -> parent?.containingPackage
+        }
     }

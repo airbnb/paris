@@ -9,10 +9,13 @@ import androidx.room.compiler.processing.compat.XConverters.toJavac
 import androidx.room.compiler.processing.compat.XConverters.toXProcessing
 import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.BaseProcessor
+import com.airbnb.paris.processor.android_resource_scanner.getFieldWithReflection
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.siblings
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
+import com.airbnb.paris.processor.utils.resolver
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 
@@ -83,10 +86,34 @@ abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessin
                         javaGetter = JavaCodeBlock.of("\$N", element.name)
                     }
                 } else {
-                    // KSP case, represents kotlin property as a field natively
-                    // TODO implement for real and test
-                    javaGetter = JavaCodeBlock.of("\$N", element.name)
-                    getterElement = element
+                    // KSP case
+                    val enclosingType = element.enclosingElement as? XTypeElement
+                    if (enclosingType?.isCompanionObject() == true) {
+                        // kotlin source case. ksp represents elements as a private field in the companion object.
+                        // we need to expose its public getter.
+//                        val expectedGetterName = "get${element.name.capitalize()}"
+//                        val getterMethod = enclosingType.getDeclaredMethods().firstOrNull { method ->
+//                            method.name == expectedGetterName
+//                        } ?: enclosingType.enclosingTypeElement?.getDeclaredMethods()?.firstOrNull { method ->
+//                            method.name == expectedGetterName
+//                        } ?: run {
+//                            // TODO: 8/25/21 This happs in the internal visibility case
+//                            error("$element ${enclosingType.className} - could not find companion method $expectedGetterName")
+//                        }
+
+                        val ksDeclaration = element.getFieldWithReflection<KSPropertyDeclaration>("declaration")
+                        val accessor = ksDeclaration.getter ?: error("No getter found for $element ${element.enclosingElement}")
+                        // TODO: Difference with jvmstatic/jvmfield or not?
+                        val getterName = env.resolver.getJvmName(accessor) ?: error("Getter name not found for $element ${element.enclosingElement}")
+
+                        // We don't have a getter in ksp - would have to create a synthetic one.
+                        getterElement = element
+                        javaGetter = JavaCodeBlock.of("Companion.\$N()", getterName)
+                    } else {
+                        // Java source case, can access java field directly
+                        javaGetter = JavaCodeBlock.of("\$N", element.name)
+                        getterElement = element
+                    }
                 }
             }
             else -> error("Unsupported type $element of type ${element.javaClass}")
