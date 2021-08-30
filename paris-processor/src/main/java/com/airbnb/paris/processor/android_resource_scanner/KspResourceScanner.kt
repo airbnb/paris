@@ -65,7 +65,7 @@ class KspResourceScanner : ResourceScanner {
         packageName: String
     ): String? {
         // eg: R.layout.foo, com.example.R.layout.foo, layout.foo, etc
-        return psiNameValue.text?.let { annotationReference ->
+        return psiNameValue.value?.text?.let { annotationReference ->
             extractReferenceAnnotationArgument(annotationReference) { annotationReferencePrefix ->
                 findMatchingImportPackageJava(annotation.psi, annotationReferencePrefix, packageName)
             }
@@ -187,10 +187,10 @@ class KspResourceScanner : ResourceScanner {
             if (value !is Int || reference == null) return null
 
             val resourceInfo = when {
-                ".R2." in reference -> {
+                ".R2." in reference || reference.startsWith("R2.") -> {
                     extractResourceInfo(reference, "R2")
                 }
-                ".R." in reference -> {
+                ".R." in reference || reference.startsWith("R.") -> {
                     extractResourceInfo(reference, "R")
                 }
                 else -> {

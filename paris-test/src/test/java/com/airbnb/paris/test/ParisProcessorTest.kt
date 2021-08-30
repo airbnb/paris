@@ -83,7 +83,7 @@ class ParisProcessorTest : ResourceTest() {
         errorCount: Int? = null,
         errorFragment: String? = null
     ) {
-        val view = JavaFileObjects.forResource("$folder/MyView.java".patchResource())
+        val view = JavaFileObjects.forResource("$folder/input/MyView.java".patchResource())
 
         assert_().about(javaSource())
             .that(view)
@@ -230,16 +230,6 @@ class ParisProcessorTest : ResourceTest() {
             "error_non_static_style_field",
             1,
             "Fields annotated with @Style must be static."
-        )
-    }
-
-    @Test
-    fun error_private_style_field() {
-        // A private field annotated with @Style
-        assertError(
-            "error_private_style_field",
-            1,
-            "Fields annotated with @Style can't be private or protected."
         )
     }
 

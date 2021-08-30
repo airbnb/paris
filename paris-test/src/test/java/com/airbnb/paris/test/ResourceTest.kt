@@ -209,4 +209,7 @@ abstract class ResourceTest {
     }
 }
 
+/**
+ * Change to true to have tests auto update the expected sources files for easy updating of tests.
+ */
 const val UPDATE_TEST_SOURCES_ON_DIFF = true
