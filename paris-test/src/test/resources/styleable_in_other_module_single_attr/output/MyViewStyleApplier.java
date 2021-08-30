@@ -51,7 +51,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * Empty style. */
+   * Empty style.
+   */
   public void applyDefault() {
   }
 
@@ -101,7 +102,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * Empty style. */
+     * Empty style.
+     */
     public StyleBuilder addDefault() {
       return this;
     }

@@ -76,6 +76,8 @@ class ParisProcessorTest : ResourceTest() {
             .compilesWithoutError()
             .and()
             .generatesSources(outputFileObjects.first(), *outputFileObjects.drop(1).toTypedArray())
+
+        expectSuccessfulGeneration(compilationMode = CompilationMode.KSP)
     }
 
     private fun assertError(
