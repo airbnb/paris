@@ -37,6 +37,8 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
 }
 
 dependencies {
@@ -57,10 +59,16 @@ dependencies {
     androidTestImplementation deps.espresso
 }
 
-// Required for KSP to work with butterknife gradle plugin codegen of R2
 kotlin {
     sourceSets {
+        // Required for KSP to work with butterknife gradle plugin codegen of R2
         main.kotlin.srcDirs += 'build/generated/source/r2/debug'
         main.kotlin.srcDirs += 'build/generated/source/r2/release'
+
+        main.kotlin.srcDirs += 'build/generated/ksp/debug/kotlin'
+        main.kotlin.srcDirs += 'build/generated/ksp/main/kotlin'
+
+        // Required for KSP to work with unit tests
+        test.kotlin.srcDirs += 'build/generated/ksp/debugUnitTest/kotlin'
     }
 }

@@ -1,11 +1,16 @@
 package com.airbnb.paris.test
 
 import com.airbnb.paris.processor.ParisProcessor
+import com.airbnb.paris.processor.ParisProcessorProvider
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import com.google.testing.compile.JavaSourcesSubject
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
+import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.junit.Test
 import java.io.File
 import java.net.URL
@@ -20,13 +25,30 @@ import java.net.URL
 fun String.patchResource(): URL =
     File("build/intermediates/sourceFolderJavaResources/debug/$this").toURI().toURL()
 
-class ParisProcessorTest {
+class ParisProcessorTest : ResourceTest() {
+
+    override fun compilationDelegate(sourceFiles: List<SourceFile>, useKsp: Boolean, args: MutableMap<String, String>): KotlinCompilation {
+        return KotlinCompilation().apply {
+            if (useKsp) {
+                symbolProcessorProviders = listOf(ParisProcessorProvider())
+                kspArgs = args
+            } else {
+                annotationProcessors = listOf(ParisProcessor())
+                kaptArgs = args
+            }
+            sources = sourceFiles
+            inheritClassPath = true
+            messageOutputStream = System.out
+        }
+    }
+
 
     private fun assertCase(folder: String) {
-        val view = JavaFileObjects.forResource("$folder/MyView.java".patchResource())
-        val generatedParisClass = JavaFileObjects.forResource("$folder/Paris.java".patchResource())
+        val view = JavaFileObjects.forResource("$folder/input/MyView.java".patchResource())
+        val generatedParisClass = JavaFileObjects.forResource("$folder/output/Paris.java".patchResource())
         val generatedStyleApplierClass =
-            JavaFileObjects.forResource("$folder/MyViewStyleApplier.java".patchResource())
+            JavaFileObjects.forResource("$folder/output/MyViewStyleApplier.java".patchResource())
+
 
         assert_().about(javaSource())
             .that(view)
@@ -37,6 +59,17 @@ class ParisProcessorTest {
             .generatesSources(generatedParisClass)
             .and()
             .generatesSources(generatedStyleApplierClass)
+
+        expectSuccessfulGeneration(compilationMode = CompilationMode.KSP)
+
+//        val result = KotlinCompilation().apply {
+//            sources = listOf(kotlinSource, javaSource)
+//
+//            annotationProcessors = listOf(ParisProcessor())
+//
+//            inheritClassPath = true
+//            messageOutputStream = System.out // see diagnostics in real time
+//        }.compile()
     }
 
     private fun assertCaseWithInput(folder: String, input: List<String>, output: List<String>) {
@@ -102,7 +135,7 @@ class ParisProcessorTest {
     fun JavaSourcesSubject.addKotlinGeneratedOption(): JavaSourcesSubject = withCompilerOptions("-Akapt.kotlin.generated=foo")
 
     @Test
-    fun atStyleStyleField() {
+    fun at_style_style_field() {
         assertCase("at_style_style_field")
     }
 
@@ -300,5 +333,6 @@ class ParisProcessorTest {
     fun styles() {
         assertCase("styles")
     }
+
 }
 

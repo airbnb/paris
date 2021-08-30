@@ -3,7 +3,7 @@ rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_8
 
 rootProject.ext {
     TARGET_SDK_VERSION = 28
-    COMPILE_SDK_VERSION = 28
+    COMPILE_SDK_VERSION = 30
     MIN_SDK_VERSION = 16
     SAMPLE_MIN_SDK_VERSION = 16
 
@@ -20,23 +20,25 @@ rootProject.ext {
     MOCKITO_VERSION = '3.11.2'
     ROBOLECTRIC_VERSION = '4.6.1'
     TESTING_COMPILE_VERSION = '0.19'
+    KOTLIN_TESTING_COMPILE_VERSION = '1.4.3'
 
     deps = [
             // Keep these alphabetized
-            androidAnnotations: "androidx.annotation:annotation:$ANDROIDX_ANNOTATIONS_VERSION",
-            appcompat         : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT_VERSION",
-            constraintLayout  : "androidx.constraintlayout:constraintlayout:$ANDROIDX_CONSTRAINTLAYOUT_VERSION",
-            javaPoet          : "com.squareup:javapoet:$JAVAPOET_VERSION",
-            espresso          : "androidx.test.espresso:espresso-core:$ANDROIDX_ESPRESSO_VERSION",
-            incapRuntime      : "net.ltgt.gradle.incap:incap:$INCAP_VERSION",
-            incapProcessor    : "net.ltgt.gradle.incap:incap-processor:$INCAP_VERSION",
-            junit             : "junit:junit:$JUNIT_VERSION",
-            kotlinReflect     : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
-            kotlinPoet        : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
-            kotlinTest        : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
-            mockitoCore       : "org.mockito:mockito-core:$MOCKITO_VERSION",
-            mockitoAndroid    : "org.mockito:mockito-android:$MOCKITO_VERSION",
-            robolectric       : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
-            testingCompile    : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
+            androidAnnotations  : "androidx.annotation:annotation:$ANDROIDX_ANNOTATIONS_VERSION",
+            appcompat           : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT_VERSION",
+            constraintLayout    : "androidx.constraintlayout:constraintlayout:$ANDROIDX_CONSTRAINTLAYOUT_VERSION",
+            javaPoet            : "com.squareup:javapoet:$JAVAPOET_VERSION",
+            espresso            : "androidx.test.espresso:espresso-core:$ANDROIDX_ESPRESSO_VERSION",
+            incapRuntime        : "net.ltgt.gradle.incap:incap:$INCAP_VERSION",
+            incapProcessor      : "net.ltgt.gradle.incap:incap-processor:$INCAP_VERSION",
+            junit               : "junit:junit:$JUNIT_VERSION",
+            kotlinCompileTesting: "com.github.tschuchortdev:kotlin-compile-testing-ksp:$KOTLIN_TESTING_COMPILE_VERSION",
+            kotlinReflect       : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
+            kotlinPoet          : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
+            kotlinTest          : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",
+            mockitoCore         : "org.mockito:mockito-core:$MOCKITO_VERSION",
+            mockitoAndroid      : "org.mockito:mockito-android:$MOCKITO_VERSION",
+            robolectric         : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
+            testingCompile      : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
     ]
 }

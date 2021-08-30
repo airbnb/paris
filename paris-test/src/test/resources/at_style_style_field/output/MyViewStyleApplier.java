@@ -45,18 +45,21 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * @see MyView#myStyle */
+   * @see MyView#myStyle
+   */
   public void applyMy() {
     apply(MyView.myStyle);
   }
 
   /**
-   * Empty style. */
+   * Empty style.
+   */
   public void applyDefault() {
   }
 
   /**
-   * For debugging */
+   * For debugging
+   */
   public static void assertStylesContainSameAttributes(Context context) {
     MyView MyView = new MyView(context);
     StyleApplierUtils.Companion.assertSameAttributes(new MyViewStyleApplier(MyView), new StyleBuilder().addMy().build(), new StyleBuilder().addDefault().build());
@@ -86,14 +89,16 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * @see MyView#myStyle */
+     * @see MyView#myStyle
+     */
     public StyleBuilder addMy() {
       add(MyView.myStyle);
       return this;
     }
 
     /**
-     * Empty style. */
+     * Empty style.
+     */
     public StyleBuilder addDefault() {
       return this;
     }
