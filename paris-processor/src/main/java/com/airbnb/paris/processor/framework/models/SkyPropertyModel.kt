@@ -3,14 +3,20 @@ package com.airbnb.paris.processor.framework.models
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.BaseProcessor
+import com.airbnb.paris.processor.android_resource_scanner.getFieldWithReflection
+import com.airbnb.paris.processor.utils.isJavac
+import com.airbnb.paris.processor.utils.jvmName
+import com.airbnb.paris.processor.utils.resolver
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 
 /**
  * Applies to Java fields and Kotlin properties
  */
-abstract class SkyPropertyModel(val element: XElement) : SkyModel {
+abstract class SkyPropertyModel(val element: XElement, val env: XProcessingEnv) : SkyModel {
 
     val enclosingElement: XTypeElement = when (element) {
         is XMethodElement -> element.enclosingElement as XTypeElement
@@ -36,9 +42,9 @@ abstract class SkyPropertyModel(val element: XElement) : SkyModel {
             is XMethodElement -> {
                 val (propertyName, getterFunction) = findGetterPropertyFromSyntheticFunction(element)
                     ?: error(
-                    "${element}: Could not find getter for property annotated with @StyleableChild. " +
-                            "This probably means the property is private or protected."
-                )
+                        "${element}: Could not find getter for property annotated with @StyleableChild. " +
+                                "This probably means the property is private or protected."
+                    )
 
                 name = propertyName
                 getterElement = getterFunction
@@ -47,9 +53,15 @@ abstract class SkyPropertyModel(val element: XElement) : SkyModel {
             }
             is XFieldElement -> {
                 name = element.name
-                getterElement = element
-                getter = name
                 type = element.type
+                getterElement = element
+
+                if (element.isJavac) {
+                    getter = name
+                } else {
+                    // KSP case
+                    getter = "${element.jvmName(env)}()"
+                }
             }
             else -> error("Unsupported type $element")
         }

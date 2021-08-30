@@ -15,6 +15,7 @@ import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSNode
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import kotlin.contracts.contract
@@ -107,3 +108,10 @@ val KSNode.containingPackage: String?
             else -> parent?.containingPackage
         }
     }
+
+fun XFieldElement.jvmName(env: XProcessingEnv): String {
+    val ksDeclaration = getFieldWithReflection<KSPropertyDeclaration>("declaration")
+    val accessor = ksDeclaration.getter ?: error("No getter found for $this $enclosingElement")
+    // TODO: Difference with jvmstatic/jvmfield or not?
+    return env.resolver.getJvmName(accessor) ?: error("Getter name not found for $this $enclosingElement")
+}

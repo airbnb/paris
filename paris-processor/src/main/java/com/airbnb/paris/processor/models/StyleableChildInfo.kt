@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.models
 
 import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.annotations.StyleableChild
 import com.airbnb.paris.processor.ParisProcessor
@@ -12,7 +13,7 @@ import com.airbnb.paris.processor.utils.isFieldElement
 // TODO Forward Javadoc to the generated functions/methods
 
 internal class StyleableChildInfoExtractor(
-     val parisProcessor: ParisProcessor
+    val parisProcessor: ParisProcessor
 ) : SkyFieldModelFactory<StyleableChildInfo>(parisProcessor, StyleableChild::class.java) {
 
     /**
@@ -46,7 +47,8 @@ internal class StyleableChildInfoExtractor(
         val model = StyleableChildInfo(
             element,
             styleableResId,
-            defaultValueResId
+            defaultValueResId,
+            parisProcessor.environment
         )
 
         val getter = model.getterElement
@@ -64,5 +66,6 @@ internal class StyleableChildInfoExtractor(
 internal class StyleableChildInfo(
     element: XElement,
     val styleableResId: AndroidResourceId,
-    val defaultValueResId: AndroidResourceId?
-) : SkyPropertyModel(element)
+    val defaultValueResId: AndroidResourceId?,
+    env: XProcessingEnv
+) : SkyPropertyModel(element, env)

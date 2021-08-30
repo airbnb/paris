@@ -14,6 +14,7 @@ import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.siblings
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
+import com.airbnb.paris.processor.utils.jvmName
 import com.airbnb.paris.processor.utils.resolver
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import javax.lang.model.element.ExecutableElement
@@ -101,10 +102,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessin
 //                            error("$element ${enclosingType.className} - could not find companion method $expectedGetterName")
 //                        }
 
-                        val ksDeclaration = element.getFieldWithReflection<KSPropertyDeclaration>("declaration")
-                        val accessor = ksDeclaration.getter ?: error("No getter found for $element ${element.enclosingElement}")
-                        // TODO: Difference with jvmstatic/jvmfield or not?
-                        val getterName = env.resolver.getJvmName(accessor) ?: error("Getter name not found for $element ${element.enclosingElement}")
+                        val getterName = element.jvmName(env)
 
                         // We don't have a getter in ksp - would have to create a synthetic one.
                         getterElement = element
