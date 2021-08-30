@@ -61,15 +61,6 @@ class ParisProcessorTest : ResourceTest() {
             .generatesSources(generatedStyleApplierClass)
 
         expectSuccessfulGeneration(compilationMode = CompilationMode.KSP)
-
-//        val result = KotlinCompilation().apply {
-//            sources = listOf(kotlinSource, javaSource)
-//
-//            annotationProcessors = listOf(ParisProcessor())
-//
-//            inheritClassPath = true
-//            messageOutputStream = System.out // see diagnostics in real time
-//        }.compile()
     }
 
     private fun assertCaseWithInput(folder: String, input: List<String>, output: List<String>) {
