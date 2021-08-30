@@ -110,15 +110,16 @@ val KSNode.containingPackage: String?
         }
     }
 
-fun XFieldElement.jvmName(env: XProcessingEnv): String {
+fun XFieldElement.javaGetterSyntax(env: XProcessingEnv): String {
     val ksDeclaration = getFieldWithReflection<KSPropertyDeclaration>("declaration")
 
     return when (ksDeclaration.origin) {
+        // java to java interop references the field directly.
         Origin.JAVA, Origin.JAVA_LIB -> name
         Origin.KOTLIN, Origin.KOTLIN_LIB -> {
             val accessor = ksDeclaration.getter ?: error("No getter found for $this $enclosingElement")
-            // TODO: Difference with jvmstatic/jvmfield or not?
-            return env.resolver.getJvmName(accessor) ?: error("Getter name not found for $this $enclosingElement")
+            // Getter is a function call from java to kotlin
+            return env.resolver.getJvmName(accessor)?.plus("()") ?: error("Getter name not found for $this $enclosingElement")
         }
         Origin.SYNTHETIC -> error("Don't know how to get jvm name for element of synthetic origin $this $enclosingElement")
     }

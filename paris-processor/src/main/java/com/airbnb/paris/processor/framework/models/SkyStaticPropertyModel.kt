@@ -9,14 +9,11 @@ import androidx.room.compiler.processing.compat.XConverters.toJavac
 import androidx.room.compiler.processing.compat.XConverters.toXProcessing
 import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.BaseProcessor
-import com.airbnb.paris.processor.android_resource_scanner.getFieldWithReflection
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.siblings
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
-import com.airbnb.paris.processor.utils.jvmName
-import com.airbnb.paris.processor.utils.resolver
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.airbnb.paris.processor.utils.javaGetterSyntax
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 
@@ -102,7 +99,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessin
 //                            error("$element ${enclosingType.className} - could not find companion method $expectedGetterName")
 //                        }
 
-                        val getterName = element.jvmName(env)
+                        val getterName = element.javaGetterSyntax(env)
 
                         // We don't have a getter in ksp - would have to create a synthetic one.
                         getterElement = element

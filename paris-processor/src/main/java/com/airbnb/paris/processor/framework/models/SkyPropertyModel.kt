@@ -7,11 +7,8 @@ import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.BaseProcessor
-import com.airbnb.paris.processor.android_resource_scanner.getFieldWithReflection
 import com.airbnb.paris.processor.utils.isJavac
-import com.airbnb.paris.processor.utils.jvmName
-import com.airbnb.paris.processor.utils.resolver
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.airbnb.paris.processor.utils.javaGetterSyntax
 
 /**
  * Applies to Java fields and Kotlin properties
@@ -60,7 +57,7 @@ abstract class SkyPropertyModel(val element: XElement, val env: XProcessingEnv) 
                     getter = name
                 } else {
                     // KSP case
-                    getter = "${element.jvmName(env)}()"
+                    getter = element.javaGetterSyntax(env)
                 }
             }
             else -> error("Unsupported type $element")

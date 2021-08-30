@@ -74,12 +74,14 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * Empty style. */
+   * Empty style.
+   */
   public void applyDefault() {
   }
 
   /**
-   * For debugging */
+   * For debugging
+   */
   public static void assertStylesContainSameAttributes(Context context) {
   }
 
@@ -158,7 +160,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * Empty style. */
+     * Empty style.
+     */
     public StyleBuilder addDefault() {
       return this;
     }
