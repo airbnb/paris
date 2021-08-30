@@ -51,12 +51,14 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * Empty style. */
+   * Empty style.
+   */
   public void applyDefault() {
   }
 
   /**
-   * For debugging */
+   * For debugging
+   */
   public static void assertStylesContainSameAttributes(Context context) {
   }
 
@@ -69,14 +71,16 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * @see MyView#setTitle(String) */
+     * @see MyView#setTitle(String)
+     */
     public B title(@Nullable String value) {
       getBuilder().put(R.styleable.MyView[R.styleable.MyView_title], value);
       return (B) this;
     }
 
     /**
-     * @see MyView#setTitle(String) */
+     * @see MyView#setTitle(String)
+     */
     public B titleRes(@StringRes int resId) {
       getBuilder().putRes(R.styleable.MyView[R.styleable.MyView_title], resId);
       return (B) this;
@@ -98,7 +102,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * Empty style. */
+     * Empty style.
+     */
     public StyleBuilder addDefault() {
       return this;
     }

@@ -174,8 +174,13 @@ abstract class ResourceTest {
                             println(generated.readText())
 
                             println("Updating sources in build/resources. Copy updated files with `published_projects/run scabbard-test-updater")
-                            println("Updated source is at $expectedOutputFile")
-                            expectedOutputFile.writeText(generated.readText())
+                            println("Expected source is at $expectedOutputFile")
+                            val actualSourceFile = expectedOutputFile.unpatchResource()
+                            println("Actual source is at $actualSourceFile")
+                            if (UPDATE_TEST_SOURCES_ON_DIFF) {
+                                println("UPDATE_TEST_SOURCES_ON_DIFF is enabled; updating expected sources with actual sources.")
+                                actualSourceFile.writeText(generated.readText())
+                            }
                         }
                         that(patch.deltas).isEmpty()
                     }
@@ -203,3 +208,5 @@ abstract class ResourceTest {
         expectThat(result.messages).contains(failureMessage)
     }
 }
+
+const val UPDATE_TEST_SOURCES_ON_DIFF = true

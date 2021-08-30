@@ -52,12 +52,14 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
   }
 
   /**
-   * Empty style. */
+   * Empty style.
+   */
   public void applyDefault() {
   }
 
   /**
-   * For debugging */
+   * For debugging
+   */
   public static void assertStylesContainSameAttributes(Context context) {
   }
 
@@ -70,7 +72,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * @see MyView#formatBoolean(boolean) */
+     * @see MyView#formatBoolean(boolean)
+     */
     @RequiresApi(21)
     public B formatBoolean(boolean value) {
       getBuilder().put(R.styleable.Formats[R.styleable.Formats_formatBoolean], value);
@@ -78,7 +81,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * @see MyView#formatBoolean(boolean) */
+     * @see MyView#formatBoolean(boolean)
+     */
     @RequiresApi(21)
     public B formatBooleanRes(@BoolRes int resId) {
       getBuilder().putRes(R.styleable.Formats[R.styleable.Formats_formatBoolean], resId);
@@ -101,7 +105,8 @@ public final class MyViewStyleApplier extends StyleApplier<MyView, MyView> {
     }
 
     /**
-     * Empty style. */
+     * Empty style.
+     */
     public StyleBuilder addDefault() {
       return this;
     }
