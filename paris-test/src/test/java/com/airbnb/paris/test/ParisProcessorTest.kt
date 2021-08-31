@@ -332,5 +332,8 @@ class ParisProcessorTest : ResourceTest() {
         assertCase("styles")
     }
 
+    @Test
+    fun style_extension_generation() = expectSuccessfulGeneration()
+
 }
 

@@ -59,7 +59,7 @@ abstract class ResourceTest {
         }
         if (compilationMode.testKapt) {
             testCodeGeneration(
-                sourceFiles = input,
+                sourceFiles = input + outputSources,
                 expectedOutput = output,
                 useKsp = false,
                 args = args,
