@@ -26,6 +26,7 @@ dependencies {
     implementation project(':paris')
 
     implementation deps.appcompat
+    implementation deps.coroutines
     implementation deps.constraintLayout
 
     ksp project(':paris-processor')
