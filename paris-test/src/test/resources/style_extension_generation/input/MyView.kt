@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.extensions.myViewStyle
 
 @Styleable
 class MyView @JvmOverloads constructor(

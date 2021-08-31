@@ -59,7 +59,7 @@ abstract class ResourceTest {
         }
         if (compilationMode.testKapt) {
             testCodeGeneration(
-                sourceFiles = input + outputSources,
+                sourceFiles = input,
                 expectedOutput = output,
                 useKsp = false,
                 args = args,
@@ -127,7 +127,9 @@ abstract class ResourceTest {
      * Test that [sourceFiles] generate [expectedOutput].
      * @param useKsp - If true ksp will be used as the annotation processing backend, if false, kapt will be used.
      * @param updateDifferences - If true, if compilation is successful, but the output is different, the generated output
-     * will be return in resources in `/build`. You can then use `published_projects/run scabbard-test-updater to copy the output.
+     * will be return in resources in `/build`.
+     *
+     * You can set [UPDATE_TEST_SOURCES_ON_DIFF] to true to have the original sources file updated for the actual generated code.
      */
     fun testCodeGeneration(
         sourceFiles: List<SourceFile>,
@@ -173,13 +175,15 @@ abstract class ResourceTest {
                             println("Generated:\n")
                             println(generated.readText())
 
-                            println("Updating sources in build/resources. Copy updated files with `published_projects/run scabbard-test-updater")
-                            println("Expected source is at $expectedOutputFile")
-                            val actualSourceFile = expectedOutputFile.unpatchResource()
-                            println("Actual source is at $actualSourceFile")
+                            println("Expected source is at: ${expectedOutputFile.unpatchResource()}")
+                            val actualFile = File(expectedOutputFile.parent, "actual/${expectedOutputFile.name}").apply {
+                                parentFile?.mkdirs()
+                                writeText(generated.readText())
+                            }
+                            println("Actual source is at: $actualFile")
                             if (UPDATE_TEST_SOURCES_ON_DIFF) {
                                 println("UPDATE_TEST_SOURCES_ON_DIFF is enabled; updating expected sources with actual sources.")
-                                actualSourceFile.writeText(generated.readText())
+                                expectedOutputFile.unpatchResource().writeText(generated.readText())
                             }
                         }
                         that(patch.deltas).isEmpty()
@@ -212,4 +216,4 @@ abstract class ResourceTest {
 /**
  * Change to true to have tests auto update the expected sources files for easy updating of tests.
  */
-const val UPDATE_TEST_SOURCES_ON_DIFF = false
+const val UPDATE_TEST_SOURCES_ON_DIFF = true
