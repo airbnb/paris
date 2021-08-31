@@ -15,6 +15,7 @@ class MyView @JvmOverloads constructor(
 ) : View(context, attrs, defStyle) {
 
     companion object {
+        @JvmStatic
         @Style
         val testStyle = myViewStyle {}
     }
