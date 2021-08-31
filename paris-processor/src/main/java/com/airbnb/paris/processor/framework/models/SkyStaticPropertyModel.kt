@@ -102,11 +102,11 @@ abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv
 //                            error("$element ${enclosingType.className} - could not find companion method $expectedGetterName")
 //                        }
 
-                        val getterName = element.javaGetterSyntax(env)
+                        val getterSyntax = element.javaGetterSyntax(env)
 
                         // We don't have a getter in ksp - would have to create a synthetic one.
                         getterElement = element
-                        javaGetter = JavaCodeBlock.of("Companion.\$N()", getterName)
+                        javaGetter = JavaCodeBlock.of("Companion.\$N", getterSyntax)
                     } else {
                         // Java source case, can access java field directly
                         javaGetter = JavaCodeBlock.of("\$N", element.name)

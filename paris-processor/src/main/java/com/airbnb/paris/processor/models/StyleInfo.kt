@@ -58,11 +58,11 @@ internal class StyleInfoExtractor(val processor: ParisProcessor) {
                     styles + when (styleMarkedAsDefault) {
                         is StyleStaticPropertyInfo -> StyleStaticPropertyInfo(
                             env = processor.environment,
-                            styleMarkedAsDefault.element,
-                            styleMarkedAsDefault.elementName,
-                            DEFAULT_STYLE_FORMATTED_NAME,
-                            styleMarkedAsDefault.javadoc,
-                            styleMarkedAsDefault.kdoc,
+                            element = styleMarkedAsDefault.element,
+                            elementName = styleMarkedAsDefault.elementName,
+                            formattedName = DEFAULT_STYLE_FORMATTED_NAME,
+                            javadoc = styleMarkedAsDefault.javadoc,
+                            kdoc = styleMarkedAsDefault.kdoc,
                             isDefault = true
                         ) as StyleInfo
                         is StyleStaticMethodInfo -> StyleStaticMethodInfo(

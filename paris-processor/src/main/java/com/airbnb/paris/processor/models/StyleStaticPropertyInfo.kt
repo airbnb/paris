@@ -15,6 +15,7 @@ import com.airbnb.paris.processor.framework.models.SkyStaticPropertyModel
 import com.airbnb.paris.processor.framework.models.SkyStaticPropertyModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
+import com.airbnb.paris.processor.utils.enclosingElementIfCompanion
 import com.airbnb.paris.processor.utils.isErrorFixed
 
 internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcessor) :
@@ -64,7 +65,7 @@ internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcess
         val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
 
         val javadoc = JavaCodeBlock.of("@see \$T#\$N\n", enclosingElement.className, elementName)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.className.toKPoet(), elementName)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.enclosingElementIfCompanion.className.toKPoet(), elementName)
 
         val propertyInfo = StyleStaticPropertyInfo(
             env = parisProcessor.environment,
