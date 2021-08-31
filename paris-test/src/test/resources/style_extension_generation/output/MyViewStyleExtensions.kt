@@ -32,7 +32,7 @@ public inline fun MyView.style(builder: ExtendableStyleBuilder<MyView>.() -> Uni
 }
 
 /**
- * @see MyView.testStyle
+ * @see MyView.Companion.testStyle
  */
 public fun ExtendableStyleBuilder<MyView>.addTest(): Unit {
   add(MyViewStyleApplier.StyleBuilder().addTest().build())

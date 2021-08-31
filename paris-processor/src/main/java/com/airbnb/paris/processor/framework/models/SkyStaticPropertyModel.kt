@@ -11,6 +11,7 @@ import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.BaseProcessor
 import com.airbnb.paris.processor.framework.JavaCodeBlock
 import com.airbnb.paris.processor.framework.siblings
+import com.airbnb.paris.processor.utils.enclosingElementIfCompanion
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
 import com.airbnb.paris.processor.utils.javaGetterSyntax
@@ -21,13 +22,15 @@ import javax.lang.model.element.TypeElement
  * Applies to Java static fields and Kotlin companion properties.
  * Element will be a method element in javac as a getter function, and a field property in KSP.
  */
-abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessingEnv) : SkyModel {
+abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv) : SkyModel {
 
-    val enclosingElement: XTypeElement = when (element) {
+    private val directEnclosingElement: XTypeElement = when (element) {
         is XMethodElement -> element.enclosingElement as XTypeElement
         is XFieldElement -> element.enclosingElement as XTypeElement
         else -> error("Unsupported type $element of type ${element.javaClass}")
     }
+
+    val enclosingElement: XTypeElement get() = directEnclosingElement.enclosingElementIfCompanion
 
     // Code for use in java source to access the property via a getter function.
     val javaGetter: JavaCodeBlock
@@ -51,7 +54,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, val env: XProcessin
 
                 if (element.isJavac) {
                     val javacElement = element.toJavac()
-                    if (enclosingElement.isCompanionObject() || enclosingElement.hasAnnotation(Metadata::class)) {
+                    if (directEnclosingElement.isCompanionObject() || directEnclosingElement.hasAnnotation(Metadata::class)) {
                         // Kotlin source viewed in javac/kapt.
                         // Java representation is a field when the annotation target is "Field"
                         val companionFunctions = javacElement.siblings()

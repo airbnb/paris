@@ -127,12 +127,12 @@ class ParisProcessor(
         val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
 
         val styleablesInfo: List<StyleableInfo> = styleableInfoExtractor.process(
-            round,
-            classesToStyleableChildrenInfo,
-            classesToBeforeStyleInfo,
-            classesToAfterStyleInfo,
-            classesToAttrsInfo,
-            classesToStylesInfo
+            roundEnv = round,
+            classesToStyleableChildInfo = classesToStyleableChildrenInfo,
+            classesToBeforeStyleInfo = classesToBeforeStyleInfo,
+            classesToAfterStyleInfo = classesToAfterStyleInfo,
+            classesToAttrsInfo = classesToAttrsInfo,
+            classesToStylesInfo = classesToStylesInfo
         )
 
         rFinder.processStyleables(styleablesInfo)

@@ -124,3 +124,6 @@ fun XFieldElement.javaGetterSyntax(env: XProcessingEnv): String {
         Origin.SYNTHETIC -> error("Don't know how to get jvm name for element of synthetic origin $this $enclosingElement")
     }
 }
+
+val XTypeElement.enclosingElementIfCompanion: XTypeElement
+    get() = if (isCompanionObject()) enclosingTypeElement!! else this

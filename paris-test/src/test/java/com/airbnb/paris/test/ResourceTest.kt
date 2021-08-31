@@ -99,7 +99,7 @@ abstract class ResourceTest {
 
     private fun getFilesFromResources(folderString: String): List<File> {
         val resourceDirectory = File(folderString.patchResource().path)
-        return resourceDirectory.walk().filter { it.isFile }.toList()
+        return resourceDirectory.walk().maxDepth(1).filter { it.isFile }.toList()
     }
 
     /**
@@ -216,4 +216,4 @@ abstract class ResourceTest {
 /**
  * Change to true to have tests auto update the expected sources files for easy updating of tests.
  */
-const val UPDATE_TEST_SOURCES_ON_DIFF = true
+const val UPDATE_TEST_SOURCES_ON_DIFF = false

@@ -333,7 +333,7 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
-    fun style_extension_generation() = expectSuccessfulGeneration(compilationMode = CompilationMode.KAPT)
+    fun style_extension_generation() = expectSuccessfulGeneration(compilationMode = CompilationMode.KSP)
 
 }
 
