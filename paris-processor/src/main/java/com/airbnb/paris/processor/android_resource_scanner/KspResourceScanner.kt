@@ -123,6 +123,8 @@ class KspResourceScanner : ResourceScanner {
         annotationReferencePrefix: String,
         packageName: String
     ): String {
+        // Note: Star imports are not included in this, and there doesn't seem to be a way to resolve them, so
+        // they are not included or supported.
         val importedNames = (annotationEntry.containingFile as? PsiJavaFile)
             ?.importList
             ?.importStatements
@@ -163,7 +165,6 @@ class KspResourceScanner : ResourceScanner {
                     // foo.R.layout.my_layout -> foo
                     ""
                 }
-                // TODO: 8/25/21 star imports are handled? (java and kotlin)
                 else -> null
             }
         } ?: run {

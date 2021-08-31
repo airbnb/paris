@@ -92,16 +92,6 @@ abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv
                     if (enclosingType?.isCompanionObject() == true) {
                         // kotlin source case. ksp represents elements as a private field in the companion object.
                         // we need to expose its public getter.
-//                        val expectedGetterName = "get${element.name.capitalize()}"
-//                        val getterMethod = enclosingType.getDeclaredMethods().firstOrNull { method ->
-//                            method.name == expectedGetterName
-//                        } ?: enclosingType.enclosingTypeElement?.getDeclaredMethods()?.firstOrNull { method ->
-//                            method.name == expectedGetterName
-//                        } ?: run {
-//                            // TODO: 8/25/21 This happs in the internal visibility case
-//                            error("$element ${enclosingType.className} - could not find companion method $expectedGetterName")
-//                        }
-
                         val getterSyntax = element.javaGetterSyntax(env)
 
                         // We don't have a getter in ksp - would have to create a synthetic one.

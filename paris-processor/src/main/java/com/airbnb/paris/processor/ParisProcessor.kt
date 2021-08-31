@@ -91,8 +91,9 @@ class ParisProcessor(
 
     var roundCount = 0
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
-        // TODO: 8/24/21 writing to the paris and module class on every round causes an infinite loop
-        // can write to that file only in finish once we collect all styleables
+        // Writing to the paris and module class file on every round causes an infinite loop, because it triggers another round.
+        // We could write to that file only in finish once we collect all styleables, or just force a single round here (which
+        // assumes that no other code generates styleables, which we've never supported anyway).
         if (roundCount > 0) return
         println("processing round $roundCount")
         roundCount++

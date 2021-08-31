@@ -14,6 +14,7 @@ import com.airbnb.paris.processor.framework.AndroidClassNames.COLOR_INT
 import com.airbnb.paris.processor.framework.AndroidClassNames.STYLE_RES
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.utils.addOriginatingElementFixed
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -287,8 +288,7 @@ internal class StyleExtensionsKotlinFile(
                     )
 
                     addOriginatingElement(styleable.annotatedElement)
-                    // TODO: update xprocessing originating element to support KspSyntheticPropertyMethodElement$Setter
-//                    addOriginatingElement(attr.element)
+                    addOriginatingElementFixed(attr.element)
                 }
             }
 
@@ -311,8 +311,7 @@ internal class StyleExtensionsKotlinFile(
                 )
 
                 addOriginatingElement(styleable.annotatedElement)
-                // TODO: update xprocessing originating element to support KspSyntheticPropertyMethodElement$Setter
-//                addOriginatingElement(attr.element)
+                addOriginatingElementFixed(attr.element)
             }
 
             // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions

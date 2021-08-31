@@ -340,7 +340,5 @@ class ParisProcessorTest : ResourceTest() {
 
     @Test
     fun style_extension_generation_java() = expectSuccessfulGeneration()
-
-
 }
 

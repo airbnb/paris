@@ -1,6 +1,7 @@
 # 2.0.0
 - Support KSP
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
+- R class references used in annotations cannot be star imported
 
 - Fix
 # 1.7.3 (April 13, 2021)

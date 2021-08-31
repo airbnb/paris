@@ -8,6 +8,7 @@ import androidx.room.compiler.processing.XMemberContainer
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.paris.processor.android_resource_scanner.getFieldWithReflection
 import com.google.devtools.ksp.processing.Resolver
@@ -15,10 +16,13 @@ import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSNode
+import com.google.devtools.ksp.symbol.KSPropertyAccessor
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.Origin
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import com.squareup.kotlinpoet.OriginatingElementsHolder
+import javax.lang.model.element.Element
 import kotlin.contracts.contract
 
 fun XElement.isFieldElement(): Boolean {
@@ -127,3 +131,29 @@ fun XFieldElement.javaGetterSyntax(env: XProcessingEnv): String {
 
 val XTypeElement.enclosingElementIfCompanion: XTypeElement
     get() = if (isCompanionObject()) enclosingTypeElement!! else this
+
+// TODO: update xprocessing library to support KspSyntheticPropertyMethodElement, then delete this workaround.
+fun <T : OriginatingElementsHolder.Builder<T>> T.addOriginatingElementFixed(
+    element: XElement
+): T {
+    if (element.isJavac) {
+        addOriginatingElement(element)
+        return this
+    }
+
+    try {
+        element.getFieldWithReflection<KSPropertyAccessor>("accessor")
+            .receiver
+            .containingFile?.let { containingFile ->
+                val wrapperElement = Class.forName("androidx.room.compiler.processing.ksp.KSFileAsOriginatingElement")
+                    .getConstructor(KSFile::class.java)
+                    .newInstance(containingFile)
+
+                addOriginatingElement(wrapperElement as Element)
+            }
+        println("Used workaround")
+    } catch (e: Throwable) {
+        addOriginatingElement(element)
+    }
+    return this
+}

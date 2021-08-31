@@ -32,7 +32,6 @@ internal class StyleInfoExtractor(val processor: ParisProcessor) {
 
         val stylesFromStyleAnnotation = (styleCompanionPropertyInfoExtractor.latest as List<StyleInfo>)
             .plus(styleStaticMethodInfoExtractor.latest)
-            // TODO: 2/21/21 can we assume XTypeElement is equal?
             .groupBy { it.enclosingElement }
 
         styleableElements
