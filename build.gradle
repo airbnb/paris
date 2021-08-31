@@ -43,7 +43,6 @@ allprojects {
 
 subprojects { project ->
     apply from: "$rootDir/blessedDeps.gradle"
-    // TODO Same for maven upload script?
 }
 
 task clean(type: Delete) {
