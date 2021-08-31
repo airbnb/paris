@@ -112,7 +112,7 @@ internal class StyleInfoExtractor(val processor: ParisProcessor) {
         }
 
         if (defaultStyleExists) {
-            val styleResourceCode = JavaCodeBlock.of("\$T.\$L", rStyleTypeElement, defaultStyleName)
+            val styleResourceCode = JavaCodeBlock.of("\$T.\$L", rStyleTypeElement?.className, defaultStyleName)
 
             val javadoc = JavaCodeBlock.of("See $defaultStyleName style (defined as an XML resource).")
             val kdoc = KotlinCodeBlock.of(javadoc.toString())
