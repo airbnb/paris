@@ -53,7 +53,7 @@ internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcess
             // Note: if the type is non existent we ignore this error check so that users don't need to change their kapt configuration, they'll still
             // get a build error though not as explicit.
             parisProcessor.logError(element) {
-                "Fields annotated with @Style must implement com.airbnb.paris.styles.Style or be of type int (and refer to a style resource). Found type $type - ${element.toJavac().kind}"
+                "Fields annotated with @Style must implement com.airbnb.paris.styles.Style or be of type int (and refer to a style resource). Found type $type}"
             }
             return null
         }

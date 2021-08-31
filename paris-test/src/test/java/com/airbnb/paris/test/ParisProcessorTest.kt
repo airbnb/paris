@@ -83,7 +83,8 @@ class ParisProcessorTest : ResourceTest() {
     private fun assertError(
         folder: String,
         errorCount: Int? = null,
-        errorFragment: String? = null
+        errorFragment: String? = null,
+        testKsp: Boolean = true
     ) {
         val view = JavaFileObjects.forResource("$folder/input/MyView.java".patchResource())
 
@@ -100,6 +101,10 @@ class ParisProcessorTest : ResourceTest() {
                     withErrorContaining(it)
                 }
             }
+
+        if (testKsp) {
+            expectCompilationFailure(failureMessage = errorFragment ?: "", compilationMode = CompilationMode.KSP)
+        }
     }
 
 
@@ -124,6 +129,8 @@ class ParisProcessorTest : ResourceTest() {
                     withErrorContaining(it)
                 }
             }
+
+        expectCompilationFailure(failureMessage = errorFragment ?: "", compilationMode = CompilationMode.KSP)
     }
 
     fun JavaSourcesSubject.SingleSourceAdapter.addKotlinGeneratedOption(): JavaSourcesSubject = withCompilerOptions("-Akapt.kotlin.generated=foo")
@@ -251,7 +258,13 @@ class ParisProcessorTest : ResourceTest() {
         // with no R (or R2) references as annotation parameters. Paris has no way of finding the R
         // package (which it needs to figure out the package of the generated Paris class) so this
         // should cause an error
-        assertError("error_styleable_outside_package_no_R", 1, "R class")
+        assertError(
+            folder = "error_styleable_outside_package_no_R",
+            errorCount = 1,
+            errorFragment = "R class",
+            // Ksp testing seems to pull in the package config from the main sources, so we can't test compilation without it :/
+            testKsp = false
+        )
     }
 
     @Test
