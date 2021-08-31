@@ -1,7 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'kotlin-kapt'
+//apply plugin: 'com.google.devtools.ksp'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
@@ -45,8 +46,8 @@ dependencies {
 
     api project(':paris-annotations')
 
-    ksp project(':paris-processor')
-    kspTest project(':paris-processor')
+    kapt project(':paris-processor')
+    kaptTest project(':paris-processor')
 
     testImplementation deps.junit
     testImplementation deps.kotlinTest
@@ -61,13 +62,10 @@ dependencies {
 kotlin {
     sourceSets {
         // Required for KSP to work with butterknife gradle plugin codegen of R2
-        main.kotlin.srcDirs += 'build/generated/source/r2/debug'
-        main.kotlin.srcDirs += 'build/generated/source/r2/release'
-
-        main.kotlin.srcDirs += 'build/generated/ksp/debug/kotlin'
-        main.kotlin.srcDirs += 'build/generated/ksp/main/kotlin'
+//        main.kotlin.srcDirs += 'build/generated/source/r2/debug'
+//        main.kotlin.srcDirs += 'build/generated/source/r2/release'
 
         // Required for KSP to work with unit tests
-        test.kotlin.srcDirs += 'build/generated/ksp/debugUnitTest/kotlin'
+//        test.kotlin.srcDirs += 'build/generated/ksp/debugUnitTest/kotlin'
     }
 }

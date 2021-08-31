@@ -104,7 +104,9 @@ internal class MapTypedArrayWrapper constructor(
     }
 
     override fun getFloat(index: Int): Float =
-        getValue(index, { resId -> resources.getFloat(resId) })
+        getValue(index, { resId ->
+            ResourcesCompat.getFloat(resources, resId)
+        })
 
     override fun getFont(index: Int): Typeface? {
         val value = styleableAttrIndexToValueRes(index)
