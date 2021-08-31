@@ -1,4 +1,4 @@
-# 1.8.0
+# 2.0.0
 - Support KSP
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
 
