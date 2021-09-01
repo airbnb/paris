@@ -82,7 +82,7 @@ internal class StyleInfoExtractor(val processor: ParisProcessor) {
                         styles + defaultNameFormatStyle
                     } else {
                         if (processor.namespacedResourcesEnabled && !styleableElement.getAnnotation(Styleable::class)!!.value.emptyDefaultStyle) {
-                            processor.logError {
+                            processor.logError(styleableElement) {
                                 "No default style found for ${styleableElement.name}. Link an appropriate default style, " +
                                         "or set @Styleable(emptyDefaultStyle = true) for this element if none exist."
                             }

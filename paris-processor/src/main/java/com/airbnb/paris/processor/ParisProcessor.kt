@@ -186,7 +186,23 @@ class ParisProcessor(
                 Message.Severity.Error -> Diagnostic.Kind.ERROR
             }
             val element = message.element
-            environment.messager.printMessage(kind, message.message + " [$element : ${element?.enclosingElementIfApplicable}]", element)
+
+            val details = if (element != null) {
+
+                buildString {
+                    append(" [element=$element ${element.javaClass}")
+
+                    element.enclosingElementIfApplicable?.className?.let {
+                        append(" in $it")
+                    }
+
+                    append("]")
+                }
+            } else {
+                ""
+            }
+
+            environment.messager.printMessage(kind, message.message + details)
         }
         loggedMessages.clear()
     }

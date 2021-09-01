@@ -343,5 +343,8 @@ class ParisProcessorTest : ResourceTest() {
 
     @Test
     fun overridden_protected_function() = expectSuccessfulGeneration()
+
+    @Test
+    fun style_in_kotlin_companion_object() = expectSuccessfulGeneration()
 }
 
