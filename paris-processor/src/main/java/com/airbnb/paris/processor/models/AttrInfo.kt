@@ -12,21 +12,24 @@ import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.framework.toKPoet
-import javax.tools.Diagnostic
 
 internal class AttrInfoExtractor(
      val parisProcessor: ParisProcessor
 ) : SkyMethodModelFactory<AttrInfo>(parisProcessor, Attr::class.java) {
 
     override fun elementToModel(element: XMethodElement): AttrInfo? {
-        if (element.isPrivate() || element.isProtected()) {
+        // TODO: KSP and XProcessing's "isProtected" check actually returns the visibility of the original declaration, which means if a subclass
+        // overrides a function for public visbility we can't check that and this will improperly fail.
+        // Ignoring this check until that is fixed.
+        // Thread: https://kotlinlang.slack.com/archives/C013BA8EQSE/p1630525108045800
+//        if (element.isPrivate() || element.isProtected()) {
+        if (element.isPrivate()) {
             parisProcessor.logError(element) {
                 "Methods annotated with @Attr can't be private or protected."
             }
             return null
         }
 
-        parisProcessor.messager.printMessage(Diagnostic.Kind.WARNING, "Processing $element ${element.enclosingElement}")
         val attr: Attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {

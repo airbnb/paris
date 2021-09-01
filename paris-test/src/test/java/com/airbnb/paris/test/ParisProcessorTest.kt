@@ -340,5 +340,8 @@ class ParisProcessorTest : ResourceTest() {
 
     @Test
     fun style_extension_generation_java() = expectSuccessfulGeneration()
+
+    @Test
+    fun overridden_protected_function() = expectSuccessfulGeneration()
 }
 
