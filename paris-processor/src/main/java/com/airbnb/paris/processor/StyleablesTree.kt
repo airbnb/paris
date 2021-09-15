@@ -18,9 +18,11 @@ internal class StyleablesTree(
      * Traverses the class hierarchy of the given View type to find and return the first
      * corresponding style applier
      */
-    internal fun findStyleApplier(viewTypeElement: XTypeElement): StyleApplierDetails {
+    internal fun findStyleApplier(viewTypeElement: XTypeElement, errorContext: (() -> String)? = null): StyleApplierDetails {
         return findStyleApplierRecursive(viewTypeElement)
-            ?: error("Could not find style applier for ${viewTypeElement}. Available types are ${styleablesInfo.map { it.viewElementType }}")
+            ?: error("Could not find style applier for ${viewTypeElement.qualifiedName} ${viewTypeElement.type}. " +
+                    errorContext?.invoke()?.let { "$it. " }.orEmpty() +
+                    "Available types are ${styleablesInfo.map { it.viewElementType }}")
     }
 
     private fun findStyleApplierRecursive(viewTypeElement: XTypeElement): StyleApplierDetails? {

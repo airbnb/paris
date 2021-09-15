@@ -75,7 +75,8 @@ internal class StyleApplierJavaClass(
         var parentStyleApplierClassName: ClassName? = null
         if (!parisProcessor.memoizer.androidViewClassTypeX.isSameType(styleableInfo.viewElementType)) {
             val parentStyleApplierDetails = styleablesTree.findStyleApplier(
-                styleableInfo.viewElementType.typeElement?.superType?.typeElement!!
+                styleableInfo.viewElementType.typeElement?.superType?.typeElement!!,
+                errorContext = {"Parent view: ${styleableInfo.viewElementType.typeElement?.qualifiedName} ${styleableInfo.viewElementType}"}
             )
 
             parentStyleApplierClassName = parentStyleApplierDetails.className
