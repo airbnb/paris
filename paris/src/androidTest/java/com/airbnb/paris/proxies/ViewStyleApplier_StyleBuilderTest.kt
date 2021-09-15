@@ -12,6 +12,7 @@ import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -58,6 +59,7 @@ class ViewStyleApplier_StyleBuilderTest {
         }
     }
 
+    @Ignore("Comparing drawables does not work in CI tests")
     @Test
     fun background() {
         assertNull(view.background)

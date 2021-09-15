@@ -21,6 +21,7 @@ import com.airbnb.paris.utils.getFloat
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -139,6 +140,7 @@ class MapTypedArrayWrapperTest {
         assertEquals(actual, wrapper.getDimensionPixelSize(R.styleable.Formats_formatDimension))
     }
 
+    @Ignore("Comparing drawables does not work in CI tests")
     @Test
     fun getDrawable() {
         val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.format_drawable))

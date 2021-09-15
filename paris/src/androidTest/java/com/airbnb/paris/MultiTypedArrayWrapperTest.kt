@@ -16,6 +16,7 @@ import com.airbnb.paris.utils.getStyle
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -142,6 +143,7 @@ class MultiTypedArrayWrapperTest {
         assertEquals(actual, multi.getDimensionPixelSize(R.styleable.Formats_formatDimension))
     }
 
+    @Ignore("Comparing drawables does not work in CI tests")
     @Test
     fun getDrawable() {
         multi = MultiTypedArrayWrapper(
