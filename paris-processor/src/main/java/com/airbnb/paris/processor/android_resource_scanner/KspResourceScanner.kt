@@ -82,7 +82,8 @@ class KspResourceScanner : ResourceScanner {
         importLookup: (annotationReferencePrefix: String) -> ImportMatch,
     ): String? {
         // First part of dot reference, eg: "R"
-        val annotationReferencePrefix = annotationReference.substringBefore(".", "").ifEmpty { return null }
+        // If no dots, then it could be fully statically imported, so we take the full string.
+        val annotationReferencePrefix = annotationReference.substringBefore(".").ifEmpty { return null }
 
         val importMatch = importLookup(annotationReferencePrefix)
 
@@ -152,7 +153,6 @@ class KspResourceScanner : ResourceScanner {
 
         return findMatchingImportPackage(importedNames, annotationReference, annotationReferencePrefix, packageName)
     }
-
 
 
     sealed class ImportMatch {

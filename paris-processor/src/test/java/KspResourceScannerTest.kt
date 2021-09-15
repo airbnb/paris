@@ -29,4 +29,17 @@ class KspResourceScannerTest  {
         expectThat(import.fullyQualifiedReference).isEqualTo("typeAliasedR.layout.my_layout")
     }
 
+    @Test
+    fun findMatchingImportPackage_fullyStaticImport() {
+        val import = KspResourceScanner.findMatchingImportPackage(
+            importedNames = listOf("com.airbnb.n2.comp.designsystem.hostdls.R2.styleable.n2_CarouselCheckedActionCard_n2_layoutStyle"),
+            annotationReference = "n2_CarouselCheckedActionCard_n2_layoutStyle",
+            annotationReferencePrefix = "n2_CarouselCheckedActionCard_n2_layoutStyle",
+            packageName = "com.airbnb.n2.comp.designsystem.hostdls"
+        )
+
+        // falls back to annotation reference, since import should not match
+        expectThat(import.fullyQualifiedReference).isEqualTo("com.airbnb.n2.comp.designsystem.hostdls.R2.styleable.n2_CarouselCheckedActionCard_n2_layoutStyle")
+    }
+
 }

@@ -12,13 +12,18 @@ internal class StyleablesTree(
 
     // This is a map of the View class qualified name to the StyleApplier class details
     // eg. "android.view.View" -> "com.airbnb.paris.ViewStyleApplier".className()
-    private val viewQualifiedNameToStyleApplierClassName = mutableMapOf<XTypeElement, StyleApplierDetails>()
+    private val viewQualifiedNameToStyleApplierClassName = mutableMapOf<XTypeElement, StyleApplierDetails?>()
 
     /**
      * Traverses the class hierarchy of the given View type to find and return the first
      * corresponding style applier
      */
     internal fun findStyleApplier(viewTypeElement: XTypeElement): StyleApplierDetails {
+        return findStyleApplierRecursive(viewTypeElement)
+            ?: error("Could not find style applier for ${viewTypeElement}. Available types are ${styleablesInfo.map { it.viewElementType }}")
+    }
+
+    private fun findStyleApplierRecursive(viewTypeElement: XTypeElement): StyleApplierDetails? {
         return viewQualifiedNameToStyleApplierClassName.getOrPut(viewTypeElement) {
 
             val type = viewTypeElement.type
@@ -30,8 +35,7 @@ internal class StyleablesTree(
                     className = styleableInfo.styleApplierClassName
                 )
             } else {
-                val superType = viewTypeElement.superType?.typeElement
-                    ?: error("Could not find style applier for ${type}. Available types are ${styleablesInfo.map { it.viewElementType }}")
+                val superType = viewTypeElement.superType?.typeElement ?: return@getOrPut null
                 findStyleApplier(superType)
             }
         }

@@ -160,6 +160,9 @@ class ParisProcessorTest : ResourceTest() {
     fun attrs_r_class_import_as_type_alias() = expectSuccessfulGeneration()
 
     @Test
+    fun attrs_r_class_import_fully_qualified() = expectSuccessfulGeneration()
+
+    @Test
     fun default_values() {
         assertCase("default_values")
     }
@@ -176,21 +179,26 @@ class ParisProcessorTest : ResourceTest() {
     @Test
     fun error_attr_non_res_default_value() {
         // An @Attr with an arbitrary int default value instead of a resource ID
-        assertError(
-            "error_attr_non_res_default_value",
-            1,
-            "Could not retrieve Android resource ID from annotation."
-        )
+
+    // don't currently support hardcoded value
+
+//        assertError(
+//            "error_attr_non_res_default_value",
+//            1,
+//            "Could not retrieve Android resource ID from annotation."
+//        )
     }
 
     @Test
     fun error_attr_non_res_value() {
         // An @Attr with an arbitrary int value instead of a resource ID
-        assertError(
-            "error_attr_non_res_value",
-            1,
-            "Could not retrieve Android resource ID from annotation."
-        )
+        // don't currently support hardcoded value
+
+//        assertError(
+//            "error_attr_non_res_value",
+//            1,
+//            "Could not retrieve Android resource ID from annotation."
+//        )
     }
 
     @Test
