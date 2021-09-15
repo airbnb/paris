@@ -18,12 +18,7 @@ internal class AttrInfoExtractor(
 ) : SkyMethodModelFactory<AttrInfo>(parisProcessor, Attr::class.java) {
 
     override fun elementToModel(element: XMethodElement): AttrInfo? {
-        // TODO: KSP and XProcessing's "isProtected" check actually returns the visibility of the original declaration, which means if a subclass
-        // overrides a function for public visbility we can't check that and this will improperly fail.
-        // Ignoring this check until that is fixed.
-        // Thread: https://kotlinlang.slack.com/archives/C013BA8EQSE/p1630525108045800
-//        if (element.isPrivate() || element.isProtected()) {
-        if (element.isPrivate()) {
+        if (element.isPrivate() || element.isProtected()) {
             parisProcessor.logError(element) {
                 "Methods annotated with @Attr can't be private or protected."
             }

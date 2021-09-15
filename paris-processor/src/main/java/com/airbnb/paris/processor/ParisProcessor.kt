@@ -183,6 +183,7 @@ class ParisProcessor(
             val kind = when (message.severity) {
                 Message.Severity.Warning -> Diagnostic.Kind.WARNING
                 Message.Severity.Error -> Diagnostic.Kind.ERROR
+                Message.Severity.Note -> Diagnostic.Kind.NOTE
             }
             val element = message.element
 
@@ -221,7 +222,13 @@ class ParisProcessor(
     }
 
     fun logWarning(element: XElement? = null, lazyMessage: () -> String) {
-        log(Message.Severity.Warning, element, lazyMessage)
+        if (isKsp) {
+            // Ksp warnings cause kotlin compile errors when warnings as errors is turned on.
+            // To prevent build failures from warnings, use note mode in KSP
+            log(Message.Severity.Note, element, lazyMessage)
+        } else {
+            log(Message.Severity.Warning, element, lazyMessage)
+        }
     }
 
     fun log(severity: Message.Severity, element: XElement? = null, lazyMessage: () -> String) {

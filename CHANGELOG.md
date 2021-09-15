@@ -3,7 +3,6 @@
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
 - R class references used in annotations cannot be star imported
 
-- Fix
 # 1.7.3 (April 13, 2021)
 
 - Fix generated code consistency in module class (#154)

@@ -94,7 +94,6 @@ internal class Format private constructor(
         }
 
         private fun forField(memoizer: Memoizer, element: XFieldElement): Format {
-            // TODO: 2/21/21 Is this assignable checking the right direction?
             if (memoizer.androidViewClassTypeX.rawType.isAssignableFrom(element.type)) {
                 // If the field is a View then the attribute must be a style or style resource id
                 return Format(Type.STYLE)
@@ -135,7 +134,6 @@ internal class Format private constructor(
                 type.isBoolean() -> Type.BOOLEAN
                 type.isFloat() -> Type.FLOAT
                 type.isInt() -> Type.INT
-                // TODO: Is the different java vs kotlin version of String accounted for when processed in either language with either tool?
                 type.isTypeOf(CharSequence::class) -> Type.CHARSEQUENCE
                 type.isTypeOf(String::class) -> Type.STRING
                 typeString == "android.content.res.ColorStateList" -> Type.COLOR_STATE_LIST

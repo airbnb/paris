@@ -134,6 +134,7 @@ val XTypeElement.enclosingElementIfCompanion: XTypeElement
     get() = if (isCompanionObject()) enclosingTypeElement!! else this
 
 // TODO: update xprocessing library to support KspSyntheticPropertyMethodElement, then delete this workaround.
+// fix will be in next version of xprocessing after alpha4
 fun <T : OriginatingElementsHolder.Builder<T>> T.addOriginatingElementFixed(
     element: XElement
 ): T {
@@ -152,7 +153,6 @@ fun <T : OriginatingElementsHolder.Builder<T>> T.addOriginatingElementFixed(
 
                 addOriginatingElement(wrapperElement as Element)
             }
-        println("Used workaround")
     } catch (e: Throwable) {
         addOriginatingElement(element)
     }

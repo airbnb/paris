@@ -29,6 +29,8 @@ abstract class BaseProcessor(var kspEnvironment: SymbolProcessorEnvironment? = n
     val filer: XFiler
         get() = environment.filer
 
+    val isKsp: Boolean get() = kspEnvironment != null
+
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.RELEASE_8
 
     override fun init(processingEnv: ProcessingEnvironment) {
