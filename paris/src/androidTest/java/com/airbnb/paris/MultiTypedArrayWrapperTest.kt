@@ -2,6 +2,7 @@ package com.airbnb.paris
 
 import android.content.Context
 import android.content.res.Resources
+import androidx.core.content.res.ResourcesCompat
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.attribute_values.ResourceId
@@ -150,8 +151,8 @@ class MultiTypedArrayWrapperTest {
             ).map { newFormatWrapper(it) },
             R.styleable.Formats
         )
-        val actual = res.getDrawable(R.drawable.format_drawable_2)
-        assertEquals(actual.constantState, multi.getDrawable(R.styleable.Formats_formatReference)?.constantState)
+        val actual = ResourcesCompat.getDrawable(res, R.drawable.format_drawable_2, null)
+        assertEquals(actual?.constantState, multi.getDrawable(R.styleable.Formats_formatReference)?.constantState)
     }
 
     @Test

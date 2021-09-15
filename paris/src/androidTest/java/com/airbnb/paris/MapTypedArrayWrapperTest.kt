@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.attribute_values.ColorValue
@@ -142,8 +143,8 @@ class MapTypedArrayWrapperTest {
     fun getDrawable() {
         val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.format_drawable))
         wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
-        val actual = res.getDrawable(R.drawable.format_drawable)
-        assertEquals(actual.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference)?.constantState)
+        val actual = ResourcesCompat.getDrawable(res, R.drawable.format_drawable, null)
+        assertEquals(actual?.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference)?.constantState)
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.airbnb.paris.proxies
 import android.view.View
 import android.view.ViewStyleApplier.StyleBuilder
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.styles.ProgrammaticStyle
@@ -64,7 +65,7 @@ class ViewStyleApplier_StyleBuilderTest {
             .backgroundRes(R.drawable.format_drawable)
             .applyTo(view)
         Assert.assertEquals(
-            res.getDrawable(R.drawable.format_drawable).constantState,
+            ResourcesCompat.getDrawable(res, R.drawable.format_drawable, null)?.constantState,
             view.background.constantState
         )
     }
