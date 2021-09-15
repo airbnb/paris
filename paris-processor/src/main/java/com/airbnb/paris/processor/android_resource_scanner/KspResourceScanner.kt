@@ -153,48 +153,7 @@ class KspResourceScanner : ResourceScanner {
         return findMatchingImportPackage(importedNames, annotationReference, annotationReferencePrefix, packageName)
     }
 
-    private fun findMatchingImportPackage(
-        importedNames: List<String>,
-        annotationReference: String,
-        annotationReferencePrefix: String,
-        packageName: String
-    ): ImportMatch {
-        // Match something like "com.airbnb.paris.test.R2 as typeAliasedR"
-        val typeAliasRegex = Regex("(.*\\s)+as\\s+.*")
-        return importedNames.firstNotNullOfOrNull { importedName ->
 
-            when {
-                importedName.endsWith(".$annotationReferencePrefix") -> {
-                    // import com.example.R
-                    // R.layout.my_layout -> R
-                    Normal(
-                        referenceImportPrefix = importedName.substringBeforeLast(".$annotationReferencePrefix"),
-                        annotationReference = annotationReference
-                    )
-                }
-                importedName.contains(typeAliasRegex) -> {
-                    typeAliasRegex.find(importedName)?.groupValues?.getOrNull(1)?.let { import ->
-                        TypeAlias(import, annotationReferencePrefix, annotationReference)
-                    }
-                }
-                (!importedName.contains(".") && importedName == annotationReferencePrefix) -> {
-                    // import foo
-                    // foo.R.layout.my_layout -> foo
-                    Normal("", annotationReference)
-                }
-                else -> null
-            }
-        } ?: run {
-            // If first character in the reference is upper case, and we didn't find a matching import,
-            // assume that it is a class reference in the same package (ie R class is in the same package, so we use the same package name)
-            if (annotationReferencePrefix.firstOrNull()?.isUpperCase() == true) {
-                Normal(packageName, annotationReference)
-            } else {
-                // Reference is already fully qualified so we don't need to prepend package info to the reference
-                Normal("", annotationReference)
-            }
-        }
-    }
 
     sealed class ImportMatch {
         abstract val fullyQualifiedReference: String
@@ -203,7 +162,7 @@ class KspResourceScanner : ResourceScanner {
             // Example: Type alias "com.airbnb.paris.test.R2 as typeAliasedR"
             // import - com.airbnb.paris.test.R2
             // alias - typeAliasedR
-            // annotationReference - annotationReference.layout.my_layout
+            // annotationReference - typeAliasedR.layout.my_layout
             // actual fqn - com.airbnb.paris.test.R2.layout.my_layout
             override val fullyQualifiedReference: String = import.trim() + annotationReference.substringAfter(alias)
         }
@@ -296,6 +255,51 @@ class KspResourceScanner : ResourceScanner {
             expression.getReferencedNameAsName()
         } else {
             null
+        }
+    }
+
+    companion object {
+        internal fun findMatchingImportPackage(
+            importedNames: List<String>,
+            annotationReference: String,
+            annotationReferencePrefix: String,
+            packageName: String
+        ): ImportMatch {
+            // Match something like "com.airbnb.paris.test.R2 as typeAliasedR"
+            val typeAliasRegex = Regex("(.*)\\s+as\\s+$annotationReferencePrefix\$")
+            return importedNames.firstNotNullOfOrNull { importedName ->
+
+                when {
+                    importedName.endsWith(".$annotationReferencePrefix") -> {
+                        // import com.example.R
+                        // R.layout.my_layout -> R
+                        Normal(
+                            referenceImportPrefix = importedName.substringBeforeLast(".$annotationReferencePrefix"),
+                            annotationReference = annotationReference
+                        )
+                    }
+                    importedName.contains(typeAliasRegex) -> {
+                        typeAliasRegex.find(importedName)?.groupValues?.getOrNull(1)?.let { import ->
+                            TypeAlias(import, annotationReferencePrefix, annotationReference)
+                        }
+                    }
+                    (!importedName.contains(".") && importedName == annotationReferencePrefix) -> {
+                        // import foo
+                        // foo.R.layout.my_layout -> foo
+                        Normal("", annotationReference)
+                    }
+                    else -> null
+                }
+            } ?: run {
+                // If first character in the reference is upper case, and we didn't find a matching import,
+                // assume that it is a class reference in the same package (ie R class is in the same package, so we use the same package name)
+                if (annotationReferencePrefix.firstOrNull()?.isUpperCase() == true) {
+                    Normal(packageName, annotationReference)
+                } else {
+                    // Reference is already fully qualified so we don't need to prepend package info to the reference
+                    Normal("", annotationReference)
+                }
+            }
         }
     }
 }

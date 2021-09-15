@@ -33,7 +33,7 @@ targetCompatibility = rootProject.JAVA_TARGET_VERSION
 dependencies {
     implementation project(':paris')
     implementation project(':paris-test-lib')
-    implementation "com.google.devtools.ksp:symbol-processing-api:1.5.30-1.0.0-beta08"
+    implementation "com.google.devtools.ksp:symbol-processing-api:$KSP_VERSION"
 
     implementation deps.appcompat
 
