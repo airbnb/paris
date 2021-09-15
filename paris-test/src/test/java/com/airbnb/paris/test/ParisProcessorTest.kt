@@ -157,6 +157,9 @@ class ParisProcessorTest : ResourceTest() {
     }
 
     @Test
+    fun attrs_r_class_import_as_type_alias() = expectSuccessfulGeneration()
+
+    @Test
     fun default_values() {
         assertCase("default_values")
     }

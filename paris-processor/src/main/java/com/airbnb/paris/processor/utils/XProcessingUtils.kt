@@ -70,6 +70,7 @@ internal fun TypeName.rawTypeName(): TypeName {
 
 /**
  * A bug in XProcessing throws an NPE if the package is not found. This is a workaround until the library is fixed.
+ * Fix merged in https://github.com/androidx/androidx/pull/222 but waiting on the next release.
  */
 fun XProcessingEnv.getTypeElementsFromPackageSafe(packageName: String): List<XTypeElement> {
     return try {

@@ -95,7 +95,6 @@ class ParisProcessor(
         // We could write to that file only in finish once we collect all styleables, or just force a single round here (which
         // assumes that no other code generates styleables, which we've never supported anyway).
         if (roundCount > 0) return
-        println("processing round $roundCount")
         roundCount++
 
         round.getElementsAnnotatedWith(ParisConfig::class)
@@ -190,7 +189,7 @@ class ParisProcessor(
             val details = if (element != null) {
 
                 buildString {
-                    append(" [element=$element ${element.javaClass}")
+                    append(" [element=$element ${element.javaClass.simpleName}")
 
                     element.enclosingElementIfApplicable?.className?.let {
                         append(" in $it")

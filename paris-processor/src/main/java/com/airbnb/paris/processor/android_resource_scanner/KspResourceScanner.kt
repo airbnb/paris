@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.android_resource_scanner
 
 import androidx.room.compiler.processing.XElement
+import com.airbnb.paris.processor.android_resource_scanner.KspResourceScanner.ImportMatch.*
 import com.airbnb.paris.processor.utils.containingPackage
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.impl.java.KSAnnotationJavaImpl
@@ -67,7 +68,7 @@ class KspResourceScanner : ResourceScanner {
         // eg: R.layout.foo, com.example.R.layout.foo, layout.foo, etc
         return psiNameValue.value?.text?.let { annotationReference ->
             extractReferenceAnnotationArgument(annotationReference) { annotationReferencePrefix ->
-                findMatchingImportPackageJava(annotation.psi, annotationReferencePrefix, packageName)
+                findMatchingImportPackageJava(annotation.psi, annotationReference, annotationReferencePrefix, packageName)
             }
         }
     }
@@ -75,14 +76,17 @@ class KspResourceScanner : ResourceScanner {
     private fun extractReferenceAnnotationArgument(
         // eg: R.layout.foo, com.example.R.layout.foo, layout.foo, etc
         annotationReference: String,
-        packagePrefixLookup: (annotationReferencePrefix: String) -> String,
+        /**
+         * Given the name referenced in source code, return the matching import for that name.
+         */
+        importLookup: (annotationReferencePrefix: String) -> ImportMatch,
     ): String? {
         // First part of dot reference, eg: "R"
         val annotationReferencePrefix = annotationReference.substringBefore(".", "").ifEmpty { return null }
 
-        val packagePrefix: String = packagePrefixLookup(annotationReferencePrefix)
+        val importMatch = importLookup(annotationReferencePrefix)
 
-        return packagePrefix + (if (packagePrefix.isNotEmpty()) "." else "") + annotationReference
+        return importMatch.fullyQualifiedReference
     }
 
     private fun processKtAnnotation(
@@ -113,16 +117,17 @@ class KspResourceScanner : ResourceScanner {
             val annotationReference: String = fqNameFromExpression(ex)?.asString() ?: return@let null
 
             extractReferenceAnnotationArgument(annotationReference) { annotationReferencePrefix ->
-                findMatchingImportPackageKt(annotationEntry, annotationReferencePrefix, packageName)
+                findMatchingImportPackageKt(annotationEntry, annotationReference, annotationReferencePrefix, packageName)
             }
         }
     }
 
     private fun findMatchingImportPackageJava(
         annotationEntry: PsiAnnotation,
+        annotationReference: String,
         annotationReferencePrefix: String,
         packageName: String
-    ): String {
+    ): ImportMatch {
         // Note: Star imports are not included in this, and there doesn't seem to be a way to resolve them, so
         // they are not included or supported.
         val importedNames = (annotationEntry.containingFile as? PsiJavaFile)
@@ -131,39 +136,51 @@ class KspResourceScanner : ResourceScanner {
             ?.mapNotNull { it.qualifiedName }
             ?: emptyList()
 
-        return findMatchingImportPackage(importedNames, annotationReferencePrefix, packageName)
+        return findMatchingImportPackage(importedNames, annotationReference, annotationReferencePrefix, packageName)
     }
 
     private fun findMatchingImportPackageKt(
         annotationEntry: KtAnnotationEntry,
+        annotationReference: String,
         annotationReferencePrefix: String,
         packageName: String
-    ): String {
+    ): ImportMatch {
         val importedNames = annotationEntry
             .containingKtFile
             .importDirectives
             .mapNotNull { it.importPath?.toString() }
 
-        return findMatchingImportPackage(importedNames, annotationReferencePrefix, packageName)
+        return findMatchingImportPackage(importedNames, annotationReference, annotationReferencePrefix, packageName)
     }
 
     private fun findMatchingImportPackage(
         importedNames: List<String>,
+        annotationReference: String,
         annotationReferencePrefix: String,
         packageName: String
-    ): String {
+    ): ImportMatch {
+        // Match something like "com.airbnb.paris.test.R2 as typeAliasedR"
+        val typeAliasRegex = Regex("(.*\\s)+as\\s+.*")
         return importedNames.firstNotNullOfOrNull { importedName ->
 
             when {
                 importedName.endsWith(".$annotationReferencePrefix") -> {
                     // import com.example.R
                     // R.layout.my_layout -> R
-                    importedName.substringBeforeLast(".$annotationReferencePrefix")
+                    Normal(
+                        referenceImportPrefix = importedName.substringBeforeLast(".$annotationReferencePrefix"),
+                        annotationReference = annotationReference
+                    )
+                }
+                importedName.contains(typeAliasRegex) -> {
+                    typeAliasRegex.find(importedName)?.groupValues?.getOrNull(1)?.let { import ->
+                        TypeAlias(import, annotationReferencePrefix, annotationReference)
+                    }
                 }
                 (!importedName.contains(".") && importedName == annotationReferencePrefix) -> {
                     // import foo
                     // foo.R.layout.my_layout -> foo
-                    ""
+                    Normal("", annotationReference)
                 }
                 else -> null
             }
@@ -171,11 +188,29 @@ class KspResourceScanner : ResourceScanner {
             // If first character in the reference is upper case, and we didn't find a matching import,
             // assume that it is a class reference in the same package (ie R class is in the same package, so we use the same package name)
             if (annotationReferencePrefix.firstOrNull()?.isUpperCase() == true) {
-                packageName
+                Normal(packageName, annotationReference)
             } else {
                 // Reference is already fully qualified so we don't need to prepend package info to the reference
-                ""
+                Normal("", annotationReference)
             }
+        }
+    }
+
+    sealed class ImportMatch {
+        abstract val fullyQualifiedReference: String
+
+        class TypeAlias(val import: String, alias: String, annotationReference: String) : ImportMatch() {
+            // Example: Type alias "com.airbnb.paris.test.R2 as typeAliasedR"
+            // import - com.airbnb.paris.test.R2
+            // alias - typeAliasedR
+            // annotationReference - annotationReference.layout.my_layout
+            // actual fqn - com.airbnb.paris.test.R2.layout.my_layout
+            override val fullyQualifiedReference: String = import.trim() + annotationReference.substringAfter(alias)
+        }
+
+        class Normal(val referenceImportPrefix: String, val annotationReference: String) : ImportMatch() {
+            override val fullyQualifiedReference: String =
+                referenceImportPrefix + (if (referenceImportPrefix.isNotEmpty()) "." else "") + annotationReference
         }
     }
 
