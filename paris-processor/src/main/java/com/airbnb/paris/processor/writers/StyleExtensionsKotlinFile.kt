@@ -70,7 +70,7 @@ internal class StyleExtensionsKotlinFile(
             receiver(styleable.viewElementType)
             addParameter("style", STYLE_CLASS_NAME.toKPoet())
             addStatement("%T(this).apply(style)", styleable.styleApplierClassName.toKPoet())
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -84,7 +84,7 @@ internal class StyleExtensionsKotlinFile(
                 addAnnotation(STYLE_RES)
             }
             addStatement("%T(this).apply(styleRes)", styleable.styleApplierClassName.toKPoet())
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -96,7 +96,7 @@ internal class StyleExtensionsKotlinFile(
             receiver(styleable.viewElementType)
             addParameter("attrs", ATTRIBUTE_SET.toKPoet().copy(nullable = true))
             addStatement("%T(this).apply(attrs)", styleable.styleApplierClassName.toKPoet())
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -136,7 +136,7 @@ internal class StyleExtensionsKotlinFile(
                 builderParameter
             )
 
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -160,7 +160,7 @@ internal class StyleExtensionsKotlinFile(
                     styleable.styleBuilderClassName.toKPoet()
                 )
 
-                addOriginatingElement(styleable.annotatedElement)
+                addOriginatingElementFixed(styleable.annotatedElement)
             }
         }
 
@@ -193,8 +193,8 @@ internal class StyleExtensionsKotlinFile(
                     styleableChildInfo.styleableResId.kotlinCode
                 )
 
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(styleableChildInfo.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(styleableChildInfo.element)
             }
 
             // Sub-styles can be style objects: "view.style { titleStyle(styleObject) }"
@@ -207,8 +207,8 @@ internal class StyleExtensionsKotlinFile(
                     styleable.styleableResourceName,
                     styleableChildInfo.styleableResId.kotlinCode
                 )
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(styleableChildInfo.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(styleableChildInfo.element)
             }
 
             /*
@@ -239,8 +239,8 @@ internal class StyleExtensionsKotlinFile(
                     subExtendableStyleBuilderTypeName,
                     builderParameter
                 )
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(styleableChildInfo.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(styleableChildInfo.element)
             }
         }
 
@@ -287,7 +287,7 @@ internal class StyleExtensionsKotlinFile(
                         attr.styleableResId.kotlinCode
                     )
 
-                    addOriginatingElement(styleable.annotatedElement)
+                    addOriginatingElementFixed(styleable.annotatedElement)
                     addOriginatingElementFixed(attr.element)
                 }
             }
@@ -310,7 +310,7 @@ internal class StyleExtensionsKotlinFile(
                     attr.styleableResId.kotlinCode
                 )
 
-                addOriginatingElement(styleable.annotatedElement)
+                addOriginatingElementFixed(styleable.annotatedElement)
                 addOriginatingElementFixed(attr.element)
             }
 
@@ -337,8 +337,8 @@ internal class StyleExtensionsKotlinFile(
                         attr.styleableResId.kotlinCode
                     )
 
-                    addOriginatingElement(styleable.annotatedElement)
-                    addOriginatingElement(attr.element)
+                    addOriginatingElementFixed(styleable.annotatedElement)
+                    addOriginatingElementFixed(attr.element)
                 }
             }
 
@@ -361,8 +361,8 @@ internal class StyleExtensionsKotlinFile(
                         attr.styleableResId.kotlinCode
                     )
 
-                    addOriginatingElement(styleable.annotatedElement)
-                    addOriginatingElement(attr.element)
+                    addOriginatingElementFixed(styleable.annotatedElement)
+                    addOriginatingElementFixed(attr.element)
                 }
             }
         }
@@ -394,7 +394,7 @@ internal class StyleExtensionsKotlinFile(
                 builderParam
             )
 
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
     }
 

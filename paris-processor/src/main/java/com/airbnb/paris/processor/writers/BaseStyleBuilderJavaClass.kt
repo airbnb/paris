@@ -19,6 +19,7 @@ import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.utils.addOriginatingElementFixed
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
@@ -144,7 +145,7 @@ internal class BaseStyleBuilderJavaClass(
             val (subStyleApplierAnnotatedElement, subStyleApplierClassName) = styleablesTree.findStyleApplier(
                 styleableChildInfo.type.typeElement ?: error("${styleableChildInfo.type} does not have type element")
             )
-            addOriginatingElement(subStyleApplierAnnotatedElement)
+            addOriginatingElementFixed(subStyleApplierAnnotatedElement)
 
             val subStyleBuilderClassName = subStyleApplierClassName.nestedClass("StyleBuilder")
             method(methodName) {

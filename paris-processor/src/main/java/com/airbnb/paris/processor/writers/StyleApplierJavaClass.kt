@@ -25,6 +25,7 @@ import com.airbnb.paris.processor.models.StyleResInfo
 import com.airbnb.paris.processor.models.StyleStaticMethodInfo
 import com.airbnb.paris.processor.models.StyleStaticPropertyInfo
 import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.utils.addOriginatingElementFixed
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
@@ -78,7 +79,7 @@ internal class StyleApplierJavaClass(
             )
 
             parentStyleApplierClassName = parentStyleApplierDetails.className
-            addOriginatingElement(parentStyleApplierDetails.annotatedElement)
+            addOriginatingElementFixed(parentStyleApplierDetails.annotatedElement)
 
             method("applyParent") {
                 override()
@@ -246,7 +247,7 @@ internal class StyleApplierJavaClass(
             )
             // If the name of the proxy or subStyle type changes then our generated code needs to update as well,
             // therefore we must depend on it as an originating element.
-            addOriginatingElement(subStyleApplierAnnotatedElement)
+            addOriginatingElementFixed(subStyleApplierAnnotatedElement)
 
             method(styleableChildInfo.name) {
                 public()

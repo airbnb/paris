@@ -21,6 +21,7 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.Origin
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
 import com.squareup.kotlinpoet.OriginatingElementsHolder
 import javax.lang.model.element.Element
 import kotlin.contracts.contract
@@ -138,6 +139,30 @@ val XTypeElement.enclosingElementIfCompanion: XTypeElement
 fun <T : OriginatingElementsHolder.Builder<T>> T.addOriginatingElementFixed(
     element: XElement
 ): T {
+    if (element.isJavac) {
+        addOriginatingElement(element)
+        return this
+    }
+
+    try {
+        element.getFieldWithReflection<KSPropertyAccessor>("accessor")
+            .receiver
+            .containingFile?.let { containingFile ->
+                val wrapperElement = Class.forName("androidx.room.compiler.processing.ksp.KSFileAsOriginatingElement")
+                    .getConstructor(KSFile::class.java)
+                    .newInstance(containingFile)
+
+                addOriginatingElement(wrapperElement as Element)
+            }
+    } catch (e: Throwable) {
+        addOriginatingElement(element)
+    }
+    return this
+}
+
+// TODO: update xprocessing library to support KspSyntheticPropertyMethodElement, then delete this workaround.
+// fix will be in next version of xprocessing after alpha4
+fun TypeSpec.Builder.addOriginatingElementFixed(element: XElement): TypeSpec.Builder {
     if (element.isJavac) {
         addOriginatingElement(element)
         return this
