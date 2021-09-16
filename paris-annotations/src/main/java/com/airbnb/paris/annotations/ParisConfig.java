@@ -21,4 +21,11 @@ public @interface ParisConfig {
      * only have resources from the module the resource was declared in.
      */
     boolean namespacedResourcesEnabled() default false;
+
+    /**
+     * By default no Paris class is generated if a module contains no @Styleable classes.
+     * However, if this is set to true a Paris class will still be generated in that case, using only
+     * the @Styleables that are discovered on the class path.
+     */
+    boolean aggregateStyleablesOnClassPath() default false;
 }

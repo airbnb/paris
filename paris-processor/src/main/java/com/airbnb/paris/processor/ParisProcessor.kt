@@ -50,6 +50,7 @@ class ParisProcessor(
     var defaultStyleNameFormat: String = ""
 
     var namespacedResourcesEnabled: Boolean = false
+    var aggregateStyleablesOnClassPath: Boolean = false
 
     val memoizer = Memoizer(this)
 
@@ -64,8 +65,6 @@ class ParisProcessor(
     private val styleInfoExtractor = StyleInfoExtractor(this)
 
     private val styleableInfoExtractor = StyleableInfoExtractor(this)
-
-    private lateinit var externalStyleablesInfo: List<BaseStyleableInfo>
 
     init {
         if (kspEnvironment != null) {
@@ -103,6 +102,7 @@ class ParisProcessor(
             ?.let {
                 defaultStyleNameFormat = it.value.defaultStyleNameFormat
                 namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
+                aggregateStyleablesOnClassPath = it.value.aggregateStyleablesOnClassPath
                 rFinder.processConfig(it)
             }
 
@@ -136,17 +136,23 @@ class ParisProcessor(
         )
 
         rFinder.processStyleables(styleablesInfo)
+        if (styleablesInfo.isEmpty() && !aggregateStyleablesOnClassPath) {
+            // No styleables to process, so we have no files to write and can stop here
+            return
+        }
 
         /** Make sure to get these before writing the [ModuleJavaClass] for this module */
-        externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
+        val externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
+
         if (allStyleables.isNotEmpty() && rFinder.element == null) {
             logError {
                 "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
             }
             return
         }
+
         val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
