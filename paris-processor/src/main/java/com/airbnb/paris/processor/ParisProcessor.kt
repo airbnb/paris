@@ -15,7 +15,6 @@ import com.airbnb.paris.processor.framework.Memoizer
 import com.airbnb.paris.processor.framework.Message
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
 import com.airbnb.paris.processor.models.AttrInfoExtractor
-import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.BaseStyleableInfoExtractor
 import com.airbnb.paris.processor.models.BeforeStyleInfoExtractor
 import com.airbnb.paris.processor.models.StyleInfoExtractor
@@ -88,6 +87,7 @@ class ParisProcessor(
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
+
     var roundCount = 0
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         // Writing to the paris and module class file on every round causes an infinite loop, because it triggers another round.
@@ -95,6 +95,8 @@ class ParisProcessor(
         // assumes that no other code generates styleables, which we've never supported anyway).
         if (roundCount > 0) return
         roundCount++
+        val timer = Timer("Paris Processor")
+        timer.start()
 
         round.getElementsAnnotatedWith(ParisConfig::class)
             .firstOrNull()
@@ -105,26 +107,33 @@ class ParisProcessor(
                 aggregateStyleablesOnClassPath = it.value.aggregateStyleablesOnClassPath
                 rFinder.processConfig(it)
             }
+        timer.markStepCompleted("Paris Config lookup")
 
         beforeStyleInfoExtractor.process(round)
         val classesToBeforeStyleInfo =
             beforeStyleInfoExtractor.latest.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process before styles")
 
         afterStyleInfoExtractor.process(round)
         val classesToAfterStyleInfo = afterStyleInfoExtractor.latest.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process after styles")
 
         styleableChildInfoExtractor.process(round)
         val styleableChildrenInfo = styleableChildInfoExtractor.latest
         val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process styleable children")
 
         attrInfoExtractor.process(round)
         val attrsInfo = attrInfoExtractor.latest
         val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process attrs")
 
         rFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
+        timer.markStepCompleted("Process resources")
 
         styleInfoExtractor.process(round)
         val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process styles")
 
         val styleablesInfo: List<StyleableInfo> = styleableInfoExtractor.process(
             roundEnv = round,
@@ -134,8 +143,10 @@ class ParisProcessor(
             classesToAttrsInfo = classesToAttrsInfo,
             classesToStylesInfo = classesToStylesInfo
         )
+        timer.markStepCompleted("Process styleables")
 
         rFinder.processStyleables(styleablesInfo)
+        timer.markStepCompleted("Process styleables resources")
         if (styleablesInfo.isEmpty() && !aggregateStyleablesOnClassPath) {
             // No styleables to process, so we have no files to write and can stop here
             return
@@ -143,6 +154,7 @@ class ParisProcessor(
 
         /** Make sure to get these before writing the [ModuleJavaClass] for this module */
         val externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
+        timer.markStepCompleted("Extract styleables from classpath")
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
 
@@ -158,9 +170,11 @@ class ParisProcessor(
             StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
             StyleExtensionsKotlinFile(this, styleableInfo).write()
         }
+        timer.markStepCompleted("Write all styleables files")
 
         if (styleablesInfo.isNotEmpty()) {
             ModuleJavaClass(this, styleablesInfo).write()
+            timer.markStepCompleted("Write module class file")
         }
 
         if (allStyleables.isNotEmpty()) {
@@ -171,7 +185,11 @@ class ParisProcessor(
                 styleablesInfo,
                 externalStyleablesInfo
             ).write()
+
+            timer.markStepCompleted("Write Paris class")
         }
+
+        timer.finishAndPrint(messager)
     }
 
     override fun onError() {
