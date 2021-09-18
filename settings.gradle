@@ -1,1 +1,9 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
 include ':sample', ':paris-annotations', ':paris-processor', ':paris', ':paris-test', ':paris-test-lib'
+
+

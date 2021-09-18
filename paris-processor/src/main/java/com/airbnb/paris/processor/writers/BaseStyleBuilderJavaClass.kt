@@ -1,6 +1,8 @@
 package com.airbnb.paris.processor.writers
 
 import androidx.annotation.RequiresApi
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.addOriginatingElement
 import com.airbnb.paris.processor.Format
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_CLASS_NAME
@@ -10,7 +12,6 @@ import com.airbnb.paris.processor.STYLE_CLASS_NAME
 import com.airbnb.paris.processor.StyleablesTree
 import com.airbnb.paris.processor.framework.AndroidClassNames
 import com.airbnb.paris.processor.framework.SkyJavaClass
-import com.airbnb.paris.processor.framework.WithSkyProcessor
 import com.airbnb.paris.processor.framework.abstract
 import com.airbnb.paris.processor.framework.constructor
 import com.airbnb.paris.processor.framework.method
@@ -18,29 +19,28 @@ import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.utils.addOriginatingElementFixed
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
-import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.javapoet.WildcardTypeName
-import javax.lang.model.element.Element
 
 internal class BaseStyleBuilderJavaClass(
-    override val processor: ParisProcessor,
+    val parisProcessor: ParisProcessor,
     parentStyleApplierClassName: ClassName?,
     styleablesTree: StyleablesTree,
     styleableInfo: StyleableInfo
-) : SkyJavaClass(processor), WithSkyProcessor {
+) : SkyJavaClass(parisProcessor) {
 
     override val packageName: String
     override val name: String
-    override val originatingElements: List<Element> = listOfNotNull(
+    override val originatingElements: List<XElement> = listOfNotNull(
         styleableInfo.annotatedElement,
-        processor.memoizer.rStyleTypeElement
+        parisProcessor.memoizer.rStyleTypeElementX
     )
 
     init {
@@ -143,9 +143,9 @@ internal class BaseStyleBuilderJavaClass(
             }
 
             val (subStyleApplierAnnotatedElement, subStyleApplierClassName) = styleablesTree.findStyleApplier(
-                styleableChildInfo.type.asTypeElement()
+                styleableChildInfo.type.typeElement ?: error("${styleableChildInfo.type} does not have type element")
             )
-            addOriginatingElement(subStyleApplierAnnotatedElement)
+            addOriginatingElementFixed(subStyleApplierAnnotatedElement)
 
             val subStyleBuilderClassName = subStyleApplierClassName.nestedClass("StyleBuilder")
             method(methodName) {
@@ -181,7 +181,7 @@ internal class BaseStyleBuilderJavaClass(
             val nonResTargetAttrs = groupedAttrs.filter { it.targetFormat != Format.RESOURCE_ID }
 
             if (nonResTargetAttrs.isNotEmpty() && nonResTargetAttrs.distinctBy { it.targetType }.size > 1) {
-                logError {
+                parisProcessor.logError {
                     "The same @Attr value can't be used on methods with different parameter types (excluding resource id types)"
                 }
             }
@@ -200,7 +200,7 @@ internal class BaseStyleBuilderJavaClass(
                     addJavadoc(attr.javadoc)
 
                     val valueParameterBuilder =
-                        ParameterSpec.builder(TypeName.get(attr.targetType), "value")
+                        ParameterSpec.builder(attr.targetType.typeName, "value")
                     attr.targetFormat.valueAnnotation?.let {
                         valueParameterBuilder.addAnnotation(it)
                     }
@@ -292,7 +292,7 @@ internal class BaseStyleBuilderJavaClass(
             public()
             addParameter(
                 ParameterSpec.builder(
-                    TypeName.get(styleableInfo.viewElementType),
+                    styleableInfo.viewElementType.typeName,
                     "view"
                 ).build()
             )

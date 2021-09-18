@@ -1,6 +1,5 @@
 package com.airbnb.paris.sample
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StyleRes
@@ -8,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.paris.extensions.dividerHeight
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * This simple activity displays a few sections of content and changes the style of each section whenever the user clicks them. This is meant to
@@ -82,9 +83,9 @@ class MainActivity : AppCompatActivity() {
     private fun assertStylesContainSameAttributesAsync() {
         if (BuildConfig.DEBUG) {
             // The check can run asynchronously to minimize impact
-            AsyncTask.THREAD_POOL_EXECUTOR.execute {
+            runBlocking(Dispatchers.Default) {
                 // Will throw in case of failure
-                Paris.assertStylesContainSameAttributes(this)
+                Paris.assertStylesContainSameAttributes(this@MainActivity)
             }
         }
     }

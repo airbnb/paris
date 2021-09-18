@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.room.compiler.processing.XElement
 import com.airbnb.paris.processor.PARIS_SIMPLE_CLASS_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.SPANNABLE_BUILDER_CLASS_NAME
@@ -11,12 +12,10 @@ import com.airbnb.paris.processor.framework.public
 import com.airbnb.paris.processor.framework.static
 import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.StyleableInfo
-import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import javax.lang.model.element.Element
 
 internal class ParisJavaClass(
-    override val processor: ParisProcessor,
+    processor: ParisProcessor,
     parisClassPackageName: String,
     styleableClassesInfo: List<StyleableInfo>,
     externalStyleableClassesInfo: List<BaseStyleableInfo>
@@ -28,7 +27,7 @@ internal class ParisJavaClass(
 
     override val packageName: String = parisClassPackageName
     override val name: String = PARIS_SIMPLE_CLASS_NAME
-    override val originatingElements: List<Element> =
+    override val originatingElements: List<XElement> =
         sortedStyleableClassesInfo.map { it.annotatedElement }
 
     override val block: TypeSpec.Builder.() -> Unit = {
@@ -37,7 +36,7 @@ internal class ParisJavaClass(
 
         for (styleableClassInfo in sortedStyleableClassesInfo) {
             val styleApplierClassName = styleableClassInfo.styleApplierClassName
-            val viewParameterTypeName = TypeName.get(styleableClassInfo.viewElementType)
+            val viewParameterTypeName = styleableClassInfo.viewElementType.typeName
 
             method("style") {
                 public()

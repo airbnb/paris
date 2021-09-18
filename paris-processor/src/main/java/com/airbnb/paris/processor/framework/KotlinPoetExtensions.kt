@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.framework
 
+import androidx.room.compiler.processing.XType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterSpec
@@ -73,6 +74,15 @@ internal fun FunSpec.Builder.parameter(
     }
 }
 
+internal fun FunSpec.Builder.receiver(
+    type: XType,
+): FunSpec.Builder {
+    return receiver(type.typeNameKotlin())
+}
+
 internal fun ParameterSpec.Builder.addAnnotation(type: JavaClassName) {
     addAnnotation(type.toKPoet())
 }
+
+fun XType.typeNameKotlin(): KotlinTypeName = typeName.toKPoet()
+

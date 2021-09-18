@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.attribute_values.ColorValue
@@ -20,6 +21,7 @@ import com.airbnb.paris.utils.getFloat
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -138,12 +140,13 @@ class MapTypedArrayWrapperTest {
         assertEquals(actual, wrapper.getDimensionPixelSize(R.styleable.Formats_formatDimension))
     }
 
+    @Ignore("Comparing drawables does not work in CI tests")
     @Test
     fun getDrawable() {
         val map = mapOf(R.attr.formatReference to ResourceId(R.drawable.format_drawable))
         wrapper = MapTypedArrayWrapper(context, R.styleable.Formats, map)
-        val actual = res.getDrawable(R.drawable.format_drawable)
-        assertEquals(actual.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference)?.constantState)
+        val actual = ResourcesCompat.getDrawable(res, R.drawable.format_drawable, null)
+        assertEquals(actual?.constantState, wrapper.getDrawable(R.styleable.Formats_formatReference)?.constantState)
     }
 
     @Test

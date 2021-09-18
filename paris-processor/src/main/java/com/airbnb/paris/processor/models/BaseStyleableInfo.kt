@@ -1,70 +1,50 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
+import com.airbnb.paris.annotations.GeneratedStyleableClass
 import com.airbnb.paris.annotations.GeneratedStyleableModule
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
-import com.airbnb.paris.processor.PROXY_CLASS_NAME
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_APPLIER_SIMPLE_CLASS_NAME_FORMAT
-import com.airbnb.paris.processor.framework.WithSkyProcessor
-import com.airbnb.paris.processor.framework.packageName
+import com.airbnb.paris.processor.utils.getTypeElementsFromPackageSafe
 import com.squareup.javapoet.ClassName
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.DeclaredType
-import javax.lang.model.type.MirroredTypeException
-import javax.lang.model.type.TypeMirror
 
 /**
  * It's important that base styleables be extracted before new ones are written for the current module, otherwise the latter will be included in the
  * results
  */
-internal class BaseStyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
+internal class BaseStyleableInfoExtractor( val processor: ParisProcessor) {
 
     fun fromEnvironment(): List<BaseStyleableInfo> {
-        val baseStyleablesInfo = mutableListOf<BaseStyleableInfo>()
-        elements.getPackageElement(PARIS_MODULES_PACKAGE_NAME)?.let { packageElement ->
-            packageElement.enclosedElements
-                .map { it.getAnnotation(GeneratedStyleableModule::class.java) }
-                .forEach { styleableModule ->
-                    baseStyleablesInfo.addAll(
-                        styleableModule.value
-                            .mapNotNull { generatedStyleableClass ->
-                                var typeElement: TypeElement? = null
-                                try {
-                                    generatedStyleableClass.value
-                                } catch (e: MirroredTypeException) {
-                                    typeElement = e.typeMirror.asTypeElement()
-                                }
-                                typeElement
-                            }
-                            .map { typeElement ->
-                                BaseStyleableInfoExtractor(processor).fromElement(typeElement)
-                            }
-                    )
-                }
-        }
-        return baseStyleablesInfo
+        return processor.environment.getTypeElementsFromPackageSafe(PARIS_MODULES_PACKAGE_NAME)
+            .mapNotNull { it.getAnnotation(GeneratedStyleableModule::class) }
+            .flatMap { styleableModule ->
+                styleableModule.getAsAnnotationBoxArray<GeneratedStyleableClass>("value")
+                    .mapNotNull { it.getAsType("value")?.typeElement }
+                    .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
+            }
     }
 
-    fun fromElement(element: TypeElement): BaseStyleableInfo {
+    fun fromElement(element: XTypeElement): BaseStyleableInfo {
         val elementPackageName = element.packageName
-        val elementName = element.simpleName.toString()
-        val elementType = element.asType()
+        val elementName = element.name
+        val elementType = element.type
 
-        val viewElementType: TypeMirror
-        viewElementType = if (isSubtype(elementType, processor.memoizer.proxyClassTypeErased)) {
+        val viewElementType: XType = if (processor.memoizer.proxyClassType.rawType.isAssignableFrom(elementType)) {
             // Get the parameterized type, which should be the view type
-            (element.superclass as DeclaredType).typeArguments[1]
+            element.superType?.typeArguments?.getOrNull(1) ?: error("No type for $elementType")
         } else {
             elementType
         }
 
-        val viewElement = viewElementType.asTypeElement()
+        val viewElement = viewElementType.typeElement!!
         val viewElementPackageName = viewElement.packageName
-        val viewElementName = viewElement.simpleName.toString()
+        val viewElementName = viewElement.name
 
-        val styleable = element.getAnnotation(Styleable::class.java)
+        val styleable = element.getAnnotation(Styleable::class)?.value!!
         val styleableResourceName = styleable.value
 
         return BaseStyleableInfo(
@@ -86,23 +66,23 @@ internal open class BaseStyleableInfo(
      * The element that is annotated with @Styleable.
      * This is used to determine the originating element of generated files.
      */
-    val annotatedElement: Element,
+    val annotatedElement: XElement,
     val elementPackageName: String,
     val elementName: String,
     /**
      * If the styleable class is not a proxy, will be equal to [viewElementType]. Otherwise,
      * will refer to the proxy class
      */
-    val elementType: TypeMirror,
+    val elementType: XType,
     private val viewElementPackageName: String,
-    val viewElement: TypeElement,
+    val viewElement: XTypeElement,
     /** The simple name of the view eg. "AirImageView" */
     val viewElementName: String,
     /**
      * If the styleable class is not a proxy, will be equal to [elementType]. Refers to the view
      * class
      */
-    val viewElementType: TypeMirror,
+    val viewElementType: XType,
     val styleableResourceName: String
 ) {
 

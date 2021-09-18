@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.writers
 
 import androidx.annotation.RequiresApi
+import androidx.room.compiler.processing.addOriginatingElement
 import com.airbnb.paris.processor.EXTENDABLE_STYLE_BUILDER_CLASS_NAME
 import com.airbnb.paris.processor.EXTENSIONS_FILE_NAME_FORMAT
 import com.airbnb.paris.processor.Format
@@ -13,6 +14,7 @@ import com.airbnb.paris.processor.framework.AndroidClassNames.COLOR_INT
 import com.airbnb.paris.processor.framework.AndroidClassNames.STYLE_RES
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
+import com.airbnb.paris.processor.utils.addOriginatingElementFixed
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -23,8 +25,6 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.UNIT
 import com.squareup.kotlinpoet.WildcardTypeName
-import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
 
 /**
  * This generates a kt file with extension functions to style a specific view.
@@ -41,7 +41,7 @@ import com.squareup.kotlinpoet.asTypeName
  *      different packages)
  */
 internal class StyleExtensionsKotlinFile(
-    override val processor: ParisProcessor,
+    processor: ParisProcessor,
     styleable: StyleableInfo
 ) : SkyKotlinFile(processor) {
 
@@ -70,7 +70,7 @@ internal class StyleExtensionsKotlinFile(
             receiver(styleable.viewElementType)
             addParameter("style", STYLE_CLASS_NAME.toKPoet())
             addStatement("%T(this).apply(style)", styleable.styleApplierClassName.toKPoet())
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -84,7 +84,7 @@ internal class StyleExtensionsKotlinFile(
                 addAnnotation(STYLE_RES)
             }
             addStatement("%T(this).apply(styleRes)", styleable.styleApplierClassName.toKPoet())
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -96,7 +96,7 @@ internal class StyleExtensionsKotlinFile(
             receiver(styleable.viewElementType)
             addParameter("attrs", ATTRIBUTE_SET.toKPoet().copy(nullable = true))
             addStatement("%T(this).apply(attrs)", styleable.styleApplierClassName.toKPoet())
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -109,10 +109,10 @@ internal class StyleExtensionsKotlinFile(
 
             val viewTypeName: KotlinTypeName
             if (styleable.viewElement.isFinal()) {
-                viewTypeName = styleable.viewElement.asClassName()
+                viewTypeName = styleable.viewElement.type.typeNameKotlin()
             } else {
                 // If the styleable class isn't final we use generics so that subclasses are able to override this extension function
-                viewTypeName = KotlinTypeVariableName("V", styleable.viewElementType.asTypeName())
+                viewTypeName = KotlinTypeVariableName("V", styleable.viewElementType.typeNameKotlin())
                 addTypeVariable(viewTypeName)
             }
 
@@ -136,7 +136,7 @@ internal class StyleExtensionsKotlinFile(
                 builderParameter
             )
 
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
 
         /*
@@ -151,7 +151,7 @@ internal class StyleExtensionsKotlinFile(
                 addKdoc(it.kdoc)
 
                 val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-                    styleable.viewElementType.asTypeName()
+                    styleable.viewElementType.typeNameKotlin()
                 )
                 receiver(extendableStyleBuilderTypeName)
 
@@ -160,12 +160,12 @@ internal class StyleExtensionsKotlinFile(
                     styleable.styleBuilderClassName.toKPoet()
                 )
 
-                addOriginatingElement(styleable.annotatedElement)
+                addOriginatingElementFixed(styleable.annotatedElement)
             }
         }
 
         val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-            WildcardTypeName.producerOf(styleable.viewElementType.asTypeName())
+            WildcardTypeName.producerOf(styleable.viewElementType.typeNameKotlin())
         )
 
         /*
@@ -193,8 +193,8 @@ internal class StyleExtensionsKotlinFile(
                     styleableChildInfo.styleableResId.kotlinCode
                 )
 
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(styleableChildInfo.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(styleableChildInfo.element)
             }
 
             // Sub-styles can be style objects: "view.style { titleStyle(styleObject) }"
@@ -207,8 +207,8 @@ internal class StyleExtensionsKotlinFile(
                     styleable.styleableResourceName,
                     styleableChildInfo.styleableResId.kotlinCode
                 )
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(styleableChildInfo.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(styleableChildInfo.element)
             }
 
             /*
@@ -223,7 +223,7 @@ internal class StyleExtensionsKotlinFile(
                 receiver(extendableStyleBuilderTypeName)
 
                 val subExtendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-                    styleableChildInfo.type.asTypeName()
+                    styleableChildInfo.type.typeNameKotlin()
                 )
                 val builderParameter = parameter(
                     "init", LambdaTypeName.get(
@@ -239,8 +239,8 @@ internal class StyleExtensionsKotlinFile(
                     subExtendableStyleBuilderTypeName,
                     builderParameter
                 )
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(styleableChildInfo.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(styleableChildInfo.element)
             }
         }
 
@@ -272,11 +272,11 @@ internal class StyleExtensionsKotlinFile(
                     addRequiresApiAnnotation(this, attr)
 
                     // TODO Make sure that this works correctly when the view code is in Kotlin and already using Kotlin types
-                    parameter("value", JavaTypeName.get(attr.targetType).toKPoet().copy(nullable = attr.targetFormat.isNullable)) {
+                    parameter("value", attr.targetType.typeNameKotlin().copy(nullable = attr.targetFormat.isNullable)) {
                         // Filter out the Nullable annotation since we defer to idiomatic Kotlin by attaching
                         // the nullability to the type.
                         attr.targetFormat.valueAnnotation?.takeIf { it != AndroidClassNames.NULLABLE }?.let {
-                            addAnnotation(it)
+                            addAnnotation(it.toKPoet())
                         }
                     }
 
@@ -287,8 +287,8 @@ internal class StyleExtensionsKotlinFile(
                         attr.styleableResId.kotlinCode
                     )
 
-                    addOriginatingElement(styleable.annotatedElement)
-                    addOriginatingElement(attr.element)
+                    addOriginatingElementFixed(styleable.annotatedElement)
+                    addOriginatingElementFixed(attr.element)
                 }
             }
 
@@ -310,8 +310,8 @@ internal class StyleExtensionsKotlinFile(
                     attr.styleableResId.kotlinCode
                 )
 
-                addOriginatingElement(styleable.annotatedElement)
-                addOriginatingElement(attr.element)
+                addOriginatingElementFixed(styleable.annotatedElement)
+                addOriginatingElementFixed(attr.element)
             }
 
             // Adds a special <attribute>Dp method that automatically converts a dp value to pixels for dimensions
@@ -337,8 +337,8 @@ internal class StyleExtensionsKotlinFile(
                         attr.styleableResId.kotlinCode
                     )
 
-                    addOriginatingElement(styleable.annotatedElement)
-                    addOriginatingElement(attr.element)
+                    addOriginatingElementFixed(styleable.annotatedElement)
+                    addOriginatingElementFixed(attr.element)
                 }
             }
 
@@ -361,8 +361,8 @@ internal class StyleExtensionsKotlinFile(
                         attr.styleableResId.kotlinCode
                     )
 
-                    addOriginatingElement(styleable.annotatedElement)
-                    addOriginatingElement(attr.element)
+                    addOriginatingElementFixed(styleable.annotatedElement)
+                    addOriginatingElementFixed(attr.element)
                 }
             }
         }
@@ -377,7 +377,7 @@ internal class StyleExtensionsKotlinFile(
             returns(STYLE_CLASS_NAME.toKPoet())
 
             val extendableStyleBuilderTypeName = EXTENDABLE_STYLE_BUILDER_CLASS_NAME.toKPoet().parameterizedBy(
-                styleable.viewElementType.asTypeName()
+                styleable.viewElementType.typeNameKotlin()
             )
 
             val builderParam = parameter(
@@ -394,7 +394,7 @@ internal class StyleExtensionsKotlinFile(
                 builderParam
             )
 
-            addOriginatingElement(styleable.annotatedElement)
+            addOriginatingElementFixed(styleable.annotatedElement)
         }
     }
 

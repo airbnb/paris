@@ -1,54 +1,55 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
-import com.airbnb.paris.processor.framework.WithSkyProcessor
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
+import com.squareup.javapoet.ClassName
 
-internal class StyleableInfoExtractor(override val processor: ParisProcessor) : WithSkyProcessor {
+internal class StyleableInfoExtractor(val processor: ParisProcessor)  {
 
     private val mutableModels = mutableListOf<StyleableInfo>()
 
     val models get() = mutableModels.toList()
 
     fun process(
-        roundEnv: RoundEnvironment,
-        classesToStyleableChildInfo: Map<TypeElement, List<StyleableChildInfo>>,
-        classesToBeforeStyleInfo: Map<TypeElement, List<BeforeStyleInfo>>,
-        classesToAfterStyleInfo: Map<TypeElement, List<AfterStyleInfo>>,
-        classesToAttrsInfo: Map<TypeElement, List<AttrInfo>>,
-        classesToStylesInfo: Map<Element, List<StyleInfo>>
+        roundEnv: XRoundEnv,
+        classesToStyleableChildInfo: Map<XTypeElement, List<StyleableChildInfo>>,
+        classesToBeforeStyleInfo: Map<XTypeElement, List<BeforeStyleInfo>>,
+        classesToAfterStyleInfo: Map<XTypeElement, List<AfterStyleInfo>>,
+        classesToAttrsInfo: Map<XTypeElement, List<AttrInfo>>,
+        classesToStylesInfo: Map<XTypeElement, List<StyleInfo>>
     ): List<StyleableInfo> {
-        val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class.java)
+
+        val styleableElements = roundEnv.getElementsAnnotatedWith(Styleable::class).filterIsInstance<XTypeElement>()
 
         val classesMissingStyleableAnnotation =
             (classesToStyleableChildInfo + classesToAttrsInfo + classesToStylesInfo)
-                .filter { (`class`, _) -> `class` !in styleableElements }
+                .filter { (clazz, _) -> clazz !in styleableElements }
                 .keys
-        if (classesMissingStyleableAnnotation.isNotEmpty()) {
-            logError(classesMissingStyleableAnnotation.first()) {
+
+        classesMissingStyleableAnnotation.forEach {
+            processor.logError(it) {
                 "Uses @Attr, @StyleableChild and/or @Style but is not annotated with @Styleable."
             }
         }
 
         return styleableElements.mapNotNull {
             fromElement(
-                it as TypeElement,
-                classesToStyleableChildInfo[it] ?: emptyList(),
-                classesToBeforeStyleInfo[it] ?: emptyList(),
-                classesToAfterStyleInfo[it] ?: emptyList(),
-                classesToAttrsInfo[it] ?: emptyList(),
-                classesToStylesInfo[it] ?: emptyList()
+                element = it,
+                styleableChildren = classesToStyleableChildInfo[it] ?: emptyList(),
+                beforeStyles = classesToBeforeStyleInfo[it] ?: emptyList(),
+                afterStyles = classesToAfterStyleInfo[it] ?: emptyList(),
+                attrs = classesToAttrsInfo[it] ?: emptyList(),
+                styles = classesToStylesInfo[it] ?: emptyList()
             )
         }.also {
-                mutableModels.addAll(it)
-            }
+            mutableModels.addAll(it)
+        }
     }
 
     private fun fromElement(
-        element: TypeElement,
+        element: XTypeElement,
         styleableChildren: List<StyleableChildInfo>,
         beforeStyles: List<BeforeStyleInfo>,
         afterStyles: List<AfterStyleInfo>,
@@ -59,27 +60,27 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
         val baseStyleableInfo = BaseStyleableInfoExtractor(processor).fromElement(element)
 
         if (baseStyleableInfo.styleableResourceName.isEmpty() && (attrs.isNotEmpty() || styleableChildren.isNotEmpty())) {
-            logError(element) {
+            processor.logError(element) {
                 "@Styleable is missing its value parameter (@Attr or @StyleableChild won't work otherwise)."
             }
             return null
         }
 
         if (baseStyleableInfo.styleableResourceName.isNotEmpty() && styleableChildren.isEmpty() && attrs.isEmpty()) {
-            logWarning(element) {
+            processor.logWarning(element) {
                 "No need to specify the @Styleable value parameter if no class members are annotated with @Attr."
             }
         }
 
         return StyleableInfo(
-            processor,
-            element,
-            styleableChildren,
-            beforeStyles,
-            afterStyles,
-            attrs,
-            styles,
-            baseStyleableInfo
+            processor = processor,
+            element = element,
+            styleableChildren = styleableChildren,
+            beforeStyles = beforeStyles,
+            afterStyles = afterStyles,
+            attrs = attrs,
+            styles = styles,
+            baseStyleableInfo = baseStyleableInfo
         )
     }
 }
@@ -89,21 +90,21 @@ internal class StyleableInfoExtractor(override val processor: ParisProcessor) : 
  * empty either
  */
 internal class StyleableInfo(
-    override val processor: ParisProcessor,
-    val element: TypeElement,
+    val processor: ParisProcessor,
+    val element: XTypeElement,
     val styleableChildren: List<StyleableChildInfo>,
     val beforeStyles: List<BeforeStyleInfo>,
     val afterStyles: List<AfterStyleInfo>,
     val attrs: List<AttrInfo>,
     val styles: List<StyleInfo>,
     baseStyleableInfo: BaseStyleableInfo
-) : BaseStyleableInfo(baseStyleableInfo), WithSkyProcessor {
+) : BaseStyleableInfo(baseStyleableInfo) {
 
     /**
      * A styleable declaration is guaranteed to be in the same R file as any attribute or styleable child.
      * `min` is used to ensure in the case there are multiple R files, a consistent one is chosen.
      */
-    val styleableRClassName = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).minOrNull()
+    val styleableRClassName: ClassName? = (attrs.map { it.styleableResId.rClassName } + styleableChildren.map { it.styleableResId.rClassName }).minOrNull()
 
     /**
      * Applies lower camel case formatting
@@ -111,7 +112,7 @@ internal class StyleableInfo(
     fun attrResourceNameToCamelCase(name: String): String {
         val prefix = "${styleableResourceName}_"
         if (!name.startsWith(prefix)) {
-            logError(element) {
+            processor.logError(element) {
                 "Attribute \"$name\" does not belong to styleable declaration \"$styleableResourceName\"."
             }
         }

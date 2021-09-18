@@ -1,28 +1,28 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.processing.XMethodElement
 import com.airbnb.paris.annotations.AfterStyle
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.STYLE_CLASS_NAME
-import com.airbnb.paris.processor.framework.isPrivate
-import com.airbnb.paris.processor.framework.isProtected
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
-import javax.lang.model.element.ExecutableElement
+import com.airbnb.paris.processor.utils.isSameTypeName
 
-internal class AfterStyleInfoExtractor(override val processor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(processor, AfterStyle::class.java) {
+internal class AfterStyleInfoExtractor(val parisProcessor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(parisProcessor, AfterStyle::class.java) {
 
-    override fun elementToModel(element: ExecutableElement): AfterStyleInfo? {
+    override fun elementToModel(element: XMethodElement): AfterStyleInfo? {
+
         if (element.isPrivate() || element.isProtected()) {
-            logError(element) {
+            parisProcessor.logError(element) {
                 "Methods annotated with @AfterStyle can't be private or protected."
             }
             return null
         }
 
-        val parameterType = element.parameters.firstOrNull()?.asType()
+        val parameterType = element.parameters.firstOrNull()?.type
 
-        if (parameterType == null || !isSameType(processor.memoizer.styleClassType, parameterType)) {
-            logError(element) {
+        if (parameterType == null || !parameterType.isSameTypeName(STYLE_CLASS_NAME)) {
+            parisProcessor.logError(element) {
                 "Methods annotated with @AfterStyle must have a single Style parameter."
             }
             return null
@@ -32,4 +32,4 @@ internal class AfterStyleInfoExtractor(override val processor: ParisProcessor) :
     }
 }
 
-internal class AfterStyleInfo(element: ExecutableElement) : SkyMethodModel(element)
+internal class AfterStyleInfo(element: XMethodElement) : SkyMethodModel(element)

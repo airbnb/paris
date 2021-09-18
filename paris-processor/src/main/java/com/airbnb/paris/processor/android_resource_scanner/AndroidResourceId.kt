@@ -6,6 +6,10 @@ import com.airbnb.paris.processor.framework.KotlinCodeBlock
 import com.airbnb.paris.processor.framework.toKPoet
 import com.squareup.javapoet.ClassName
 
+/**
+ * @param className Like com.example.R.styleable
+ * @param resourceName Like title_view
+ */
 class AndroidResourceId(val value: Int, val className: ClassName, val resourceName: String) {
 
     val rClassName: ClassName = className.topLevelClassName()

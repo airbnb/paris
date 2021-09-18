@@ -1,46 +1,57 @@
 package com.airbnb.paris.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceScanner
+import com.airbnb.paris.processor.android_resource_scanner.AndroidResourceId
+import com.airbnb.paris.processor.android_resource_scanner.JavacResourceScanner
+import com.airbnb.paris.processor.android_resource_scanner.KspResourceScanner
+import com.airbnb.paris.processor.android_resource_scanner.ResourceScanner
 import com.airbnb.paris.processor.framework.Memoizer
-import com.airbnb.paris.processor.framework.SkyProcessor
-import com.airbnb.paris.processor.framework.packageName
+import com.airbnb.paris.processor.framework.Message
 import com.airbnb.paris.processor.models.AfterStyleInfoExtractor
 import com.airbnb.paris.processor.models.AttrInfoExtractor
-import com.airbnb.paris.processor.models.BaseStyleableInfo
 import com.airbnb.paris.processor.models.BaseStyleableInfoExtractor
 import com.airbnb.paris.processor.models.BeforeStyleInfoExtractor
 import com.airbnb.paris.processor.models.StyleInfoExtractor
 import com.airbnb.paris.processor.models.StyleableChildInfoExtractor
 import com.airbnb.paris.processor.models.StyleableInfo
 import com.airbnb.paris.processor.models.StyleableInfoExtractor
+import com.airbnb.paris.processor.utils.enclosingElementIfApplicable
 import com.airbnb.paris.processor.writers.ModuleJavaClass
 import com.airbnb.paris.processor.writers.ParisJavaClass
 import com.airbnb.paris.processor.writers.StyleApplierJavaClass
 import com.airbnb.paris.processor.writers.StyleExtensionsKotlinFile
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import javax.annotation.processing.ProcessingEnvironment
-import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.TypeElement
+import javax.tools.Diagnostic
+import kotlin.reflect.KClass
 
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
-class ParisProcessor : SkyProcessor(), WithParisProcessor {
+class ParisProcessor(
+    kspEnvironment: SymbolProcessorEnvironment? = null
+) : BaseProcessor(kspEnvironment) {
 
-    override val processor = this
+    val loggedMessages: MutableList<Message> = mutableListOf()
 
-    internal val resourceScanner = AndroidResourceScanner()
+    lateinit var resourceScanner: ResourceScanner
 
     internal val rFinder = RFinder(this)
+    val RElement: XTypeElement? get() = rFinder.element
 
-    override var defaultStyleNameFormat: String = ""
+    var defaultStyleNameFormat: String = ""
 
-    override var namespacedResourcesEnabled: Boolean = false
+    var namespacedResourcesEnabled: Boolean = false
+    var aggregateStyleablesOnClassPath: Boolean = false
 
-    override val memoizer = Memoizer(this)
+    val memoizer = Memoizer(this)
 
     private val beforeStyleInfoExtractor = BeforeStyleInfoExtractor(this)
 
@@ -54,12 +65,16 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     private val styleableInfoExtractor = StyleableInfoExtractor(this)
 
-    private lateinit var externalStyleablesInfo: List<BaseStyleableInfo>
+    init {
+        if (kspEnvironment != null) {
+            resourceScanner = KspResourceScanner()
+        }
+    }
 
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
-        resourceScanner.init(processingEnv)
+        resourceScanner = JavacResourceScanner(processingEnv)
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
@@ -72,72 +87,94 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
-    override fun processRound(annotations: Set<TypeElement>, roundEnv: RoundEnvironment) {
-        // The expectation is that all files will be generated during the first round where we get
-        // all the annotated elements. Then a second empty round will happen to give us a chance to
-        // do more but we ignore it
-        if (annotations.isEmpty()) {
+
+    var roundCount = 0
+    override fun process(environment: XProcessingEnv, round: XRoundEnv) {
+        // Writing to the paris and module class file on every round causes an infinite loop, because it triggers another round.
+        // We could write to that file only in finish once we collect all styleables, or just force a single round here (which
+        // assumes that no other code generates styleables, which we've never supported anyway).
+        if (roundCount > 0) return
+        roundCount++
+        val timer = Timer("Paris Processor")
+        timer.start()
+
+        round.getElementsAnnotatedWith(ParisConfig::class)
+            .firstOrNull()
+            ?.getAnnotation(ParisConfig::class)
+            ?.let {
+                defaultStyleNameFormat = it.value.defaultStyleNameFormat
+                namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
+                aggregateStyleablesOnClassPath = it.value.aggregateStyleablesOnClassPath
+                rFinder.processConfig(it)
+            }
+        timer.markStepCompleted("Paris Config lookup")
+
+        beforeStyleInfoExtractor.process(round)
+        val classesToBeforeStyleInfo =
+            beforeStyleInfoExtractor.latest.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process before styles")
+
+        afterStyleInfoExtractor.process(round)
+        val classesToAfterStyleInfo = afterStyleInfoExtractor.latest.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process after styles")
+
+        styleableChildInfoExtractor.process(round)
+        val styleableChildrenInfo = styleableChildInfoExtractor.latest
+        val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process styleable children")
+
+        attrInfoExtractor.process(round)
+        val attrsInfo = attrInfoExtractor.latest
+        val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process attrs")
+
+        rFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
+        timer.markStepCompleted("Process resources")
+
+        styleInfoExtractor.process(round)
+        val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
+        timer.markStepCompleted("Process styles")
+
+        val styleablesInfo: List<StyleableInfo> = styleableInfoExtractor.process(
+            roundEnv = round,
+            classesToStyleableChildInfo = classesToStyleableChildrenInfo,
+            classesToBeforeStyleInfo = classesToBeforeStyleInfo,
+            classesToAfterStyleInfo = classesToAfterStyleInfo,
+            classesToAttrsInfo = classesToAttrsInfo,
+            classesToStylesInfo = classesToStylesInfo
+        )
+        timer.markStepCompleted("Process styleables")
+
+        rFinder.processStyleables(styleablesInfo)
+        timer.markStepCompleted("Process styleables resources")
+        if (styleablesInfo.isEmpty() && !aggregateStyleablesOnClassPath) {
+            // No styleables to process, so we have no files to write and can stop here
             return
         }
 
-        roundEnv.getElementsAnnotatedWith(ParisConfig::class.java)
-            .firstOrNull()
-            ?.getAnnotation(ParisConfig::class.java)
-            ?.let {
-                defaultStyleNameFormat = it.defaultStyleNameFormat
-                namespacedResourcesEnabled = it.namespacedResourcesEnabled
-                rFinder.processConfig(it)
-            }
-
-        beforeStyleInfoExtractor.process(roundEnv)
-        val classesToBeforeStyleInfo =
-            beforeStyleInfoExtractor.latest.groupBy { it.enclosingElement }
-
-        afterStyleInfoExtractor.process(roundEnv)
-        val classesToAfterStyleInfo = afterStyleInfoExtractor.latest.groupBy { it.enclosingElement }
-
-        styleableChildInfoExtractor.process(roundEnv)
-        val styleableChildrenInfo = styleableChildInfoExtractor.latest
-        val classesToStyleableChildrenInfo = styleableChildrenInfo.groupBy { it.enclosingElement }
-
-        attrInfoExtractor.process(roundEnv)
-        val attrsInfo = attrInfoExtractor.latest
-        val classesToAttrsInfo = attrsInfo.groupBy { it.enclosingElement }
-
-        rFinder.processResourceAnnotations(styleableChildrenInfo, attrsInfo)
-
-        styleInfoExtractor.process(roundEnv)
-        val classesToStylesInfo = styleInfoExtractor.latest.groupBy { it.enclosingElement }
-
-        val styleablesInfo: List<StyleableInfo> = styleableInfoExtractor.process(
-            roundEnv,
-            classesToStyleableChildrenInfo,
-            classesToBeforeStyleInfo,
-            classesToAfterStyleInfo,
-            classesToAttrsInfo,
-            classesToStylesInfo
-        )
-
-        rFinder.processStyleables(styleablesInfo)
-
         /** Make sure to get these before writing the [ModuleJavaClass] for this module */
-        externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
+        val externalStyleablesInfo = BaseStyleableInfoExtractor(this).fromEnvironment()
+        timer.markStepCompleted("Extract styleables from classpath")
 
         val allStyleables = styleablesInfo + externalStyleablesInfo
+
         if (allStyleables.isNotEmpty() && rFinder.element == null) {
             logError {
                 "Unable to locate R class. Please annotate an arbitrary package with @ParisConfig and set the rClass parameter to the R class."
             }
             return
         }
+
         val styleablesTree = StyleablesTree(this, allStyleables)
         for (styleableInfo in styleablesInfo) {
             StyleApplierJavaClass(this, styleablesTree, styleableInfo).write()
             StyleExtensionsKotlinFile(this, styleableInfo).write()
         }
+        timer.markStepCompleted("Write all styleables files")
 
         if (styleablesInfo.isNotEmpty()) {
             ModuleJavaClass(this, styleablesInfo).write()
+            timer.markStepCompleted("Write module class file")
         }
 
         if (allStyleables.isNotEmpty()) {
@@ -148,20 +185,77 @@ class ParisProcessor : SkyProcessor(), WithParisProcessor {
                 styleablesInfo,
                 externalStyleablesInfo
             ).write()
+
+            timer.markStepCompleted("Write Paris class")
+        }
+
+        timer.finishAndPrint(messager)
+    }
+
+    override fun onError() {
+        printLogsIfAny()
+    }
+
+    override fun finish() {
+        // Errors and warnings are only printed at the end to generate as many classes as possible
+        // and avoid "could not find" errors which make debugging harder
+        printLogsIfAny()
+    }
+
+    fun printLogsIfAny() {
+        loggedMessages.forEach { message ->
+            val kind = when (message.severity) {
+                Message.Severity.Warning -> Diagnostic.Kind.WARNING
+                Message.Severity.Error -> Diagnostic.Kind.ERROR
+                Message.Severity.Note -> Diagnostic.Kind.NOTE
+            }
+            val element = message.element
+
+            val details = if (element != null) {
+
+                buildString {
+                    append(" [element=$element ${element.javaClass.simpleName}")
+
+                    element.enclosingElementIfApplicable?.className?.let {
+                        append(" in $it")
+                    }
+
+                    append("]")
+                }
+            } else {
+                ""
+            }
+
+            environment.messager.printMessage(kind, message.message + details)
+        }
+        loggedMessages.clear()
+    }
+
+    fun getResourceId(annotation: KClass<out Annotation>, element: XElement, value: Int): AndroidResourceId? {
+        val resourceId = resourceScanner.getId(annotation, element, value)
+        if (resourceId == null) {
+            logError(element) {
+                "Could not retrieve Android resource ID from annotation."
+            }
+        }
+        return resourceId
+    }
+
+    fun logError(element: XElement? = null, lazyMessage: () -> String) {
+        log(Message.Severity.Error, element, lazyMessage)
+    }
+
+    fun logWarning(element: XElement? = null, lazyMessage: () -> String) {
+        if (isKsp) {
+            // Ksp warnings cause kotlin compile errors when warnings as errors is turned on.
+            // To prevent build failures from warnings, use note mode in KSP
+            log(Message.Severity.Note, element, lazyMessage)
+        } else {
+            log(Message.Severity.Warning, element, lazyMessage)
         }
     }
 
-    override fun claimAnnotations(
-        annotations: Set<TypeElement>,
-        roundEnv: RoundEnvironment
-    ): Boolean {
-        // Let other annotation processors use them if they want
-        return false
-    }
-
-    override fun processingOver() {
-        // Errors and warnings are only printed at the end to generate as many classes as possible
-        // and avoid "could not find" errors which make debugging harder
-        printLogsIfAny(messager)
+    fun log(severity: Message.Severity, element: XElement? = null, lazyMessage: () -> String) {
+        loggedMessages.add(Message(severity, lazyMessage(), element))
     }
 }

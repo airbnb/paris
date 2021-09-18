@@ -90,4 +90,3 @@ internal fun TypeSpec.Builder.public() {
 internal fun TypeSpec.Builder.static() {
     addModifiers(Modifier.STATIC)
 }
-

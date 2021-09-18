@@ -1,16 +1,15 @@
 package com.airbnb.paris.processor.framework.models
 
-import com.airbnb.paris.processor.framework.SkyProcessor
-import com.airbnb.paris.processor.framework.WithSkyProcessor
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XRoundEnv
+import com.airbnb.paris.processor.BaseProcessor
 
 interface SkyModel
 
-abstract class SkyModelFactory<T : SkyModel, in E : Element>(
-    override val processor: SkyProcessor,
+abstract class JavaSkyModelFactory<T : SkyModel, in E : XElement>(
+    val processor: BaseProcessor,
     private val annotationClass: Class<out Annotation>
-) : WithSkyProcessor {
+) {
 
     var models = emptyList<T>()
         private set
@@ -18,11 +17,12 @@ abstract class SkyModelFactory<T : SkyModel, in E : Element>(
     var latest = emptyList<T>()
         private set
 
-    fun process(roundEnv: RoundEnvironment) {
-        roundEnv.getElementsAnnotatedWith(annotationClass)
+    fun process(roundEnv: XRoundEnv) {
+        roundEnv.getElementsAnnotatedWith(annotationClass.canonicalName)
+            .filter(::filter)
             .mapNotNull {
                 @Suppress("UNCHECKED_CAST")
-                if (filter(it)) elementToModel(it as E) else null
+                elementToModel(it as E)
             }
             .let {
                 models += it
@@ -30,7 +30,7 @@ abstract class SkyModelFactory<T : SkyModel, in E : Element>(
             }
     }
 
-    open fun filter(element: Element): Boolean = true
+    open fun filter(element: XElement): Boolean = true
 
     abstract fun elementToModel(element: E): T?
 }

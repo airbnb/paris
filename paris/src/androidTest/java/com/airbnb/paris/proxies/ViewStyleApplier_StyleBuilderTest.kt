@@ -3,6 +3,7 @@ package com.airbnb.paris.proxies
 import android.view.View
 import android.view.ViewStyleApplier.StyleBuilder
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.airbnb.paris.styles.ProgrammaticStyle
@@ -11,6 +12,7 @@ import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -57,6 +59,7 @@ class ViewStyleApplier_StyleBuilderTest {
         }
     }
 
+    @Ignore("Comparing drawables does not work in CI tests")
     @Test
     fun background() {
         assertNull(view.background)
@@ -64,7 +67,7 @@ class ViewStyleApplier_StyleBuilderTest {
             .backgroundRes(R.drawable.format_drawable)
             .applyTo(view)
         Assert.assertEquals(
-            res.getDrawable(R.drawable.format_drawable).constantState,
+            ResourcesCompat.getDrawable(res, R.drawable.format_drawable, null)?.constantState,
             view.background.constantState
         )
     }

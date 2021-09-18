@@ -25,7 +25,8 @@ public final class MyViewWithoutStyleStyleApplier extends StyleApplier<MyViewWit
   }
 
   /**
-   * Empty style. */
+   * Empty style.
+   */
   public void applyDefault() {
   }
 
@@ -59,7 +60,8 @@ public final class MyViewWithoutStyleStyleApplier extends StyleApplier<MyViewWit
     }
 
     /**
-     * Empty style. */
+     * Empty style.
+     */
     public StyleBuilder addDefault() {
       return this;
     }

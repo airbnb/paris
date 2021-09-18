@@ -10,12 +10,6 @@ android {
         minSdkVersion rootProject.MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
     }
 
     compileOptions {
@@ -32,7 +26,6 @@ dependencies {
     implementation project(':paris')
 
     implementation deps.appcompat
-    implementation deps.kotlin
 
     kapt project(':paris-processor')
 }

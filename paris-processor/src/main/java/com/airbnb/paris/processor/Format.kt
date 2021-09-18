@@ -1,14 +1,24 @@
 package com.airbnb.paris.processor
 
+import androidx.annotation.ColorInt
+import androidx.annotation.Px
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XVariableElement
+import androidx.room.compiler.processing.isArray
+import androidx.room.compiler.processing.isInt
+import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.annotations.Fraction
+import com.airbnb.paris.annotations.LayoutDimension
 import com.airbnb.paris.processor.framework.AndroidClassNames
-import com.airbnb.paris.processor.framework.hasAnnotation
-import com.airbnb.paris.processor.framework.hasAnyAnnotation
+import com.airbnb.paris.processor.framework.Memoizer
+import com.airbnb.paris.processor.utils.hasAnyAnnotationBySimpleName
+import com.airbnb.paris.processor.utils.isBoolean
+import com.airbnb.paris.processor.utils.isFieldElement
+import com.airbnb.paris.processor.utils.isFloat
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
 
 internal class Format private constructor(
     private val type: Type,
@@ -69,17 +79,22 @@ internal class Format private constructor(
             "XmlRes"
         )
 
-        fun forElement(processor: ParisProcessor, element: Element): Format {
-            return if (element.kind == ElementKind.FIELD) {
-                forField(processor, element)
-            } else {
-                forMethod(element)
+        fun forElement(memoizer: Memoizer, element: XElement): Format {
+            return when {
+                element.isFieldElement() -> {
+                    forField(memoizer, element)
+                }
+                element.isMethod() -> {
+                    forMethod(element)
+                }
+                else -> {
+                    error("unsupported $element")
+                }
             }
         }
 
-        private fun forField(processor: ParisProcessor, element: Element): Format {
-            val type = element.asType()
-            if (processor.isView(type)) {
+        private fun forField(memoizer: Memoizer, element: XFieldElement): Format {
+            if (memoizer.androidViewClassTypeX.rawType.isAssignableFrom(element.type)) {
                 // If the field is a View then the attribute must be a style or style resource id
                 return Format(Type.STYLE)
             }
@@ -87,43 +102,45 @@ internal class Format private constructor(
             return forEitherFieldOrMethodParameter(element)
         }
 
-        private fun forMethod(element: Element): Format {
-            return forEitherFieldOrMethodParameter((element as ExecutableElement).parameters[0])
+        private fun forMethod(element: XMethodElement): Format {
+            val param = element.parameters.firstOrNull() ?: error("No parameter for $element")
+            return forEitherFieldOrMethodParameter(param)
         }
 
-        private fun forEitherFieldOrMethodParameter(element: Element): Format {
+        private fun forEitherFieldOrMethodParameter(element: XVariableElement): Format {
             // TODO Use qualified name of annotations
             // TODO Check that the type of the parameters corresponds to the annotation
 
-            if (element.hasAnnotation("ColorInt")) {
+            if (element.hasAnnotation(ColorInt::class)) {
                 return Format(Type.COLOR)
             }
-            if (element.hasAnnotation("Fraction")) {
-                val fraction = element.getAnnotation(Fraction::class.java)
+            element.getAnnotation(Fraction::class)?.value?.let { fraction ->
                 return Format(Type.FRACTION, fraction.base, fraction.pbase)
             }
-            if (element.hasAnnotation("LayoutDimension")) {
+            if (element.hasAnnotation(LayoutDimension::class)) {
                 return Format(Type.LAYOUT_DIMENSION)
             }
             // TODO What about Sp?
-            if (element.hasAnnotation("Px")) {
+            if (element.hasAnnotation(Px::class)) {
                 return Format(Type.DIMENSION_PIXEL_SIZE)
             }
-            if (element.hasAnyAnnotation(RES_ANNOTATIONS)) {
+            if (element.hasAnyAnnotationBySimpleName(RES_ANNOTATIONS)) {
                 return Format.RESOURCE_ID
             }
 
-            val formatType = when (val typeString = element.asType().toString()) {
-                "java.lang.Boolean", "boolean" -> Type.BOOLEAN
-                "java.lang.CharSequence" -> Type.CHARSEQUENCE
-                "java.lang.CharSequence[]" -> Type.CHARSEQUENCE_ARRAY
-                "android.content.res.ColorStateList" -> Type.COLOR_STATE_LIST
-                "android.graphics.Typeface" -> Type.FONT
-                "android.graphics.drawable.Drawable" -> Type.DRAWABLE
-                "java.lang.Float", "float" -> Type.FLOAT
-                "java.lang.Integer", "int" -> Type.INT
-                "java.lang.String" -> Type.STRING
-                else -> throw IllegalArgumentException("Invalid type: $typeString")
+            val type = element.type.makeNonNullable()
+            val typeString by lazy { type.typeName.toString() }
+            val formatType = when {
+                type.isBoolean() -> Type.BOOLEAN
+                type.isFloat() -> Type.FLOAT
+                type.isInt() -> Type.INT
+                type.isTypeOf(CharSequence::class) -> Type.CHARSEQUENCE
+                type.isTypeOf(String::class) -> Type.STRING
+                typeString == "android.content.res.ColorStateList" -> Type.COLOR_STATE_LIST
+                typeString == "android.graphics.Typeface" -> Type.FONT
+                typeString == "android.graphics.drawable.Drawable" -> Type.DRAWABLE
+                type.isArray() && type.componentType.isTypeOf(CharSequence::class) -> Type.CHARSEQUENCE_ARRAY
+                else -> error("Invalid type: $type $typeString")
             }
             return Format(formatType)
         }

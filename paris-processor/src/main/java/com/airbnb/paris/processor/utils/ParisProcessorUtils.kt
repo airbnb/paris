@@ -28,15 +28,15 @@ class ParisProcessorUtils {
                         acc
                     } else {
                         if (index == 0) {
-                            c.toUpperCase() + acc
+                            c.uppercaseChar() + acc
                         } else if (name[index - 1] != '_') {
                             if (isNameAllCaps) {
-                                c.toLowerCase() + acc
+                                c.lowercaseChar() + acc
                             } else {
                                 c + acc
                             }
                         } else {
-                            c.toUpperCase() + acc
+                            c.uppercaseChar() + acc
                         }
                     }
                 }

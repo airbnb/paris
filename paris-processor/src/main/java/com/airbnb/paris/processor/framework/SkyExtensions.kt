@@ -81,6 +81,12 @@ internal fun Element.siblings(): List<Element> = when (this) {
     else -> TODO()
 }
 
+//internal fun XElement.siblings(): List<Element> = when (this) {
+//    is XExecutableElement -> enclosingTypeElement.en
+//    is XFieldElement -> enclosingElement.enclosedElements.filterNot { it === this }
+//    else -> TODO()
+//}
+
 // String
 
 internal fun String.className(): ClassName =
