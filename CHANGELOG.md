@@ -1,7 +1,66 @@
 # 2.0.0
-- Support KSP
+Paris now supports Kotlin Symbol Processing for faster builds! https://github.com/google/ksp
+
+Breaking changes needed to support KSP:
 - ParisConfig annotation can no longer be used on package elements, only on class or interfaces
 - R class references used in annotations cannot be star imported
+- Added `aggregateStyleablesOnClassPath` parameter to @ParisConfig. This must now be set to true to have the module generate a Paris class using only classpath dependencies if there are no Styleables in the module sources.
+
+Note: Due to a bug in KSP (https://github.com/google/ksp/issues/630) it is recommended to disable KSP incremental compilation until the bug is fixed in KSP, otherwise you may encounter spurious build failures.
+
+Additionally, if you are using R2 generation via the butterknife gradle plugin you must configure KSP to be aware of those generated sources.
+This can be done either via the experiment KSP setting `allowSourcesFromOtherPlugins`
+```
+// build.gradle.kts
+ksp {
+    allowSourceFromOtherPlugins=true
+}
+```
+
+Or by manually registering R2 sources as an input to KSP
+```kotlin
+// In a gradle plugin or build.gradle.kts
+project.afterEvaluate {
+   setUpR2TaskDependency()
+}
+
+fun Project.setUpR2TaskDependency() {
+    requireAndroidVariants().forEach { variant ->
+        val r2Task = runCatching { project.tasks.named("generate${variant.name.capitalize()}R2") }.getOrNull()
+        if (r2Task != null) {
+            project.tasks.named("ksp${variant.name.capitalize()}Kotlin").dependsOn(r2Task)
+
+            project.extensions.configure(KotlinAndroidProjectExtension::class.java) {
+                sourceSets.getByName(variant.name)
+                    .kotlin
+                    .srcDir("build/generated/source/r2/${variant.name}")
+            }
+        }
+    }
+}
+
+/**
+ * Return the Android variants for this module, or error if this is not a module with a known Android plugin.
+ */
+fun Project.requireAndroidVariants(): DomainObjectSet<out BaseVariant> {
+    return androidVariants() ?: error("no known android extension found for ${project.name}")
+}
+
+/**
+ * Return the Android variants for this module, or null if this is not a module with a known Android plugin.
+ */
+fun Project.androidVariants(): DomainObjectSet<out BaseVariant>? {
+    return when (val androidExtension = this.extensions.findByName("android")) {
+        is LibraryExtension -> {
+            androidExtension.libraryVariants
+        }
+        is AppExtension -> {
+            androidExtension.applicationVariants
+        }
+        else -> null
+    }
+}
+```
 
 # 1.7.3 (April 13, 2021)
 
