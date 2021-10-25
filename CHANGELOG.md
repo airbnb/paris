@@ -1,3 +1,7 @@
+# 2.0.1
+
+Bump XProcessing, KSP, and Kotlin versions to latest.
+
 # 2.0.0
 Paris now supports Kotlin Symbol Processing for faster builds! https://github.com/google/ksp
 

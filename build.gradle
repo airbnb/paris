@@ -2,9 +2,9 @@ buildscript {
     ext {
         ANDROID_PLUGIN_VERSION = '7.0.1'
         BUTTERKNIFE_VERSION = '10.2.3'
-        KOTLIN_VERSION = '1.5.30'
+        KOTLIN_VERSION = '1.5.31'
         VERSIONS_VERSION = '0.39.0'
-        KSP_VERSION = '1.5.30-1.0.0'
+        KSP_VERSION = '1.5.31-1.0.0'
     }
 
     repositories {
