@@ -21,7 +21,8 @@ rootProject.ext {
     MOCKITO_VERSION = '3.11.2'
     ROBOLECTRIC_VERSION = '4.6.1'
     TESTING_COMPILE_VERSION = '0.19'
-    KOTLIN_TESTING_COMPILE_VERSION = '1.4.4'
+    KOTLIN_TESTING_COMPILE_VERSION = '1.4.5'
+    XPROCESSING_VERSION = "2.4.0-beta01"
 
     deps = [
             // Keep these alphabetized
@@ -42,5 +43,9 @@ rootProject.ext {
             mockitoAndroid      : "org.mockito:mockito-android:$MOCKITO_VERSION",
             robolectric         : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
             testingCompile      : "com.google.testing.compile:compile-testing:$TESTING_COMPILE_VERSION",
+            ksp                       : "com.google.devtools.ksp:symbol-processing-api:$KSP_VERSION",
+            kspImpl                   : "com.google.devtools.ksp:symbol-processing:$KSP_VERSION",
+            xProcessing               : "androidx.room:room-compiler-processing:$XPROCESSING_VERSION",
+            xProcessingTesting        : "androidx.room:room-compiler-processing-testing:$XPROCESSING_VERSION",
     ]
 }

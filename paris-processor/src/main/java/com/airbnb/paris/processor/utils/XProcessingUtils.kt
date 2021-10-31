@@ -102,7 +102,7 @@ val XElement.isJavac: Boolean
     }
 
 val XProcessingEnv.resolver: Resolver
-    get() = getFieldWithReflection("resolver")
+    get() = getFieldWithReflection("_resolver")
 
 val KSAnnotation.containingPackage: String?
     get() = parent?.containingPackage
@@ -133,53 +133,3 @@ fun XFieldElement.javaGetterSyntax(env: XProcessingEnv): String {
 
 val XTypeElement.enclosingElementIfCompanion: XTypeElement
     get() = if (isCompanionObject()) enclosingTypeElement!! else this
-
-// TODO: update xprocessing library to support KspSyntheticPropertyMethodElement, then delete this workaround.
-// fix will be in next version of xprocessing after alpha4
-fun <T : OriginatingElementsHolder.Builder<T>> T.addOriginatingElementFixed(
-    element: XElement
-): T {
-    if (element.isJavac) {
-        addOriginatingElement(element)
-        return this
-    }
-
-    try {
-        element.getFieldWithReflection<KSPropertyAccessor>("accessor")
-            .receiver
-            .containingFile?.let { containingFile ->
-                val wrapperElement = Class.forName("androidx.room.compiler.processing.ksp.KSFileAsOriginatingElement")
-                    .getConstructor(KSFile::class.java)
-                    .newInstance(containingFile)
-
-                addOriginatingElement(wrapperElement as Element)
-            }
-    } catch (e: Throwable) {
-        addOriginatingElement(element)
-    }
-    return this
-}
-
-// TODO: update xprocessing library to support KspSyntheticPropertyMethodElement, then delete this workaround.
-// fix will be in next version of xprocessing after alpha4
-fun TypeSpec.Builder.addOriginatingElementFixed(element: XElement): TypeSpec.Builder {
-    if (element.isJavac) {
-        addOriginatingElement(element)
-        return this
-    }
-
-    try {
-        element.getFieldWithReflection<KSPropertyAccessor>("accessor")
-            .receiver
-            .containingFile?.let { containingFile ->
-                val wrapperElement = Class.forName("androidx.room.compiler.processing.ksp.KSFileAsOriginatingElement")
-                    .getConstructor(KSFile::class.java)
-                    .newInstance(containingFile)
-
-                addOriginatingElement(wrapperElement as Element)
-            }
-    } catch (e: Throwable) {
-        addOriginatingElement(element)
-    }
-    return this
-}

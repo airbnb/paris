@@ -10,9 +10,9 @@ targetCompatibility = rootProject.JAVA_TARGET_VERSION
 
 dependencies {
     implementation project(':paris-annotations')
-    implementation "com.google.devtools.ksp:symbol-processing-api:$KSP_VERSION"
-    implementation "com.google.devtools.ksp:symbol-processing:$KSP_VERSION"
-    implementation "androidx.room:room-compiler-processing:2.4.0-alpha04"
+    implementation deps.ksp
+    implementation deps.kspImpl
+    implementation deps.xProcessing
     // Compiler needed to resolve resource references in annotations
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
 
@@ -23,7 +23,7 @@ dependencies {
 
     compileOnly files(rootProject.file("libs/tools.jar"))
 
-    testImplementation "androidx.room:room-compiler-processing-testing:2.4.0-alpha04"
+    testImplementation deps.xProcessingTesting
     testImplementation deps.junit
     testImplementation "io.strikt:strikt-core:0.31.0"
     testImplementation deps.kotlinTest
