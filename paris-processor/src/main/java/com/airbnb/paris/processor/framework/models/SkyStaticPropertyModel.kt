@@ -48,7 +48,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv
 
                 // Method case for kotlin companion property in javac/kapt
                 // Original source is kotlin, so java interop will use a getter function
-                javaGetter = JavaCodeBlock.of("Companion.\$N()", getter.name)
+                javaGetter = JavaCodeBlock.of("Companion.\$N()", getter.jvmName)
             }
             is XFieldElement -> {
 

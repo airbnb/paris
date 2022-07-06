@@ -10,7 +10,7 @@ abstract class SkyMethodModel private constructor(
     val enclosingElement: XTypeElement,
     val element: XMethodElement,
 ) : SkyModel {
-    val name: String get() = element.name
+    val jvmName: String get() = element.jvmName
 
     protected constructor(element: XMethodElement) : this(
         element.enclosingElement as XTypeElement,

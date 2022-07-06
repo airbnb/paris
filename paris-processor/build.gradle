@@ -25,7 +25,7 @@ dependencies {
 
     testImplementation deps.xProcessingTesting
     testImplementation deps.junit
-    testImplementation "io.strikt:strikt-core:0.31.0"
+    testImplementation "io.strikt:strikt-core:0.34.1"
     testImplementation deps.kotlinTest
 }
 

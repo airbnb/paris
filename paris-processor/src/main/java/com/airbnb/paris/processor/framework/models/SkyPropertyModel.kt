@@ -45,7 +45,7 @@ abstract class SkyPropertyModel(val element: XElement, val env: XProcessingEnv) 
 
                 name = propertyName
                 getterElement = getterFunction
-                getter = "${getterFunction.name}()"
+                getter = "${getterFunction.jvmName}()"
                 type = getterFunction.returnType
             }
             is XFieldElement -> {
@@ -90,10 +90,10 @@ internal fun findGetterPropertyFromSyntheticFunction(syntheticMethod: XMethodEle
     // be appended with "$" and an arbitrary string for obfuscation purposes.
     // In kotlin 1.4.0 both versions will be present, so we check for the real getter first.
     val kotlinGetterElement = getters.firstOrNull {
-        val elementSimpleName = it.name
+        val elementSimpleName = it.jvmName
         elementSimpleName == getterName
     } ?: getters.firstOrNull {
-        val elementSimpleName = it.name
+        val elementSimpleName = it.jvmName
         elementSimpleName.startsWith("$getterName$")
     } ?: return null
 
