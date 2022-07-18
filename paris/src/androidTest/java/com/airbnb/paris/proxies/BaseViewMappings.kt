@@ -28,7 +28,7 @@ internal val BOOLS = listOf(true, false)
 
 // TODO What about Dp and ColorInt methods?
 
-internal open class BaseViewMapping<in Builder, Proxy : com.airbnb.paris.proxies.Proxy<Proxy, View>, View : android.view.View, Input : Any> protected constructor(
+internal open class BaseViewMapping<in Builder, Proxy : com.airbnb.paris.proxies.Proxy<Proxy, View>, View : android.view.View, Input : Any?> protected constructor(
     val testValues: List<Input>,
     val attrRes: Int,
     val setProxyFunction: Proxy.(Input) -> Unit,
