@@ -1,11 +1,13 @@
 package com.airbnb.paris.proxies
 
+import android.R
+import android.content.res.ColorStateList
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageViewStyleApplier
 import java.util.ArrayList
 
-internal class ImageViewMapping<I : Any> private constructor(
+internal class ImageViewMapping<I : Any?> private constructor(
     testValues: List<I>,
     attrRes: Int,
     setProxyFunction: ImageViewProxy.(I) -> Unit,
@@ -28,7 +30,7 @@ internal class ImageViewMapping<I : Any> private constructor(
 
     companion object {
 
-        fun <I : Any> withCustomAssert(
+        fun <I : Any?> withCustomAssert(
             testValues: List<I>,
             attrRes: Int,
             setProxyFunction: ImageViewProxy.(I) -> Unit,
@@ -46,7 +48,7 @@ internal class ImageViewMapping<I : Any> private constructor(
             )
         }
 
-        fun <I : Any> withAssertEquals(
+        fun <I : Any?> withAssertEquals(
             testValues: List<I>,
             attrRes: Int,
             setProxyFunction: ImageViewProxy.(I) -> Unit,
@@ -89,9 +91,9 @@ internal val IMAGE_VIEW_MAPPINGS = ArrayList<ImageViewMapping<*>>().apply {
     ))
 
     // tint
-    add(ImageViewMapping.withAssertEquals(
+    add(ImageViewMapping.withAssertEquals<ColorStateList?>(
         ARBITRARY_COLOR_STATE_LISTS,
-        android.R.attr.tint,
+        R.attr.tint,
         ImageViewProxy::setTint,
         ImageViewStyleApplier.StyleBuilder::tint,
         ImageViewStyleApplier.StyleBuilder::tintRes,

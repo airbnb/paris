@@ -32,7 +32,6 @@ internal class StyleStaticMethodInfoExtractor(val parisProcessor: ParisProcessor
 
         val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
 
-        // TODO Check that the target type is a builder
         val targetType = element.parameters[0].type.typeName
 
         val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement.className, elementName, targetType)

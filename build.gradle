@@ -1,16 +1,17 @@
 buildscript {
     ext {
-        ANDROID_PLUGIN_VERSION = '7.0.1'
+        ANDROID_PLUGIN_VERSION = '7.2.1'
         BUTTERKNIFE_VERSION = '10.2.3'
-        KOTLIN_VERSION = '1.5.31'
-        VERSIONS_VERSION = '0.39.0'
-        KSP_VERSION = '1.5.31-1.0.0'
+        KOTLIN_VERSION = '1.7.0'
+        // Run "./gradlew dependencyUpdates" to check for updates
+        VERSIONS_VERSION = '0.42.0'
+        KSP_VERSION = '1.7.0-1.0.6'
     }
 
     repositories {
         google()
         gradlePluginPortal()
-        jcenter()
+        mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
@@ -21,7 +22,7 @@ buildscript {
         classpath "com.github.ben-manes:gradle-versions-plugin:$VERSIONS_VERSION"
         classpath 'com.vanniktech:gradle-maven-publish-plugin:0.14.2'
         // Dokka is needed on classpath for vanniktech publish plugin
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.7.0"
     }
 }
 
@@ -34,7 +35,7 @@ apply plugin: "com.github.ben-manes.versions"
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     configurations.all {

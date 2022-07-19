@@ -176,7 +176,7 @@ internal class StyleApplierJavaClass(
 
                 // TODO Move to different method
                 for (beforeStyle in styleableInfo.beforeStyles) {
-                    addStatement("getProxy().\$N(style)", beforeStyle.name)
+                    addStatement("getProxy().\$N(style)", beforeStyle.jvmName)
                 }
 
                 for (attr in styleableInfo.attrs) {
@@ -184,7 +184,7 @@ internal class StyleApplierJavaClass(
                         controlFlow("if (a.hasValue(\$L))", attr.styleableResId.code) {
                             addStatement(
                                 "getProxy().\$N(\$L)",
-                                attr.name,
+                                attr.jvmName,
                                 attr.targetFormat.typedArrayMethodCode("a", attr.styleableResId.code)
                             )
                         }
@@ -193,7 +193,7 @@ internal class StyleApplierJavaClass(
                             controlFlow("else if (style.getShouldApplyDefaults())") {
                                 addStatement(
                                     "getProxy().\$N(\$L)",
-                                    attr.name,
+                                    attr.jvmName,
                                     attr.targetFormat.resourcesMethodCode(
                                         "context",
                                         "res",
@@ -217,7 +217,7 @@ internal class StyleApplierJavaClass(
 
                 // TODO Move to different method
                 for (afterStyle in styleableInfo.afterStyles) {
-                    addStatement("getProxy().\$N(style)", afterStyle.name)
+                    addStatement("getProxy().\$N(style)", afterStyle.jvmName)
                 }
             }
         }
