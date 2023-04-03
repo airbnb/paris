@@ -66,7 +66,7 @@ abstract class BaseProcessor(var kspEnvironment: SymbolProcessorEnvironment? = n
 
     final override fun process(resolver: Resolver): List<KSAnnotated> {
         val kspEnvironment = requireNotNull(kspEnvironment)
-        environment = XProcessingEnv.create(kspEnvironment.options, resolver, kspEnvironment.codeGenerator, kspEnvironment.logger)
+        environment = XProcessingEnv.create(kspEnvironment, resolver)
         process(environment, XRoundEnv.create(environment))
         return emptyList()
     }

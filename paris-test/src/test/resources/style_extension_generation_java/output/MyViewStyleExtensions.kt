@@ -1,6 +1,6 @@
 @file:Suppress(
   "DEPRECATION",
-  "Detekt.MaxLineLength"
+  "Detekt.MaxLineLength",
 )
 
 package com.airbnb.paris.extensions
