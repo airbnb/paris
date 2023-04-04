@@ -1,11 +1,11 @@
 buildscript {
     ext {
-        ANDROID_PLUGIN_VERSION = '7.2.1'
+        ANDROID_PLUGIN_VERSION = '7.4.0'
         BUTTERKNIFE_VERSION = '10.2.3'
-        KOTLIN_VERSION = '1.7.0'
+        KOTLIN_VERSION = '1.8.10'
         // Run "./gradlew dependencyUpdates" to check for updates
         VERSIONS_VERSION = '0.42.0'
-        KSP_VERSION = '1.7.0-1.0.6'
+        KSP_VERSION = '1.8.10-1.0.9'
     }
 
     repositories {

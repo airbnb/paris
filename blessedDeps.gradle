@@ -21,8 +21,8 @@ rootProject.ext {
     MOCKITO_VERSION = '3.11.2'
     ROBOLECTRIC_VERSION = '4.6.1'
     TESTING_COMPILE_VERSION = '0.19'
-    KOTLIN_TESTING_COMPILE_VERSION = '1.4.9'
-    XPROCESSING_VERSION = "2.5.0-alpha02"
+    KOTLIN_TESTING_COMPILE_VERSION = '1.5.0'
+    XPROCESSING_VERSION = "2.6.0-alpha01"
 
     deps = [
             // Keep these alphabetized

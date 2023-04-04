@@ -1,3 +1,10 @@
+# 2.0.2
+
+Bump XProcessing, KSP, and Kotlin versions to latest.
+
+There was a breaking change in the room compiler processing library, this version is compatible with Room 2.6.0-alpha01 and will fail if earlier versions are used.
+This dependency must be the same for all other annotation processors that also use this library, such as Epoxy.
+
 # 2.0.1
 
 Bump XProcessing, KSP, and Kotlin versions to latest.
