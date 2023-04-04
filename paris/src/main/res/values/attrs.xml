@@ -11,6 +11,8 @@
         <attr name="android:elevation" />
         <attr name="android:focusable" />
         <attr name="android:foreground" />
+        <attr name="android:foregroundTint" />
+        <attr name="android:foregroundTintMode" />
         <attr name="android:layout_width" />
         <attr name="android:layout_height" />
         <attr name="android:layout_gravity" />
@@ -23,7 +25,7 @@
         <attr name="android:layout_marginStart" />
         <attr name="android:layout_marginTop" />
         <attr name="android:layout_marginVertical" />
-        <attr name="android:layout_weight"/>
+        <attr name="android:layout_weight" />
         <attr name="android:minHeight" />
         <attr name="android:minWidth" />
         <attr name="android:padding" />
@@ -60,7 +62,7 @@
         <attr name="android:fontFamily" />
         <attr name="android:gravity" />
         <attr name="android:letterSpacing" />
-        <attr name="android:lineHeight"/>
+        <attr name="android:lineHeight" />
         <attr name="android:lines" />
         <attr name="android:lineSpacingExtra" />
         <attr name="android:lineSpacingMultiplier" />

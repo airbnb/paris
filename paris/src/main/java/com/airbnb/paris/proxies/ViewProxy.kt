@@ -17,6 +17,7 @@ import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import com.airbnb.paris.R2
+import com.airbnb.paris.R2.attr.tintMode
 import com.airbnb.paris.annotations.AfterStyle
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.LayoutDimension
@@ -293,6 +294,19 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     fun setForeground(drawable: Drawable?) {
         view.foreground = drawable
     }
+
+    @Attr(R2.styleable.Paris_View_android_foregroundTint)
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun setForegroundTint(colorStateList: ColorStateList?) {
+        view.foregroundTintList = colorStateList
+    }
+
+    @Attr(R2.styleable.Paris_View_android_foregroundTintMode)
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun setForegroundTintMode(tintMode: Int) {
+        view.foregroundTintMode = parseTintMode(tintMode)
+    }
+
 
     @Attr(R2.styleable.Paris_View_android_minHeight)
     fun setMinHeight(@Px minHeight: Int) {
