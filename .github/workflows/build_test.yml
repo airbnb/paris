@@ -5,7 +5,7 @@ on:
   pull_request:
 jobs:
   build-test:
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Paris
         uses: actions/checkout@v2
