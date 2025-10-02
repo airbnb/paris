@@ -60,7 +60,7 @@ class ProgrammaticStyleTest {
      */
     @Test
     fun styleableAttributeFromTheme() {
-        context.setTheme(R.style.Theme_AppCompat)
+        context.setTheme(android.R.style.Theme_Material)
         val emptyStyle = ProgrammaticStyle.builder().build()
         val ta = emptyStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
         val actualTextAppearance = ta.getResourceId(R.styleable.Paris_TextView_android_textAppearance)
