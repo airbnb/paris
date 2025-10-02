@@ -22,7 +22,7 @@ class StyleApplierUtilsTest {
     init {
         // Necessary to test AppCompat attributes like "?attr/selectableItemBackground"
         // TODO Not working for background() test
-        context.setTheme(R.style.Theme_AppCompat)
+        context.setTheme(android.R.style.Theme_Material)
     }
 
     @Before

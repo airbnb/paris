@@ -19,7 +19,7 @@ class ViewStyleBuilderTest {
     init {
         // Necessary to test AppCompat attributes like "?attr/selectableItemBackground"
         // TODO Not working for background() test
-        context.setTheme(R.style.Theme_AppCompat)
+        context.setTheme(android.R.style.Theme_Material)
     }
 
     @Before
@@ -40,10 +40,10 @@ class ViewStyleBuilderTest {
             .build()
         val typedArray = style.obtainStyledAttributes(context, R.styleable.MyView)
         val subStyle = typedArray.getStyle(R.styleable.MyView_titleStyle)
-        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, com.airbnb.paris.R.styleable.Paris_TextView)
 
-        assertEquals(Color.RED, subTypedArray.getColor(R.styleable.Paris_TextView_android_textColor))
-        assertEquals(16, subTypedArray.getDimensionPixelSize(R.styleable.Paris_TextView_android_textSize))
+        assertEquals(Color.RED, subTypedArray.getColor(com.airbnb.paris.R.styleable.Paris_TextView_android_textColor))
+        assertEquals(16, subTypedArray.getDimensionPixelSize(com.airbnb.paris.R.styleable.Paris_TextView_android_textSize))
     }
 
     @Test
@@ -58,9 +58,9 @@ class ViewStyleBuilderTest {
             .build()
         val typedArray = style.obtainStyledAttributes(context, R.styleable.MyView)
         val subStyle = typedArray.getStyle(R.styleable.MyView_titleStyle)
-        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, com.airbnb.paris.R.styleable.Paris_TextView)
 
-        assertEquals(Color.GREEN, subTypedArray.getColor(R.styleable.Paris_TextView_android_textColor))
+        assertEquals(Color.GREEN, subTypedArray.getColor(com.airbnb.paris.R.styleable.Paris_TextView_android_textColor))
     }
 
     @Test
@@ -81,8 +81,8 @@ class ViewStyleBuilderTest {
             .build()
         val typedArray = style.obtainStyledAttributes(context, intArrayOf(R.attr.titleStyle))
         val subStyle = typedArray.getStyle(0)
-        val subTypedArray = subStyle.obtainStyledAttributes(context, R.styleable.Paris_TextView)
+        val subTypedArray = subStyle.obtainStyledAttributes(context, com.airbnb.paris.R.styleable.Paris_TextView)
 
-        assertEquals(Color.GREEN, subTypedArray.getColor(R.styleable.Paris_TextView_android_textColor))
+        assertEquals(Color.GREEN, subTypedArray.getColor(com.airbnb.paris.R.styleable.Paris_TextView_android_textColor))
     }
 }
