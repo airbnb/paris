@@ -1,3 +1,5 @@
+@file:OptIn(org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi::class)
+
 package com.airbnb.paris.test
 
 import com.github.difflib.DiffUtils
