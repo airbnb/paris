@@ -13,7 +13,7 @@ jobs:
         name: Setting up Java 11
         with:
           distribution: liberica
-          java-version: '11'
+          java-version: '17'
       - name: Build / Unit tests / Lint
         run: "./gradlew check --stacktrace"
       - name: Run UI Tests
