@@ -108,7 +108,6 @@ class TextViewProxy(view: TextView) : BaseProxy<TextViewProxy, TextView>(view) {
     }
 
     @Attr(R2.styleable.Paris_TextView_android_letterSpacing)
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setLetterSpacing(letterSpacing: Float) {
         view.letterSpacing = letterSpacing
     }
