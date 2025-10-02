@@ -45,10 +45,10 @@ import com.airbnb.paris.extensions.titleStyle
 @Styleable("SectionView")
 class SectionView : FrameLayout {
 
-    @StyleableChild(R.styleable.SectionView_titleStyle)
+    @StyleableChild(R2.styleable.SectionView_titleStyle)
     val titleView by lazy { findViewById<TextView>(R.id.title)!! }
 
-    @StyleableChild(R.styleable.SectionView_contentStyle)
+    @StyleableChild(R2.styleable.SectionView_contentStyle)
     val contentView by lazy { findViewById<TextView>(R.id.content)!! }
 
     private var dividerHeight: Int = 0
@@ -72,23 +72,23 @@ class SectionView : FrameLayout {
         style(attrs)
     }
 
-    @Attr(R.styleable.SectionView_titleText)
+    @Attr(R2.styleable.SectionView_titleText)
     fun setTitleText(titleText: CharSequence) {
         titleView.text = titleText
     }
 
-    @Attr(R.styleable.SectionView_contentText)
+    @Attr(R2.styleable.SectionView_contentText)
     fun setContentText(contentText: CharSequence) {
         contentView.text = contentText
     }
 
-    @Attr(R.styleable.SectionView_dividerColor)
+    @Attr(R2.styleable.SectionView_dividerColor)
     fun setDividerColor(@ColorInt color: Int) {
         dividerPaint.color = color
         invalidate()
     }
 
-    @Attr(R.styleable.SectionView_dividerHeight)
+    @Attr(R2.styleable.SectionView_dividerHeight)
     fun setDividerHeight(@Px dividerHeight: Int) {
         this.dividerHeight = dividerHeight
         invalidate()
