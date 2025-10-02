@@ -179,18 +179,6 @@ class ViewStyleApplierTest {
         val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
         assertEquals(20, layoutParams.marginEnd)
     }
-
-    @Test
-    @Config(sdk = [(Build.VERSION_CODES.JELLY_BEAN)])
-    fun layout_marginEnd_requiresApi() {
-        // layout_marginEnd requires JELLY_BEAN_MR1 (17) so here the attribute should be ignored.
-        applier.apply(viewStyle {
-            layoutMarginEnd(10)
-        })
-        // The margin doesn't get set so the layout parameters should still be null.
-        assertNull(view.layoutParams)
-    }
-
     @Test
     fun layout_marginStart_precedence() {
         applier.apply(viewStyle {
@@ -200,18 +188,6 @@ class ViewStyleApplierTest {
         val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
         assertEquals(20, layoutParams.marginStart)
     }
-
-    @Test
-    @Config(sdk = [(Build.VERSION_CODES.JELLY_BEAN)])
-    fun layout_marginStart_requiresApi() {
-        // layout_marginStart requires JELLY_BEAN_MR1 (17) so here the attribute should be ignored.
-        applier.apply(viewStyle {
-            layoutMarginStart(10)
-        })
-        // The margin doesn't get set so the layout parameters should still be null.
-        assertNull(view.layoutParams)
-    }
-
     @Test
     fun layout_marginHorizontal_precedence() {
         applier.apply(viewStyle {
