@@ -91,14 +91,11 @@ internal class MapTypedArrayWrapper constructor(
         return getValue(index, { resId ->
             when {
                 isNullRes(resId) -> null
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> ResourcesCompat.getDrawable(
+                else -> ResourcesCompat.getDrawable(
                     resources,
                     resId,
                     theme
                 )
-                else -> {
-                    ResourcesCompat.getDrawable(resources, resId, null)
-                }
             }
         })
     }

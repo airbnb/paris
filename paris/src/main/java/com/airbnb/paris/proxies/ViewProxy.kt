@@ -93,9 +93,7 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
 
                 marginParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    marginParams.layoutDirection = view.layoutDirection
-                }
+                marginParams.layoutDirection = view.layoutDirection
             }
 
             val margin = margin
@@ -118,11 +116,9 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
                     marginParams.topMargin = it
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    // Note: setting negatives marginEnd or marginStart doesn't work (the view resets them to 0)
-                    marginEnd?.let { marginParams.marginEnd = it }
-                    marginStart?.let { marginParams.marginStart = it }
-                }
+                // Note: setting negatives marginEnd or marginStart doesn't work (the view resets them to 0)
+                marginEnd?.let { marginParams.marginEnd = it }
+                marginStart?.let { marginParams.marginStart = it }
             }
             view.layoutParams = marginParams
         }
@@ -212,13 +208,11 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginEnd)
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setLayoutMarginEnd(@Px marginEnd: Int) {
         this.marginEnd = marginEnd
     }
 
     @Attr(R2.styleable.Paris_View_android_layout_marginStart)
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setLayoutMarginStart(@Px marginStart: Int) {
         this.marginStart = marginStart
     }
@@ -278,7 +272,6 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
      * android:elevation attribute only when running Lollipop and use View.setElevation() for now.
      */
     @Attr(R2.styleable.Paris_View_android_elevation)
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setElevation(@Px elevation: Int) {
         view.elevation = elevation.toFloat()
     }
@@ -340,19 +333,16 @@ class ViewProxy(view: View) : BaseProxy<ViewProxy, View>(view) {
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingEnd)
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setPaddingEnd(@Px padding: Int) {
         view.setPaddingEnd(padding)
     }
 
     @Attr(R2.styleable.Paris_View_android_paddingStart)
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun setPaddingStart(@Px padding: Int) {
         view.setPaddingStart(padding)
     }
 
     @Attr(R2.styleable.Paris_View_android_stateListAnimator)
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setStateListAnimator(@AnyRes animatorRes: Int) {
         val animator = if (animatorRes != 0) {
             AnimatorInflater.loadStateListAnimator(view.context, animatorRes)

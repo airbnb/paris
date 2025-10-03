@@ -25,7 +25,6 @@ class ImageViewProxy(view: ImageView) : BaseProxy<ImageViewProxy, ImageView>(vie
     }
 
     @Attr(R2.styleable.Paris_ImageView_android_tint)
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setTint(color: ColorStateList?) {
         view.imageTintList = color
     }

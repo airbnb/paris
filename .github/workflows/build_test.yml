@@ -5,7 +5,7 @@ on:
   pull_request:
 jobs:
   build-test:
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Paris
         uses: actions/checkout@v2
@@ -13,7 +13,7 @@ jobs:
         name: Setting up Java 11
         with:
           distribution: liberica
-          java-version: '11'
+          java-version: '17'
       - name: Build / Unit tests / Lint
         run: "./gradlew check --stacktrace"
       - name: Run UI Tests

@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
+    namespace "com.airbnb.paris.test.lib"
     compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
     defaultConfig {
@@ -18,7 +19,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
