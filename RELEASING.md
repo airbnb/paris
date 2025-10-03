@@ -10,5 +10,5 @@ Releasing
     1. Tag version `vX.Y.Z`
     2. Release title `vX.Y.Z`
     3. Paste the content from `CHANGELOG.md` as the description
-7. `./gradlew clean uploadArchives --no-daemon --no-parallel`
-8. Visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifact.
+7. `./gradlew clean publish --no-daemon --no-parallel`
+8. Visit [Maven Central Portal](https://central.sonatype.com/) to verify and publish the release.
