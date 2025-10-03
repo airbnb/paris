@@ -1,3 +1,11 @@
+# 2.1.0
+* Min SDK has been increased from 16 to 21.
+* Project now requires Java 17.             
+* Upgraded Gradle to 8.13, AGP to 8.13.0, Kotlin to 1.9.25, and KSP to 1.9.25-1.0.20.
+* Updated Robolectric and kotlin-compile-testing dependencies.
+* Upgraded gradle-maven-publish-plugin to 0.34.0 (restores license metadata in published POMs).
+* Switch CI tests to run on Ubuntu.
+
 # 2.0.2
 
 Bump XProcessing, KSP, and Kotlin versions to latest.
