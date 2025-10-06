@@ -1,3 +1,6 @@
+# 2.1.1
+* Roll back to Java 11 bytecode target for broader compatibility.
+
 # 2.1.0
 * Min SDK has been increased from 16 to 21.
 * Project now requires Java 17.             
