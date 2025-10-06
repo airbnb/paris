@@ -1,4 +1,4 @@
-rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_17
+rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_11
 rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_11
 
 rootProject.ext {
