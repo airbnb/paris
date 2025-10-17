@@ -20,8 +20,8 @@ rootProject.ext {
     KOTLIN_TEST_VERSION = '2.0.7'
     MOCKITO_VERSION = '3.11.2'
     ROBOLECTRIC_VERSION = '4.16'
-    TESTING_COMPILE_VERSION = '0.19'
-    KOTLIN_TESTING_COMPILE_VERSION = '1.6.0'
+    TESTING_COMPILE_VERSION = '0.23.0'
+    KOTLIN_TESTING_COMPILE_VERSION = '0.10.1'
     XPROCESSING_VERSION = "2.8.3"
 
     deps = [
@@ -35,7 +35,7 @@ rootProject.ext {
             incapRuntime        : "net.ltgt.gradle.incap:incap:$INCAP_VERSION",
             incapProcessor      : "net.ltgt.gradle.incap:incap-processor:$INCAP_VERSION",
             junit               : "junit:junit:$JUNIT_VERSION",
-            kotlinCompileTesting: "com.github.tschuchortdev:kotlin-compile-testing-ksp:$KOTLIN_TESTING_COMPILE_VERSION",
+            kotlinCompileTesting: "dev.zacsweers.kctfork:ksp:$KOTLIN_TESTING_COMPILE_VERSION",
             kotlinReflect       : "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION",
             kotlinPoet          : "com.squareup:kotlinpoet:$KOTLINPOET_VERSION",
             kotlinTest          : "io.kotlintest:kotlintest:$KOTLIN_TEST_VERSION",

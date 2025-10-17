@@ -11,8 +11,7 @@ import com.google.testing.compile.JavaSourcesSubject
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
-import com.tschuchort.compiletesting.symbolProcessorProviders
+import com.tschuchort.compiletesting.configureKsp
 import org.junit.Test
 import java.io.File
 import java.net.URL
@@ -33,9 +32,9 @@ class ParisProcessorTest : ResourceTest() {
 
     override fun compilationDelegate(sourceFiles: List<SourceFile>, useKsp: Boolean, args: MutableMap<String, String>): KotlinCompilation {
         return KotlinCompilation().apply {
-            if (useKsp) {
-                symbolProcessorProviders = listOf(ParisProcessorProvider())
-                kspArgs = args
+            if (useKsp) configureKsp {
+                symbolProcessorProviders += ParisProcessorProvider()
+                processorOptions.putAll(args)
             } else {
                 annotationProcessors = listOf(ParisProcessor())
                 kaptArgs = args
