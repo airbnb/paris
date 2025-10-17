@@ -1,1 +1,2 @@
+<!-- package is required for Butter Knife R2 generator (doesn't support namespace from build.gradle) -->
 <manifest package="com.airbnb.paris.test.lib" />

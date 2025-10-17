@@ -114,8 +114,8 @@ internal class Format private constructor(
             if (element.hasAnnotation(ColorInt::class)) {
                 return Format(Type.COLOR)
             }
-            element.getAnnotation(Fraction::class)?.value?.let { fraction ->
-                return Format(Type.FRACTION, fraction.base, fraction.pbase)
+            element.getAnnotation(Fraction::class)?.let { fraction ->
+                return Format(Type.FRACTION, fraction.getAsInt("base"), fraction.getAsInt("pbase"))
             }
             if (element.hasAnnotation(LayoutDimension::class)) {
                 return Format(Type.LAYOUT_DIMENSION)

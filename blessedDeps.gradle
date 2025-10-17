@@ -22,7 +22,7 @@ rootProject.ext {
     ROBOLECTRIC_VERSION = '4.16'
     TESTING_COMPILE_VERSION = '0.19'
     KOTLIN_TESTING_COMPILE_VERSION = '1.6.0'
-    XPROCESSING_VERSION = "2.6.0-alpha01"
+    XPROCESSING_VERSION = "2.8.3"
 
     deps = [
             // Keep these alphabetized

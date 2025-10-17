@@ -32,10 +32,11 @@ dependencies {
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-        freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
-        freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
-        freeCompilerArgs += "-Xopt-in=com.google.devtools.ksp.KspExperimental"
+        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs += "-opt-in=kotlin.contracts.ExperimentalContracts"
+        freeCompilerArgs += "-opt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
+        freeCompilerArgs += "-opt-in=com.google.devtools.ksp.KspExperimental"
+        freeCompilerArgs += "-opt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview"
     }
 }
 

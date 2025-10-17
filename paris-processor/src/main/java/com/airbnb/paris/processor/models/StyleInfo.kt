@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
@@ -81,7 +82,7 @@ internal class StyleInfoExtractor(val processor: ParisProcessor) {
                     if (defaultNameFormatStyle != null) {
                         styles + defaultNameFormatStyle
                     } else {
-                        if (processor.namespacedResourcesEnabled && !styleableElement.getAnnotation(Styleable::class)!!.value.emptyDefaultStyle) {
+                        if (processor.namespacedResourcesEnabled && !styleableElement.getAnnotation(Styleable::class)!!.getAsBoolean("emptyDefaultStyle")) {
                             processor.logError(styleableElement) {
                                 "No default style found for ${styleableElement.name}. Link an appropriate default style, " +
                                         "or set @Styleable(emptyDefaultStyle = true) for this element if none exist."
@@ -111,7 +112,7 @@ internal class StyleInfoExtractor(val processor: ParisProcessor) {
         }
 
         if (defaultStyleExists) {
-            val styleResourceCode = JavaCodeBlock.of("\$T.\$L", rStyleTypeElement?.className, defaultStyleName)
+            val styleResourceCode = JavaCodeBlock.of("\$T.\$L", rStyleTypeElement?.let { it.asClassName().toJavaPoet() }, defaultStyleName)
 
             val javadoc = JavaCodeBlock.of("See $defaultStyleName style (defined as an XML resource).")
             val kdoc = KotlinCodeBlock.of(javadoc.toString())

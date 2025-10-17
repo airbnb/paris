@@ -1,6 +1,8 @@
 package com.airbnb.paris.processor.models
 
 import androidx.annotation.RequiresApi
+import androidx.room.compiler.codegen.toJavaPoet
+import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XType
 import com.airbnb.paris.annotations.Attr
@@ -25,7 +27,7 @@ internal class AttrInfoExtractor(
             return null
         }
 
-        val attr: Attr = element.getAnnotation(Attr::class)?.value ?: error("@Attr annotation not found on $element")
+        val attr: XAnnotation = element.getAnnotation(Attr::class) ?: error("@Attr annotation not found on $element")
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {
             parisProcessor.logError(element) {
@@ -38,7 +40,7 @@ internal class AttrInfoExtractor(
 
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = parisProcessor.getResourceId(Attr::class, element, attr.value) ?: return null
+            styleableResId = parisProcessor.getResourceId(Attr::class, element, attr.getAsInt("value")) ?: return null
         } catch (e: Throwable) {
             parisProcessor.logError(element) {
                 "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.) $e"
@@ -48,8 +50,9 @@ internal class AttrInfoExtractor(
 
         var defaultValueResId: AndroidResourceId? = null
         try {
-            if (attr.defaultValue != -1) {
-                defaultValueResId = parisProcessor.getResourceId(Attr::class, element, attr.defaultValue) ?: return null
+            val defaultValue = attr.getAsInt("defaultValue")
+            if (defaultValue != -1) {
+                defaultValueResId = parisProcessor.getResourceId(Attr::class, element, defaultValue) ?: return null
             }
         } catch (e: Throwable) {
             parisProcessor.logError(element) {
@@ -60,17 +63,18 @@ internal class AttrInfoExtractor(
 
         val enclosingElement = element.enclosingElement
         val name = element.name
-        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement.className, name, targetType.typeName)
+        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement.asClassName().toJavaPoet(), name, targetType.typeName)
         // internal functions have a '$' in their name which creates a kdoc error. We could escape it but the part after the '$' is meant for
         // obfuscation anyway so not using it should result in clearer documentation.
         val kdocName = name.substringBefore('$')
-        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.className.toKPoet(), kdocName)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.asClassName().toJavaPoet().toKPoet(), kdocName)
 
         // We rely on the `RequiresApi` Android annotation to disable certain attributes based on the Android SDK version.
         // 1 is the default since that's the minimum version.
-        val requiresApi = element.getAnnotation(RequiresApi::class)?.value?.let {
+        val requiresApi = element.getAnnotation(RequiresApi::class)?.let {
+            val api = it.getAsInt("api")
             // value is an alias of api, so we give precedence to api.
-            if (it.api > 1) it.api else it.value
+            if (api > 1) api else it.getAsInt("value")
         } ?: 1
 
         return AttrInfo(

@@ -24,8 +24,8 @@ class KspResourceScanner : ResourceScanner {
 
     override fun getId(annotation: KClass<out Annotation>, element: XElement, value: Int): AndroidResourceId? {
         val annotationArgs = cache.getOrPut(annotation to element) {
-            val annotationBox = element.getAnnotation(annotation) ?: return@getOrPut emptyList()
-            val ksAnnotation = annotationBox.getFieldWithReflection<KSAnnotation>("annotation")
+            val xAnnotation = element.getAnnotation(annotation) ?: return@getOrPut emptyList()
+            val ksAnnotation = xAnnotation.getFieldWithReflection<KSAnnotation>("ksAnnotated")
             processAnnotationWithResource(ksAnnotation)
         }
 

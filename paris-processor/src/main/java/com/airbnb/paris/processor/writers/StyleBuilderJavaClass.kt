@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.AndroidClassNames
@@ -65,11 +66,11 @@ internal class StyleBuilderJavaClass(
                 returns(styleBuilderClassName)
 
                 when (it) {
-                    is StyleStaticPropertyInfo -> addStatement("add(\$T.\$L)", it.enclosingElement.className, it.javaGetter)
+                    is StyleStaticPropertyInfo -> addStatement("add(\$T.\$L)", it.enclosingElement.asClassName().toJavaPoet(), it.javaGetter)
                     is StyleStaticMethodInfo -> {
                         addStatement("consumeProgrammaticStyleBuilder()")
                         addStatement("debugName(\$S)", it.formattedName)
-                        addStatement("\$T.\$L(this)", it.enclosingElement.className, it.elementName)
+                        addStatement("\$T.\$L(this)", it.enclosingElement.asClassName().toJavaPoet(), it.elementName)
                         addStatement("consumeProgrammaticStyleBuilder()")
                     }
                     is StyleResInfo -> addStatement("add(\$L)", it.styleResourceCode)

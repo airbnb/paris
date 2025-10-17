@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
@@ -102,9 +103,9 @@ class ParisProcessor(
             .firstOrNull()
             ?.getAnnotation(ParisConfig::class)
             ?.let {
-                defaultStyleNameFormat = it.value.defaultStyleNameFormat
-                namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
-                aggregateStyleablesOnClassPath = it.value.aggregateStyleablesOnClassPath
+                defaultStyleNameFormat = it.getAsString("defaultStyleNameFormat")
+                namespacedResourcesEnabled = it.getAsBoolean("namespacedResourcesEnabled")
+                aggregateStyleablesOnClassPath = it.getAsBoolean("aggregateStyleablesOnClassPath")
                 rFinder.processConfig(it)
             }
         timer.markStepCompleted("Paris Config lookup")
@@ -216,7 +217,7 @@ class ParisProcessor(
                 buildString {
                     append(" [element=$element ${element.javaClass.simpleName}")
 
-                    element.enclosingElementIfApplicable?.className?.let {
+                    element.enclosingElementIfApplicable?.asClassName()?.toJavaPoet()?.let {
                         append(" in $it")
                     }
 

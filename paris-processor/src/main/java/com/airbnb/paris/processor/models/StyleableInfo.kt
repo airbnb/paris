@@ -5,6 +5,7 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.ParisProcessor
 import com.squareup.javapoet.ClassName
+import java.util.Locale.getDefault
 
 internal class StyleableInfoExtractor(val processor: ParisProcessor)  {
 
@@ -126,10 +127,10 @@ internal class StyleableInfo(
                     if (index == 0 || formattedName[index - 1] != '_') {
                         c + acc
                     } else {
-                        c.toUpperCase() + acc
+                        c.uppercaseChar() + acc
                     }
                 }
-            }.decapitalize()
+            }.replaceFirstChar { it.lowercase(getDefault()) }
     }
 }
 

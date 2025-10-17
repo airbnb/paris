@@ -9,6 +9,7 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.paris.processor.BaseProcessor
 import com.airbnb.paris.processor.utils.isJavac
 import com.airbnb.paris.processor.utils.javaGetterSyntax
+import java.util.Locale.getDefault
 
 /**
  * Applies to Java fields and Kotlin properties
@@ -77,14 +78,14 @@ internal fun findGetterPropertyFromSyntheticFunction(syntheticMethod: XMethodEle
         .substringBefore("\$annotations", missingDelimiterValue = "")
         // get prefix will only exist for kotlin 1.4
         .removePrefix("get")
-        .decapitalize()
+        .replaceFirstChar { it.lowercase(getDefault()) }
         .ifBlank { return null }
 
     val enclosing = syntheticMethod.enclosingElement as? XTypeElement ?: return null
 
     val getters = enclosing.getDeclaredMethods().filter { it.parameters.isEmpty() }
 
-    val getterName = "get${name.capitalize()}"
+    val getterName = "get${name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString() }}"
 
     // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
     // be appended with "$" and an arbitrary string for obfuscation purposes.

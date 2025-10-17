@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XMethodElement
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.processor.ParisProcessor
@@ -24,7 +25,7 @@ internal class StyleStaticMethodInfoExtractor(val parisProcessor: ParisProcessor
         }
 
         val style = element.getAnnotation(Style::class)
-        val isDefault = style!!.value.isDefault
+        val isDefault = style!!.getAsBoolean("isDefault")
 
         val enclosingElement = element.enclosingElement
 
@@ -34,8 +35,8 @@ internal class StyleStaticMethodInfoExtractor(val parisProcessor: ParisProcessor
 
         val targetType = element.parameters[0].type.typeName
 
-        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement.className, elementName, targetType)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.className.toKPoet(), elementName)
+        val javadoc = JavaCodeBlock.of("@see \$T#\$N(\$T)\n", enclosingElement.asClassName().toJavaPoet(), elementName, targetType)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.asClassName().toJavaPoet().toKPoet(), elementName)
 
         return StyleStaticMethodInfo(
             element,
