@@ -14,7 +14,7 @@ import com.airbnb.paris.processor.utils.isFieldElement
 
 internal class StyleableChildInfoExtractor(
     val parisProcessor: ParisProcessor
-) : SkyFieldModelFactory<StyleableChildInfo>(parisProcessor, StyleableChild::class.java) {
+) : SkyFieldModelFactory<StyleableChildInfo>(parisProcessor, StyleableChild::class) {
 
     /**
      * @param element Represents a field annotated with @StyleableChild

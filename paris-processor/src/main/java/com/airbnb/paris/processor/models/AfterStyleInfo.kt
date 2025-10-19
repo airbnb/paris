@@ -8,7 +8,7 @@ import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 import com.airbnb.paris.processor.utils.isSameTypeName
 
-internal class AfterStyleInfoExtractor(val parisProcessor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(parisProcessor, AfterStyle::class.java) {
+internal class AfterStyleInfoExtractor(val parisProcessor: ParisProcessor) : SkyMethodModelFactory<AfterStyleInfo>(parisProcessor, AfterStyle::class) {
 
     override fun elementToModel(element: XMethodElement): AfterStyleInfo? {
 

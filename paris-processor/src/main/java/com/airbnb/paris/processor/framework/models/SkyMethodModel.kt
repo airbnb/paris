@@ -5,6 +5,7 @@ import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.isMethod
 import com.airbnb.paris.processor.BaseProcessor
+import kotlin.reflect.KClass
 
 abstract class SkyMethodModel private constructor(
     val enclosingElement: XTypeElement,
@@ -22,7 +23,7 @@ typealias SkyStaticMethodModel = SkyMethodModel
 
 abstract class SkyMethodModelFactory<T : SkyMethodModel>(
     processor: BaseProcessor,
-    annotationClass: Class<out Annotation>
+    annotationClass: KClass<out Annotation>
 ) : JavaSkyModelFactory<T, XMethodElement>(processor, annotationClass) {
 
     override fun filter(element: XElement): Boolean = element.isMethod()

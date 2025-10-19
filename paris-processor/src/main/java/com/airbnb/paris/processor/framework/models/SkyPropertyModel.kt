@@ -10,6 +10,7 @@ import com.airbnb.paris.processor.BaseProcessor
 import com.airbnb.paris.processor.utils.isJavac
 import com.airbnb.paris.processor.utils.javaGetterSyntax
 import java.util.Locale.getDefault
+import kotlin.reflect.KClass
 
 /**
  * Applies to Java fields and Kotlin properties
@@ -123,5 +124,5 @@ internal data class GetterResult(val propertyName: String, val getterFunction: X
 
 abstract class SkyFieldModelFactory<T : SkyPropertyModel>(
     processor: BaseProcessor,
-    annotationClass: Class<out Annotation>
+    annotationClass: KClass<out Annotation>
 ) : JavaSkyModelFactory<T, XElement>(processor, annotationClass)

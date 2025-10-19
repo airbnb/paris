@@ -17,7 +17,7 @@ import com.airbnb.paris.processor.framework.toKPoet
 
 internal class AttrInfoExtractor(
      val parisProcessor: ParisProcessor
-) : SkyMethodModelFactory<AttrInfo>(parisProcessor, Attr::class.java) {
+) : SkyMethodModelFactory<AttrInfo>(parisProcessor, Attr::class) {
 
     override fun elementToModel(element: XMethodElement): AttrInfo? {
         if (element.isPrivate() || element.isProtected()) {

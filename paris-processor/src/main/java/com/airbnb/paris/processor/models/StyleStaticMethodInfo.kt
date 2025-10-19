@@ -12,7 +12,7 @@ import com.airbnb.paris.processor.framework.toKPoet
 import com.airbnb.paris.processor.utils.ParisProcessorUtils
 
 internal class StyleStaticMethodInfoExtractor(val parisProcessor: ParisProcessor) :
-    SkyStaticMethodModelFactory<StyleStaticMethodInfo>(parisProcessor, Style::class.java) {
+    SkyStaticMethodModelFactory<StyleStaticMethodInfo>(parisProcessor, Style::class) {
 
     override fun elementToModel(element: XMethodElement): StyleStaticMethodInfo? {
         // TODO Get Javadoc from field/method and add it to the generated methods

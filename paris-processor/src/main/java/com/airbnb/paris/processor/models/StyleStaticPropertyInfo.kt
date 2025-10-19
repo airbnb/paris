@@ -19,7 +19,7 @@ import com.airbnb.paris.processor.utils.enclosingElementIfCompanion
 import com.airbnb.paris.processor.utils.isErrorFixed
 
 internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcessor) :
-    SkyStaticPropertyModelFactory<StyleStaticPropertyInfo>(parisProcessor, Style::class.java) {
+    SkyStaticPropertyModelFactory<StyleStaticPropertyInfo>(parisProcessor, Style::class) {
 
     override fun filter(element: XElement): Boolean {
         if ((element as? XFieldElement)?.isStatic() == false) {

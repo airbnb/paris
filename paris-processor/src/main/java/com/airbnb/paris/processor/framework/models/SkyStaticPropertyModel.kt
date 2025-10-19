@@ -18,6 +18,7 @@ import com.airbnb.paris.processor.utils.javaGetterSyntax
 import java.util.Locale.getDefault
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
+import kotlin.reflect.KClass
 
 /**
  * Applies to Java static fields and Kotlin companion properties.
@@ -112,7 +113,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv
 
 abstract class SkyStaticPropertyModelFactory<T : SkyStaticPropertyModel>(
     processor: BaseProcessor,
-    annotationClass: Class<out Annotation>
+    annotationClass: KClass<out Annotation>
 ) : JavaSkyModelFactory<T, XElement>(processor, annotationClass) {
 
     override fun filter(element: XElement): Boolean {
