@@ -8,7 +8,7 @@ import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 
 data class ResourceStyle constructor(
-    @StyleRes @IntRange(from = 0) private val styleRes: Int,
+    @param:StyleRes @param:IntRange(from = 0) private val styleRes: Int,
     private var name: String? = null
 ) : Style {
 

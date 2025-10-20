@@ -11,7 +11,6 @@ class ExtendableStyleBuilder<V : View> : StyleBuilder<ExtendableStyleBuilder<V>,
     public override var builder = super.builder
 
     // Makes the function public so that extensions can access it
-    @Suppress("RedundantOverride")
     public override fun consumeProgrammaticStyleBuilder() {
         super.consumeProgrammaticStyleBuilder()
     }

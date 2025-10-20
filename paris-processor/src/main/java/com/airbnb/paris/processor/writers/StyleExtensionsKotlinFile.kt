@@ -16,6 +16,7 @@ import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 
 import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
@@ -399,6 +400,7 @@ internal class StyleExtensionsKotlinFile(
         }
     }
 
+    @OptIn(DelicateKotlinPoetApi::class)
     private fun addRequiresApiAnnotation(builder: FunSpec.Builder, attr: AttrInfo) {
         if (attr.requiresApi > 1) {
             builder.addAnnotation(
