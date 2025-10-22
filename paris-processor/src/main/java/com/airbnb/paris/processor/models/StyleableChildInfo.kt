@@ -21,10 +21,10 @@ internal class StyleableChildInfoExtractor(
      */
     override fun elementToModel(element: XElement): StyleableChildInfo? {
 
-        val attr = element.getAnnotation(StyleableChild::class) ?: error("@StyleableChild not found on $element")
+        val attr = element.getAnnotation(annotationClass) ?: error("@StyleableChild not found on $element")
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = parisProcessor.getResourceId(StyleableChild::class, element, attr.getAsInt("value")) ?: return null
+            styleableResId = parisProcessor.getResourceId(annotationClass, element, attr.getAsInt("value")) ?: return null
         } catch (e: Throwable) {
             parisProcessor.logError(element) {
                 "Incorrectly typed @StyleableChild value parameter. (This usually happens when an R value doesn't exist.) $e ${e.message}"
@@ -36,7 +36,7 @@ internal class StyleableChildInfoExtractor(
         val defaultValue = attr.getAsInt("defaultValue")
         if (defaultValue != -1) {
             try {
-                defaultValueResId = parisProcessor.getResourceId(StyleableChild::class, element, defaultValue) ?: return null
+                defaultValueResId = parisProcessor.getResourceId(annotationClass, element, defaultValue) ?: return null
             } catch (e: Throwable) {
                 parisProcessor.logError(element) {
                     "Incorrectly typed @StyleableChild defaultValue parameter. (This usually happens when an R value doesn't exist.)"

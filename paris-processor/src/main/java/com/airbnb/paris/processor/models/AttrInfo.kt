@@ -27,7 +27,7 @@ internal class AttrInfoExtractor(
             return null
         }
 
-        val attr: XAnnotation = element.getAnnotation(Attr::class) ?: error("@Attr annotation not found on $element")
+        val attr: XAnnotation = element.getAnnotation(annotationClass) ?: error("@Attr annotation not found on $element")
 
         val targetType = element.parameters.firstOrNull()?.type ?: run {
             parisProcessor.logError(element) {
@@ -40,7 +40,7 @@ internal class AttrInfoExtractor(
 
         val styleableResId: AndroidResourceId
         try {
-            styleableResId = parisProcessor.getResourceId(Attr::class, element, attr.getAsInt("value")) ?: return null
+            styleableResId = parisProcessor.getResourceId(annotationClass, element, attr.getAsInt("value")) ?: return null
         } catch (e: Throwable) {
             parisProcessor.logError(element) {
                 "Incorrectly typed @Attr value parameter. (This usually happens when an R value doesn't exist.) $e"
@@ -52,7 +52,7 @@ internal class AttrInfoExtractor(
         try {
             val defaultValue = attr.getAsInt("defaultValue")
             if (defaultValue != -1) {
-                defaultValueResId = parisProcessor.getResourceId(Attr::class, element, defaultValue) ?: return null
+                defaultValueResId = parisProcessor.getResourceId(annotationClass, element, defaultValue) ?: return null
             }
         } catch (e: Throwable) {
             parisProcessor.logError(element) {

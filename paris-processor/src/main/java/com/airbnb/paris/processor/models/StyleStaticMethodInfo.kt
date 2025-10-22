@@ -24,7 +24,7 @@ internal class StyleStaticMethodInfoExtractor(val parisProcessor: ParisProcessor
             return null
         }
 
-        val style = element.getAnnotation(Style::class)
+        val style = element.getAnnotation(annotationClass)
         val isDefault = style!!.getAsBoolean("isDefault")
 
         val enclosingElement = element.enclosingElement

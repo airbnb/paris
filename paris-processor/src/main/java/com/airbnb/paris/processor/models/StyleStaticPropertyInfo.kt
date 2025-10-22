@@ -59,7 +59,7 @@ internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcess
             return null
         }
 
-        val style = element.getAnnotation(Style::class)!!
+        val style = element.getAnnotation(annotationClass)!!
         val isDefault = style.getAsBoolean("isDefault")
 
         val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
