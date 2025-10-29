@@ -244,6 +244,9 @@ class ParisProcessor(
     fun log(severity: Message.Severity, element: XElement? = null, lazyMessage: () -> String) {
         loggedMessages.add(
             Message(severity, lazyMessage(), element) { el ->
+                // Extract element metadata immediately while PSI is still valid.
+                // In KSP2, accessing elements in finish() callback throws:
+                // "Access to invalid KotlinAlwaysAccessibleLifetimeToken: PSI has changed since creation"
                 buildString {
                     append(" [element=$el ${el.javaClass.simpleName}")
 
