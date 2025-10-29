@@ -1,6 +1,7 @@
 package com.airbnb.paris.processor.framework
 
 import androidx.room.compiler.processing.XType
+import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterSpec
@@ -18,6 +19,7 @@ internal inline fun FileSpec.Builder.function(
     addFunction(FunSpec.builder(name).apply(block).build())
 }
 
+@OptIn(DelicateKotlinPoetApi::class)
 internal fun FunSpec.Builder.receiver(receiver: TypeMirror) {
     receiver(receiver.asTypeName())
 }

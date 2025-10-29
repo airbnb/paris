@@ -3,7 +3,6 @@ package com.airbnb.paris.processor.models
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
-import com.airbnb.paris.annotations.GeneratedStyleableClass
 import com.airbnb.paris.annotations.GeneratedStyleableModule
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.processor.PARIS_MODULES_PACKAGE_NAME
@@ -22,8 +21,8 @@ internal class BaseStyleableInfoExtractor( val processor: ParisProcessor) {
         return processor.environment.getTypeElementsFromPackageSafe(PARIS_MODULES_PACKAGE_NAME)
             .mapNotNull { it.getAnnotation(GeneratedStyleableModule::class) }
             .flatMap { styleableModule ->
-                styleableModule.getAsAnnotationBoxArray<GeneratedStyleableClass>("value")
-                    .mapNotNull { it.getAsType("value")?.typeElement }
+                styleableModule.getAsAnnotationList("value")
+                    .mapNotNull { it.getAsType("value").typeElement }
                     .map { BaseStyleableInfoExtractor(processor).fromElement(it) }
             }
     }
@@ -35,7 +34,7 @@ internal class BaseStyleableInfoExtractor( val processor: ParisProcessor) {
 
         val viewElementType: XType = if (processor.memoizer.proxyClassType.rawType.isAssignableFrom(elementType)) {
             // Get the parameterized type, which should be the view type
-            element.superType?.typeArguments?.getOrNull(1) ?: error("No type for $elementType")
+            element.superClass?.typeArguments?.getOrNull(1) ?: error("No type for $elementType")
         } else {
             elementType
         }
@@ -44,8 +43,8 @@ internal class BaseStyleableInfoExtractor( val processor: ParisProcessor) {
         val viewElementPackageName = viewElement.packageName
         val viewElementName = viewElement.name
 
-        val styleable = element.getAnnotation(Styleable::class)?.value!!
-        val styleableResourceName = styleable.value
+        val styleable = element.getAnnotation(Styleable::class)!!
+        val styleableResourceName = styleable.getAsString("value")
 
         return BaseStyleableInfo(
             annotatedElement = element,

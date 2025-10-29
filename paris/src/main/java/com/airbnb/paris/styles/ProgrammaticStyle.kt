@@ -14,7 +14,9 @@ import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
 import java.util.HashMap
+import kotlin.ConsistentCopyVisibility
 
+@ConsistentCopyVisibility
 data class ProgrammaticStyle internal constructor(
     private val attributeMap: Map<Int, Any?>,
     private var name: String? = null
@@ -22,6 +24,7 @@ data class ProgrammaticStyle internal constructor(
 
     internal constructor(builder: Builder) : this(builder.attrResToValueResMap, builder.name)
 
+    @ConsistentCopyVisibility
     data class Builder internal constructor(
         internal val attrResToValueResMap: MutableMap<Int, Any?> = HashMap(),
         internal var name: String = "a programmatic style"

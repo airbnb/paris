@@ -16,6 +16,7 @@ import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableInfo
 
 import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
@@ -25,6 +26,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.UNIT
 import com.squareup.kotlinpoet.WildcardTypeName
+import java.util.Locale.getDefault
 
 /**
  * This generates a kt file with extension functions to style a specific view.
@@ -372,7 +374,7 @@ internal class StyleExtensionsKotlinFile(
          *
          * Usage is like: "val style = imageViewStyle {  // builder as a receiver here  }"
          */
-        function("${styleable.viewElementName.decapitalize()}Style") {
+        function("${styleable.viewElementName.replaceFirstChar { it.lowercase(getDefault()) }}Style") {
             addModifiers(KModifier.INLINE)
             returns(STYLE_CLASS_NAME.toKPoet())
 
@@ -398,6 +400,7 @@ internal class StyleExtensionsKotlinFile(
         }
     }
 
+    @OptIn(DelicateKotlinPoetApi::class)
     private fun addRequiresApiAnnotation(builder: FunSpec.Builder, attr: AttrInfo) {
         if (attr.requiresApi > 1) {
             builder.addAnnotation(

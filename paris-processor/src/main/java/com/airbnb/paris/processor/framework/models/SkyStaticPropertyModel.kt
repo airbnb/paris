@@ -15,8 +15,10 @@ import com.airbnb.paris.processor.utils.enclosingElementIfCompanion
 import com.airbnb.paris.processor.utils.isFieldElement
 import com.airbnb.paris.processor.utils.isJavac
 import com.airbnb.paris.processor.utils.javaGetterSyntax
+import java.util.Locale.getDefault
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
+import kotlin.reflect.KClass
 
 /**
  * Applies to Java static fields and Kotlin companion properties.
@@ -70,7 +72,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv
                         // If the property is public the name of the getter function will be prepended with "get". If it's internal, it will also
                         // be appended with "$" and an arbitrary string for obfuscation purposes.
                         // Kotlin 1.4.x contains BOTH at once, but only the none synthetic one can be used, so we check for the real one first.
-                        val getterName = "get${element.name.capitalize()}"
+                        val getterName = "get${element.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString() }}"
                         val companionGetter = companionFunctions.firstOrNull {
                             val elementSimpleName = it.simpleName.toString()
                             elementSimpleName == getterName
@@ -111,7 +113,7 @@ abstract class SkyStaticPropertyModel(val element: XElement, env: XProcessingEnv
 
 abstract class SkyStaticPropertyModelFactory<T : SkyStaticPropertyModel>(
     processor: BaseProcessor,
-    annotationClass: Class<out Annotation>
+    annotationClass: KClass<out Annotation>
 ) : JavaSkyModelFactory<T, XElement>(processor, annotationClass) {
 
     override fun filter(element: XElement): Boolean {

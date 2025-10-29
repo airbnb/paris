@@ -6,7 +6,7 @@ import com.airbnb.paris.processor.ParisProcessor
 import com.airbnb.paris.processor.framework.models.SkyMethodModel
 import com.airbnb.paris.processor.framework.models.SkyMethodModelFactory
 
-internal class BeforeStyleInfoExtractor(val parisProcessor: ParisProcessor) : SkyMethodModelFactory<BeforeStyleInfo>(parisProcessor, BeforeStyle::class.java) {
+internal class BeforeStyleInfoExtractor(val parisProcessor: ParisProcessor) : SkyMethodModelFactory<BeforeStyleInfo>(parisProcessor, BeforeStyle::class) {
 
     override fun elementToModel(element: XMethodElement): BeforeStyleInfo? {
         if (element.isPrivate() || element.isProtected()) {

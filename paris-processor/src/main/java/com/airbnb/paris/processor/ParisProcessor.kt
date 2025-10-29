@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
@@ -102,9 +103,9 @@ class ParisProcessor(
             .firstOrNull()
             ?.getAnnotation(ParisConfig::class)
             ?.let {
-                defaultStyleNameFormat = it.value.defaultStyleNameFormat
-                namespacedResourcesEnabled = it.value.namespacedResourcesEnabled
-                aggregateStyleablesOnClassPath = it.value.aggregateStyleablesOnClassPath
+                defaultStyleNameFormat = it.getAsString("defaultStyleNameFormat")
+                namespacedResourcesEnabled = it.getAsBoolean("namespacedResourcesEnabled")
+                aggregateStyleablesOnClassPath = it.getAsBoolean("aggregateStyleablesOnClassPath")
                 rFinder.processConfig(it)
             }
         timer.markStepCompleted("Paris Config lookup")
@@ -209,22 +210,7 @@ class ParisProcessor(
                 Message.Severity.Error -> Diagnostic.Kind.ERROR
                 Message.Severity.Note -> Diagnostic.Kind.NOTE
             }
-            val element = message.element
-
-            val details = if (element != null) {
-
-                buildString {
-                    append(" [element=$element ${element.javaClass.simpleName}")
-
-                    element.enclosingElementIfApplicable?.className?.let {
-                        append(" in $it")
-                    }
-
-                    append("]")
-                }
-            } else {
-                ""
-            }
+            val details = message.elementDetails.orEmpty()
 
             environment.messager.printMessage(kind, message.message + details)
         }
@@ -256,6 +242,21 @@ class ParisProcessor(
     }
 
     fun log(severity: Message.Severity, element: XElement? = null, lazyMessage: () -> String) {
-        loggedMessages.add(Message(severity, lazyMessage(), element))
+        loggedMessages.add(
+            Message(severity, lazyMessage(), element) { el ->
+                // Extract element metadata immediately while PSI is still valid.
+                // In KSP2, accessing elements in finish() callback throws:
+                // "Access to invalid KotlinAlwaysAccessibleLifetimeToken: PSI has changed since creation"
+                buildString {
+                    append(" [element=$el ${el.javaClass.simpleName}")
+
+                    el.enclosingElementIfApplicable?.asClassName()?.toJavaPoet()?.let {
+                        append(" in $it")
+                    }
+
+                    append("]")
+                }
+            }
+        )
     }
 }

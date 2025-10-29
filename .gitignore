@@ -22,3 +22,6 @@ local.properties
 # Vim
 *~
 .swp
+
+# Kotlin
+.kotlin

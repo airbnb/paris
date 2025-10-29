@@ -1,5 +1,6 @@
 package com.airbnb.paris.processor.writers
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.addOriginatingElement
 import com.airbnb.paris.processor.Format
@@ -75,7 +76,7 @@ internal class StyleApplierJavaClass(
         var parentStyleApplierClassName: ClassName? = null
         if (!parisProcessor.memoizer.androidViewClassTypeX.isSameType(styleableInfo.viewElementType)) {
             val parentStyleApplierDetails = styleablesTree.findStyleApplier(
-                styleableInfo.viewElementType.typeElement?.superType?.typeElement!!,
+                styleableInfo.viewElementType.typeElement?.superClass?.typeElement!!,
                 errorContext = {"Parent view: ${styleableInfo.viewElementType.typeElement?.qualifiedName}"}
             )
 
@@ -101,7 +102,11 @@ internal class StyleApplierJavaClass(
                 override()
                 protected()
                 returns(ArrayTypeName.of(Integer.TYPE))
-                addStatement("return \$T.styleable.\$L", styleableInfo.styleableRClassName ?: parisProcessor.RElement?.className, styleableInfo.styleableResourceName)
+                addStatement(
+                    "return \$T.styleable.\$L",
+                    styleableInfo.styleableRClassName ?: parisProcessor.RElement?.asClassName()?.toJavaPoet(),
+                    styleableInfo.styleableResourceName
+                )
             }
 
             val attrsWithDefaultValue = styleableInfo.attrs
@@ -270,7 +275,13 @@ internal class StyleApplierJavaClass(
                 public()
 
                 when (styleInfo) {
-                    is StyleStaticPropertyInfo -> addStatement("apply(\$T.\$L)", styleInfo.enclosingElement.className, styleInfo.javaGetter)
+                    is StyleStaticPropertyInfo -> {
+                        addStatement(
+                            "apply(\$T.\$L)",
+                            styleInfo.enclosingElement.asClassName().toJavaPoet(),
+                            styleInfo.javaGetter
+                        )
+                    }
                     is StyleStaticMethodInfo -> {
                         addStatement(
                             "\$T builder = new \$T()",
@@ -279,7 +290,7 @@ internal class StyleApplierJavaClass(
                         )
                             .addStatement(
                                 "\$T.\$L(builder)",
-                                styleInfo.enclosingElement.className,
+                                styleInfo.enclosingElement.asClassName().toJavaPoet(),
                                 styleInfo.elementName
                             )
                             .addStatement("apply(builder.build())")

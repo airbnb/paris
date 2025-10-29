@@ -3,20 +3,23 @@ package com.airbnb.paris.processor.android_resource_scanner
 import androidx.room.compiler.processing.XElement
 import com.airbnb.paris.processor.android_resource_scanner.KspResourceScanner.ImportMatch.*
 import com.airbnb.paris.processor.utils.containingPackage
+import com.google.devtools.ksp.impl.symbol.java.KSAnnotationJavaImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSAnnotationImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.resolved.KSAnnotationResolvedImpl
 import com.google.devtools.ksp.symbol.KSAnnotation
-import com.google.devtools.ksp.symbol.impl.java.KSAnnotationJavaImpl
-import com.google.devtools.ksp.symbol.impl.kotlin.KSAnnotationImpl
+import com.google.devtools.ksp.symbol.KSValueArgument
 import com.squareup.javapoet.ClassName
-import org.jetbrains.kotlin.com.intellij.psi.PsiAnnotation
-import org.jetbrains.kotlin.com.intellij.psi.PsiJavaFile
-import org.jetbrains.kotlin.com.intellij.psi.PsiNameValuePair
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
-import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.KtSimpleNameExpression
-import org.jetbrains.kotlin.psi.ValueArgument
+import ksp.com.intellij.psi.PsiAnnotation
+import ksp.com.intellij.psi.PsiJavaFile
+import ksp.com.intellij.psi.PsiNameValuePair
+import ksp.org.jetbrains.kotlin.analysis.api.annotations.KaAnnotation
+import ksp.org.jetbrains.kotlin.name.FqName
+import ksp.org.jetbrains.kotlin.name.Name
+import ksp.org.jetbrains.kotlin.psi.KtAnnotationEntry
+import ksp.org.jetbrains.kotlin.psi.KtDotQualifiedExpression
+import ksp.org.jetbrains.kotlin.psi.KtExpression
+import ksp.org.jetbrains.kotlin.psi.KtSimpleNameExpression
+import ksp.org.jetbrains.kotlin.psi.ValueArgument
 import kotlin.reflect.KClass
 
 class KspResourceScanner : ResourceScanner {
@@ -24,8 +27,8 @@ class KspResourceScanner : ResourceScanner {
 
     override fun getId(annotation: KClass<out Annotation>, element: XElement, value: Int): AndroidResourceId? {
         val annotationArgs = cache.getOrPut(annotation to element) {
-            val annotationBox = element.getAnnotation(annotation) ?: return@getOrPut emptyList()
-            val ksAnnotation = annotationBox.getFieldWithReflection<KSAnnotation>("annotation")
+            val xAnnotation = element.getAnnotation(annotation) ?: return@getOrPut emptyList()
+            val ksAnnotation = xAnnotation.getFieldWithReflection<KSAnnotation>("ksAnnotated")
             processAnnotationWithResource(ksAnnotation)
         }
 
@@ -37,38 +40,44 @@ class KspResourceScanner : ResourceScanner {
     private fun processAnnotationWithResource(annotation: KSAnnotation): List<AnnotationWithReferenceValue> {
         val packageName = annotation.containingPackage.orEmpty()
         return when (annotation) {
-            is KSAnnotationImpl -> processKtAnnotation(annotation.ktAnnotationEntry, annotation, packageName)
-            is KSAnnotationJavaImpl -> processJavaAnnotation(annotation.psi, annotation, packageName)
+            is KSAnnotationImpl -> processKtAnnotation(annotation.getFieldWithReflection("ktAnnotationEntry"), annotation.arguments, packageName)
+            is KSAnnotationJavaImpl -> processJavaAnnotation(annotation.getFieldWithReflection("psi"), annotation.arguments, packageName)
+            is KSAnnotationResolvedImpl -> {
+                val ktAnnotationEntry = annotation.getFieldWithReflection<KaAnnotation>("annotationApplication").psi as? KtAnnotationEntry
+                    ?: return emptyList()
+                processKtAnnotation(ktAnnotationEntry, annotation.arguments, packageName)
+            }
+
             else -> emptyList()
         }
     }
 
     private fun processJavaAnnotation(
         psi: PsiAnnotation,
-        annotation: KSAnnotationJavaImpl,
+        arguments: List<KSValueArgument>,
         packageName: String
     ): List<AnnotationWithReferenceValue> {
         return psi.parameterList
             .attributes
-            .zip(annotation.arguments)
+            .zip(arguments)
             .map { (psiNameValue, ksValueArgument) ->
                 AnnotationWithReferenceValue(
                     name = ksValueArgument.name?.asString(),
                     value = ksValueArgument.value,
-                    reference = extractJavaReferenceAnnotationArgument(psiNameValue, annotation, packageName)
+                    reference = extractJavaReferenceAnnotationArgument(psiNameValue, psi, packageName)
                 )
             }
     }
 
     private fun extractJavaReferenceAnnotationArgument(
         psiNameValue: PsiNameValuePair,
-        annotation: KSAnnotationJavaImpl,
+        psi: PsiAnnotation,
         packageName: String
     ): String? {
         // eg: R.layout.foo, com.example.R.layout.foo, layout.foo, etc
         return psiNameValue.value?.text?.let { annotationReference ->
             extractReferenceAnnotationArgument(annotationReference) { annotationReferencePrefix ->
-                findMatchingImportPackageJava(annotation.psi, annotationReference, annotationReferencePrefix, packageName)
+                findMatchingImportPackageJava(psi, annotationReference, annotationReferencePrefix, packageName)
             }
         }
     }
@@ -92,11 +101,11 @@ class KspResourceScanner : ResourceScanner {
 
     private fun processKtAnnotation(
         annotationEntry: KtAnnotationEntry,
-        annotation: KSAnnotation,
+        arguments: List<KSValueArgument>,
         packageName: String
     ): List<AnnotationWithReferenceValue> {
         return annotationEntry.valueArguments
-            .zip(annotation.arguments)
+            .zip(arguments)
             .map { (valueArgument, ksValueArgument) ->
 
                 AnnotationWithReferenceValue(

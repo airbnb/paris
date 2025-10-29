@@ -3,7 +3,6 @@
 package com.airbnb.paris.test
 
 import com.github.difflib.DiffUtils
-import com.google.common.io.Resources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.kspSourcesDir
@@ -46,13 +45,11 @@ abstract class ResourceTest {
     ) {
         val folderString = inferResourceFolderFromTest()
         val input = getSourceFiles("$folderString/input")
-        val outputSources = getSourceFiles("$folderString/output")
         val output = getFilesFromResources("$folderString/output")
 
         if (compilationMode.testKSP) {
             testCodeGeneration(
-                // If any output sources reference each other compilation of them fails unless they are included in sources explicitly.
-                sourceFiles = input + outputSources,
+                sourceFiles = input,
                 expectedOutput = output,
                 useKsp = true,
                 args = args,
@@ -72,7 +69,7 @@ abstract class ResourceTest {
 
     /**
      * Allows writing compilation test name with backticks that specifies a resource folder. If there folder is nested `/` should be
-     * encoded as ` `. Compilation is expceted to fail with [failureMessage].
+     * encoded as ` `. Compilation is expected to fail with [failureMessage].
      */
     fun expectCompilationFailure(
         failureMessage: String,
@@ -116,7 +113,7 @@ abstract class ResourceTest {
             } else if (it.name.endsWith("java.txt")) {
                 SourceFile.java(it.name.removeSuffix(".txt"), it.readText())
             } else {
-                SourceFile.Companion.fromPath(it)
+                SourceFile.new(it.name, it.readText().trimIndent())
             }
         }
     }

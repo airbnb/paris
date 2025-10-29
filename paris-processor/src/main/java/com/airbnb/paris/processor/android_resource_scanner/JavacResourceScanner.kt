@@ -8,7 +8,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol
 import com.sun.tools.javac.tree.JCTree
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess
 import com.sun.tools.javac.tree.TreeScanner
-import java.util.HashMap
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.Element
@@ -31,7 +30,7 @@ class JavacResourceScanner(
             try {
                 // Get original ProcessingEnvironment from Gradle-wrapped one or KAPT-wrapped one.
                 // In Kapt, its field is called "delegate". In Gradle's, it's called "processingEnv"
-                processingEnv.javaClass.declaredFields.mapNotNull { field ->
+                processingEnv.javaClass.declaredFields.firstNotNullOfOrNull { field ->
                     if (field.name == "delegate" || field.name == "processingEnv") {
                         field.isAccessible = true
                         val javacEnv = field[processingEnv] as ProcessingEnvironment
@@ -39,7 +38,7 @@ class JavacResourceScanner(
                     } else {
                         null
                     }
-                }.firstOrNull()
+                }
             } catch (ignored2: Throwable) {
                 null
             }

@@ -1,10 +1,9 @@
 package com.airbnb.paris.processor
 
-import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.isVoid
 import androidx.room.compiler.processing.isVoidObject
-import com.airbnb.paris.annotations.ParisConfig
 import com.airbnb.paris.processor.models.AttrInfo
 import com.airbnb.paris.processor.models.StyleableChildInfo
 import com.airbnb.paris.processor.models.StyleableInfo
@@ -14,7 +13,7 @@ internal class RFinder(val processor: ParisProcessor) {
     var element: XTypeElement? = null
         private set
 
-    fun processConfig(config: XAnnotationBox<ParisConfig>) {
+    fun processConfig(config: XAnnotation) {
         if (element != null) {
             return
         }
@@ -62,11 +61,11 @@ internal class RFinder(val processor: ParisProcessor) {
         }
     }
 
-    private fun getRTypeFromConfig(config: XAnnotationBox<ParisConfig>): XTypeElement? {
+    private fun getRTypeFromConfig(config: XAnnotation): XTypeElement? {
         val rType = config.getAsType("rClass")
 
         // Void is the default so check against that
-        return if (rType == null || rType.isVoidObject() || rType.isVoid()) {
+        return if (rType.isVoidObject() || rType.isVoid()) {
             null
         } else {
             val rTypeElement = rType.typeElement ?: return null

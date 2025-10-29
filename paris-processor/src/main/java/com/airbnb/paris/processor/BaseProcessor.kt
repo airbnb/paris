@@ -31,7 +31,7 @@ abstract class BaseProcessor(var kspEnvironment: SymbolProcessorEnvironment? = n
 
     val isKsp: Boolean get() = kspEnvironment != null
 
-    override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.RELEASE_8
+    override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)

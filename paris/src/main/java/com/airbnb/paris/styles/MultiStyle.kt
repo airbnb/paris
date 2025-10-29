@@ -5,7 +5,9 @@ import android.content.Context
 import com.airbnb.paris.typed_array_wrappers.MultiTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayTypedArrayWrapper
 import com.airbnb.paris.typed_array_wrappers.TypedArrayWrapper
+import kotlin.ConsistentCopyVisibility
 
+@ConsistentCopyVisibility
 data class MultiStyle internal constructor(
     private val name: String,
     private val styles: List<Style>

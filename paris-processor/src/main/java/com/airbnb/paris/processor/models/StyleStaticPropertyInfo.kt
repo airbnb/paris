@@ -1,11 +1,11 @@
 package com.airbnb.paris.processor.models
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XTypeElement
-import androidx.room.compiler.processing.compat.XConverters.toJavac
 import androidx.room.compiler.processing.isInt
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.processor.ParisProcessor
@@ -19,7 +19,7 @@ import com.airbnb.paris.processor.utils.enclosingElementIfCompanion
 import com.airbnb.paris.processor.utils.isErrorFixed
 
 internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcessor) :
-    SkyStaticPropertyModelFactory<StyleStaticPropertyInfo>(parisProcessor, Style::class.java) {
+    SkyStaticPropertyModelFactory<StyleStaticPropertyInfo>(parisProcessor, Style::class) {
 
     override fun filter(element: XElement): Boolean {
         if ((element as? XFieldElement)?.isStatic() == false) {
@@ -59,13 +59,13 @@ internal class StyleStaticPropertyInfoExtractor(val parisProcessor: ParisProcess
             return null
         }
 
-        val style = element.getAnnotation(Style::class)!!.value
-        val isDefault = style.isDefault
+        val style = element.getAnnotation(annotationClass)!!
+        val isDefault = style.getAsBoolean("isDefault")
 
         val formattedName = ParisProcessorUtils.reformatStyleFieldOrMethodName(elementName)
 
-        val javadoc = JavaCodeBlock.of("@see \$T#\$N\n", enclosingElement.className, elementName)
-        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.enclosingElementIfCompanion.className.toKPoet(), elementName)
+        val javadoc = JavaCodeBlock.of("@see \$T#\$N\n", enclosingElement.asClassName().toJavaPoet(), elementName)
+        val kdoc = KotlinCodeBlock.of("@see %T.%N\n", enclosingElement.enclosingElementIfCompanion.asClassName().toJavaPoet().toKPoet(), elementName)
 
         val propertyInfo = StyleStaticPropertyInfo(
             env = parisProcessor.environment,

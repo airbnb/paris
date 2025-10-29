@@ -37,7 +37,7 @@ internal class StyleablesTree(
                     className = styleableInfo.styleApplierClassName
                 )
             } else {
-                val superType = viewTypeElement.superType?.typeElement ?: return@getOrPut null
+                val superType = viewTypeElement.superClass?.typeElement ?: return@getOrPut null
                 findStyleApplier(superType)
             }
         }
