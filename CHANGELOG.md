@@ -1,3 +1,6 @@
+# 2.2.0
+* Update to Kotlin 2.2.21, KSP 2.2.21-2.0.4 and enable KSP2 support by @martinbirn in https://github.com/airbnb/paris/pull/183
+
 # 2.1.1
 * Roll back to Java 11 bytecode target for broader compatibility.
 
