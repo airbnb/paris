@@ -1,4 +1,4 @@
-# 2.2.0
+# 2.2.1
 * Update to Kotlin 2.2.21, KSP 2.2.21-2.0.4 and enable KSP2 support by @martinbirn in https://github.com/airbnb/paris/pull/183
 
 # 2.1.1

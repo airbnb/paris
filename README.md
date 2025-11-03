@@ -13,11 +13,11 @@ Paris lets you define and apply styles programmatically to Android views, includ
 In your project's `build.gradle`:
 ```gradle
 dependencies {
-    implementation 'com.airbnb.android:paris:2.2.0'
+    implementation 'com.airbnb.android:paris:2.2.1'
     // Apply the Paris processor if you're using Paris annotations for code gen.
-    kapt 'com.airbnb.android:paris-processor:2.2.0'
+    kapt 'com.airbnb.android:paris-processor:2.2.1'
     // or if you are using Kotlin Symbol Processing
-    ksp 'com.airbnb.android:paris-processor:2.2.0'
+    ksp 'com.airbnb.android:paris-processor:2.2.1'
 }
 ```
 
