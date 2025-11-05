@@ -89,6 +89,28 @@ class ViewProxyTest {
     }
 
     @Test
+    fun setForegroundTint() {
+        // First set the tint to something else
+        view.foregroundTintList = ContextCompat.getColorStateList(context, android.R.color.black)
+        proxy.setForegroundTint(ContextCompat.getColorStateList(context, android.R.color.holo_red_dark))
+        assertEquals(
+            ContextCompat.getColorStateList(context, android.R.color.holo_red_dark),
+            view.foregroundTintList
+        )
+    }
+
+    @Test
+    fun setForegroundTintMode() {
+        // First set the porterduff mode to something else
+        view.foregroundTintMode = PorterDuff.Mode.SRC_OVER
+        proxy.setForegroundTintMode(ViewProxy.PORTERDUFF_MODE_ADD)
+        assertEquals(
+            PorterDuff.Mode.ADD,
+            view.foregroundTintMode
+        )
+    }
+
+    @Test
     fun setVisibility_visibleProgrammatic() {
         // Since visible is the default first set the visibility to something else
         view.visibility = View.GONE
